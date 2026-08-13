@@ -1,0 +1,108 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #fff;
+}
+
+#root {
+  width: 100%;
+  height: 100vh;
+  background: #fff;
+}
+
+/* 壳层只负责提供子应用舞台和内容承载，不负责业务页的页面级 gutter。
+   页面外层留白只能由 DemoPageContainer / PageScaffold 这类 container 提供，
+   页面内容层不要再通过根节点 padding 或负 margin 抵消壳层 / container。 */
+.subapp-shell-content {
+  min-width: 0;
+  padding: 0;
+  background: transparent !important;
+}
+
+.subapp-shell-stage {
+  width: 100%;
+  min-width: 0;
+}
+
+/* 自定义滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* 自定义菜单样式 */
+.custom-menu.ant-menu {
+  border-right: none !important;
+  background: #fff !important;
+}
+
+.custom-menu .ant-menu-item {
+  margin: 4px 8px !important;
+  border-radius: 4px !important;
+  height: 40px !important;
+  line-height: 40px !important;
+  color: #595959 !important;
+}
+
+.custom-menu .ant-menu-item:hover {
+  color: #1890ff !important;
+}
+
+.custom-menu .ant-menu-item-selected {
+  background: #1890ff !important;
+  color: #fff !important;
+}
+
+.custom-menu .ant-menu-item-selected .ant-menu-item-icon {
+  color: #fff !important;
+}
+
+.custom-menu .ant-menu-item-selected::after {
+  display: none !important;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .ant-layout-sider {
+    position: fixed !important;
+    height: 100vh;
+    z-index: 999;
+  }
+}
+
+/* 面包屑导航颜色 */
+.ant-breadcrumb-link {
+  color: #595959 !important;
+}
+
+.ant-breadcrumb-separator {
+  color: #d9d9d9 !important;
+}
+
+/* 最后一个面包屑（当前页面）颜色更深 */
+.ant-breadcrumb-item:last-child .ant-breadcrumb-link {
+  color: #262626 !important;
+  font-weight: 500 !important;
+}

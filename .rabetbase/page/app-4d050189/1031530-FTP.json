@@ -1,0 +1,2332 @@
+{
+  "version": "1.0.0",
+  "componentsMap": [
+    {
+      "package": "@yuntoo/antd-meta",
+      "version": "1.0.0",
+      "main": "",
+      "destructuring": true,
+      "exportName": "YtPage",
+      "componentName": "YtPage"
+    },
+    {
+      "devMode": "lowCode",
+      "componentName": "Page"
+    },
+    {
+      "package": "@yuntoo/antd-smart",
+      "version": "1.0.0",
+      "main": "",
+      "destructuring": true,
+      "exportName": "LrSmartFilter",
+      "componentName": "LrSmartFilter"
+    },
+    {
+      "package": "@yuntoo/antd-smart",
+      "version": "1.0.0",
+      "main": "",
+      "destructuring": true,
+      "exportName": "LrSmartTable",
+      "componentName": "LrSmartTable"
+    },
+    {
+      "package": "@yuntoo/antd-meta",
+      "version": "1.0.0",
+      "main": "",
+      "destructuring": true,
+      "exportName": "YtRglContainer",
+      "componentName": "YtRglContainer"
+    }
+  ],
+  "componentsTree": [
+    {
+      "componentName": "Page",
+      "id": "node_3yh7wyv8",
+      "props": {
+        "ref": "outerView",
+        "style": {
+          "height": "100%"
+        }
+      },
+      "dataSource": {
+        "list": [
+          {
+            "type": "urlParams",
+            "id": "urlParams",
+            "isInit": true,
+            "source": "system",
+            "options": {}
+          },
+          {
+            "type": "fetch",
+            "id": "1015686_filter",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/235e11a9cb7945c8926b4d31fe64843f/filter",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "pageSize",
+                  "value": "this.state.yttable_44i8b4v1_pageSize",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "currentPage",
+                  "value": "this.state.yttable_44i8b4v1_currentPage",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "filter",
+                  "value": "this.state.ytfilter_xkhqkx5s_filter",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "sort",
+                  "value": "this.state.yttable_44i8b4v1_sort",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "select",
+                  "value": [
+                    "id",
+                    "title",
+                    "internal_legal_entity.entity_name",
+                    "attachment.file_name",
+                    "employee.full_name",
+                    "status",
+                    "bank_status",
+                    "payroll_month",
+                    "expected_pay_date",
+                    "amount",
+                    "currency",
+                    "employee_count",
+                    "applicant_user_id",
+                    "applicant_name_snapshot",
+                    "internal_legal_entity_name_snapshot",
+                    "payment_method",
+                    "bank_submitted_at",
+                    "bank_confirmed_at",
+                    "bank_confirmed_by_user_id",
+                    "bank_confirmed_by_name_snapshot",
+                    "current_owner_user_id",
+                    "current_owner_role",
+                    "current_owner_name_snapshot",
+                    "last_action_at",
+                    "submitted_at",
+                    "is_deleted",
+                    "process_instance_id",
+                    "instance_status",
+                    "flow_status",
+                    "running_node",
+                    "node_start_time",
+                    "node_process_user"
+                  ],
+                  "type": "array",
+                  "required": true
+                }
+              ],
+              "headersArr": [],
+              "params": {
+                "pageSize": {
+                  "type": "JSExpression",
+                  "value": "this.state.yttable_44i8b4v1_pageSize"
+                },
+                "currentPage": {
+                  "type": "JSExpression",
+                  "value": "this.state.yttable_44i8b4v1_currentPage"
+                },
+                "filter": {
+                  "type": "JSExpression",
+                  "value": "this.state.ytfilter_xkhqkx5s_filter"
+                },
+                "sort": {
+                  "type": "JSExpression",
+                  "value": "this.state.yttable_44i8b4v1_sort"
+                },
+                "select": [
+                  "id",
+                  "title",
+                  "internal_legal_entity.entity_name",
+                  "attachment.file_name",
+                  "employee.full_name",
+                  "status",
+                  "bank_status",
+                  "payroll_month",
+                  "expected_pay_date",
+                  "amount",
+                  "currency",
+                  "employee_count",
+                  "applicant_user_id",
+                  "applicant_name_snapshot",
+                  "internal_legal_entity_name_snapshot",
+                  "payment_method",
+                  "bank_submitted_at",
+                  "bank_confirmed_at",
+                  "bank_confirmed_by_user_id",
+                  "bank_confirmed_by_name_snapshot",
+                  "current_owner_user_id",
+                  "current_owner_role",
+                  "current_owner_name_snapshot",
+                  "last_action_at",
+                  "submitted_at",
+                  "is_deleted",
+                  "process_instance_id",
+                  "instance_status",
+                  "flow_status",
+                  "running_node",
+                  "node_start_time",
+                  "node_process_user"
+                ]
+              },
+              "requiredParams": [
+                "pageSize",
+                "currentPage"
+              ],
+              "headers": {},
+              "willFetch": {
+                "type": "JSFunction",
+                "value": "({ filter, sort, ...rest }) => ({ ...rest, ...filter, ...sort })"
+              }
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "1015686_delete",
+            "isInit": false,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/235e11a9cb7945c8926b4d31fe64843f/delete",
+              "isCors": true,
+              "timeout": 5000,
+              "requiredParams": [
+                "id"
+              ]
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "1015686_excelExport",
+            "isInit": false,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/235e11a9cb7945c8926b4d31fe64843f/excelExport",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "filter",
+                  "value": "this.state.ytfilter_xkhqkx5s_filter",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "selectKeys",
+                  "value": "this.state.yttable_44i8b4v1_selectKeys",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "select",
+                  "value": [
+                    "id",
+                    "title",
+                    "internal_legal_entity.entity_name",
+                    "attachment.file_name",
+                    "employee.full_name",
+                    "status",
+                    "bank_status",
+                    "payroll_month",
+                    "expected_pay_date",
+                    "amount",
+                    "currency",
+                    "employee_count",
+                    "applicant_user_id",
+                    "applicant_name_snapshot",
+                    "internal_legal_entity_name_snapshot",
+                    "payment_method",
+                    "bank_submitted_at",
+                    "bank_confirmed_at",
+                    "bank_confirmed_by_user_id",
+                    "bank_confirmed_by_name_snapshot",
+                    "current_owner_user_id",
+                    "current_owner_role",
+                    "current_owner_name_snapshot",
+                    "last_action_at",
+                    "submitted_at",
+                    "is_deleted",
+                    "process_instance_id",
+                    "instance_status",
+                    "flow_status",
+                    "running_node",
+                    "node_start_time",
+                    "node_process_user"
+                  ],
+                  "type": "array",
+                  "required": false
+                }
+              ],
+              "headersArr": [],
+              "params": {
+                "filter": {
+                  "type": "JSExpression",
+                  "value": "this.state.ytfilter_xkhqkx5s_filter"
+                },
+                "selectKeys": {
+                  "type": "JSExpression",
+                  "value": "this.state.yttable_44i8b4v1_selectKeys"
+                },
+                "select": [
+                  "id",
+                  "title",
+                  "internal_legal_entity.entity_name",
+                  "attachment.file_name",
+                  "employee.full_name",
+                  "status",
+                  "bank_status",
+                  "payroll_month",
+                  "expected_pay_date",
+                  "amount",
+                  "currency",
+                  "employee_count",
+                  "applicant_user_id",
+                  "applicant_name_snapshot",
+                  "internal_legal_entity_name_snapshot",
+                  "payment_method",
+                  "bank_submitted_at",
+                  "bank_confirmed_at",
+                  "bank_confirmed_by_user_id",
+                  "bank_confirmed_by_name_snapshot",
+                  "current_owner_user_id",
+                  "current_owner_role",
+                  "current_owner_name_snapshot",
+                  "last_action_at",
+                  "submitted_at",
+                  "is_deleted",
+                  "process_instance_id",
+                  "instance_status",
+                  "flow_status",
+                  "running_node",
+                  "node_start_time",
+                  "node_process_user"
+                ]
+              },
+              "requiredParams": [],
+              "headers": {},
+              "willFetch": {
+                "type": "JSFunction",
+                "value": "({ filter, selectKeys, select, ...rest }) => ({ ...rest, ...filter, select, ...selectKeys })"
+              }
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_ab17964f0efd46f78cecb4969140f257_bank_receipt_attachment_id_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/ab17964f0efd46f78cecb4969140f257/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "id",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "file_name",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "id",
+                "label": "file_name"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_ab563bb9148947bfb751f8c1aff0d5c7_internal_legal_entity_id_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/ab563bb9148947bfb751f8c1aff0d5c7/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "id",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "entity_name",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "id",
+                "label": "entity_name"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_d8e2be71fbf14f93a589ebe96b64e004_applicant_user_id_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/d8e2be71fbf14f93a589ebe96b64e004/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "id",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "full_name",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "id",
+                "label": "full_name"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_d8e2be71fbf14f93a589ebe96b64e004_bank_confirmed_by_user_id_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/d8e2be71fbf14f93a589ebe96b64e004/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "id",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "full_name",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "id",
+                "label": "full_name"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_d8e2be71fbf14f93a589ebe96b64e004_current_owner_user_id_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/d8e2be71fbf14f93a589ebe96b64e004/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "id",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "full_name",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "id",
+                "label": "full_name"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_d8e2be71fbf14f93a589ebe96b64e004_uploaded_by_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/d8e2be71fbf14f93a589ebe96b64e004/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "id",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "full_name",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "id",
+                "label": "full_name"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_d8e2be71fbf14f93a589ebe96b64e004_created_by_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/d8e2be71fbf14f93a589ebe96b64e004/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "username",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "full_name",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "username",
+                "label": "full_name"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_d8e2be71fbf14f93a589ebe96b64e004_updated_by_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/d8e2be71fbf14f93a589ebe96b64e004/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "username",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "full_name",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "username",
+                "label": "full_name"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_b4a72c4ca0984102aba03a393063ba65_seal_name_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/b4a72c4ca0984102aba03a393063ba65/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "credential_name",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "credential_name",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "credential_name",
+                "label": "credential_name"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_d8e2be71fbf14f93a589ebe96b64e004_contact_name_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/d8e2be71fbf14f93a589ebe96b64e004/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "full_name",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "full_name",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "full_name",
+                "label": "full_name"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          }
+        ]
+      },
+      "hidden": false,
+      "title": "",
+      "isLocked": false,
+      "condition": true,
+      "conditionGroup": "",
+      "children": [
+        {
+          "componentName": "YtPage",
+          "id": "node_d25xdw4y",
+          "props": {
+            "ref": "ytpage_d25xdw4y",
+            "_context": {
+              "type": "JSExpression",
+              "value": "this"
+            },
+            "_uniqueId": "ytpage_d25xdw4y",
+            "useRGL": true
+          },
+          "hidden": false,
+          "title": "",
+          "isLocked": false,
+          "condition": true,
+          "conditionGroup": "",
+          "children": [
+            {
+              "componentName": "YtRglContainer",
+              "id": "node_i3h4jk3r",
+              "props": {
+                "RGLlayout": [
+                  {
+                    "i": "node_hn9tq78a",
+                    "w": 12,
+                    "h": 3,
+                    "x": 0,
+                    "y": 0,
+                    "autoHeight": true
+                  },
+                  {
+                    "i": "node_vd8pfjip",
+                    "w": 12,
+                    "h": 27,
+                    "x": 0,
+                    "y": 3,
+                    "autoHeight": true
+                  }
+                ]
+              },
+              "hidden": false,
+              "title": "",
+              "isLocked": false,
+              "condition": true,
+              "conditionGroup": "",
+              "children": [
+                {
+                  "componentName": "LrSmartFilter",
+                  "id": "node_hn9tq78a",
+                  "props": {
+                    "_doVersion": "V2",
+                    "_context": {
+                      "type": "JSExpression",
+                      "value": "this"
+                    },
+                    "ref": "ytfilter_xkhqkx5s",
+                    "_uniqueId": "ytfilter_xkhqkx5s",
+                    "datasetId": 1015686,
+                    "oneSearchFilterKey": "ytfilter_xkhqkx5s_filter",
+                    "items": [
+                      {
+                        "lcAsItemId": null,
+                        "name": "title",
+                        "label": "薪资发放标题",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": true,
+                        "placeholder": "请输入薪资发放标题",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "ogyuwvj6vi"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "applicant_user_id",
+                        "label": "申请人",
+                        "componentName": "YtUserSelect",
+                        "doType": "USER",
+                        "isShown": true,
+                        "placeholder": "请选择申请人",
+                        "options": null,
+                        "indexType": "index",
+                        "__lc_as_item_id__": "cd9qobdo4r"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "internal_legal_entity_id",
+                        "label": "付款法人实体",
+                        "componentName": "YtSingleSelect",
+                        "doType": "NUMBER",
+                        "isShown": true,
+                        "placeholder": "请选择付款法人实体",
+                        "options": {
+                          "type": "JSExpression",
+                          "value": "this.state.internal_legal_entity_id_options"
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "jmzeyc94vb"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "status",
+                        "label": "申请状态",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "isShown": true,
+                        "placeholder": "请选择申请状态",
+                        "options": [
+                          {
+                            "label": "草稿",
+                            "value": "draft"
+                          },
+                          {
+                            "label": "已确认支付",
+                            "value": "paid_confirmed"
+                          }
+                        ],
+                        "indexType": "index",
+                        "__lc_as_item_id__": "6xiabkogca"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "bank_status",
+                        "label": "银行状态",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "isShown": true,
+                        "placeholder": "请选择银行状态",
+                        "options": [
+                          {
+                            "label": "已确认",
+                            "value": "confirmed"
+                          },
+                          {
+                            "label": "未提交",
+                            "value": "not_submitted"
+                          }
+                        ],
+                        "indexType": "index",
+                        "__lc_as_item_id__": "h95oknpf29"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "payroll_month",
+                        "label": "发薪月份",
+                        "componentName": "YtRangeDatePicker",
+                        "doType": "DATETIME",
+                        "isShown": true,
+                        "placeholder": "请选择发薪月份",
+                        "options": null,
+                        "indexType": "index",
+                        "__lc_as_item_id__": "brc2bqyqsp"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "expected_pay_date",
+                        "label": "预期发放日期",
+                        "componentName": "YtRangeDatePicker",
+                        "doType": "DATETIME",
+                        "isShown": true,
+                        "placeholder": "请选择预期发放日期",
+                        "options": null,
+                        "indexType": "index",
+                        "__lc_as_item_id__": "odqx4bcia9"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "current_owner_user_id",
+                        "label": "当前处理人",
+                        "componentName": "YtUserSelect",
+                        "doType": "USER",
+                        "isShown": true,
+                        "placeholder": "请选择当前处理人",
+                        "options": null,
+                        "indexType": "index",
+                        "__lc_as_item_id__": "zhw92520uc"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "bank_confirmed_by_user_id",
+                        "label": "银行确认人",
+                        "componentName": "YtUserSelect",
+                        "doType": "USER",
+                        "isShown": false,
+                        "placeholder": "请选择银行确认人",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "0xmzfziw9a"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "applicant_name_snapshot",
+                        "label": "申请人姓名快照",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入申请人姓名快照",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "exl7drex7h"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "internal_legal_entity_name_snapshot",
+                        "label": "付款公司名称快照",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入付款公司名称快照",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "9hzlm8zlkk"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "employee_count",
+                        "label": "员工人数",
+                        "componentName": "YtRangeInputNumber",
+                        "doType": "NUMBER",
+                        "isShown": false,
+                        "placeholder": "请输入员工人数",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "gr1mabjfv1"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "amount",
+                        "label": "发放总金额",
+                        "componentName": "YtRangeInputNumber",
+                        "doType": "NUMBER",
+                        "isShown": false,
+                        "placeholder": "请输入发放总金额",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "jd576ul7me"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "currency",
+                        "label": "支付币种",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入支付币种",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "2maj0eb6mp"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "payment_method",
+                        "label": "支付方式",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "isShown": false,
+                        "placeholder": "请选择支付方式",
+                        "options": [
+                          {
+                            "label": "银行转账",
+                            "value": "bank_transfer"
+                          }
+                        ],
+                        "indexType": null,
+                        "__lc_as_item_id__": "9985pyt7ob"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "bank_submitted_at",
+                        "label": "银行提交时间",
+                        "componentName": "YtRangeDatePicker",
+                        "doType": "DATETIME",
+                        "isShown": false,
+                        "placeholder": "请选择银行提交时间",
+                        "options": null,
+                        "indexType": "index",
+                        "__lc_as_item_id__": "sgr1fzx73y"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "bank_confirmed_at",
+                        "label": "银行确认时间",
+                        "componentName": "YtRangeDatePicker",
+                        "doType": "DATETIME",
+                        "isShown": false,
+                        "placeholder": "请选择银行确认时间",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "qlrc2gwvsf"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "bank_confirmed_by_name_snapshot",
+                        "label": "确认人姓名快照",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入确认人姓名快照",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "refsb2yud4"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "bank_receipt_attachment_id",
+                        "label": "银行回单附件ID",
+                        "componentName": "YtRangeInputNumber",
+                        "doType": "NUMBER",
+                        "isShown": false,
+                        "placeholder": "请输入银行回单附件ID",
+                        "options": null,
+                        "indexType": "index",
+                        "__lc_as_item_id__": "50mi02b7p4"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "current_owner_role",
+                        "label": "当前处理人角色",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入当前处理人角色",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "e2lv5x1k2h"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "current_owner_name_snapshot",
+                        "label": "当前处理人姓名",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入当前处理人姓名",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "4qyu0i77pp"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "last_action_at",
+                        "label": "最后操作时间",
+                        "componentName": "YtRangeDatePicker",
+                        "doType": "DATETIME",
+                        "isShown": false,
+                        "placeholder": "请选择最后操作时间",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "tmzv4h3t6u"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "submitted_at",
+                        "label": "提交时间",
+                        "componentName": "YtRangeDatePicker",
+                        "doType": "DATETIME",
+                        "isShown": false,
+                        "placeholder": "请选择提交时间",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "a51268pwx7"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "is_deleted",
+                        "label": "删除标志",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "isShown": false,
+                        "placeholder": "请选择删除标志",
+                        "options": [
+                          {
+                            "label": "正常",
+                            "value": 0
+                          },
+                          {
+                            "label": "已删除",
+                            "value": 1
+                          }
+                        ],
+                        "indexType": "index",
+                        "__lc_as_item_id__": "k3qmngplcp"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "process_instance_id",
+                        "label": "流程实例ID",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入流程实例ID",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "aijhq8y03s"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "instance_status",
+                        "label": "流程实例状态",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "isShown": false,
+                        "placeholder": "请选择流程实例状态",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "op3wbengiu"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "flow_status",
+                        "label": "流程业务状态",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "isShown": false,
+                        "placeholder": "请选择流程业务状态",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "d1ugcgqdu1"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "running_node",
+                        "label": "当前节点",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "isShown": false,
+                        "placeholder": "请选择当前节点",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "12l3sepaog"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "node_start_time",
+                        "label": "节点开始时间",
+                        "componentName": "YtRangeDatePicker",
+                        "doType": "DATETIME",
+                        "isShown": false,
+                        "placeholder": "请选择节点开始时间",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "xvb8vx6sca"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "node_process_user",
+                        "label": "节点处理人",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入节点处理人",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "zo5fgd8y0m"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "id",
+                        "label": "主键",
+                        "componentName": "YtInput",
+                        "doType": "NUMBER",
+                        "isShown": false,
+                        "placeholder": "请输入主键",
+                        "options": null,
+                        "indexType": "primary",
+                        "__lc_as_item_id__": "52p4gvoxcn"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "remark",
+                        "label": "备注",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入备注",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "0yw9ey6b2c"
+                      }
+                    ],
+                    "events": [
+                      {
+                        "optType": "flowAction",
+                        "name": "onSearch",
+                        "flowList": [
+                          {
+                            "active": true,
+                            "optType": "request",
+                            "options": {
+                              "_bindDataSource": "1015686_filter",
+                              "_autoBindDataSourceParams": true,
+                              "confirmConfig": {
+                                "enable": false
+                              },
+                              "responseConfig": {
+                                "successToastMsg": "查询成功！",
+                                "errorToastMsg": "查询失败"
+                              },
+                              "redirectType": "current"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "showSearch": true
+                  },
+                  "meta": {
+                    "datasetId": 1015686,
+                    "datasetCode": "235e11a9cb7945c8926b4d31fe64843f"
+                  },
+                  "hidden": false,
+                  "title": "",
+                  "isLocked": false,
+                  "condition": true,
+                  "conditionGroup": ""
+                },
+                {
+                  "componentName": "LrSmartTable",
+                  "id": "node_vd8pfjip",
+                  "props": {
+                    "_doVersion": "V2",
+                    "_context": {
+                      "type": "JSExpression",
+                      "value": "this"
+                    },
+                    "ref": "yttable_44i8b4v1",
+                    "_uniqueId": "yttable_44i8b4v1",
+                    "dataSource": {
+                      "type": "JSExpression",
+                      "value": "this.state['1015686_filter']"
+                    },
+                    "loading": {
+                      "type": "JSExpression",
+                      "value": "this.state['1015686_filter_loading']"
+                    },
+                    "columns": [
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "id",
+                        "title": "申请ID",
+                        "pkField": true,
+                        "doType": "NUMBER",
+                        "format": "text",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": "start",
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": "primary",
+                        "__lc_as_item_id__": "hj9doticzs"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "title",
+                        "title": "薪资发放标题",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": "start",
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "nn2r7223ie"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "internal_legal_entity.entity_name",
+                        "title": "付款公司名称",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "ycod56i16e"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "attachment.file_name",
+                        "title": "银行回单文件",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "kmm2kd6cj8"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "employee.full_name",
+                        "title": "当前处理人姓名",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "tjbv97sc4g"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "status",
+                        "title": "申请状态",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "tag",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "colorMapping": {
+                            "draft": "default",
+                            "paid_confirmed": "default"
+                          },
+                          "options": [
+                            {
+                              "label": "草稿",
+                              "value": "draft"
+                            },
+                            {
+                              "label": "已确认支付",
+                              "value": "paid_confirmed"
+                            }
+                          ]
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "j2yjek97oj"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "bank_status",
+                        "title": "银行状态",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "tag",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "colorMapping": {
+                            "not_submitted": "default",
+                            "confirmed": "default"
+                          },
+                          "options": [
+                            {
+                              "label": "已确认",
+                              "value": "confirmed"
+                            },
+                            {
+                              "label": "未提交",
+                              "value": "not_submitted"
+                            }
+                          ]
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "jewgt61vl5"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "payroll_month",
+                        "title": "发薪月份",
+                        "pkField": false,
+                        "doType": "DATETIME",
+                        "format": "datetime",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "format": "YYYY-MM-DD"
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "b3sm4psbd2"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "expected_pay_date",
+                        "title": "预期发放日期",
+                        "pkField": false,
+                        "doType": "DATETIME",
+                        "format": "datetime",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "format": "YYYY-MM-DD"
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "qe072pqomn"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "amount",
+                        "title": "发放总金额",
+                        "pkField": false,
+                        "doType": "NUMBER",
+                        "format": "number",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "precision": 2,
+                          "separator": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "qep2yfes5p"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "currency",
+                        "title": "支付币种",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "vnwyhooq91"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "employee_count",
+                        "title": "员工人数",
+                        "pkField": false,
+                        "doType": "NUMBER",
+                        "format": "number",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "separator": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "no7jrczt5r"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "applicant_user_id",
+                        "title": "申请人",
+                        "pkField": false,
+                        "doType": "USER",
+                        "format": "user",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": "index",
+                        "__lc_as_item_id__": "zjty67lbr7"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "applicant_name_snapshot",
+                        "title": "申请人姓名快照",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "18o4oj9696"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "internal_legal_entity_id",
+                        "title": "付款法人实体ID",
+                        "pkField": false,
+                        "doType": "NUMBER",
+                        "format": "enum",
+                        "isShown": false,
+                        "isFetched": false,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": "index",
+                        "__lc_as_item_id__": "y1n6w2n1lt"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "internal_legal_entity_name_snapshot",
+                        "title": "付款公司名称快照",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "uc7fo8wu9e"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "payment_method",
+                        "title": "支付方式",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "enum",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "options": [
+                            {
+                              "color": "default",
+                              "label": "银行转账",
+                              "value": "bank_transfer"
+                            }
+                          ],
+                          "type": "select"
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "1p86bg1zy8"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "bank_submitted_at",
+                        "title": "银行提交时间",
+                        "pkField": false,
+                        "doType": "DATETIME",
+                        "format": "datetime",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "format": "YYYY-MM-DD HH:mm"
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "0g0go9c419"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "bank_confirmed_at",
+                        "title": "银行确认时间",
+                        "pkField": false,
+                        "doType": "DATETIME",
+                        "format": "datetime",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "format": "YYYY-MM-DD HH:mm"
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "tcc0qus89g"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "bank_confirmed_by_user_id",
+                        "title": "银行确认人",
+                        "pkField": false,
+                        "doType": "USER",
+                        "format": "user",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "uhmorwu10d"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "bank_confirmed_by_name_snapshot",
+                        "title": "确认人姓名快照",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "z43o4n8bc4"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "bank_receipt_attachment_id",
+                        "title": "银行回单附件ID",
+                        "pkField": false,
+                        "doType": "NUMBER",
+                        "format": "enum",
+                        "isShown": false,
+                        "isFetched": false,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": "index",
+                        "__lc_as_item_id__": "fzoxxxr319"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "current_owner_user_id",
+                        "title": "当前处理人",
+                        "pkField": false,
+                        "doType": "USER",
+                        "format": "user",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": "index",
+                        "__lc_as_item_id__": "8pybsofqkb"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "current_owner_role",
+                        "title": "当前处理人角色",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "3ums9zabrx"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "current_owner_name_snapshot",
+                        "title": "当前处理人姓名快照",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "9i4k7fyeot"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "last_action_at",
+                        "title": "最后操作时间",
+                        "pkField": false,
+                        "doType": "DATETIME",
+                        "format": "datetime",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "format": "YYYY-MM-DD HH:mm"
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "zoynyyth60"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "remark",
+                        "title": "备注",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": false,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "6i7ahlw6n8"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "submitted_at",
+                        "title": "提交时间",
+                        "pkField": false,
+                        "doType": "DATETIME",
+                        "format": "datetime",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "format": "YYYY-MM-DD HH:mm"
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "s1emqq56lw"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "created_at",
+                        "title": "创建时间",
+                        "pkField": false,
+                        "doType": "DATETIME",
+                        "format": "datetime",
+                        "isShown": false,
+                        "isFetched": false,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "format": "YYYY-MM-DD HH:mm"
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "cak2lu9lk7"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "updated_at",
+                        "title": "更新时间",
+                        "pkField": false,
+                        "doType": "DATETIME",
+                        "format": "datetime",
+                        "isShown": false,
+                        "isFetched": false,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "format": "YYYY-MM-DD HH:mm"
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "x1fd77x7fk"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "is_deleted",
+                        "title": "删除标志",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "enum",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "options": [
+                            {
+                              "color": "success",
+                              "label": "正常",
+                              "value": 0
+                            },
+                            {
+                              "color": "default",
+                              "label": "已删除",
+                              "value": 1
+                            }
+                          ],
+                          "type": "select"
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "zw6vziogcu"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "process_instance_id",
+                        "title": "流程实例ID",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "6dfqdvilpk"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "instance_status",
+                        "title": "流程实例状态",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "enum",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "xw86jmoq9x"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "flow_status",
+                        "title": "流程业务状态",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "enum",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "prt7j6dyg5"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "running_node",
+                        "title": "当前节点",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "enum",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "9kkz2l7cyd"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "node_start_time",
+                        "title": "节点开始时间",
+                        "pkField": false,
+                        "doType": "DATETIME",
+                        "format": "datetime",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "format": "YYYY-MM-DD HH:mm"
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "wybb3tjf3e"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "node_process_user",
+                        "title": "节点处理人",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "3env2y99z8"
+                      }
+                    ],
+                    "pagination": {
+                      "enable": true,
+                      "showQuickJumper": true,
+                      "showSizeChanger": true,
+                      "pageSizeOptions": [
+                        "10",
+                        "20",
+                        "50",
+                        "100"
+                      ],
+                      "currentPage": {
+                        "type": "JSExpression",
+                        "value": "this.state['yttable_44i8b4v1_currentPage']"
+                      },
+                      "currentPageKey": "yttable_44i8b4v1_currentPage",
+                      "total": {
+                        "type": "JSExpression",
+                        "value": "this.state['yttable_44i8b4v1_total']"
+                      },
+                      "totalKey": "yttable_44i8b4v1_total",
+                      "pageSize": {
+                        "type": "JSExpression",
+                        "value": "this.state['yttable_44i8b4v1_pageSize']"
+                      },
+                      "pageSizeKey": "yttable_44i8b4v1_pageSize"
+                    },
+                    "toolbar": {
+                      "enable": true,
+                      "globalButtons": [
+                        {
+                          "title": "新增",
+                          "type": "primary",
+                          "size": "medium",
+                          "optType": "jsAction",
+                          "options": {
+                            "jsFunction": {
+                              "type": "JSFunction",
+                              "value": "(config) => config._context?.appHelper?.yt?.smartPageHistory?.push({ pageTagName: 'CREATE', datasetId: '1015686' })"
+                            }
+                          }
+                        }
+                      ],
+                      "exportButtons": {
+                        "loading": {
+                          "type": "JSExpression",
+                          "value": "this.state['1015686_excelExport_loading']"
+                        },
+                        "mainButton": {
+                          "title": "批量操作",
+                          "optType": "jsAction",
+                          "disabled": {
+                            "type": "JSExpression",
+                            "value": "!this.state['yttable_44i8b4v1_selectedRowKeys']?.length"
+                          },
+                          "options": {
+                            "jsFunction": {
+                              "type": "JSFunction",
+                              "value": "(config) => config._context?.appHelper?.yt?.smartPageHistory?.push({ pageTagName: 'UPDATE', datasetId: '1015686', dataid: config._context?.state['yttable_44i8b4v1_selectedRowKeys'], type: 'batch' })"
+                            }
+                          }
+                        },
+                        "buttons": [
+                          {
+                            "title": "导出选中项",
+                            "optType": "flowAction",
+                            "actionType": "export",
+                            "disabled": {
+                              "type": "JSExpression",
+                              "value": "!this.state['yttable_44i8b4v1_selectedRowKeys']?.length"
+                            },
+                            "options": {
+                              "flowList": [
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015686_excelExport",
+                                    "_autoBindDataSourceParams": true
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "title": "导出全部",
+                            "optType": "flowAction",
+                            "actionType": "export",
+                            "options": {
+                              "flowList": [
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015686_excelExport"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "title": "删除选中项",
+                            "optType": "flowAction",
+                            "actionType": "delete",
+                            "danger": true,
+                            "disabled": {
+                              "type": "JSExpression",
+                              "value": "!this.state['yttable_44i8b4v1_selectedRowKeys']?.length"
+                            },
+                            "options": {
+                              "flowList": [
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015686_delete",
+                                    "_autoBindDataSourceParams": false,
+                                    "_bindDataSourceParams": {
+                                      "type": "JSFunction",
+                                      "value": "(extraParams) => { return { id: extraParams.selectId }; }"
+                                    },
+                                    "confirmConfig": {
+                                      "enable": true,
+                                      "type": "confirm",
+                                      "title": "确认批量删除",
+                                      "content": "确认批量删除选中数据吗？"
+                                    },
+                                    "responseConfig": {
+                                      "enableSuccessToast": true,
+                                      "enableErrorToast": true,
+                                      "successToastMsg": "删除成功",
+                                      "errorToastMsg": "删除失败"
+                                    }
+                                  }
+                                },
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015686_filter",
+                                    "_autoBindDataSourceParams": false,
+                                    "confirmConfig": {
+                                      "enable": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "title": "删除全部",
+                            "optType": "flowAction",
+                            "actionType": "delete",
+                            "danger": true,
+                            "disabled": {
+                              "type": "JSExpression",
+                              "value": "!(this.state['yttable_44i8b4v1_total'] > 0)"
+                            },
+                            "options": {
+                              "flowList": [
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015686_delete",
+                                    "_autoBindDataSourceParams": false,
+                                    "_bindDataSourceParams": {
+                                      "type": "JSFunction",
+                                      "value": "(extraParams) => { return { id: extraParams.allIds }; }"
+                                    },
+                                    "confirmConfig": {
+                                      "enable": true,
+                                      "type": "confirm",
+                                      "title": "确认批量删除",
+                                      "content": "确认批量删除当前页全部数据吗？"
+                                    },
+                                    "responseConfig": {
+                                      "enableSuccessToast": true,
+                                      "enableErrorToast": true,
+                                      "successToastMsg": "删除成功",
+                                      "errorToastMsg": "删除失败"
+                                    }
+                                  }
+                                },
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015686_filter",
+                                    "_autoBindDataSourceParams": false,
+                                    "confirmConfig": {
+                                      "enable": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        "buttonsDisabled": {
+                          "type": "JSExpression",
+                          "value": "this.state['yttable_44i8b4v1_onePage'] || false"
+                        }
+                      }
+                    },
+                    "rowSelection": {
+                      "enable": true,
+                      "isDisabled": {
+                        "type": "JSExpression",
+                        "value": "this.state['yttable_44i8b4v1_onePage'] || false"
+                      }
+                    },
+                    "showSelectionTotal": true,
+                    "sortEnable": true,
+                    "operateButtonsEnable": true,
+                    "operateButtons": [
+                      {
+                        "title": "更新",
+                        "type": "default",
+                        "size": "medium",
+                        "optType": "jsAction",
+                        "__lc_as_item_id__": "6dc9ql5k4t",
+                        "options": {
+                          "jsFunction": {
+                            "type": "JSFunction",
+                            "value": "(config) => config._context?.appHelper?.yt?.smartPageHistory?.push({ pageTagName: 'UPDATE', datasetId: '1015686', dataid: config.extraParams?.rowKey })"
+                          }
+                        }
+                      },
+                      {
+                        "title": "详情",
+                        "type": "default",
+                        "size": "medium",
+                        "optType": "jsAction",
+                        "__lc_as_item_id__": "8pjgwjv2fw",
+                        "options": {
+                          "jsFunction": {
+                            "type": "JSFunction",
+                            "value": "(config) => config._context?.appHelper?.yt?.smartPageHistory?.push({ pageTagName: 'DETAIL', datasetId: '1015686', dataid: config.extraParams?.rowKey })"
+                          }
+                        }
+                      },
+                      {
+                        "title": "删除",
+                        "type": "default",
+                        "size": "medium",
+                        "optType": "flowAction",
+                        "__lc_as_item_id__": "ll6hga5k0j",
+                        "options": {
+                          "flowList": [
+                            {
+                              "active": true,
+                              "optType": "request",
+                              "__lc_as_item_id__": "bv3jvrbx46",
+                              "options": {
+                                "_bindDataSource": "1015686_delete",
+                                "_autoBindDataSourceParams": false,
+                                "_bindDataSourceParams": {
+                                  "type": "JSFunction",
+                                  "value": "(extraParams) => { return { id: extraParams.rowKey }; }"
+                                },
+                                "confirmConfig": {
+                                  "enable": true,
+                                  "type": "confirm",
+                                  "title": "确认删除",
+                                  "content": "确认删除该条数据吗？"
+                                },
+                                "responseConfig": {
+                                  "enableSuccessToast": true,
+                                  "enableErrorToast": true,
+                                  "successToastMsg": "删除成功",
+                                  "errorToastMsg": "删除失败"
+                                }
+                              }
+                            },
+                            {
+                              "active": true,
+                              "optType": "request",
+                              "__lc_as_item_id__": "v1ui2ew0op",
+                              "options": {
+                                "_bindDataSource": "1015686_filter",
+                                "_autoBindDataSourceParams": false,
+                                "confirmConfig": {
+                                  "enable": false
+                                }
+                              }
+                            }
+                          ],
+                          "_autoBindDataSourceParams": false,
+                          "redirectType": "current"
+                        }
+                      }
+                    ]
+                  },
+                  "meta": {
+                    "datasetId": 1015686,
+                    "datasetCode": "235e11a9cb7945c8926b4d31fe64843f"
+                  },
+                  "hidden": false,
+                  "title": "",
+                  "isLocked": false,
+                  "condition": true,
+                  "conditionGroup": ""
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "fileName": "/"
+    }
+  ],
+  "i18n": {}
+}

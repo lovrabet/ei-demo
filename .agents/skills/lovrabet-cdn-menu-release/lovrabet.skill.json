@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 2,
+  "appCode": "app-4d050189",
+  "skillCode": "lovrabet-cdn-menu-release",
+  "skillName": "企业智能系统前端发布",
+  "scope": "personal",
+  "readonly": false,
+  "version": "20260811.192734",
+  "tags": [],
+  "contentHash": "5946c7d30dc90ba0fc042f603268344eb38d0b89f902ae81e9cd03acab0c85ae",
+  "fileHashes": {
+    "SKILL.md": "5946c7d30dc90ba0fc042f603268344eb38d0b89f902ae81e9cd03acab0c85ae",
+    "agents/openai.yaml": "e6bfbf5be46fac9f14de9fe19e014ba37ed5b42c3a0a840d1ba3c035a0b2eecf"
+  },
+  "treeHash": "eef02c5ba08b9d678064459470a68d14ffd7d2e9a878cec379734c1e38952d7b",
+  "zipSha256": "59cb295e3ade00a59f08ec5089e7a715c81cfd2887e083a7b8e512745536e3d8",
+  "zipSize": 5384,
+  "files": [
+    {
+      "path": "SKILL.md",
+      "hash": "5946c7d30dc90ba0fc042f603268344eb38d0b89f902ae81e9cd03acab0c85ae",
+      "size": 4910
+    },
+    {
+      "path": "agents/openai.yaml",
+      "hash": "e6bfbf5be46fac9f14de9fe19e014ba37ed5b42c3a0a840d1ba3c035a0b2eecf",
+      "size": 248
+    }
+  ],
+  "pulledAt": "2026-08-11T11:27:35.339Z"
+}

@@ -1,0 +1,47 @@
+.context {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 16px;
+}
+
+.context strong {
+  color: var(--ant-color-text, #1f1f1f);
+  font-size: 16px;
+}
+
+.context span {
+  color: var(--ant-color-text-secondary, #666);
+}
+
+.form {
+  margin-top: 20px;
+}
+
+.threeColumns {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.72fr) minmax(220px, 1.4fr) minmax(
+      150px,
+      0.88fr
+    );
+  gap: 16px;
+}
+
+.threeColumns :global(.ant-input-number),
+.threeColumns :global(.ant-picker),
+.threeColumns :global(.ant-select) {
+  width: 100%;
+}
+
+.footer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (max-width: 680px) {
+  .threeColumns {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

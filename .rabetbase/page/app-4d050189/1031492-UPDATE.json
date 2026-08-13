@@ -1,0 +1,905 @@
+{
+  "version": "1.0.0",
+  "componentsMap": [
+    {
+      "package": "@yuntoo/antd-meta",
+      "version": "1.0.0",
+      "main": "",
+      "destructuring": true,
+      "exportName": "YtPage",
+      "componentName": "YtPage"
+    },
+    {
+      "devMode": "lowCode",
+      "componentName": "Page"
+    },
+    {
+      "package": "@yuntoo/antd-smart",
+      "version": "1.0.0",
+      "main": "",
+      "destructuring": true,
+      "exportName": "LrSmartUpdate",
+      "componentName": "LrSmartUpdate"
+    },
+    {
+      "package": "@yuntoo/antd-meta",
+      "version": "1.0.0",
+      "main": "",
+      "destructuring": true,
+      "exportName": "YtRglContainer",
+      "componentName": "YtRglContainer"
+    }
+  ],
+  "componentsTree": [
+    {
+      "componentName": "Page",
+      "id": "node_taxnryvq",
+      "props": {
+        "ref": "outerView",
+        "style": {
+          "height": "100%"
+        }
+      },
+      "dataSource": {
+        "list": [
+          {
+            "type": "urlParams",
+            "id": "urlParams",
+            "isInit": true,
+            "source": "system",
+            "options": {}
+          },
+          {
+            "type": "fetch",
+            "id": "1015672_getOne",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/d60179efd37846e380aafdd166a02871/getOne",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "id",
+                  "value": "this.state.urlParams.dataid",
+                  "type": "expression",
+                  "required": true
+                }
+              ],
+              "headersArr": [],
+              "params": {
+                "id": {
+                  "type": "JSExpression",
+                  "value": "this.state.urlParams.dataid"
+                }
+              },
+              "requiredParams": [
+                "id"
+              ],
+              "headers": {}
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "1015672_update",
+            "isInit": false,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/d60179efd37846e380aafdd166a02871/update",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "id",
+                  "value": "this.state.urlParams.dataid",
+                  "type": "expression",
+                  "required": true
+                }
+              ],
+              "params": {
+                "id": {
+                  "type": "JSExpression",
+                  "value": "this.state.urlParams.dataid"
+                }
+              },
+              "requiredParams": [
+                "id"
+              ]
+            }
+          }
+        ]
+      },
+      "hidden": false,
+      "title": "",
+      "isLocked": false,
+      "condition": true,
+      "conditionGroup": "",
+      "children": [
+        {
+          "componentName": "YtPage",
+          "id": "node_44ls2kqo",
+          "props": {
+            "ref": "ytpage_44ls2kqo",
+            "_context": {
+              "type": "JSExpression",
+              "value": "this"
+            },
+            "_uniqueId": "ytpage_44ls2kqo",
+            "useRGL": true
+          },
+          "hidden": false,
+          "title": "",
+          "isLocked": false,
+          "condition": true,
+          "conditionGroup": "",
+          "children": [
+            {
+              "componentName": "YtRglContainer",
+              "id": "node_jhhraerl",
+              "props": {
+                "RGLlayout": [
+                  {
+                    "i": "node_7b4s9ysj",
+                    "w": 12,
+                    "h": 12,
+                    "x": 0,
+                    "y": 0,
+                    "autoHeight": true
+                  }
+                ]
+              },
+              "hidden": false,
+              "title": "",
+              "isLocked": false,
+              "condition": true,
+              "conditionGroup": "",
+              "children": [
+                {
+                  "componentName": "LrSmartUpdate",
+                  "id": "node_7b4s9ysj",
+                  "props": {
+                    "_doVersion": "V2",
+                    "_context": {
+                      "type": "JSExpression",
+                      "value": "this"
+                    },
+                    "ref": "ytform_quqs8sb3",
+                    "_uniqueId": "ytform_quqs8sb3",
+                    "layout": "vertical",
+                    "items": [
+                      {
+                        "lcAsItemId": null,
+                        "name": "basic_info",
+                        "label": "基本信息",
+                        "componentName": "group",
+                        "required": false,
+                        "modeConfig": null,
+                        "placeholder": "请输入基本信息",
+                        "tooltip": null,
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": null,
+                        "hidden": false,
+                        "isShown": null,
+                        "systemRetain": false,
+                        "disabled": false,
+                        "rules": null,
+                        "extendProps": {},
+                        "indexType": null,
+                        "__lc_as_item_id__": "3cad2icpew"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "id",
+                        "label": "主键",
+                        "componentName": "YtInputNumber",
+                        "doType": "NUMBER",
+                        "required": false,
+                        "modeConfig": null,
+                        "placeholder": "请输入主键",
+                        "tooltip": "Primary key",
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": null,
+                        "hidden": false,
+                        "isShown": true,
+                        "systemRetain": false,
+                        "disabled": true,
+                        "options": null,
+                        "rules": [
+                          {
+                            "type": "required",
+                            "message": "请输入主键"
+                          }
+                        ],
+                        "extendProps": {
+                          "precision": 0
+                        },
+                        "indexType": "primary",
+                        "__lc_as_item_id__": "23rrgskbd8"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "rule_code",
+                        "label": "规则编码",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "required": true,
+                        "modeConfig": null,
+                        "placeholder": "请输入规则编码",
+                        "tooltip": "Stable rule code",
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": null,
+                        "hidden": false,
+                        "isShown": true,
+                        "systemRetain": false,
+                        "disabled": true,
+                        "options": null,
+                        "rules": [
+                          {
+                            "type": "required",
+                            "message": "请输入规则编码"
+                          }
+                        ],
+                        "extendProps": {},
+                        "indexType": "unique",
+                        "__lc_as_item_id__": "68fhmlcr6u"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "rule_name",
+                        "label": "规则名称",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "required": true,
+                        "modeConfig": null,
+                        "placeholder": "请输入规则名称",
+                        "tooltip": "Rule name",
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": null,
+                        "hidden": false,
+                        "isShown": true,
+                        "systemRetain": false,
+                        "disabled": false,
+                        "options": null,
+                        "rules": [
+                          {
+                            "type": "required",
+                            "message": "请输入规则名称"
+                          }
+                        ],
+                        "extendProps": {},
+                        "indexType": null,
+                        "__lc_as_item_id__": "etwjiwt53f"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "status",
+                        "label": "状态",
+                        "componentName": "YtRadioGroup",
+                        "doType": "SELECT",
+                        "required": true,
+                        "modeConfig": null,
+                        "placeholder": "请选择状态",
+                        "tooltip": "active / inactive",
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": null,
+                        "hidden": false,
+                        "isShown": true,
+                        "systemRetain": false,
+                        "disabled": false,
+                        "options": [
+                          {
+                            "label": "启用",
+                            "value": "active"
+                          },
+                          {
+                            "label": "停用",
+                            "value": "inactive"
+                          }
+                        ],
+                        "rules": [
+                          {
+                            "type": "required",
+                            "message": "请输入状态"
+                          }
+                        ],
+                        "extendProps": {},
+                        "indexType": "index",
+                        "__lc_as_item_id__": "cqao3t1wy5"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "priority",
+                        "label": "优先级",
+                        "componentName": "YtInputNumber",
+                        "doType": "NUMBER",
+                        "required": true,
+                        "modeConfig": null,
+                        "placeholder": "请输入优先级",
+                        "tooltip": "Smaller number matches earlier",
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": null,
+                        "hidden": false,
+                        "isShown": true,
+                        "systemRetain": false,
+                        "disabled": false,
+                        "options": null,
+                        "rules": [
+                          {
+                            "type": "required",
+                            "message": "请输入优先级"
+                          }
+                        ],
+                        "extendProps": {
+                          "precision": 0
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "g6j9fq2qrh"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "rule_config",
+                        "label": "规则配置",
+                        "componentName": "group",
+                        "required": false,
+                        "modeConfig": null,
+                        "placeholder": "请输入规则配置",
+                        "tooltip": null,
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": null,
+                        "hidden": false,
+                        "isShown": null,
+                        "systemRetain": false,
+                        "disabled": false,
+                        "rules": null,
+                        "extendProps": {},
+                        "indexType": null,
+                        "__lc_as_item_id__": "36xmvshkn2"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "expense_type",
+                        "label": "费用类型",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "required": true,
+                        "modeConfig": null,
+                        "placeholder": "请选择费用类型",
+                        "tooltip": "travel / office / cloud / other / all",
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": null,
+                        "hidden": false,
+                        "isShown": true,
+                        "systemRetain": false,
+                        "disabled": false,
+                        "options": [
+                          {
+                            "label": "差旅",
+                            "value": "travel"
+                          },
+                          {
+                            "label": "办公",
+                            "value": "office"
+                          },
+                          {
+                            "label": "云服务",
+                            "value": "cloud"
+                          },
+                          {
+                            "label": "其他",
+                            "value": "other"
+                          },
+                          {
+                            "label": "全部",
+                            "value": "all"
+                          }
+                        ],
+                        "rules": [
+                          {
+                            "type": "required",
+                            "message": "请输入费用类型"
+                          }
+                        ],
+                        "extendProps": {},
+                        "indexType": "index",
+                        "__lc_as_item_id__": "2fa1377jp0"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "category",
+                        "label": "费用类别",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "required": true,
+                        "modeConfig": null,
+                        "placeholder": "请选择费用类别",
+                        "tooltip": "flight / hotel / taxi / train / meal / other / all",
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": null,
+                        "hidden": false,
+                        "isShown": true,
+                        "systemRetain": false,
+                        "disabled": false,
+                        "options": [
+                          {
+                            "label": "机票",
+                            "value": "flight"
+                          },
+                          {
+                            "label": "酒店",
+                            "value": "hotel"
+                          },
+                          {
+                            "label": "出租车",
+                            "value": "taxi"
+                          },
+                          {
+                            "label": "火车",
+                            "value": "train"
+                          },
+                          {
+                            "label": "餐饮",
+                            "value": "meal"
+                          },
+                          {
+                            "label": "其他",
+                            "value": "other"
+                          },
+                          {
+                            "label": "全部",
+                            "value": "all"
+                          }
+                        ],
+                        "rules": [
+                          {
+                            "type": "required",
+                            "message": "请输入费用类别"
+                          }
+                        ],
+                        "extendProps": {},
+                        "indexType": "index",
+                        "__lc_as_item_id__": "oohs67bpe1"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "calculation_type",
+                        "label": "计算类型",
+                        "componentName": "YtRadioGroup",
+                        "doType": "SELECT",
+                        "required": true,
+                        "modeConfig": null,
+                        "placeholder": "请选择计算类型",
+                        "tooltip": "full / ratio / fixed_limit / manual_review",
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": null,
+                        "hidden": false,
+                        "isShown": true,
+                        "systemRetain": false,
+                        "disabled": false,
+                        "options": [
+                          {
+                            "label": "全额",
+                            "value": "full"
+                          },
+                          {
+                            "label": "比例",
+                            "value": "ratio"
+                          },
+                          {
+                            "label": "固定限额",
+                            "value": "fixed_limit"
+                          },
+                          {
+                            "label": "人工审核",
+                            "value": "manual_review"
+                          }
+                        ],
+                        "rules": [
+                          {
+                            "type": "required",
+                            "message": "请输入计算类型"
+                          }
+                        ],
+                        "extendProps": {},
+                        "indexType": null,
+                        "__lc_as_item_id__": "6b9iht925d"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "reimburse_ratio",
+                        "label": "报销比例",
+                        "componentName": "YtInputNumber",
+                        "doType": "NUMBER",
+                        "required": false,
+                        "modeConfig": null,
+                        "placeholder": "请输入报销比例",
+                        "tooltip": "Reimbursement ratio when calculation_type=ratio/full",
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": null,
+                        "hidden": false,
+                        "isShown": true,
+                        "systemRetain": false,
+                        "disabled": false,
+                        "options": null,
+                        "rules": null,
+                        "extendProps": {},
+                        "indexType": null,
+                        "__lc_as_item_id__": "oolvwe6fa9"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "limit_amount",
+                        "label": "限额金额",
+                        "componentName": "YtInputNumber",
+                        "doType": "NUMBER",
+                        "required": false,
+                        "modeConfig": null,
+                        "placeholder": "请输入限额金额",
+                        "tooltip": "Amount cap when calculation_type=fixed_limit",
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": null,
+                        "hidden": false,
+                        "isShown": true,
+                        "systemRetain": false,
+                        "disabled": false,
+                        "options": null,
+                        "rules": null,
+                        "extendProps": {},
+                        "indexType": null,
+                        "__lc_as_item_id__": "0sm1olk153"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "effective_from",
+                        "label": "生效开始",
+                        "componentName": "YtDatePicker",
+                        "doType": "DATETIME",
+                        "required": false,
+                        "modeConfig": null,
+                        "placeholder": "请选择生效开始",
+                        "tooltip": "Effective start date",
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": null,
+                        "hidden": false,
+                        "isShown": true,
+                        "systemRetain": false,
+                        "disabled": false,
+                        "options": null,
+                        "rules": null,
+                        "extendProps": {
+                          "format": "YYYY-MM-DD",
+                          "picker": "date"
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "bbpxu9s5t8"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "effective_to",
+                        "label": "生效结束",
+                        "componentName": "YtDatePicker",
+                        "doType": "DATETIME",
+                        "required": false,
+                        "modeConfig": null,
+                        "placeholder": "请选择生效结束",
+                        "tooltip": "Effective end date",
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": null,
+                        "hidden": false,
+                        "isShown": true,
+                        "systemRetain": false,
+                        "disabled": false,
+                        "options": null,
+                        "rules": null,
+                        "extendProps": {
+                          "format": "YYYY-MM-DD",
+                          "picker": "date"
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "mjwafevwrg"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "description_info",
+                        "label": "补充说明",
+                        "componentName": "group",
+                        "required": false,
+                        "modeConfig": null,
+                        "placeholder": "请输入补充说明",
+                        "tooltip": null,
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": null,
+                        "hidden": false,
+                        "isShown": null,
+                        "systemRetain": false,
+                        "disabled": false,
+                        "rules": null,
+                        "extendProps": {},
+                        "indexType": null,
+                        "__lc_as_item_id__": "03eybxb1xk"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "condition_text",
+                        "label": "条件描述",
+                        "componentName": "YtTextArea",
+                        "doType": "TEXT",
+                        "required": false,
+                        "modeConfig": null,
+                        "placeholder": "请输入条件描述",
+                        "tooltip": "Natural-language condition for Agent and reviewers",
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": "full",
+                        "hidden": false,
+                        "isShown": true,
+                        "systemRetain": false,
+                        "disabled": false,
+                        "options": null,
+                        "rules": null,
+                        "extendProps": {},
+                        "indexType": null,
+                        "__lc_as_item_id__": "3g7v5fuaca"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "requirement_text",
+                        "label": "要求说明",
+                        "componentName": "YtTextArea",
+                        "doType": "TEXT",
+                        "required": false,
+                        "modeConfig": null,
+                        "placeholder": "请输入要求说明",
+                        "tooltip": "Required materials and compliance notes",
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": "full",
+                        "hidden": false,
+                        "isShown": true,
+                        "systemRetain": false,
+                        "disabled": false,
+                        "options": null,
+                        "rules": null,
+                        "extendProps": {},
+                        "indexType": null,
+                        "__lc_as_item_id__": "w7xa3v7obv"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "remark",
+                        "label": "备注",
+                        "componentName": "YtTextArea",
+                        "doType": "TEXT",
+                        "required": false,
+                        "modeConfig": null,
+                        "placeholder": "请输入备注",
+                        "tooltip": "Remark",
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": "full",
+                        "hidden": false,
+                        "isShown": true,
+                        "systemRetain": false,
+                        "disabled": false,
+                        "options": null,
+                        "rules": null,
+                        "extendProps": {},
+                        "indexType": null,
+                        "__lc_as_item_id__": "ow9goynmz1"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "created_at",
+                        "label": "创建时间",
+                        "componentName": "YtDatePicker",
+                        "doType": "DATETIME",
+                        "required": false,
+                        "modeConfig": null,
+                        "placeholder": "请选择创建时间",
+                        "tooltip": null,
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": null,
+                        "hidden": false,
+                        "isShown": false,
+                        "systemRetain": false,
+                        "disabled": false,
+                        "options": null,
+                        "rules": [
+                          {
+                            "type": "required",
+                            "message": "请输入创建时间"
+                          }
+                        ],
+                        "extendProps": {
+                          "showTime": {
+                            "format": "HH:mm"
+                          },
+                          "format": "YYYY-MM-DD HH:mm",
+                          "picker": "date"
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "ux39ols0pz"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "updated_at",
+                        "label": "更新时间",
+                        "componentName": "YtDatePicker",
+                        "doType": "DATETIME",
+                        "required": false,
+                        "modeConfig": null,
+                        "placeholder": "请选择更新时间",
+                        "tooltip": null,
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": null,
+                        "hidden": false,
+                        "isShown": false,
+                        "systemRetain": false,
+                        "disabled": false,
+                        "options": null,
+                        "rules": [
+                          {
+                            "type": "required",
+                            "message": "请输入更新时间"
+                          }
+                        ],
+                        "extendProps": {
+                          "showTime": {
+                            "format": "HH:mm"
+                          },
+                          "format": "YYYY-MM-DD HH:mm",
+                          "picker": "date"
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "5y9tj3ocb1"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "is_deleted",
+                        "label": "删除标记",
+                        "componentName": "YtRadioGroup",
+                        "doType": "SELECT",
+                        "required": false,
+                        "modeConfig": null,
+                        "placeholder": "请选择删除标记",
+                        "tooltip": "Logical deletion flag: 0 active, 1 deleted",
+                        "tip": null,
+                        "span": "12",
+                        "formSpan": null,
+                        "hidden": false,
+                        "isShown": false,
+                        "systemRetain": false,
+                        "disabled": false,
+                        "options": [
+                          {
+                            "label": "正常",
+                            "value": 0
+                          },
+                          {
+                            "label": "已删除",
+                            "value": 1
+                          }
+                        ],
+                        "rules": [
+                          {
+                            "type": "required",
+                            "message": "请输入删除标记"
+                          }
+                        ],
+                        "extendProps": {},
+                        "indexType": null,
+                        "__lc_as_item_id__": "66fk7pcomc"
+                      }
+                    ],
+                    "_bindDataSource": "1015672_getOne",
+                    "_submitDataSource": "1015672_update",
+                    "defaultValue": {
+                      "type": "JSExpression",
+                      "value": "this.state['1015672_getOne']"
+                    },
+                    "footer": [
+                      {
+                        "title": "提交",
+                        "type": "primary",
+                        "size": "medium",
+                        "optType": "flowAction",
+                        "__lc_as_item_id__": "gbdqlki078",
+                        "options": {
+                          "flowList": [
+                            {
+                              "active": true,
+                              "optType": "submit",
+                              "__lc_as_item_id__": "byxknnakb9",
+                              "options": {
+                                "_bindForm": "ytform_quqs8sb3",
+                                "_bindDataSource": "1015672_update",
+                                "_autoBindDataSourceParams": true,
+                                "confirmConfig": {
+                                  "enable": false
+                                },
+                                "responseConfig": {
+                                  "enableSuccessToast": true,
+                                  "enableErrorToast": true,
+                                  "successToastMsg": "更新成功！",
+                                  "errorToastMsg": ""
+                                },
+                                "redirectType": "current"
+                              }
+                            },
+                            {
+                              "active": true,
+                              "optType": "jsAction",
+                              "__lc_as_item_id__": "wtu63u07vw",
+                              "options": {
+                                "jsFunction": {
+                                  "type": "JSFunction",
+                                  "value": "(config) => {\n  window.__rendererInstanceRegistry?.instances.values().forEach((item) => item.instance.dataSourceMap['1015672_filter']?.load());\n}"
+                                }
+                              }
+                            },
+                            {
+                              "active": true,
+                              "optType": "jsAction",
+                              "__lc_as_item_id__": "tnqeim2271",
+                              "options": {
+                                "jsFunction": {
+                                  "type": "JSFunction",
+                                  "value": "(config) => {\nconst { _context } = config;\nconst dataid = _context?.state?.urlParams?.dataid;\n_context?.appHelper?.yt?.smartPageHistory?.push({ pageTagName: 'RESULT', datasetId: '1015672', dataid: dataid });\n}"
+                                }
+                              }
+                            }
+                          ],
+                          "redirectType": "current"
+                        }
+                      },
+                      {
+                        "title": "重置",
+                        "type": "default",
+                        "size": "medium",
+                        "optType": "reset",
+                        "__lc_as_item_id__": "sv4o3zlr4o",
+                        "options": {
+                          "_bindForm": "ytform_quqs8sb3",
+                          "_autoBindDataSourceParams": false,
+                          "redirectType": "current"
+                        }
+                      }
+                    ]
+                  },
+                  "meta": {
+                    "datasetId": 1015672,
+                    "datasetCode": "d60179efd37846e380aafdd166a02871"
+                  },
+                  "hidden": false,
+                  "title": "",
+                  "isLocked": false,
+                  "condition": true,
+                  "conditionGroup": ""
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "i18n": {}
+}

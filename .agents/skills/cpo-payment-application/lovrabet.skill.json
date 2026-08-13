@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "appCode": "app-4d050189",
+  "skillCode": "cpo-payment-application",
+  "skillName": "付款申请助手",
+  "scope": "personal",
+  "readonly": false,
+  "version": "20260811.192554",
+  "tags": [],
+  "contentHash": "6e044f02766fbe3d9c86a531257481e19822bc9334309f3664b5a4b2bc40ad03",
+  "pulledAt": "2026-08-11T11:25:54.942Z"
+}

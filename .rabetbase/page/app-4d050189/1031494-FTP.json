@@ -1,0 +1,2620 @@
+{
+  "version": "1.0.0",
+  "componentsMap": [
+    {
+      "package": "@yuntoo/antd-meta",
+      "version": "1.0.0",
+      "main": "",
+      "destructuring": true,
+      "exportName": "YtPage",
+      "componentName": "YtPage"
+    },
+    {
+      "devMode": "lowCode",
+      "componentName": "Page"
+    },
+    {
+      "package": "@yuntoo/antd-smart",
+      "version": "1.0.0",
+      "main": "",
+      "destructuring": true,
+      "exportName": "LrSmartFilter",
+      "componentName": "LrSmartFilter"
+    },
+    {
+      "package": "@yuntoo/antd-smart",
+      "version": "1.0.0",
+      "main": "",
+      "destructuring": true,
+      "exportName": "LrSmartTable",
+      "componentName": "LrSmartTable"
+    },
+    {
+      "package": "@yuntoo/antd-meta",
+      "version": "1.0.0",
+      "main": "",
+      "destructuring": true,
+      "exportName": "YtRglContainer",
+      "componentName": "YtRglContainer"
+    }
+  ],
+  "componentsTree": [
+    {
+      "componentName": "Page",
+      "id": "node_zqiyj2pf",
+      "props": {
+        "ref": "outerView",
+        "style": {
+          "height": "100%"
+        }
+      },
+      "dataSource": {
+        "list": [
+          {
+            "type": "urlParams",
+            "id": "urlParams",
+            "isInit": true,
+            "source": "system",
+            "options": {}
+          },
+          {
+            "type": "fetch",
+            "id": "1015680_filter",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/fc11e2d760b94b2ca2ccf0485ed40ca8/filter",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "pageSize",
+                  "value": "this.state.yttable_7u4voqnq_pageSize",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "currentPage",
+                  "value": "this.state.yttable_7u4voqnq_currentPage",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "filter",
+                  "value": "this.state.ytfilter_f5zt3r8q_filter",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "sort",
+                  "value": "this.state.yttable_7u4voqnq_sort",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "select",
+                  "value": [
+                    "id",
+                    "invoice_no",
+                    "invoice_title",
+                    "business_partner.name",
+                    "status",
+                    "request_type",
+                    "invoice_direction",
+                    "invoice_purpose",
+                    "invoice_date",
+                    "total_amount",
+                    "amount",
+                    "tax_amount",
+                    "currency",
+                    "invoice_type",
+                    "seller_name",
+                    "buyer_name",
+                    "partner_name_snapshot",
+                    "tax_rate",
+                    "invoice_region",
+                    "invoice_medium",
+                    "is_mainland_compliant",
+                    "buyer_tax_no",
+                    "buyer_address_phone",
+                    "buyer_bank_account",
+                    "invoice_content",
+                    "category",
+                    "file_path",
+                    "receiver_name",
+                    "receiver_phone",
+                    "receiver_email",
+                    "submitted_at",
+                    "applicant_user_id",
+                    "applicant_name_snapshot",
+                    "partner_source",
+                    "is_deleted",
+                    "contract_application.contract_name"
+                  ],
+                  "type": "array",
+                  "required": true
+                }
+              ],
+              "headersArr": [],
+              "params": {
+                "pageSize": {
+                  "type": "JSExpression",
+                  "value": "this.state.yttable_7u4voqnq_pageSize"
+                },
+                "currentPage": {
+                  "type": "JSExpression",
+                  "value": "this.state.yttable_7u4voqnq_currentPage"
+                },
+                "filter": {
+                  "type": "JSExpression",
+                  "value": "this.state.ytfilter_f5zt3r8q_filter"
+                },
+                "sort": {
+                  "type": "JSExpression",
+                  "value": "this.state.yttable_7u4voqnq_sort"
+                },
+                "select": [
+                  "id",
+                  "invoice_no",
+                  "invoice_title",
+                  "business_partner.name",
+                  "status",
+                  "request_type",
+                  "invoice_direction",
+                  "invoice_purpose",
+                  "invoice_date",
+                  "total_amount",
+                  "amount",
+                  "tax_amount",
+                  "currency",
+                  "invoice_type",
+                  "seller_name",
+                  "buyer_name",
+                  "partner_name_snapshot",
+                  "tax_rate",
+                  "invoice_region",
+                  "invoice_medium",
+                  "is_mainland_compliant",
+                  "buyer_tax_no",
+                  "buyer_address_phone",
+                  "buyer_bank_account",
+                  "invoice_content",
+                  "category",
+                  "file_path",
+                  "receiver_name",
+                  "receiver_phone",
+                  "receiver_email",
+                  "submitted_at",
+                  "applicant_user_id",
+                  "applicant_name_snapshot",
+                  "partner_source",
+                  "is_deleted",
+                  "contract_application.contract_name"
+                ]
+              },
+              "requiredParams": [
+                "pageSize",
+                "currentPage"
+              ],
+              "headers": {},
+              "willFetch": {
+                "type": "JSFunction",
+                "value": "({ filter, sort, ...rest }) => ({ ...rest, ...filter, ...sort })"
+              }
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "1015680_delete",
+            "isInit": false,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/fc11e2d760b94b2ca2ccf0485ed40ca8/delete",
+              "isCors": true,
+              "timeout": 5000,
+              "requiredParams": [
+                "id"
+              ]
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "1015680_excelExport",
+            "isInit": false,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/fc11e2d760b94b2ca2ccf0485ed40ca8/excelExport",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "filter",
+                  "value": "this.state.ytfilter_f5zt3r8q_filter",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "selectKeys",
+                  "value": "this.state.yttable_7u4voqnq_selectKeys",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "select",
+                  "value": [
+                    "id",
+                    "invoice_no",
+                    "invoice_title",
+                    "business_partner.name",
+                    "status",
+                    "request_type",
+                    "invoice_direction",
+                    "invoice_purpose",
+                    "invoice_date",
+                    "total_amount",
+                    "amount",
+                    "tax_amount",
+                    "currency",
+                    "invoice_type",
+                    "seller_name",
+                    "buyer_name",
+                    "partner_name_snapshot",
+                    "tax_rate",
+                    "invoice_region",
+                    "invoice_medium",
+                    "is_mainland_compliant",
+                    "buyer_tax_no",
+                    "buyer_address_phone",
+                    "buyer_bank_account",
+                    "invoice_content",
+                    "category",
+                    "file_path",
+                    "receiver_name",
+                    "receiver_phone",
+                    "receiver_email",
+                    "submitted_at",
+                    "applicant_user_id",
+                    "applicant_name_snapshot",
+                    "partner_source",
+                    "is_deleted",
+                    "contract_application.contract_name"
+                  ],
+                  "type": "array",
+                  "required": false
+                }
+              ],
+              "headersArr": [],
+              "params": {
+                "filter": {
+                  "type": "JSExpression",
+                  "value": "this.state.ytfilter_f5zt3r8q_filter"
+                },
+                "selectKeys": {
+                  "type": "JSExpression",
+                  "value": "this.state.yttable_7u4voqnq_selectKeys"
+                },
+                "select": [
+                  "id",
+                  "invoice_no",
+                  "invoice_title",
+                  "business_partner.name",
+                  "status",
+                  "request_type",
+                  "invoice_direction",
+                  "invoice_purpose",
+                  "invoice_date",
+                  "total_amount",
+                  "amount",
+                  "tax_amount",
+                  "currency",
+                  "invoice_type",
+                  "seller_name",
+                  "buyer_name",
+                  "partner_name_snapshot",
+                  "tax_rate",
+                  "invoice_region",
+                  "invoice_medium",
+                  "is_mainland_compliant",
+                  "buyer_tax_no",
+                  "buyer_address_phone",
+                  "buyer_bank_account",
+                  "invoice_content",
+                  "category",
+                  "file_path",
+                  "receiver_name",
+                  "receiver_phone",
+                  "receiver_email",
+                  "submitted_at",
+                  "applicant_user_id",
+                  "applicant_name_snapshot",
+                  "partner_source",
+                  "is_deleted",
+                  "contract_application.contract_name"
+                ]
+              },
+              "requiredParams": [],
+              "headers": {},
+              "willFetch": {
+                "type": "JSFunction",
+                "value": "({ filter, selectKeys, select, ...rest }) => ({ ...rest, ...filter, select, ...selectKeys })"
+              }
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_53869993f80f45ae8ef6cdf051d8e355_contract_id_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/53869993f80f45ae8ef6cdf051d8e355/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "id",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "contract_name",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "id",
+                "label": "contract_name"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_68c70907e27c481cbefb96dd3906936e_partner_id_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/68c70907e27c481cbefb96dd3906936e/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "id",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "name",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "id",
+                "label": "name"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_d8e2be71fbf14f93a589ebe96b64e004_applicant_user_id_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/d8e2be71fbf14f93a589ebe96b64e004/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "id",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "full_name",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "id",
+                "label": "full_name"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_d8e2be71fbf14f93a589ebe96b64e004_liaison_user_id_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/d8e2be71fbf14f93a589ebe96b64e004/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "id",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "full_name",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "id",
+                "label": "full_name"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_ecebe4f9726b46ccb19aaca00aa93dd0_supplier_category_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/ecebe4f9726b46ccb19aaca00aa93dd0/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "code",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "label",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "code",
+                "label": "label"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_ecebe4f9726b46ccb19aaca00aa93dd0_payment_purpose_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/ecebe4f9726b46ccb19aaca00aa93dd0/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "code",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "label",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "code",
+                "label": "label"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          }
+        ]
+      },
+      "hidden": false,
+      "title": "",
+      "isLocked": false,
+      "condition": true,
+      "conditionGroup": "",
+      "children": [
+        {
+          "componentName": "YtPage",
+          "id": "node_4myd3gtb",
+          "props": {
+            "ref": "ytpage_4myd3gtb",
+            "_context": {
+              "type": "JSExpression",
+              "value": "this"
+            },
+            "_uniqueId": "ytpage_4myd3gtb",
+            "useRGL": true
+          },
+          "hidden": false,
+          "title": "",
+          "isLocked": false,
+          "condition": true,
+          "conditionGroup": "",
+          "children": [
+            {
+              "componentName": "YtRglContainer",
+              "id": "node_ztwzcyec",
+              "props": {
+                "RGLlayout": [
+                  {
+                    "i": "node_l468mhqi",
+                    "w": 12,
+                    "h": 3,
+                    "x": 0,
+                    "y": 0,
+                    "autoHeight": true
+                  },
+                  {
+                    "i": "node_pldxh15u",
+                    "w": 12,
+                    "h": 27,
+                    "x": 0,
+                    "y": 3,
+                    "autoHeight": true
+                  }
+                ]
+              },
+              "hidden": false,
+              "title": "",
+              "isLocked": false,
+              "condition": true,
+              "conditionGroup": "",
+              "children": [
+                {
+                  "componentName": "LrSmartFilter",
+                  "id": "node_l468mhqi",
+                  "props": {
+                    "_doVersion": "V2",
+                    "_context": {
+                      "type": "JSExpression",
+                      "value": "this"
+                    },
+                    "ref": "ytfilter_f5zt3r8q",
+                    "_uniqueId": "ytfilter_f5zt3r8q",
+                    "datasetId": 1015680,
+                    "oneSearchFilterKey": "ytfilter_f5zt3r8q_filter",
+                    "items": [
+                      {
+                        "lcAsItemId": null,
+                        "name": "invoice_no",
+                        "label": "发票号码",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": true,
+                        "placeholder": "请输入发票号码",
+                        "options": null,
+                        "indexType": "unique",
+                        "__lc_as_item_id__": "tez3lhgjic"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "invoice_title",
+                        "label": "发票标题",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": true,
+                        "placeholder": "请输入发票标题",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "0caj6nv2mq"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "seller_name",
+                        "label": "销售方名称",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": true,
+                        "placeholder": "请输入销售方名称",
+                        "options": null,
+                        "indexType": "index",
+                        "__lc_as_item_id__": "voboyusm22"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "buyer_name",
+                        "label": "购买方名称",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": true,
+                        "placeholder": "请输入购买方名称",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "0quk1za3dn"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "contract_id",
+                        "label": "关联合同",
+                        "componentName": "YtSingleSelect",
+                        "doType": "NUMBER",
+                        "isShown": true,
+                        "placeholder": "请选择关联合同",
+                        "options": {
+                          "type": "JSExpression",
+                          "value": "this.state.contract_id_options"
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "ick4dv5556"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "partner_id",
+                        "label": "交易对手",
+                        "componentName": "YtSingleSelect",
+                        "doType": "NUMBER",
+                        "isShown": true,
+                        "placeholder": "请选择交易对手",
+                        "options": {
+                          "type": "JSExpression",
+                          "value": "this.state.partner_id_options"
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "h3470abnrb"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "status",
+                        "label": "状态",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "isShown": true,
+                        "placeholder": "请选择状态",
+                        "options": [
+                          {
+                            "label": "草稿",
+                            "value": "draft"
+                          },
+                          {
+                            "label": "已提交",
+                            "value": "submitted"
+                          },
+                          {
+                            "label": "已审核",
+                            "value": "reviewed"
+                          },
+                          {
+                            "label": "已驳回",
+                            "value": "rejected"
+                          },
+                          {
+                            "label": "已使用",
+                            "value": "used"
+                          },
+                          {
+                            "label": "已作废",
+                            "value": "invalid"
+                          },
+                          {
+                            "label": "已取消",
+                            "value": "cancelled"
+                          }
+                        ],
+                        "indexType": "index",
+                        "__lc_as_item_id__": "usvtpb26cl"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "request_type",
+                        "label": "请求类型",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "isShown": true,
+                        "placeholder": "请选择请求类型",
+                        "options": [
+                          {
+                            "label": "客户发票",
+                            "value": "customer_invoice"
+                          },
+                          {
+                            "label": "服务商发票",
+                            "value": "service_provider_invoice"
+                          },
+                          {
+                            "label": "其他",
+                            "value": "other"
+                          }
+                        ],
+                        "indexType": "index",
+                        "__lc_as_item_id__": "994tz1knui"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "invoice_direction",
+                        "label": "发票方向",
+                        "componentName": "YtRadioGroup",
+                        "doType": "SELECT",
+                        "isShown": true,
+                        "placeholder": "请选择发票方向",
+                        "options": [
+                          {
+                            "label": "进项",
+                            "value": "incoming"
+                          },
+                          {
+                            "label": "销项",
+                            "value": "outgoing"
+                          }
+                        ],
+                        "indexType": "index",
+                        "__lc_as_item_id__": "b6x3of200c"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "invoice_purpose",
+                        "label": "发票用途",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "isShown": true,
+                        "placeholder": "请选择发票用途",
+                        "options": [
+                          {
+                            "label": "报销",
+                            "value": "reimbursement"
+                          },
+                          {
+                            "label": "采购",
+                            "value": "procurement"
+                          },
+                          {
+                            "label": "合同付款",
+                            "value": "contract_payment"
+                          },
+                          {
+                            "label": "客户开票",
+                            "value": "customer_billing"
+                          },
+                          {
+                            "label": "其他",
+                            "value": "other"
+                          }
+                        ],
+                        "indexType": "index",
+                        "__lc_as_item_id__": "xse34o9kdt"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "invoice_type",
+                        "label": "发票类型",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "isShown": true,
+                        "placeholder": "请选择发票类型",
+                        "options": [
+                          {
+                            "label": "增值税专用发票",
+                            "value": "vat_special"
+                          },
+                          {
+                            "label": "增值税普通发票",
+                            "value": "vat_normal"
+                          },
+                          {
+                            "label": "电子客票",
+                            "value": "e_ticket"
+                          },
+                          {
+                            "label": "收据",
+                            "value": "receipt"
+                          },
+                          {
+                            "label": "其他",
+                            "value": "other"
+                          }
+                        ],
+                        "indexType": null,
+                        "__lc_as_item_id__": "a6e39tc5sv"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "invoice_date",
+                        "label": "发票日期",
+                        "componentName": "YtRangeDatePicker",
+                        "doType": "DATETIME",
+                        "isShown": true,
+                        "placeholder": "请选择发票日期",
+                        "options": null,
+                        "indexType": "index",
+                        "__lc_as_item_id__": "tdx2tm2gs5"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "partner_source",
+                        "label": "对手来源",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "isShown": false,
+                        "placeholder": "请选择对手来源",
+                        "options": [
+                          {
+                            "label": "CRM客户",
+                            "value": "crm_customer"
+                          },
+                          {
+                            "label": "业务伙伴",
+                            "value": "business_partner"
+                          },
+                          {
+                            "label": "手动录入",
+                            "value": "manual"
+                          }
+                        ],
+                        "indexType": "index",
+                        "__lc_as_item_id__": "4x7ic3zmig"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "buyer_tax_no",
+                        "label": "购买方税号",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入购买方税号",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "f40ewdobxa"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "buyer_address_phone",
+                        "label": "购买方地址电话",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入购买方地址电话",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "oogkoz7xa0"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "buyer_bank_account",
+                        "label": "购买方银行账号",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入购买方银行账号",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "vfvdadmzot"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "amount",
+                        "label": "不含税金额",
+                        "componentName": "YtRangeInputNumber",
+                        "doType": "NUMBER",
+                        "isShown": false,
+                        "placeholder": "请输入不含税金额",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "5ntw9rndiz"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "tax_amount",
+                        "label": "税额",
+                        "componentName": "YtRangeInputNumber",
+                        "doType": "NUMBER",
+                        "isShown": false,
+                        "placeholder": "请输入税额",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "aie2qsp7ol"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "total_amount",
+                        "label": "总金额",
+                        "componentName": "YtRangeInputNumber",
+                        "doType": "NUMBER",
+                        "isShown": false,
+                        "placeholder": "请输入总金额",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "jtpxhy030p"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "currency",
+                        "label": "币种",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入币种",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "3bdwritgow"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "tax_rate",
+                        "label": "税率",
+                        "componentName": "YtRangeInputNumber",
+                        "doType": "NUMBER",
+                        "isShown": false,
+                        "placeholder": "请输入税率",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "r2tbcgsecz"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "invoice_region",
+                        "label": "发票区域",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "isShown": false,
+                        "placeholder": "请选择发票区域",
+                        "options": [
+                          {
+                            "label": "中国大陆",
+                            "value": "mainland_china"
+                          },
+                          {
+                            "label": "海外",
+                            "value": "overseas"
+                          },
+                          {
+                            "label": "未知",
+                            "value": "unknown"
+                          }
+                        ],
+                        "indexType": null,
+                        "__lc_as_item_id__": "w99id6l3vg"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "invoice_content",
+                        "label": "发票内容",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入发票内容",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "8tjettdjeo"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "invoice_medium",
+                        "label": "发票介质",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "isShown": false,
+                        "placeholder": "请选择发票介质",
+                        "options": [
+                          {
+                            "label": "电子",
+                            "value": "electronic"
+                          },
+                          {
+                            "label": "纸质",
+                            "value": "paper"
+                          },
+                          {
+                            "label": "其他",
+                            "value": "other"
+                          }
+                        ],
+                        "indexType": null,
+                        "__lc_as_item_id__": "wvlc2zcn7x"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "is_mainland_compliant",
+                        "label": "是否大陆合规",
+                        "componentName": "YtRadioGroup",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请选择是否大陆合规",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "ken5nsnuzq"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "category",
+                        "label": "分类",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入分类",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "p33w0utfg8"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "file_path",
+                        "label": "文件路径",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入文件路径",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "768z5yz8yb"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "receiver_name",
+                        "label": "收票人姓名",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入收票人姓名",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "4m8y5biyv1"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "receiver_phone",
+                        "label": "收票人电话",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入收票人电话",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "t8zbjp9mo0"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "receiver_email",
+                        "label": "收票人邮箱",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入收票人邮箱",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "di65mfd7fw"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "submitted_at",
+                        "label": "提交时间",
+                        "componentName": "YtRangeDatePicker",
+                        "doType": "DATETIME",
+                        "isShown": false,
+                        "placeholder": "请选择提交时间",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "fosfk92kto"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "applicant_user_id",
+                        "label": "申请人用户ID",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入申请人用户ID",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "y2oakh6qgs"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "applicant_name_snapshot",
+                        "label": "申请人姓名快照",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入申请人姓名快照",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "jlxmg4u6ph"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "id",
+                        "label": "主键ID",
+                        "componentName": "YtInput",
+                        "doType": "NUMBER",
+                        "isShown": false,
+                        "placeholder": "请输入主键ID",
+                        "options": null,
+                        "indexType": "primary",
+                        "__lc_as_item_id__": "47uvlq1aua"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "partner_name_snapshot",
+                        "label": "对手名称快照",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": true,
+                        "placeholder": "请输入对手名称快照",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "dr1maa7k91"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "remark",
+                        "label": "备注",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入备注",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "vwdsapw006"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "is_deleted",
+                        "label": "删除标志",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "isShown": true,
+                        "placeholder": "请选择删除标志",
+                        "options": [
+                          {
+                            "label": "正常",
+                            "value": 0
+                          },
+                          {
+                            "label": "已删除",
+                            "value": 1
+                          }
+                        ],
+                        "indexType": "unique",
+                        "__lc_as_item_id__": "xjjkv92ovn"
+                      }
+                    ],
+                    "events": [
+                      {
+                        "optType": "flowAction",
+                        "name": "onSearch",
+                        "flowList": [
+                          {
+                            "active": true,
+                            "optType": "request",
+                            "options": {
+                              "_bindDataSource": "1015680_filter",
+                              "_autoBindDataSourceParams": true,
+                              "confirmConfig": {
+                                "enable": false
+                              },
+                              "responseConfig": {
+                                "successToastMsg": "查询成功！",
+                                "errorToastMsg": "查询失败"
+                              },
+                              "redirectType": "current"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "showSearch": true
+                  },
+                  "meta": {
+                    "datasetId": 1015680,
+                    "datasetCode": "fc11e2d760b94b2ca2ccf0485ed40ca8"
+                  },
+                  "hidden": false,
+                  "title": "",
+                  "isLocked": false,
+                  "condition": true,
+                  "conditionGroup": ""
+                },
+                {
+                  "componentName": "LrSmartTable",
+                  "id": "node_pldxh15u",
+                  "props": {
+                    "_doVersion": "V2",
+                    "_context": {
+                      "type": "JSExpression",
+                      "value": "this"
+                    },
+                    "ref": "yttable_7u4voqnq",
+                    "_uniqueId": "yttable_7u4voqnq",
+                    "dataSource": {
+                      "type": "JSExpression",
+                      "value": "this.state['1015680_filter']"
+                    },
+                    "loading": {
+                      "type": "JSExpression",
+                      "value": "this.state['1015680_filter_loading']"
+                    },
+                    "columns": [
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "id",
+                        "title": "主键ID",
+                        "pkField": true,
+                        "doType": "NUMBER",
+                        "format": "text",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": "start",
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": "primary",
+                        "__lc_as_item_id__": "dj7sb2nwrz"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "invoice_no",
+                        "title": "发票号码",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": "start",
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": "unique",
+                        "__lc_as_item_id__": "vhccqr55t0"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "invoice_title",
+                        "title": "发票标题",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "3884ur75ee"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "business_partner.name",
+                        "title": "交易对手名称",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "rfgszyt7yv"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "status",
+                        "title": "状态",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "tag",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "colorMapping": {
+                            "submitted": "default",
+                            "rejected": "default",
+                            "draft": "default",
+                            "invalid": "default",
+                            "reviewed": "default",
+                            "cancelled": "error",
+                            "used": "default"
+                          },
+                          "options": [
+                            {
+                              "label": "草稿",
+                              "value": "draft"
+                            },
+                            {
+                              "label": "已提交",
+                              "value": "submitted"
+                            },
+                            {
+                              "label": "已审核",
+                              "value": "reviewed"
+                            },
+                            {
+                              "label": "已驳回",
+                              "value": "rejected"
+                            },
+                            {
+                              "label": "已使用",
+                              "value": "used"
+                            },
+                            {
+                              "label": "已作废",
+                              "value": "invalid"
+                            },
+                            {
+                              "label": "已取消",
+                              "value": "cancelled"
+                            }
+                          ]
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "chva9xtnr6"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "request_type",
+                        "title": "请求类型",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "enum",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "options": [
+                            {
+                              "color": "default",
+                              "label": "客户发票",
+                              "value": "customer_invoice"
+                            },
+                            {
+                              "color": "default",
+                              "label": "服务商发票",
+                              "value": "service_provider_invoice"
+                            },
+                            {
+                              "color": "default",
+                              "label": "其他",
+                              "value": "other"
+                            }
+                          ],
+                          "type": "select"
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "x7pzurtwm5"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "invoice_direction",
+                        "title": "发票方向",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "enum",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "options": [
+                            {
+                              "color": "default",
+                              "label": "进项",
+                              "value": "incoming"
+                            },
+                            {
+                              "color": "default",
+                              "label": "销项",
+                              "value": "outgoing"
+                            }
+                          ],
+                          "type": "select"
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "9x4pmwy0h5"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "invoice_purpose",
+                        "title": "发票用途",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "enum",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "options": [
+                            {
+                              "color": "default",
+                              "label": "报销",
+                              "value": "reimbursement"
+                            },
+                            {
+                              "color": "default",
+                              "label": "采购",
+                              "value": "procurement"
+                            },
+                            {
+                              "color": "default",
+                              "label": "合同付款",
+                              "value": "contract_payment"
+                            },
+                            {
+                              "color": "default",
+                              "label": "客户开票",
+                              "value": "customer_billing"
+                            },
+                            {
+                              "color": "default",
+                              "label": "其他",
+                              "value": "other"
+                            }
+                          ],
+                          "type": "select"
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "7hi5xspf5a"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "invoice_date",
+                        "title": "发票日期",
+                        "pkField": false,
+                        "doType": "DATETIME",
+                        "format": "datetime",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "format": "YYYY-MM-DD"
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "x6ucopw8ut"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "total_amount",
+                        "title": "总金额",
+                        "pkField": false,
+                        "doType": "NUMBER",
+                        "format": "number",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "precision": 2,
+                          "separator": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "p1cuq0q0qs"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "amount",
+                        "title": "不含税金额",
+                        "pkField": false,
+                        "doType": "NUMBER",
+                        "format": "number",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "precision": 2,
+                          "separator": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "j6sjcxd6jw"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "tax_amount",
+                        "title": "税额",
+                        "pkField": false,
+                        "doType": "NUMBER",
+                        "format": "number",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "precision": 2,
+                          "separator": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "wr0m1vu7vu"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "currency",
+                        "title": "币种",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "kfdoouzfym"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "invoice_type",
+                        "title": "发票类型",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "enum",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "options": [
+                            {
+                              "color": "default",
+                              "label": "增值税专用发票",
+                              "value": "vat_special"
+                            },
+                            {
+                              "color": "default",
+                              "label": "增值税普通发票",
+                              "value": "vat_normal"
+                            },
+                            {
+                              "color": "default",
+                              "label": "电子客票",
+                              "value": "e_ticket"
+                            },
+                            {
+                              "color": "default",
+                              "label": "收据",
+                              "value": "receipt"
+                            },
+                            {
+                              "color": "default",
+                              "label": "其他",
+                              "value": "other"
+                            }
+                          ],
+                          "type": "select"
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "evfe46mu4v"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "seller_name",
+                        "title": "销售方名称",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "5dhphs8aht"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "buyer_name",
+                        "title": "购买方名称",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "39vv77j6i6"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "partner_name_snapshot",
+                        "title": "对手名称快照",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "dss8uj2q4f"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "tax_rate",
+                        "title": "税率",
+                        "pkField": false,
+                        "doType": "NUMBER",
+                        "format": "number",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "precision": 2,
+                          "separator": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "m7wjn5zzkx"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "invoice_region",
+                        "title": "发票区域",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "enum",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "options": [
+                            {
+                              "color": "default",
+                              "label": "中国大陆",
+                              "value": "mainland_china"
+                            },
+                            {
+                              "color": "default",
+                              "label": "海外",
+                              "value": "overseas"
+                            },
+                            {
+                              "color": "default",
+                              "label": "未知",
+                              "value": "unknown"
+                            }
+                          ],
+                          "type": "select"
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "lemxqsbhlr"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "invoice_medium",
+                        "title": "发票介质",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "enum",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "options": [
+                            {
+                              "color": "default",
+                              "label": "电子",
+                              "value": "electronic"
+                            },
+                            {
+                              "color": "default",
+                              "label": "纸质",
+                              "value": "paper"
+                            },
+                            {
+                              "color": "default",
+                              "label": "其他",
+                              "value": "other"
+                            }
+                          ],
+                          "type": "select"
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "yx9y5iz7lz"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "is_mainland_compliant",
+                        "title": "是否大陆合规",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "enum",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "vxmfa4raw8"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "buyer_tax_no",
+                        "title": "购买方税号",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "7nr9k5eefl"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "buyer_address_phone",
+                        "title": "购买方地址电话",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "iyz8i0gpwv"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "buyer_bank_account",
+                        "title": "购买方银行账号",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "x706kjih3u"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "invoice_content",
+                        "title": "发票内容",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "p4w45a13t8"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "category",
+                        "title": "分类",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "ry9t1b8tkx"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "file_path",
+                        "title": "文件路径",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "cex6rvicus"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "receiver_name",
+                        "title": "收票人姓名",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "9nqlo8ujew"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "receiver_phone",
+                        "title": "收票人电话",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "in0ou400o3"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "receiver_email",
+                        "title": "收票人邮箱",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "cnfxn0c12j"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "submitted_at",
+                        "title": "提交时间",
+                        "pkField": false,
+                        "doType": "DATETIME",
+                        "format": "datetime",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "format": "YYYY-MM-DD HH:mm"
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "wk1ibj70px"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "applicant_user_id",
+                        "title": "申请人用户ID",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "358acz7599"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "applicant_name_snapshot",
+                        "title": "申请人姓名快照",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "qqqnevllwt"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "partner_id",
+                        "title": "交易对手ID",
+                        "pkField": false,
+                        "doType": "NUMBER",
+                        "format": "enum",
+                        "isShown": false,
+                        "isFetched": false,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": "index",
+                        "__lc_as_item_id__": "vu8owzl72p"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "partner_source",
+                        "title": "对手来源",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "enum",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "options": [
+                            {
+                              "color": "default",
+                              "label": "CRM客户",
+                              "value": "crm_customer"
+                            },
+                            {
+                              "color": "default",
+                              "label": "业务伙伴",
+                              "value": "business_partner"
+                            },
+                            {
+                              "color": "default",
+                              "label": "手动录入",
+                              "value": "manual"
+                            }
+                          ],
+                          "type": "select"
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "fs0jgliqs2"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "contract_id",
+                        "title": "合同ID",
+                        "pkField": false,
+                        "doType": "NUMBER",
+                        "format": "enum",
+                        "isShown": false,
+                        "isFetched": false,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": "index",
+                        "__lc_as_item_id__": "h5526mjvro"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "remark",
+                        "title": "备注",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": false,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "63ack595o2"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "created_at",
+                        "title": "创建时间",
+                        "pkField": false,
+                        "doType": "DATETIME",
+                        "format": "datetime",
+                        "isShown": false,
+                        "isFetched": false,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "format": "YYYY-MM-DD HH:mm"
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "0uh44w9ni4"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "updated_at",
+                        "title": "更新时间",
+                        "pkField": false,
+                        "doType": "DATETIME",
+                        "format": "datetime",
+                        "isShown": false,
+                        "isFetched": false,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "format": "YYYY-MM-DD HH:mm"
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "qp6agjxf8h"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "is_deleted",
+                        "title": "删除标志",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "enum",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "options": [
+                            {
+                              "color": "success",
+                              "label": "正常",
+                              "value": 0
+                            },
+                            {
+                              "color": "default",
+                              "label": "已删除",
+                              "value": 1
+                            }
+                          ],
+                          "type": "select"
+                        },
+                        "indexType": "unique",
+                        "__lc_as_item_id__": "rvzjpvsvh8"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "contract_application.contract_name",
+                        "title": "合同名称",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "of9sr1hmdb"
+                      }
+                    ],
+                    "pagination": {
+                      "enable": true,
+                      "showQuickJumper": true,
+                      "showSizeChanger": true,
+                      "pageSizeOptions": [
+                        "10",
+                        "20",
+                        "50",
+                        "100"
+                      ],
+                      "currentPage": {
+                        "type": "JSExpression",
+                        "value": "this.state['yttable_7u4voqnq_currentPage']"
+                      },
+                      "currentPageKey": "yttable_7u4voqnq_currentPage",
+                      "total": {
+                        "type": "JSExpression",
+                        "value": "this.state['yttable_7u4voqnq_total']"
+                      },
+                      "totalKey": "yttable_7u4voqnq_total",
+                      "pageSize": {
+                        "type": "JSExpression",
+                        "value": "this.state['yttable_7u4voqnq_pageSize']"
+                      },
+                      "pageSizeKey": "yttable_7u4voqnq_pageSize"
+                    },
+                    "toolbar": {
+                      "enable": true,
+                      "globalButtons": [
+                        {
+                          "title": "新增",
+                          "type": "primary",
+                          "size": "medium",
+                          "optType": "jsAction",
+                          "options": {
+                            "jsFunction": {
+                              "type": "JSFunction",
+                              "value": "(config) => config._context?.appHelper?.yt?.smartPageHistory?.push({ pageTagName: 'CREATE', datasetId: '1015680' })"
+                            }
+                          }
+                        }
+                      ],
+                      "exportButtons": {
+                        "loading": {
+                          "type": "JSExpression",
+                          "value": "this.state['1015680_excelExport_loading']"
+                        },
+                        "mainButton": {
+                          "title": "批量操作",
+                          "optType": "jsAction",
+                          "disabled": {
+                            "type": "JSExpression",
+                            "value": "!this.state['yttable_7u4voqnq_selectedRowKeys']?.length"
+                          },
+                          "options": {
+                            "jsFunction": {
+                              "type": "JSFunction",
+                              "value": "(config) => config._context?.appHelper?.yt?.smartPageHistory?.push({ pageTagName: 'UPDATE', datasetId: '1015680', dataid: config._context?.state['yttable_7u4voqnq_selectedRowKeys'], type: 'batch' })"
+                            }
+                          }
+                        },
+                        "buttons": [
+                          {
+                            "title": "导出选中项",
+                            "optType": "flowAction",
+                            "actionType": "export",
+                            "disabled": {
+                              "type": "JSExpression",
+                              "value": "!this.state['yttable_7u4voqnq_selectedRowKeys']?.length"
+                            },
+                            "options": {
+                              "flowList": [
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015680_excelExport",
+                                    "_autoBindDataSourceParams": true
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "title": "导出全部",
+                            "optType": "flowAction",
+                            "actionType": "export",
+                            "options": {
+                              "flowList": [
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015680_excelExport"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "title": "删除选中项",
+                            "optType": "flowAction",
+                            "actionType": "delete",
+                            "danger": true,
+                            "disabled": {
+                              "type": "JSExpression",
+                              "value": "!this.state['yttable_7u4voqnq_selectedRowKeys']?.length"
+                            },
+                            "options": {
+                              "flowList": [
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015680_delete",
+                                    "_autoBindDataSourceParams": false,
+                                    "_bindDataSourceParams": {
+                                      "type": "JSFunction",
+                                      "value": "(extraParams) => { return { id: extraParams.selectId }; }"
+                                    },
+                                    "confirmConfig": {
+                                      "enable": true,
+                                      "type": "confirm",
+                                      "title": "确认批量删除",
+                                      "content": "确认批量删除选中数据吗？"
+                                    },
+                                    "responseConfig": {
+                                      "enableSuccessToast": true,
+                                      "enableErrorToast": true,
+                                      "successToastMsg": "删除成功",
+                                      "errorToastMsg": "删除失败"
+                                    }
+                                  }
+                                },
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015680_filter",
+                                    "_autoBindDataSourceParams": false,
+                                    "confirmConfig": {
+                                      "enable": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "title": "删除全部",
+                            "optType": "flowAction",
+                            "actionType": "delete",
+                            "danger": true,
+                            "disabled": {
+                              "type": "JSExpression",
+                              "value": "!(this.state['yttable_7u4voqnq_total'] > 0)"
+                            },
+                            "options": {
+                              "flowList": [
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015680_delete",
+                                    "_autoBindDataSourceParams": false,
+                                    "_bindDataSourceParams": {
+                                      "type": "JSFunction",
+                                      "value": "(extraParams) => { return { id: extraParams.allIds }; }"
+                                    },
+                                    "confirmConfig": {
+                                      "enable": true,
+                                      "type": "confirm",
+                                      "title": "确认批量删除",
+                                      "content": "确认批量删除当前页全部数据吗？"
+                                    },
+                                    "responseConfig": {
+                                      "enableSuccessToast": true,
+                                      "enableErrorToast": true,
+                                      "successToastMsg": "删除成功",
+                                      "errorToastMsg": "删除失败"
+                                    }
+                                  }
+                                },
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015680_filter",
+                                    "_autoBindDataSourceParams": false,
+                                    "confirmConfig": {
+                                      "enable": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        "buttonsDisabled": {
+                          "type": "JSExpression",
+                          "value": "this.state['yttable_7u4voqnq_onePage'] || false"
+                        }
+                      }
+                    },
+                    "rowSelection": {
+                      "enable": true,
+                      "isDisabled": {
+                        "type": "JSExpression",
+                        "value": "this.state['yttable_7u4voqnq_onePage'] || false"
+                      }
+                    },
+                    "showSelectionTotal": true,
+                    "sortEnable": true,
+                    "operateButtonsEnable": true,
+                    "operateButtons": [
+                      {
+                        "title": "更新",
+                        "type": "default",
+                        "size": "medium",
+                        "optType": "jsAction",
+                        "__lc_as_item_id__": "005x4007we",
+                        "options": {
+                          "jsFunction": {
+                            "type": "JSFunction",
+                            "value": "(config) => config._context?.appHelper?.yt?.smartPageHistory?.push({ pageTagName: 'UPDATE', datasetId: '1015680', dataid: config.extraParams?.rowKey })"
+                          }
+                        }
+                      },
+                      {
+                        "title": "详情",
+                        "type": "default",
+                        "size": "medium",
+                        "optType": "jsAction",
+                        "__lc_as_item_id__": "d4vatjt5ol",
+                        "options": {
+                          "jsFunction": {
+                            "type": "JSFunction",
+                            "value": "(config) => config._context?.appHelper?.yt?.smartPageHistory?.push({ pageTagName: 'DETAIL', datasetId: '1015680', dataid: config.extraParams?.rowKey })"
+                          }
+                        }
+                      },
+                      {
+                        "title": "删除",
+                        "type": "default",
+                        "size": "medium",
+                        "optType": "flowAction",
+                        "__lc_as_item_id__": "963ruakopr",
+                        "options": {
+                          "flowList": [
+                            {
+                              "active": true,
+                              "optType": "request",
+                              "__lc_as_item_id__": "txvb877vu6",
+                              "options": {
+                                "_bindDataSource": "1015680_delete",
+                                "_autoBindDataSourceParams": false,
+                                "_bindDataSourceParams": {
+                                  "type": "JSFunction",
+                                  "value": "(extraParams) => { return { id: extraParams.rowKey }; }"
+                                },
+                                "confirmConfig": {
+                                  "enable": true,
+                                  "type": "confirm",
+                                  "title": "确认删除",
+                                  "content": "确认删除该条数据吗？"
+                                },
+                                "responseConfig": {
+                                  "enableSuccessToast": true,
+                                  "enableErrorToast": true,
+                                  "successToastMsg": "删除成功",
+                                  "errorToastMsg": "删除失败"
+                                }
+                              }
+                            },
+                            {
+                              "active": true,
+                              "optType": "request",
+                              "__lc_as_item_id__": "5wb86pl27h",
+                              "options": {
+                                "_bindDataSource": "1015680_filter",
+                                "_autoBindDataSourceParams": false,
+                                "confirmConfig": {
+                                  "enable": false
+                                }
+                              }
+                            }
+                          ],
+                          "_autoBindDataSourceParams": false,
+                          "redirectType": "current"
+                        }
+                      }
+                    ]
+                  },
+                  "meta": {
+                    "datasetId": 1015680,
+                    "datasetCode": "fc11e2d760b94b2ca2ccf0485ed40ca8"
+                  },
+                  "hidden": false,
+                  "title": "",
+                  "isLocked": false,
+                  "condition": true,
+                  "conditionGroup": ""
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "fileName": "/"
+    }
+  ],
+  "i18n": {}
+}

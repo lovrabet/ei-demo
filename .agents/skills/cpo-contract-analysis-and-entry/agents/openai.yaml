@@ -1,0 +1,4 @@
+interface:
+  display_name: "合同风险分析与分期入库"
+  short_description: "逐页审查合同风险、拆解资金分期并安全录入启智云图业务系统"
+  default_prompt: "使用 $cpo-contract-analysis-and-entry 作为合同专家审查这份合同的风险和资金分期，核对合作方后按结论录入系统。"

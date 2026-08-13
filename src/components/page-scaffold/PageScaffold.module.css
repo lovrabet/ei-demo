@@ -1,0 +1,87 @@
+.root {
+  --page-scaffold-max-width: 100%;
+  --page-scaffold-gap: 20px;
+  --page-scaffold-header-gap: 16px;
+  --page-scaffold-description-margin-top: 8px;
+  width: 100%;
+  min-width: 0;
+  /* Prompt 管理页与 Demo 页统一顶部/左右 16px。
+     底部保持 0，由 PageFooterBar 负责底部留白和安全区，避免双层空白。 */
+  padding: 16px 16px 0;
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--page-scaffold-max-width);
+  min-width: 0;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--page-scaffold-gap);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--page-scaffold-header-gap);
+  flex-wrap: wrap;
+}
+
+.heading {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.title {
+  margin: 0 !important;
+}
+
+.description {
+  margin-top: var(--page-scaffold-description-margin-top) !important;
+  margin-bottom: 0 !important;
+}
+
+.notice {
+  width: 100%;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--page-scaffold-gap);
+  min-width: 0;
+}
+
+.variantList {
+  --page-scaffold-gap: 16px;
+}
+
+.densityCompact {
+  --page-scaffold-gap: 14px;
+  --page-scaffold-header-gap: 12px;
+  --page-scaffold-description-margin-top: 6px;
+}
+
+.variantList.densityCompact {
+  --page-scaffold-gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .root {
+    --page-scaffold-gap: 16px;
+    --page-scaffold-header-gap: 14px;
+    --page-scaffold-description-margin-top: 6px;
+    padding: 12px 12px 0;
+  }
+
+  .densityCompact {
+    --page-scaffold-gap: 12px;
+    --page-scaffold-header-gap: 10px;
+    --page-scaffold-description-margin-top: 4px;
+  }
+
+  .variantList.densityCompact {
+    --page-scaffold-gap: 10px;
+  }
+}

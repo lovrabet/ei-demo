@@ -1,0 +1,30 @@
+.card {
+  border-color: #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 10px 28px rgb(15 23 42 / 6%);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 4px;
+}
+
+.actions :global(.ant-btn) {
+  min-width: 144px;
+}
+
+.feedback {
+  width: 100%;
+  margin-top: 16px;
+}
+
+@media (max-width: 767px) {
+  .actions {
+    justify-content: stretch;
+  }
+
+  .actions :global(.ant-btn) {
+    width: 100%;
+  }
+}

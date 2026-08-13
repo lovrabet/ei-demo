@@ -1,0 +1,1148 @@
+{
+  "version": "1.0.0",
+  "componentsMap": [
+    {
+      "package": "@yuntoo/antd-meta",
+      "version": "1.0.0",
+      "main": "",
+      "destructuring": true,
+      "exportName": "YtPage",
+      "componentName": "YtPage"
+    },
+    {
+      "devMode": "lowCode",
+      "componentName": "Page"
+    },
+    {
+      "package": "@yuntoo/antd-smart",
+      "version": "1.0.0",
+      "main": "",
+      "destructuring": true,
+      "exportName": "LrSmartFilter",
+      "componentName": "LrSmartFilter"
+    },
+    {
+      "package": "@yuntoo/antd-smart",
+      "version": "1.0.0",
+      "main": "",
+      "destructuring": true,
+      "exportName": "LrSmartTable",
+      "componentName": "LrSmartTable"
+    },
+    {
+      "package": "@yuntoo/antd-meta",
+      "version": "1.0.0",
+      "main": "",
+      "destructuring": true,
+      "exportName": "YtRglContainer",
+      "componentName": "YtRglContainer"
+    }
+  ],
+  "componentsTree": [
+    {
+      "componentName": "Page",
+      "id": "node_a28raql3",
+      "props": {
+        "ref": "outerView",
+        "style": {
+          "height": "100%"
+        }
+      },
+      "dataSource": {
+        "list": [
+          {
+            "type": "urlParams",
+            "id": "urlParams",
+            "isInit": true,
+            "source": "system",
+            "options": {}
+          },
+          {
+            "type": "fetch",
+            "id": "1015649_filter",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/9dd0d102219145ddbb67d1c247a84fb9/filter",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "pageSize",
+                  "value": "this.state.yttable_225aa49m_pageSize",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "currentPage",
+                  "value": "this.state.yttable_225aa49m_currentPage",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "filter",
+                  "value": "this.state.ytfilter_sml7mm28_filter",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "sort",
+                  "value": "this.state.yttable_225aa49m_sort",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "select",
+                  "value": [
+                    "id",
+                    "biz_type",
+                    "relation_type",
+                    "amount_used",
+                    "biz_id",
+                    "is_deleted",
+                    "invoice_record.invoice_title"
+                  ],
+                  "type": "array",
+                  "required": true
+                }
+              ],
+              "headersArr": [],
+              "params": {
+                "pageSize": {
+                  "type": "JSExpression",
+                  "value": "this.state.yttable_225aa49m_pageSize"
+                },
+                "currentPage": {
+                  "type": "JSExpression",
+                  "value": "this.state.yttable_225aa49m_currentPage"
+                },
+                "filter": {
+                  "type": "JSExpression",
+                  "value": "this.state.ytfilter_sml7mm28_filter"
+                },
+                "sort": {
+                  "type": "JSExpression",
+                  "value": "this.state.yttable_225aa49m_sort"
+                },
+                "select": [
+                  "id",
+                  "biz_type",
+                  "relation_type",
+                  "amount_used",
+                  "biz_id",
+                  "is_deleted",
+                  "invoice_record.invoice_title"
+                ]
+              },
+              "requiredParams": [
+                "pageSize",
+                "currentPage"
+              ],
+              "headers": {},
+              "willFetch": {
+                "type": "JSFunction",
+                "value": "({ filter, sort, ...rest }) => ({ ...rest, ...filter, ...sort })"
+              }
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "1015649_delete",
+            "isInit": false,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/9dd0d102219145ddbb67d1c247a84fb9/delete",
+              "isCors": true,
+              "timeout": 5000,
+              "requiredParams": [
+                "id"
+              ]
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "1015649_excelExport",
+            "isInit": false,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/9dd0d102219145ddbb67d1c247a84fb9/excelExport",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "filter",
+                  "value": "this.state.ytfilter_sml7mm28_filter",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "selectKeys",
+                  "value": "this.state.yttable_225aa49m_selectKeys",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "select",
+                  "value": [
+                    "id",
+                    "biz_type",
+                    "relation_type",
+                    "amount_used",
+                    "biz_id",
+                    "is_deleted",
+                    "invoice_record.invoice_title"
+                  ],
+                  "type": "array",
+                  "required": false
+                }
+              ],
+              "headersArr": [],
+              "params": {
+                "filter": {
+                  "type": "JSExpression",
+                  "value": "this.state.ytfilter_sml7mm28_filter"
+                },
+                "selectKeys": {
+                  "type": "JSExpression",
+                  "value": "this.state.yttable_225aa49m_selectKeys"
+                },
+                "select": [
+                  "id",
+                  "biz_type",
+                  "relation_type",
+                  "amount_used",
+                  "biz_id",
+                  "is_deleted",
+                  "invoice_record.invoice_title"
+                ]
+              },
+              "requiredParams": [],
+              "headers": {},
+              "willFetch": {
+                "type": "JSFunction",
+                "value": "({ filter, selectKeys, select, ...rest }) => ({ ...rest, ...filter, select, ...selectKeys })"
+              }
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_fc11e2d760b94b2ca2ccf0485ed40ca8_invoice_id_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/fc11e2d760b94b2ca2ccf0485ed40ca8/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "id",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "invoice_title",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "id",
+                "label": "invoice_title"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_53869993f80f45ae8ef6cdf051d8e355_contract_id_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/53869993f80f45ae8ef6cdf051d8e355/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "id",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "contract_name",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "id",
+                "label": "contract_name"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_68c70907e27c481cbefb96dd3906936e_partner_id_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/68c70907e27c481cbefb96dd3906936e/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "id",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "name",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "id",
+                "label": "name"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          }
+        ]
+      },
+      "hidden": false,
+      "title": "",
+      "isLocked": false,
+      "condition": true,
+      "conditionGroup": "",
+      "children": [
+        {
+          "componentName": "YtPage",
+          "id": "node_0b6dug5h",
+          "props": {
+            "ref": "ytpage_0b6dug5h",
+            "_context": {
+              "type": "JSExpression",
+              "value": "this"
+            },
+            "_uniqueId": "ytpage_0b6dug5h",
+            "useRGL": true
+          },
+          "hidden": false,
+          "title": "",
+          "isLocked": false,
+          "condition": true,
+          "conditionGroup": "",
+          "children": [
+            {
+              "componentName": "YtRglContainer",
+              "id": "node_qm8qc4q1",
+              "props": {
+                "RGLlayout": [
+                  {
+                    "i": "node_9r3e2m17",
+                    "w": 12,
+                    "h": 3,
+                    "x": 0,
+                    "y": 0,
+                    "autoHeight": true
+                  },
+                  {
+                    "i": "node_ri2qcuhe",
+                    "w": 12,
+                    "h": 27,
+                    "x": 0,
+                    "y": 3,
+                    "autoHeight": true
+                  }
+                ]
+              },
+              "hidden": false,
+              "title": "",
+              "isLocked": false,
+              "condition": true,
+              "conditionGroup": "",
+              "children": [
+                {
+                  "componentName": "LrSmartFilter",
+                  "id": "node_9r3e2m17",
+                  "props": {
+                    "_doVersion": "V2",
+                    "_context": {
+                      "type": "JSExpression",
+                      "value": "this"
+                    },
+                    "ref": "ytfilter_sml7mm28",
+                    "_uniqueId": "ytfilter_sml7mm28",
+                    "datasetId": 1015649,
+                    "oneSearchFilterKey": "ytfilter_sml7mm28_filter",
+                    "items": [
+                      {
+                        "lcAsItemId": null,
+                        "name": "biz_type",
+                        "label": "业务类型",
+                        "componentName": "YtRadioGroup",
+                        "doType": "SELECT",
+                        "isShown": true,
+                        "placeholder": "请选择业务类型",
+                        "options": [
+                          {
+                            "label": "费用项目",
+                            "value": "expense_item"
+                          },
+                          {
+                            "label": "付款",
+                            "value": "payment"
+                          },
+                          {
+                            "label": "合同",
+                            "value": "contract"
+                          }
+                        ],
+                        "indexType": "unique",
+                        "__lc_as_item_id__": "tqzv6j2f2n"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "relation_type",
+                        "label": "关联类型",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "isShown": true,
+                        "placeholder": "请选择关联类型",
+                        "options": [
+                          {
+                            "label": "实际",
+                            "value": "actual"
+                          },
+                          {
+                            "label": "冲抵",
+                            "value": "offset"
+                          },
+                          {
+                            "label": "供应商发票",
+                            "value": "supplier_invoice"
+                          },
+                          {
+                            "label": "回款",
+                            "value": "receipt"
+                          },
+                          {
+                            "label": "凭证",
+                            "value": "proof"
+                          }
+                        ],
+                        "indexType": "unique",
+                        "__lc_as_item_id__": "7jt0tq84qe"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "biz_id",
+                        "label": "业务对象ID",
+                        "componentName": "YtRangeInputNumber",
+                        "doType": "NUMBER",
+                        "isShown": false,
+                        "placeholder": "请输入业务对象ID",
+                        "options": null,
+                        "indexType": "unique",
+                        "__lc_as_item_id__": "r70jw1ke9w"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "amount_used",
+                        "label": "使用金额",
+                        "componentName": "YtRangeInputNumber",
+                        "doType": "NUMBER",
+                        "isShown": false,
+                        "placeholder": "请输入使用金额",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "i4qp4fv4fo"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "is_deleted",
+                        "label": "逻辑删除",
+                        "componentName": "YtRadioGroup",
+                        "doType": "SELECT",
+                        "isShown": false,
+                        "placeholder": "请选择逻辑删除",
+                        "options": [
+                          {
+                            "label": "正常",
+                            "value": 0
+                          },
+                          {
+                            "label": "已删除",
+                            "value": 1
+                          }
+                        ],
+                        "indexType": "unique",
+                        "__lc_as_item_id__": "jmwrpygds4"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "id",
+                        "label": "主键",
+                        "componentName": "YtInput",
+                        "doType": "NUMBER",
+                        "isShown": false,
+                        "placeholder": "请输入主键",
+                        "options": null,
+                        "indexType": "primary",
+                        "__lc_as_item_id__": "1viy9ju4wn"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "invoice_id",
+                        "label": "发票ID",
+                        "componentName": "YtSingleSelect",
+                        "doType": "NUMBER",
+                        "isShown": true,
+                        "placeholder": "请选择发票ID",
+                        "options": {
+                          "type": "JSExpression",
+                          "value": "this.state.invoice_id_options"
+                        },
+                        "indexType": "unique",
+                        "__lc_as_item_id__": "jqs4v0avlf"
+                      }
+                    ],
+                    "events": [
+                      {
+                        "optType": "flowAction",
+                        "name": "onSearch",
+                        "flowList": [
+                          {
+                            "active": true,
+                            "optType": "request",
+                            "options": {
+                              "_bindDataSource": "1015649_filter",
+                              "_autoBindDataSourceParams": true,
+                              "confirmConfig": {
+                                "enable": false
+                              },
+                              "responseConfig": {
+                                "successToastMsg": "查询成功！",
+                                "errorToastMsg": "查询失败"
+                              },
+                              "redirectType": "current"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "showSearch": true
+                  },
+                  "meta": {
+                    "datasetId": 1015649,
+                    "datasetCode": "9dd0d102219145ddbb67d1c247a84fb9"
+                  },
+                  "hidden": false,
+                  "title": "",
+                  "isLocked": false,
+                  "condition": true,
+                  "conditionGroup": ""
+                },
+                {
+                  "componentName": "LrSmartTable",
+                  "id": "node_ri2qcuhe",
+                  "props": {
+                    "_doVersion": "V2",
+                    "_context": {
+                      "type": "JSExpression",
+                      "value": "this"
+                    },
+                    "ref": "yttable_225aa49m",
+                    "_uniqueId": "yttable_225aa49m",
+                    "dataSource": {
+                      "type": "JSExpression",
+                      "value": "this.state['1015649_filter']"
+                    },
+                    "loading": {
+                      "type": "JSExpression",
+                      "value": "this.state['1015649_filter_loading']"
+                    },
+                    "columns": [
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "id",
+                        "title": "主键ID",
+                        "pkField": true,
+                        "doType": "NUMBER",
+                        "format": "text",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": "start",
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": "primary",
+                        "__lc_as_item_id__": "0j4fg13d6j"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "biz_type",
+                        "title": "业务类型",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "enum",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": "start",
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "options": [
+                            {
+                              "color": "default",
+                              "label": "费用项目",
+                              "value": "expense_item"
+                            },
+                            {
+                              "color": "default",
+                              "label": "付款",
+                              "value": "payment"
+                            },
+                            {
+                              "color": "default",
+                              "label": "合同",
+                              "value": "contract"
+                            }
+                          ],
+                          "type": "select"
+                        },
+                        "indexType": "unique",
+                        "__lc_as_item_id__": "jmrf4duihf"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "relation_type",
+                        "title": "关联类型",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "tag",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "colorMapping": {
+                            "actual": "default",
+                            "offset": "default",
+                            "receipt": "default",
+                            "supplier_invoice": "default",
+                            "proof": "default"
+                          },
+                          "options": [
+                            {
+                              "label": "实际",
+                              "value": "actual"
+                            },
+                            {
+                              "label": "冲抵",
+                              "value": "offset"
+                            },
+                            {
+                              "label": "供应商发票",
+                              "value": "supplier_invoice"
+                            },
+                            {
+                              "label": "回款",
+                              "value": "receipt"
+                            },
+                            {
+                              "label": "凭证",
+                              "value": "proof"
+                            }
+                          ]
+                        },
+                        "indexType": "unique",
+                        "__lc_as_item_id__": "2buypqjvmo"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "amount_used",
+                        "title": "使用金额",
+                        "pkField": false,
+                        "doType": "NUMBER",
+                        "format": "number",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "precision": 2,
+                          "separator": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "drd92rr78i"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "biz_id",
+                        "title": "业务对象ID",
+                        "pkField": false,
+                        "doType": "NUMBER",
+                        "format": "number",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "separator": true
+                        },
+                        "indexType": "unique",
+                        "__lc_as_item_id__": "wbos44xabu"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "invoice_id",
+                        "title": "发票ID",
+                        "pkField": false,
+                        "doType": "NUMBER",
+                        "format": "enum",
+                        "isShown": false,
+                        "isFetched": false,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": "unique",
+                        "__lc_as_item_id__": "olsr00i5e5"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "created_at",
+                        "title": "创建时间",
+                        "pkField": false,
+                        "doType": "DATETIME",
+                        "format": "datetime",
+                        "isShown": false,
+                        "isFetched": false,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "format": "YYYY-MM-DD HH:mm"
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "kmqijz0uqt"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "is_deleted",
+                        "title": "逻辑删除",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "enum",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "options": [
+                            {
+                              "color": "success",
+                              "label": "正常",
+                              "value": 0
+                            },
+                            {
+                              "color": "default",
+                              "label": "已删除",
+                              "value": 1
+                            }
+                          ],
+                          "type": "select"
+                        },
+                        "indexType": "unique",
+                        "__lc_as_item_id__": "ueojohel2m"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "invoice_record.invoice_title",
+                        "title": "发票标题",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "mrwv9dofuz"
+                      }
+                    ],
+                    "pagination": {
+                      "enable": true,
+                      "showQuickJumper": true,
+                      "showSizeChanger": true,
+                      "pageSizeOptions": [
+                        "10",
+                        "20",
+                        "50",
+                        "100"
+                      ],
+                      "currentPage": {
+                        "type": "JSExpression",
+                        "value": "this.state['yttable_225aa49m_currentPage']"
+                      },
+                      "currentPageKey": "yttable_225aa49m_currentPage",
+                      "total": {
+                        "type": "JSExpression",
+                        "value": "this.state['yttable_225aa49m_total']"
+                      },
+                      "totalKey": "yttable_225aa49m_total",
+                      "pageSize": {
+                        "type": "JSExpression",
+                        "value": "this.state['yttable_225aa49m_pageSize']"
+                      },
+                      "pageSizeKey": "yttable_225aa49m_pageSize"
+                    },
+                    "toolbar": {
+                      "enable": true,
+                      "globalButtons": [
+                        {
+                          "title": "新增",
+                          "type": "primary",
+                          "size": "medium",
+                          "optType": "jsAction",
+                          "options": {
+                            "jsFunction": {
+                              "type": "JSFunction",
+                              "value": "(config) => config._context?.appHelper?.yt?.smartPageHistory?.push({ pageTagName: 'CREATE', datasetId: '1015649' })"
+                            }
+                          }
+                        }
+                      ],
+                      "exportButtons": {
+                        "loading": {
+                          "type": "JSExpression",
+                          "value": "this.state['1015649_excelExport_loading']"
+                        },
+                        "mainButton": {
+                          "title": "批量操作",
+                          "optType": "jsAction",
+                          "disabled": {
+                            "type": "JSExpression",
+                            "value": "!this.state['yttable_225aa49m_selectedRowKeys']?.length"
+                          },
+                          "options": {
+                            "jsFunction": {
+                              "type": "JSFunction",
+                              "value": "(config) => config._context?.appHelper?.yt?.smartPageHistory?.push({ pageTagName: 'UPDATE', datasetId: '1015649', dataid: config._context?.state['yttable_225aa49m_selectedRowKeys'], type: 'batch' })"
+                            }
+                          }
+                        },
+                        "buttons": [
+                          {
+                            "title": "导出选中项",
+                            "optType": "flowAction",
+                            "actionType": "export",
+                            "disabled": {
+                              "type": "JSExpression",
+                              "value": "!this.state['yttable_225aa49m_selectedRowKeys']?.length"
+                            },
+                            "options": {
+                              "flowList": [
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015649_excelExport",
+                                    "_autoBindDataSourceParams": true
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "title": "导出全部",
+                            "optType": "flowAction",
+                            "actionType": "export",
+                            "options": {
+                              "flowList": [
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015649_excelExport"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "title": "删除选中项",
+                            "optType": "flowAction",
+                            "actionType": "delete",
+                            "danger": true,
+                            "disabled": {
+                              "type": "JSExpression",
+                              "value": "!this.state['yttable_225aa49m_selectedRowKeys']?.length"
+                            },
+                            "options": {
+                              "flowList": [
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015649_delete",
+                                    "_autoBindDataSourceParams": false,
+                                    "_bindDataSourceParams": {
+                                      "type": "JSFunction",
+                                      "value": "(extraParams) => { return { id: extraParams.selectId }; }"
+                                    },
+                                    "confirmConfig": {
+                                      "enable": true,
+                                      "type": "confirm",
+                                      "title": "确认批量删除",
+                                      "content": "确认批量删除选中数据吗？"
+                                    },
+                                    "responseConfig": {
+                                      "enableSuccessToast": true,
+                                      "enableErrorToast": true,
+                                      "successToastMsg": "删除成功",
+                                      "errorToastMsg": "删除失败"
+                                    }
+                                  }
+                                },
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015649_filter",
+                                    "_autoBindDataSourceParams": false,
+                                    "confirmConfig": {
+                                      "enable": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "title": "删除全部",
+                            "optType": "flowAction",
+                            "actionType": "delete",
+                            "danger": true,
+                            "disabled": {
+                              "type": "JSExpression",
+                              "value": "!(this.state['yttable_225aa49m_total'] > 0)"
+                            },
+                            "options": {
+                              "flowList": [
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015649_delete",
+                                    "_autoBindDataSourceParams": false,
+                                    "_bindDataSourceParams": {
+                                      "type": "JSFunction",
+                                      "value": "(extraParams) => { return { id: extraParams.allIds }; }"
+                                    },
+                                    "confirmConfig": {
+                                      "enable": true,
+                                      "type": "confirm",
+                                      "title": "确认批量删除",
+                                      "content": "确认批量删除当前页全部数据吗？"
+                                    },
+                                    "responseConfig": {
+                                      "enableSuccessToast": true,
+                                      "enableErrorToast": true,
+                                      "successToastMsg": "删除成功",
+                                      "errorToastMsg": "删除失败"
+                                    }
+                                  }
+                                },
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015649_filter",
+                                    "_autoBindDataSourceParams": false,
+                                    "confirmConfig": {
+                                      "enable": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        "buttonsDisabled": {
+                          "type": "JSExpression",
+                          "value": "this.state['yttable_225aa49m_onePage'] || false"
+                        }
+                      }
+                    },
+                    "rowSelection": {
+                      "enable": true,
+                      "isDisabled": {
+                        "type": "JSExpression",
+                        "value": "this.state['yttable_225aa49m_onePage'] || false"
+                      }
+                    },
+                    "showSelectionTotal": true,
+                    "sortEnable": true,
+                    "operateButtonsEnable": true,
+                    "operateButtons": [
+                      {
+                        "title": "更新",
+                        "type": "default",
+                        "size": "medium",
+                        "optType": "jsAction",
+                        "__lc_as_item_id__": "p0vc7gpqn5",
+                        "options": {
+                          "jsFunction": {
+                            "type": "JSFunction",
+                            "value": "(config) => config._context?.appHelper?.yt?.smartPageHistory?.push({ pageTagName: 'UPDATE', datasetId: '1015649', dataid: config.extraParams?.rowKey })"
+                          }
+                        }
+                      },
+                      {
+                        "title": "详情",
+                        "type": "default",
+                        "size": "medium",
+                        "optType": "jsAction",
+                        "__lc_as_item_id__": "4hiu03haos",
+                        "options": {
+                          "jsFunction": {
+                            "type": "JSFunction",
+                            "value": "(config) => config._context?.appHelper?.yt?.smartPageHistory?.push({ pageTagName: 'DETAIL', datasetId: '1015649', dataid: config.extraParams?.rowKey })"
+                          }
+                        }
+                      },
+                      {
+                        "title": "删除",
+                        "type": "default",
+                        "size": "medium",
+                        "optType": "flowAction",
+                        "__lc_as_item_id__": "ivhxy1b9z6",
+                        "options": {
+                          "flowList": [
+                            {
+                              "active": true,
+                              "optType": "request",
+                              "__lc_as_item_id__": "wf8i5s2d0u",
+                              "options": {
+                                "_bindDataSource": "1015649_delete",
+                                "_autoBindDataSourceParams": false,
+                                "_bindDataSourceParams": {
+                                  "type": "JSFunction",
+                                  "value": "(extraParams) => { return { id: extraParams.rowKey }; }"
+                                },
+                                "confirmConfig": {
+                                  "enable": true,
+                                  "type": "confirm",
+                                  "title": "确认删除",
+                                  "content": "确认删除该条数据吗？"
+                                },
+                                "responseConfig": {
+                                  "enableSuccessToast": true,
+                                  "enableErrorToast": true,
+                                  "successToastMsg": "删除成功",
+                                  "errorToastMsg": "删除失败"
+                                }
+                              }
+                            },
+                            {
+                              "active": true,
+                              "optType": "request",
+                              "__lc_as_item_id__": "wwevmsaxhf",
+                              "options": {
+                                "_bindDataSource": "1015649_filter",
+                                "_autoBindDataSourceParams": false,
+                                "confirmConfig": {
+                                  "enable": false
+                                }
+                              }
+                            }
+                          ],
+                          "_autoBindDataSourceParams": false,
+                          "redirectType": "current"
+                        }
+                      }
+                    ]
+                  },
+                  "meta": {
+                    "datasetId": 1015649,
+                    "datasetCode": "9dd0d102219145ddbb67d1c247a84fb9"
+                  },
+                  "hidden": false,
+                  "title": "",
+                  "isLocked": false,
+                  "condition": true,
+                  "conditionGroup": ""
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "fileName": "/"
+    }
+  ],
+  "i18n": {}
+}

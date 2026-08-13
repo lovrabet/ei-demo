@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Local database credentials (never commit — see db/demo_db.py)
+db/.demo-db.json
+db/.src-db.json
+
+# Runtime artifacts
+.lovrabet.log
+*.log
+scripts/__pycache__/
+db/__pycache__/
+__pycache__/
+
+# BFF archive (deleted/retired endpoints kept only for local reference)
+bff-trash/
+
+# OS
+.DS_Store
+
+# Generated DDL export (structure snapshot of the source DB)
+db/yuntoo-cpo-ddl.sql

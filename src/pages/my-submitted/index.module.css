@@ -1,0 +1,65 @@
+.table :global(.ant-table-thead > tr > th) {
+  white-space: nowrap;
+}
+
+.table :global(.ant-table-tbody > tr > td) {
+  vertical-align: middle;
+}
+
+.titleLink,
+.titleText {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.processor {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+}
+
+.processorName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.processor :global(.ant-tag) {
+  flex: none;
+  margin-inline-end: 0;
+}
+
+.amount {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.time,
+.actions {
+  white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  .card :global(.ant-card-head-wrapper) {
+    gap: 12px;
+    align-items: flex-start;
+    flex-direction: column;
+    padding-block: 12px;
+  }
+
+  .card :global(.ant-card-extra),
+  .toolbar {
+    width: 100%;
+  }
+
+  .toolbar :global(.ant-select) {
+    flex: 1;
+  }
+}

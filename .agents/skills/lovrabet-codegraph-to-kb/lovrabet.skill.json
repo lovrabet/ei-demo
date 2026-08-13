@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 2,
+  "appCode": "app-4d050189",
+  "skillCode": "lovrabet-codegraph-to-kb",
+  "skillName": "代码知识挖掘入库",
+  "scope": "personal",
+  "readonly": false,
+  "version": "20260811.192805",
+  "tags": [],
+  "contentHash": "45d27b827134082dfac7d391dce29ff0b9bbccecd6d63411c91107c8422f7bd6",
+  "fileHashes": {
+    "SKILL.md": "45d27b827134082dfac7d391dce29ff0b9bbccecd6d63411c91107c8422f7bd6",
+    "references/extraction-playbook.md": "af11abf7c03e418c95aa56dd9dc78e13722b66151cec543f14dfbc342e86cd1e",
+    "references/output-contract.md": "b3be72a833ae775d2b151e6874dfad6f67810db47b4cff7ac324fbd5aa4c7597",
+    "references/runtime-contract.md": "a1608997a3b5db89c5a43e55fd8112249a82142317e9d43a1986e026157e628f"
+  },
+  "treeHash": "ce154cb67f59311f61acf1b8c9bcda956b86ac8ce8679bbe68f4cc602ce1c1df",
+  "zipSha256": "9843555d22b49c8b4eb311c91024022545427f7340d94612575e4afdbd44a118",
+  "zipSize": 16493,
+  "files": [
+    {
+      "path": "SKILL.md",
+      "hash": "45d27b827134082dfac7d391dce29ff0b9bbccecd6d63411c91107c8422f7bd6",
+      "size": 5091
+    },
+    {
+      "path": "references/extraction-playbook.md",
+      "hash": "af11abf7c03e418c95aa56dd9dc78e13722b66151cec543f14dfbc342e86cd1e",
+      "size": 5643
+    },
+    {
+      "path": "references/output-contract.md",
+      "hash": "b3be72a833ae775d2b151e6874dfad6f67810db47b4cff7ac324fbd5aa4c7597",
+      "size": 1695
+    },
+    {
+      "path": "references/runtime-contract.md",
+      "hash": "a1608997a3b5db89c5a43e55fd8112249a82142317e9d43a1986e026157e628f",
+      "size": 3538
+    }
+  ],
+  "pulledAt": "2026-08-11T11:28:06.544Z"
+}

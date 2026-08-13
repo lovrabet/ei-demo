@@ -1,0 +1,43 @@
+{
+  "apps": {
+    "app-4d050189": {
+      "sqlRoot": ".rabetbase/sql/app-4d050189",
+      "lastSync": "2026-08-11T11:05:10.712Z",
+      "sqls": {
+        "4d050189-a33eb743": {
+          "path": "oa-demo/4d050189-a33eb743_cpoWorkbenchDashboard.sql",
+          "hash": "d04adbaafa296e3e18817792487e4af6",
+          "remoteId": 2643,
+          "version": 2,
+          "dbId": 10384,
+          "dbName": "oa-demo",
+          "sqlName": "cpoWorkbenchDashboard",
+          "sqlConfig": "{\"version\": 2}",
+          "mode": "sql"
+        },
+        "4d050189-2a63c18c": {
+          "path": "oa-demo/4d050189-2a63c18c_cpoCustomer360List.sql",
+          "hash": "f504bf8cf7ab4447fdaabdb7741140e3",
+          "remoteId": 2644,
+          "version": 2,
+          "dbId": 10384,
+          "dbName": "oa-demo",
+          "sqlName": "cpoCustomer360List",
+          "sqlConfig": "{\"version\": 2}",
+          "mode": "sql"
+        },
+        "4d050189-316a4851": {
+          "path": "oa-demo/4d050189-316a4851_cpoContractCenterCrmContracts.sql",
+          "hash": "18280c92365a1a95107ed704e4995a9f",
+          "remoteId": 2645,
+          "version": 2,
+          "dbId": 10384,
+          "dbName": "oa-demo",
+          "sqlName": "cpoContractCenterCrmContracts",
+          "sqlConfig": "{\"version\": 2}",
+          "mode": "sql"
+        }
+      }
+    }
+  }
+}

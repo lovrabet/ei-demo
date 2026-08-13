@@ -1,0 +1,4 @@
+interface:
+  display_name: "工资付款 Excel 自动录入"
+  short_description: "分析工资表并按合规审批主体拆分工资付款草稿"
+  default_prompt: "使用 $cpo-salary-payment-from-excel 分析多份工资 Excel，按合规审批主体和我的要求规划拆单并生成工资付款草稿。"

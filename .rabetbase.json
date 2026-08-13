@@ -1,0 +1,12 @@
+{
+  "createdAt": "8/11/2026, 3:51:36 PM",
+  "version": "2.3.15",
+  "env": "production",
+  "apps": {
+    "app-4d050189": {
+      "appcode": "app-4d050189",
+      "env": "production"
+    }
+  },
+  "defaultApp": "app-4d050189"
+}

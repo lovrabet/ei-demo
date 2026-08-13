@@ -1,0 +1,87 @@
+.root {
+  --form-layout-max-width: 720px;
+  --form-layout-gap: 16px;
+  --form-layout-section-gap: 14px;
+  --form-layout-row-gap: 16px;
+  width: 100%;
+  max-width: var(--form-layout-max-width);
+  min-width: 0;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-layout-gap);
+}
+
+.compact {
+  --form-layout-gap: 12px;
+  --form-layout-section-gap: 12px;
+  --form-layout-row-gap: 12px;
+}
+
+.root :global(.ant-form-item) {
+  margin-bottom: 0;
+}
+
+.root :global(.ant-picker),
+.root :global(.ant-input-number) {
+  width: 100%;
+}
+
+.section {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-layout-section-gap);
+}
+
+.sectionHeader {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.sectionTitle {
+  margin: 0;
+  color: #1f2937;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.sectionDescription {
+  color: #71717a;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.sectionBody {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-layout-gap);
+}
+
+.row {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: var(--form-layout-row-template);
+  gap: 0 var(--form-layout-row-gap);
+  align-items: start;
+}
+
+.rowCompact {
+  --form-layout-row-gap: 12px;
+}
+
+@media (max-width: 720px) {
+  .root {
+    --form-layout-gap: 14px;
+    --form-layout-section-gap: 12px;
+    --form-layout-row-gap: 12px;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+    gap: var(--form-layout-gap);
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "appCode": "app-4d050189",
+  "skillCode": "cpo-contract-application",
+  "skillName": "合同申请助手",
+  "scope": "personal",
+  "readonly": false,
+  "version": "20260811.192556",
+  "tags": [],
+  "contentHash": "ec164d8e96ef9ad1e9867ba1a97e12ae0262c4769a8be34ddd7c282c19a25ea1",
+  "pulledAt": "2026-08-11T11:25:56.201Z"
+}

@@ -1,0 +1,225 @@
+.pageShell {
+  display: grid;
+  gap: 14px;
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: minmax(260px, 420px) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #e6edf5;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.summaryStrip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(116px, auto));
+  justify-content: end;
+  gap: 10px;
+}
+
+.summaryStrip div {
+  min-width: 0;
+  padding: 9px 12px;
+  border: 1px solid #e6edf5;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.summaryStrip strong {
+  display: block;
+  margin-top: 3px;
+  color: #101828;
+  font-size: 16px;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.tableWrap {
+  border: 1px solid #e6edf5;
+  border-radius: 8px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.tableWrap :global(.ant-table-thead > tr > th) {
+  background: #f8fafc;
+  color: #475467;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.clickableRow {
+  cursor: pointer;
+}
+
+.clickableRow:hover td {
+  background: #f8fbff !important;
+}
+
+.agreementNoButton {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #0958d9;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.agreementNoButton:hover {
+  text-decoration: underline;
+}
+
+.agreementInfo {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.agreementInfo strong,
+.agreementInfo span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.agreementInfo span {
+  color: #667085;
+  font-size: 12px;
+}
+
+.drawerLayout {
+  display: grid;
+  grid-template-columns: minmax(420px, 0.82fr) minmax(720px, 1.18fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.formPanel,
+.previewPanel {
+  min-width: 0;
+  border: 1px solid #e6edf5;
+  border-radius: 8px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.previewPanel {
+  background: #f3f6fa;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #edf2f7;
+  background: #f8fafc;
+}
+
+.panelHeader h2 {
+  margin: 0;
+  color: #101828;
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.previewActions {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.previewActions :global(.ant-tag) {
+  max-width: 220px;
+  margin-inline-end: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.fullInput {
+  width: 100%;
+}
+
+.customerOption {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.customerOption span {
+  color: #667085;
+  font-size: 12px;
+}
+
+.previewFrame {
+  width: 100%;
+  min-height: 780px;
+  border: 0;
+  background: #eef2f6;
+}
+
+.detailPreviewFrame {
+  display: block;
+  min-height: 820px;
+  border-top: 1px solid #edf2f7;
+}
+
+.detailLayout {
+  display: grid;
+  gap: 14px;
+}
+
+.detailSection {
+  min-width: 0;
+  border: 1px solid #e6edf5;
+  border-radius: 8px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.detailDescriptions {
+  padding: 14px;
+}
+
+.detailDescriptions :global(.ant-descriptions-view) {
+  border-radius: 8px;
+}
+
+@media (max-width: 1220px) {
+  .drawerLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .toolbar,
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .summaryStrip {
+    grid-template-columns: 1fr;
+    justify-content: stretch;
+  }
+}

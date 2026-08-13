@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 2,
+  "appCode": "app-4d050189",
+  "skillCode": "cpo-contract-analysis-and-entry",
+  "skillName": "合同风险分析与分期入库",
+  "scope": "personal",
+  "readonly": false,
+  "version": "20260811.192724",
+  "tags": [],
+  "contentHash": "298c7a983cf6589b5d3a14307054041d69d5e4b00f1e3811acad21ce78cb58ab",
+  "fileHashes": {
+    "SKILL.md": "298c7a983cf6589b5d3a14307054041d69d5e4b00f1e3811acad21ce78cb58ab",
+    "agents/openai.yaml": "2ac443cbcea1d795f52aacd61d9339611408d6a425313d6ff1e20a5794d4460a",
+    "references/contract-review-rules.md": "66e934682204c6249c763b026ba38a68811bbe4f211de6c636b20210ce29c7c0",
+    "references/contract-risk-review.md": "511fa098e4b57a59de7217de9e304e763c827a67b911b70e21b08563f0fa349f",
+    "references/output-contract.md": "da42d6ef7aa7211bd60be2a47450a844b477afef5a36f3013c0fb69a89c2fb92",
+    "references/system-entry.md": "a5408d0ecee207173f5672ddfdf6edbe07836438af7330938c13271c7dc86177",
+    "scripts/validate_contract_analysis.py": "df5ebfddcb9a46769bac579a086e72ce9eb9bd1bec418b7d326fbf99a444c0d2"
+  },
+  "treeHash": "3b1021c13c414ad87f8a95d7f32387ec764675aeeebd04475c6be450af95cfa2",
+  "zipSha256": "024076b7983e27eb3dbb6fd08f6f4e2b1a654a67406b76948fd5220ef1849dba",
+  "zipSize": 52599,
+  "files": [
+    {
+      "path": "SKILL.md",
+      "hash": "298c7a983cf6589b5d3a14307054041d69d5e4b00f1e3811acad21ce78cb58ab",
+      "size": 8596
+    },
+    {
+      "path": "agents/openai.yaml",
+      "hash": "2ac443cbcea1d795f52aacd61d9339611408d6a425313d6ff1e20a5794d4460a",
+      "size": 337
+    },
+    {
+      "path": "references/contract-review-rules.md",
+      "hash": "66e934682204c6249c763b026ba38a68811bbe4f211de6c636b20210ce29c7c0",
+      "size": 4386
+    },
+    {
+      "path": "references/contract-risk-review.md",
+      "hash": "511fa098e4b57a59de7217de9e304e763c827a67b911b70e21b08563f0fa349f",
+      "size": 5066
+    },
+    {
+      "path": "references/output-contract.md",
+      "hash": "da42d6ef7aa7211bd60be2a47450a844b477afef5a36f3013c0fb69a89c2fb92",
+      "size": 6925
+    },
+    {
+      "path": "references/system-entry.md",
+      "hash": "a5408d0ecee207173f5672ddfdf6edbe07836438af7330938c13271c7dc86177",
+      "size": 7396
+    },
+    {
+      "path": "scripts/validate_contract_analysis.py",
+      "hash": "df5ebfddcb9a46769bac579a086e72ce9eb9bd1bec418b7d326fbf99a444c0d2",
+      "size": 18965
+    }
+  ],
+  "pulledAt": "2026-08-11T11:27:25.484Z"
+}

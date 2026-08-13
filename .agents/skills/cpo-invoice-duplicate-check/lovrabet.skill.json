@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 2,
+  "appCode": "app-4d050189",
+  "skillCode": "cpo-invoice-duplicate-check",
+  "skillName": "发票重复查验",
+  "scope": "personal",
+  "readonly": false,
+  "version": "20260811.192654",
+  "tags": [],
+  "contentHash": "aa24b78981d09f1a2592ad40bb97bb44a049d95ed655a8df022905e0387d8a9c",
+  "fileHashes": {
+    "SKILL.md": "aa24b78981d09f1a2592ad40bb97bb44a049d95ed655a8df022905e0387d8a9c",
+    "references/output-contract.md": "81b497160835f09ad7fe0bb730d8bbf7903d624b40cb182d828edabfb71c921e",
+    "references/runtime-contract.md": "8b19bfaf4a527cbefc171b4a1364e8aef2358cf95199a3540ee713213d03cbb8"
+  },
+  "treeHash": "e7480456d768907b9d0ef6a24326abf2c7e9829086e1292f4183438489116a1f",
+  "zipSha256": "6e0779c42925f72ef1f6eae134171efa00ba03b8e444161fec7db92e51a3544b",
+  "zipSize": 5944,
+  "files": [
+    {
+      "path": "SKILL.md",
+      "hash": "aa24b78981d09f1a2592ad40bb97bb44a049d95ed655a8df022905e0387d8a9c",
+      "size": 3063
+    },
+    {
+      "path": "references/output-contract.md",
+      "hash": "81b497160835f09ad7fe0bb730d8bbf7903d624b40cb182d828edabfb71c921e",
+      "size": 1178
+    },
+    {
+      "path": "references/runtime-contract.md",
+      "hash": "8b19bfaf4a527cbefc171b4a1364e8aef2358cf95199a3540ee713213d03cbb8",
+      "size": 1319
+    }
+  ],
+  "pulledAt": "2026-08-11T11:26:55.182Z"
+}

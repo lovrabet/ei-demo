@@ -1,0 +1,4 @@
+interface:
+  display_name: "批量审批核查助手"
+  short_description: "批量核验本人审批待办、提示合规风险并在确认后安全办理"
+  default_prompt: "使用 $cpo-batch-workflow-approval 核验我的全部审批待办，列出风险和可直接通过项，确认后批量办理。"

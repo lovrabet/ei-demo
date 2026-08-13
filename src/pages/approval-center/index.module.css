@@ -1,0 +1,91 @@
+.card :global(.ant-card-head) {
+  min-height: 72px;
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 0;
+}
+
+.titleIcon {
+  color: var(--ant-color-primary, #1677ff);
+}
+
+.subtitle {
+  color: var(--ant-color-text-secondary, #666);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.statistics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.statisticCard {
+  position: relative;
+  min-height: 104px;
+  padding: 18px 20px;
+  overflow: hidden;
+  background: var(--ant-color-fill-quaternary, #fafafa);
+  border: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+  border-radius: 8px;
+}
+
+.statisticCard > :first-child {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 22px;
+}
+
+.statisticCard :global(.ant-statistic-title) {
+  margin-bottom: 6px;
+}
+
+.statisticCard :global(.ant-statistic-content) {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.totalIcon {
+  color: var(--ant-color-primary, #1677ff);
+}
+
+.todoIcon {
+  color: var(--ant-color-warning, #faad14);
+}
+
+.doneIcon {
+  color: var(--ant-color-success, #52c41a);
+}
+
+.tabs :global(.ant-tabs-nav) {
+  margin-bottom: 16px;
+}
+
+@media (max-width: 767px) {
+  .card :global(.ant-card-body) {
+    padding: 16px;
+  }
+
+  .statistics {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .statisticCard {
+    min-height: 88px;
+    padding: 14px 16px;
+  }
+
+  .statisticCard > :first-child {
+    top: 16px;
+    right: 16px;
+  }
+}

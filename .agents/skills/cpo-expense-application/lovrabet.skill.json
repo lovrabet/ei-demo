@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "appCode": "app-4d050189",
+  "skillCode": "cpo-expense-application",
+  "skillName": "报销申请助手",
+  "scope": "personal",
+  "readonly": false,
+  "version": "20260811.192553",
+  "tags": [],
+  "contentHash": "c0ffde06e42d3969f1472efd03dbfa348ee739b0f1b5750ce57b2290b0b936ae",
+  "pulledAt": "2026-08-11T11:25:53.549Z"
+}

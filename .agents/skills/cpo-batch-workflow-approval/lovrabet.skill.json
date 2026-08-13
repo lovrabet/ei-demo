@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 2,
+  "appCode": "app-4d050189",
+  "skillCode": "cpo-batch-workflow-approval",
+  "skillName": "批量审批核查助手",
+  "scope": "personal",
+  "readonly": false,
+  "version": "20260811.192714",
+  "tags": [],
+  "contentHash": "33dea8b232f9e88b5ec77b50c5079ec678021d303e40c04947bef8148c324514",
+  "fileHashes": {
+    "SKILL.md": "33dea8b232f9e88b5ec77b50c5079ec678021d303e40c04947bef8148c324514",
+    "agents/openai.yaml": "319722c6e95999c20f32bf0673a74d3dd31cc7243f881bb10e7be1c9a0bd1962",
+    "references/output-contract.md": "76a3f03ab7cc9fd937585649d49b71a7867f3f824f04b9aaa013bdd583f26ee4",
+    "references/review-policy.md": "2b0e96861001f0ed95804a600b33d93b586c02195ffb6968293712fbaa6a58a8",
+    "references/runtime-contract.md": "e25d88f8b90d7c2e9e4215c874ee3782b132e876c454dc7516e5859b4f71f9c5",
+    "scripts/validate_batch_plan.py": "f4106ede0c524488b88ffdb4fbe9d0639217e0bde965f2cddcb8ec04be154251"
+  },
+  "treeHash": "57238ca174f677db2001c1b98563e05d0434d794e3ccc05b248deb4f229d1212",
+  "zipSha256": "cc60ace6721ce13c64ed63f908814211af613a49a145de0374edf743f46bd24c",
+  "zipSize": 26010,
+  "files": [
+    {
+      "path": "SKILL.md",
+      "hash": "33dea8b232f9e88b5ec77b50c5079ec678021d303e40c04947bef8148c324514",
+      "size": 5596
+    },
+    {
+      "path": "agents/openai.yaml",
+      "hash": "319722c6e95999c20f32bf0673a74d3dd31cc7243f881bb10e7be1c9a0bd1962",
+      "size": 306
+    },
+    {
+      "path": "references/output-contract.md",
+      "hash": "76a3f03ab7cc9fd937585649d49b71a7867f3f824f04b9aaa013bdd583f26ee4",
+      "size": 2699
+    },
+    {
+      "path": "references/review-policy.md",
+      "hash": "2b0e96861001f0ed95804a600b33d93b586c02195ffb6968293712fbaa6a58a8",
+      "size": 5772
+    },
+    {
+      "path": "references/runtime-contract.md",
+      "hash": "e25d88f8b90d7c2e9e4215c874ee3782b132e876c454dc7516e5859b4f71f9c5",
+      "size": 4247
+    },
+    {
+      "path": "scripts/validate_batch_plan.py",
+      "hash": "f4106ede0c524488b88ffdb4fbe9d0639217e0bde965f2cddcb8ec04be154251",
+      "size": 6628
+    }
+  ],
+  "pulledAt": "2026-08-11T11:27:15.361Z"
+}

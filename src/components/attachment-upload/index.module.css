@@ -1,0 +1,118 @@
+.compactUpload {
+  min-width: 0;
+}
+
+.actionUpload {
+  display: contents;
+}
+
+.inlineUploadAction {
+  grid-column: 5;
+  grid-row: 1;
+  align-self: center;
+}
+
+.inlineFile {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  min-width: 0;
+  max-width: max-content;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
+  color: #595959;
+  font: inherit;
+  cursor: pointer;
+}
+
+.inlineFile:hover,
+.inlineFile:focus-visible {
+  color: #1677ff;
+}
+
+.inlineFile span {
+  overflow: hidden;
+  max-width: 640px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.compactFileList {
+  display: block;
+}
+
+.hiddenUploadTrigger {
+  display: none;
+}
+
+.compactTrigger {
+  height: 28px;
+  padding-inline: 2px;
+  font-weight: 500;
+}
+
+.compactPanel {
+  padding-top: 2px;
+}
+
+.compactPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 24px;
+  margin-bottom: 4px;
+  color: #4b5563;
+  font-size: 13px;
+}
+
+.compactDragger :global(.ant-upload) {
+  min-height: 72px;
+  padding: 12px !important;
+}
+
+.compactDragger :global(.ant-upload-drag-container) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 8px;
+}
+
+.compactIcon {
+  color: #737373;
+  font-size: 20px;
+}
+
+.compactHint {
+  color: #262626;
+  font-size: 13px;
+}
+
+.compactMeta {
+  flex-basis: 100%;
+  color: #8c8c8c;
+  font-size: 12px;
+  text-align: center;
+}
+
+.compactUpload :global(.ant-upload-list) {
+  margin: 0 0 2px;
+}
+
+.compactUpload :global(.ant-upload-list-item) {
+  margin-top: 0;
+  padding-inline: 2px 6px;
+}
+
+@media (max-width: 767px) {
+  .inlineFile span {
+    max-width: 360px;
+  }
+
+  .compactDragger :global(.ant-upload) {
+    min-height: 84px;
+  }
+}

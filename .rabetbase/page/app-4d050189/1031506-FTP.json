@@ -1,0 +1,1237 @@
+{
+  "version": "1.0.0",
+  "componentsMap": [
+    {
+      "package": "@yuntoo/antd-meta",
+      "version": "1.0.0",
+      "main": "",
+      "destructuring": true,
+      "exportName": "YtPage",
+      "componentName": "YtPage"
+    },
+    {
+      "devMode": "lowCode",
+      "componentName": "Page"
+    },
+    {
+      "package": "@yuntoo/antd-smart",
+      "version": "1.0.0",
+      "main": "",
+      "destructuring": true,
+      "exportName": "LrSmartFilter",
+      "componentName": "LrSmartFilter"
+    },
+    {
+      "package": "@yuntoo/antd-smart",
+      "version": "1.0.0",
+      "main": "",
+      "destructuring": true,
+      "exportName": "LrSmartTable",
+      "componentName": "LrSmartTable"
+    },
+    {
+      "package": "@yuntoo/antd-meta",
+      "version": "1.0.0",
+      "main": "",
+      "destructuring": true,
+      "exportName": "YtRglContainer",
+      "componentName": "YtRglContainer"
+    }
+  ],
+  "componentsTree": [
+    {
+      "componentName": "Page",
+      "id": "node_aseex2zu",
+      "props": {
+        "ref": "outerView",
+        "style": {
+          "height": "100%"
+        }
+      },
+      "dataSource": {
+        "list": [
+          {
+            "type": "urlParams",
+            "id": "urlParams",
+            "isInit": true,
+            "source": "system",
+            "options": {}
+          },
+          {
+            "type": "fetch",
+            "id": "1015655_filter",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/ab17964f0efd46f78cecb4969140f257/filter",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "pageSize",
+                  "value": "this.state.yttable_f61vz21c_pageSize",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "currentPage",
+                  "value": "this.state.yttable_f61vz21c_currentPage",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "filter",
+                  "value": "this.state.ytfilter_zkjiewg3_filter",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "sort",
+                  "value": "this.state.yttable_f61vz21c_sort",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "select",
+                  "value": [
+                    "id",
+                    "file_name",
+                    "biz_type",
+                    "attachment_type",
+                    "biz_id",
+                    "uploaded_by",
+                    "employee.full_name",
+                    "file_type",
+                    "file_path",
+                    "source_dir",
+                    "is_deleted"
+                  ],
+                  "type": "array",
+                  "required": true
+                }
+              ],
+              "headersArr": [],
+              "params": {
+                "pageSize": {
+                  "type": "JSExpression",
+                  "value": "this.state.yttable_f61vz21c_pageSize"
+                },
+                "currentPage": {
+                  "type": "JSExpression",
+                  "value": "this.state.yttable_f61vz21c_currentPage"
+                },
+                "filter": {
+                  "type": "JSExpression",
+                  "value": "this.state.ytfilter_zkjiewg3_filter"
+                },
+                "sort": {
+                  "type": "JSExpression",
+                  "value": "this.state.yttable_f61vz21c_sort"
+                },
+                "select": [
+                  "id",
+                  "file_name",
+                  "biz_type",
+                  "attachment_type",
+                  "biz_id",
+                  "uploaded_by",
+                  "employee.full_name",
+                  "file_type",
+                  "file_path",
+                  "source_dir",
+                  "is_deleted"
+                ]
+              },
+              "requiredParams": [
+                "pageSize",
+                "currentPage"
+              ],
+              "headers": {},
+              "willFetch": {
+                "type": "JSFunction",
+                "value": "({ filter, sort, ...rest }) => ({ ...rest, ...filter, ...sort })"
+              }
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "1015655_delete",
+            "isInit": false,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/ab17964f0efd46f78cecb4969140f257/delete",
+              "isCors": true,
+              "timeout": 5000,
+              "requiredParams": [
+                "id"
+              ]
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "1015655_excelExport",
+            "isInit": false,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/ab17964f0efd46f78cecb4969140f257/excelExport",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "filter",
+                  "value": "this.state.ytfilter_zkjiewg3_filter",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "selectKeys",
+                  "value": "this.state.yttable_f61vz21c_selectKeys",
+                  "type": "expression",
+                  "required": true
+                },
+                {
+                  "name": "select",
+                  "value": [
+                    "id",
+                    "file_name",
+                    "biz_type",
+                    "attachment_type",
+                    "biz_id",
+                    "uploaded_by",
+                    "employee.full_name",
+                    "file_type",
+                    "file_path",
+                    "source_dir",
+                    "is_deleted"
+                  ],
+                  "type": "array",
+                  "required": false
+                }
+              ],
+              "headersArr": [],
+              "params": {
+                "filter": {
+                  "type": "JSExpression",
+                  "value": "this.state.ytfilter_zkjiewg3_filter"
+                },
+                "selectKeys": {
+                  "type": "JSExpression",
+                  "value": "this.state.yttable_f61vz21c_selectKeys"
+                },
+                "select": [
+                  "id",
+                  "file_name",
+                  "biz_type",
+                  "attachment_type",
+                  "biz_id",
+                  "uploaded_by",
+                  "employee.full_name",
+                  "file_type",
+                  "file_path",
+                  "source_dir",
+                  "is_deleted"
+                ]
+              },
+              "requiredParams": [],
+              "headers": {},
+              "willFetch": {
+                "type": "JSFunction",
+                "value": "({ filter, selectKeys, select, ...rest }) => ({ ...rest, ...filter, select, ...selectKeys })"
+              }
+            }
+          },
+          {
+            "type": "fetch",
+            "id": "dataset_d8e2be71fbf14f93a589ebe96b64e004_uploaded_by_options",
+            "isInit": true,
+            "source": "dataset",
+            "options": {
+              "method": "POST",
+              "uri": "/api/app-4d050189/d8e2be71fbf14f93a589ebe96b64e004/getSelectOptions",
+              "isCors": true,
+              "timeout": 5000,
+              "paramsArr": [
+                {
+                  "name": "code",
+                  "value": "id",
+                  "type": "string",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "value": "full_name",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "params": {
+                "code": "id",
+                "label": "full_name"
+              },
+              "requiredParams": [
+                "code",
+                "label"
+              ],
+              "headersArr": [],
+              "headers": {}
+            }
+          }
+        ]
+      },
+      "hidden": false,
+      "title": "",
+      "isLocked": false,
+      "condition": true,
+      "conditionGroup": "",
+      "children": [
+        {
+          "componentName": "YtPage",
+          "id": "node_faffm92k",
+          "props": {
+            "ref": "ytpage_faffm92k",
+            "_context": {
+              "type": "JSExpression",
+              "value": "this"
+            },
+            "_uniqueId": "ytpage_faffm92k",
+            "useRGL": true
+          },
+          "hidden": false,
+          "title": "",
+          "isLocked": false,
+          "condition": true,
+          "conditionGroup": "",
+          "children": [
+            {
+              "componentName": "YtRglContainer",
+              "id": "node_iz1xdqkg",
+              "props": {
+                "RGLlayout": [
+                  {
+                    "i": "node_yh1xs12f",
+                    "w": 12,
+                    "h": 3,
+                    "x": 0,
+                    "y": 0,
+                    "autoHeight": true
+                  },
+                  {
+                    "i": "node_whpov0e3",
+                    "w": 12,
+                    "h": 27,
+                    "x": 0,
+                    "y": 3,
+                    "autoHeight": true
+                  }
+                ]
+              },
+              "hidden": false,
+              "title": "",
+              "isLocked": false,
+              "condition": true,
+              "conditionGroup": "",
+              "children": [
+                {
+                  "componentName": "LrSmartFilter",
+                  "id": "node_yh1xs12f",
+                  "props": {
+                    "_doVersion": "V2",
+                    "_context": {
+                      "type": "JSExpression",
+                      "value": "this"
+                    },
+                    "ref": "ytfilter_zkjiewg3",
+                    "_uniqueId": "ytfilter_zkjiewg3",
+                    "datasetId": 1015655,
+                    "oneSearchFilterKey": "ytfilter_zkjiewg3_filter",
+                    "items": [
+                      {
+                        "lcAsItemId": null,
+                        "name": "file_name",
+                        "label": "文件名",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": true,
+                        "placeholder": "请输入文件名",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "wb4qx5xfuo"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "uploaded_by",
+                        "label": "上传人",
+                        "componentName": "YtUserSelect",
+                        "doType": "USER",
+                        "isShown": true,
+                        "placeholder": "请选择上传人",
+                        "options": null,
+                        "indexType": "index",
+                        "__lc_as_item_id__": "rrdqk9nqru"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "biz_type",
+                        "label": "业务类型",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "isShown": true,
+                        "placeholder": "请选择业务类型",
+                        "options": [
+                          {
+                            "label": "费用",
+                            "value": "expense"
+                          },
+                          {
+                            "label": "合同",
+                            "value": "contract"
+                          },
+                          {
+                            "label": "付款",
+                            "value": "payment"
+                          },
+                          {
+                            "label": "工资发放",
+                            "value": "salary_payment"
+                          },
+                          {
+                            "label": "合作伙伴",
+                            "value": "partner"
+                          },
+                          {
+                            "label": "发票",
+                            "value": "invoice"
+                          },
+                          {
+                            "label": "资质",
+                            "value": "credential"
+                          }
+                        ],
+                        "indexType": "index",
+                        "__lc_as_item_id__": "6lvbpexjp3"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "attachment_type",
+                        "label": "附件类型",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "isShown": true,
+                        "placeholder": "请选择附件类型",
+                        "options": [
+                          {
+                            "label": "发票",
+                            "value": "invoice"
+                          },
+                          {
+                            "label": "合同文件",
+                            "value": "contract_file"
+                          },
+                          {
+                            "label": "资质",
+                            "value": "credential"
+                          },
+                          {
+                            "label": "银行回单",
+                            "value": "bank_receipt"
+                          },
+                          {
+                            "label": "审批材料",
+                            "value": "approval_material"
+                          },
+                          {
+                            "label": "工资表",
+                            "value": "payroll_sheet"
+                          },
+                          {
+                            "label": "其他",
+                            "value": "other"
+                          }
+                        ],
+                        "indexType": "index",
+                        "__lc_as_item_id__": "u4jgtzsbwm"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "biz_id",
+                        "label": "业务ID",
+                        "componentName": "YtRangeInputNumber",
+                        "doType": "NUMBER",
+                        "isShown": true,
+                        "placeholder": "请输入业务ID",
+                        "options": null,
+                        "indexType": "index",
+                        "__lc_as_item_id__": "onbkla8kyc"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "file_type",
+                        "label": "文件类型",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入文件类型",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "fdxjut8lbh"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "source_dir",
+                        "label": "来源目录",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入来源目录",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "0gsll26ivf"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "file_path",
+                        "label": "文件路径",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "isShown": false,
+                        "placeholder": "请输入文件路径",
+                        "options": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "vljhi9acfy"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "is_deleted",
+                        "label": "删除标志",
+                        "componentName": "YtRadioGroup",
+                        "doType": "SELECT",
+                        "isShown": false,
+                        "placeholder": "请选择删除标志",
+                        "options": [
+                          {
+                            "label": "正常",
+                            "value": 0
+                          },
+                          {
+                            "label": "已删除",
+                            "value": 1
+                          }
+                        ],
+                        "indexType": null,
+                        "__lc_as_item_id__": "65cz0xtefd"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "name": "id",
+                        "label": "主键",
+                        "componentName": "YtInput",
+                        "doType": "NUMBER",
+                        "isShown": false,
+                        "placeholder": "请输入主键",
+                        "options": null,
+                        "indexType": "primary",
+                        "__lc_as_item_id__": "kft621p5oz"
+                      }
+                    ],
+                    "events": [
+                      {
+                        "optType": "flowAction",
+                        "name": "onSearch",
+                        "flowList": [
+                          {
+                            "active": true,
+                            "optType": "request",
+                            "options": {
+                              "_bindDataSource": "1015655_filter",
+                              "_autoBindDataSourceParams": true,
+                              "confirmConfig": {
+                                "enable": false
+                              },
+                              "responseConfig": {
+                                "successToastMsg": "查询成功！",
+                                "errorToastMsg": "查询失败"
+                              },
+                              "redirectType": "current"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "showSearch": true
+                  },
+                  "meta": {
+                    "datasetId": 1015655,
+                    "datasetCode": "ab17964f0efd46f78cecb4969140f257"
+                  },
+                  "hidden": false,
+                  "title": "",
+                  "isLocked": false,
+                  "condition": true,
+                  "conditionGroup": ""
+                },
+                {
+                  "componentName": "LrSmartTable",
+                  "id": "node_whpov0e3",
+                  "props": {
+                    "_doVersion": "V2",
+                    "_context": {
+                      "type": "JSExpression",
+                      "value": "this"
+                    },
+                    "ref": "yttable_f61vz21c",
+                    "_uniqueId": "yttable_f61vz21c",
+                    "dataSource": {
+                      "type": "JSExpression",
+                      "value": "this.state['1015655_filter']"
+                    },
+                    "loading": {
+                      "type": "JSExpression",
+                      "value": "this.state['1015655_filter_loading']"
+                    },
+                    "columns": [
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "id",
+                        "title": "附件ID",
+                        "pkField": true,
+                        "doType": "NUMBER",
+                        "format": "text",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": "start",
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": "primary",
+                        "__lc_as_item_id__": "41k3mlh1fi"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "file_name",
+                        "title": "文件名",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": "start",
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "zpozoaous0"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "biz_type",
+                        "title": "业务类型",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "enum",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "options": [
+                            {
+                              "color": "default",
+                              "label": "费用",
+                              "value": "expense"
+                            },
+                            {
+                              "color": "default",
+                              "label": "合同",
+                              "value": "contract"
+                            },
+                            {
+                              "color": "default",
+                              "label": "付款",
+                              "value": "payment"
+                            },
+                            {
+                              "color": "default",
+                              "label": "工资发放",
+                              "value": "salary_payment"
+                            },
+                            {
+                              "color": "default",
+                              "label": "合作伙伴",
+                              "value": "partner"
+                            },
+                            {
+                              "color": "default",
+                              "label": "发票",
+                              "value": "invoice"
+                            },
+                            {
+                              "color": "default",
+                              "label": "资质",
+                              "value": "credential"
+                            }
+                          ],
+                          "type": "select"
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "oksdnykh5u"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "attachment_type",
+                        "title": "附件类型",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "enum",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "options": [
+                            {
+                              "color": "default",
+                              "label": "发票",
+                              "value": "invoice"
+                            },
+                            {
+                              "color": "default",
+                              "label": "合同文件",
+                              "value": "contract_file"
+                            },
+                            {
+                              "color": "default",
+                              "label": "资质",
+                              "value": "credential"
+                            },
+                            {
+                              "color": "default",
+                              "label": "银行回单",
+                              "value": "bank_receipt"
+                            },
+                            {
+                              "color": "default",
+                              "label": "审批材料",
+                              "value": "approval_material"
+                            },
+                            {
+                              "color": "default",
+                              "label": "工资表",
+                              "value": "payroll_sheet"
+                            },
+                            {
+                              "color": "default",
+                              "label": "其他",
+                              "value": "other"
+                            }
+                          ],
+                          "type": "select"
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "iaa2bz094k"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "biz_id",
+                        "title": "业务ID",
+                        "pkField": false,
+                        "doType": "NUMBER",
+                        "format": "number",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "separator": true
+                        },
+                        "indexType": "index",
+                        "__lc_as_item_id__": "45tytrfhw4"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "uploaded_by",
+                        "title": "上传人",
+                        "pkField": false,
+                        "doType": "USER",
+                        "format": "user",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": "index",
+                        "__lc_as_item_id__": "2uth7f4kz3"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "employee.full_name",
+                        "title": "上传人姓名",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": true,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "indexType": null,
+                        "__lc_as_item_id__": "0xhdcor4fd"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "file_type",
+                        "title": "文件类型",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "dq1iyi13h4"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "file_path",
+                        "title": "文件路径",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "9q1b8nwtjj"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "source_dir",
+                        "title": "来源目录",
+                        "pkField": false,
+                        "doType": "TEXT",
+                        "format": "text",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "ellipsis": true
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "xr6qkpls62"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "is_deleted",
+                        "title": "删除标志",
+                        "pkField": false,
+                        "doType": "SELECT",
+                        "format": "enum",
+                        "isShown": false,
+                        "isFetched": true,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "options": [
+                            {
+                              "color": "success",
+                              "label": "正常",
+                              "value": 0
+                            },
+                            {
+                              "color": "default",
+                              "label": "已删除",
+                              "value": 1
+                            }
+                          ],
+                          "type": "select"
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "m5nhcu2423"
+                      },
+                      {
+                        "lcAsItemId": null,
+                        "dataIndex": "created_at",
+                        "title": "创建时间",
+                        "pkField": false,
+                        "doType": "DATETIME",
+                        "format": "datetime",
+                        "isShown": false,
+                        "isFetched": false,
+                        "fixed": null,
+                        "width": null,
+                        "align": null,
+                        "tooltip": null,
+                        "sortable": null,
+                        "defaultSortOrder": null,
+                        "formatOptions": {
+                          "format": "YYYY-MM-DD HH:mm"
+                        },
+                        "indexType": null,
+                        "__lc_as_item_id__": "oy6zwrt866"
+                      }
+                    ],
+                    "pagination": {
+                      "enable": true,
+                      "showQuickJumper": true,
+                      "showSizeChanger": true,
+                      "pageSizeOptions": [
+                        "10",
+                        "20",
+                        "50",
+                        "100"
+                      ],
+                      "currentPage": {
+                        "type": "JSExpression",
+                        "value": "this.state['yttable_f61vz21c_currentPage']"
+                      },
+                      "currentPageKey": "yttable_f61vz21c_currentPage",
+                      "total": {
+                        "type": "JSExpression",
+                        "value": "this.state['yttable_f61vz21c_total']"
+                      },
+                      "totalKey": "yttable_f61vz21c_total",
+                      "pageSize": {
+                        "type": "JSExpression",
+                        "value": "this.state['yttable_f61vz21c_pageSize']"
+                      },
+                      "pageSizeKey": "yttable_f61vz21c_pageSize"
+                    },
+                    "toolbar": {
+                      "enable": true,
+                      "globalButtons": [
+                        {
+                          "title": "新增",
+                          "type": "primary",
+                          "size": "medium",
+                          "optType": "jsAction",
+                          "options": {
+                            "jsFunction": {
+                              "type": "JSFunction",
+                              "value": "(config) => config._context?.appHelper?.yt?.smartPageHistory?.push({ pageTagName: 'CREATE', datasetId: '1015655' })"
+                            }
+                          }
+                        }
+                      ],
+                      "exportButtons": {
+                        "loading": {
+                          "type": "JSExpression",
+                          "value": "this.state['1015655_excelExport_loading']"
+                        },
+                        "mainButton": {
+                          "title": "批量操作",
+                          "optType": "jsAction",
+                          "disabled": {
+                            "type": "JSExpression",
+                            "value": "!this.state['yttable_f61vz21c_selectedRowKeys']?.length"
+                          },
+                          "options": {
+                            "jsFunction": {
+                              "type": "JSFunction",
+                              "value": "(config) => config._context?.appHelper?.yt?.smartPageHistory?.push({ pageTagName: 'UPDATE', datasetId: '1015655', dataid: config._context?.state['yttable_f61vz21c_selectedRowKeys'], type: 'batch' })"
+                            }
+                          }
+                        },
+                        "buttons": [
+                          {
+                            "title": "导出选中项",
+                            "optType": "flowAction",
+                            "actionType": "export",
+                            "disabled": {
+                              "type": "JSExpression",
+                              "value": "!this.state['yttable_f61vz21c_selectedRowKeys']?.length"
+                            },
+                            "options": {
+                              "flowList": [
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015655_excelExport",
+                                    "_autoBindDataSourceParams": true
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "title": "导出全部",
+                            "optType": "flowAction",
+                            "actionType": "export",
+                            "options": {
+                              "flowList": [
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015655_excelExport"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "title": "删除选中项",
+                            "optType": "flowAction",
+                            "actionType": "delete",
+                            "danger": true,
+                            "disabled": {
+                              "type": "JSExpression",
+                              "value": "!this.state['yttable_f61vz21c_selectedRowKeys']?.length"
+                            },
+                            "options": {
+                              "flowList": [
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015655_delete",
+                                    "_autoBindDataSourceParams": false,
+                                    "_bindDataSourceParams": {
+                                      "type": "JSFunction",
+                                      "value": "(extraParams) => { return { id: extraParams.selectId }; }"
+                                    },
+                                    "confirmConfig": {
+                                      "enable": true,
+                                      "type": "confirm",
+                                      "title": "确认批量删除",
+                                      "content": "确认批量删除选中数据吗？"
+                                    },
+                                    "responseConfig": {
+                                      "enableSuccessToast": true,
+                                      "enableErrorToast": true,
+                                      "successToastMsg": "删除成功",
+                                      "errorToastMsg": "删除失败"
+                                    }
+                                  }
+                                },
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015655_filter",
+                                    "_autoBindDataSourceParams": false,
+                                    "confirmConfig": {
+                                      "enable": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "title": "删除全部",
+                            "optType": "flowAction",
+                            "actionType": "delete",
+                            "danger": true,
+                            "disabled": {
+                              "type": "JSExpression",
+                              "value": "!(this.state['yttable_f61vz21c_total'] > 0)"
+                            },
+                            "options": {
+                              "flowList": [
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015655_delete",
+                                    "_autoBindDataSourceParams": false,
+                                    "_bindDataSourceParams": {
+                                      "type": "JSFunction",
+                                      "value": "(extraParams) => { return { id: extraParams.allIds }; }"
+                                    },
+                                    "confirmConfig": {
+                                      "enable": true,
+                                      "type": "confirm",
+                                      "title": "确认批量删除",
+                                      "content": "确认批量删除当前页全部数据吗？"
+                                    },
+                                    "responseConfig": {
+                                      "enableSuccessToast": true,
+                                      "enableErrorToast": true,
+                                      "successToastMsg": "删除成功",
+                                      "errorToastMsg": "删除失败"
+                                    }
+                                  }
+                                },
+                                {
+                                  "active": true,
+                                  "optType": "request",
+                                  "options": {
+                                    "_bindDataSource": "1015655_filter",
+                                    "_autoBindDataSourceParams": false,
+                                    "confirmConfig": {
+                                      "enable": false
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        "buttonsDisabled": {
+                          "type": "JSExpression",
+                          "value": "this.state['yttable_f61vz21c_onePage'] || false"
+                        }
+                      }
+                    },
+                    "rowSelection": {
+                      "enable": true,
+                      "isDisabled": {
+                        "type": "JSExpression",
+                        "value": "this.state['yttable_f61vz21c_onePage'] || false"
+                      }
+                    },
+                    "showSelectionTotal": true,
+                    "sortEnable": true,
+                    "operateButtonsEnable": true,
+                    "operateButtons": [
+                      {
+                        "title": "更新",
+                        "type": "default",
+                        "size": "medium",
+                        "optType": "jsAction",
+                        "__lc_as_item_id__": "rjatswjsi4",
+                        "options": {
+                          "jsFunction": {
+                            "type": "JSFunction",
+                            "value": "(config) => config._context?.appHelper?.yt?.smartPageHistory?.push({ pageTagName: 'UPDATE', datasetId: '1015655', dataid: config.extraParams?.rowKey })"
+                          }
+                        }
+                      },
+                      {
+                        "title": "详情",
+                        "type": "default",
+                        "size": "medium",
+                        "optType": "jsAction",
+                        "__lc_as_item_id__": "bq208zsasv",
+                        "options": {
+                          "jsFunction": {
+                            "type": "JSFunction",
+                            "value": "(config) => config._context?.appHelper?.yt?.smartPageHistory?.push({ pageTagName: 'DETAIL', datasetId: '1015655', dataid: config.extraParams?.rowKey })"
+                          }
+                        }
+                      },
+                      {
+                        "title": "删除",
+                        "type": "default",
+                        "size": "medium",
+                        "optType": "flowAction",
+                        "__lc_as_item_id__": "h628lpmn89",
+                        "options": {
+                          "flowList": [
+                            {
+                              "active": true,
+                              "optType": "request",
+                              "__lc_as_item_id__": "ms076irgw5",
+                              "options": {
+                                "_bindDataSource": "1015655_delete",
+                                "_autoBindDataSourceParams": false,
+                                "_bindDataSourceParams": {
+                                  "type": "JSFunction",
+                                  "value": "(extraParams) => { return { id: extraParams.rowKey }; }"
+                                },
+                                "confirmConfig": {
+                                  "enable": true,
+                                  "type": "confirm",
+                                  "title": "确认删除",
+                                  "content": "确认删除该条数据吗？"
+                                },
+                                "responseConfig": {
+                                  "enableSuccessToast": true,
+                                  "enableErrorToast": true,
+                                  "successToastMsg": "删除成功",
+                                  "errorToastMsg": "删除失败"
+                                }
+                              }
+                            },
+                            {
+                              "active": true,
+                              "optType": "request",
+                              "__lc_as_item_id__": "34zhuhkym8",
+                              "options": {
+                                "_bindDataSource": "1015655_filter",
+                                "_autoBindDataSourceParams": false,
+                                "confirmConfig": {
+                                  "enable": false
+                                }
+                              }
+                            }
+                          ],
+                          "_autoBindDataSourceParams": false,
+                          "redirectType": "current"
+                        }
+                      }
+                    ]
+                  },
+                  "meta": {
+                    "datasetId": 1015655,
+                    "datasetCode": "ab17964f0efd46f78cecb4969140f257"
+                  },
+                  "hidden": false,
+                  "title": "",
+                  "isLocked": false,
+                  "condition": true,
+                  "conditionGroup": ""
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "fileName": "/"
+    }
+  ],
+  "i18n": {}
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lovrabet 发布菜单"
+  short_description: "构建上传 CDN 并更新 Lovrabet 菜单"
+  default_prompt: "Use $lovrabet-cdn-menu-release to build, upload CDN assets, update Lovrabet menus, and push code for this app."

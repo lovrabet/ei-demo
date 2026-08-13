@@ -1,0 +1,8 @@
+.moneyInput {
+  width: 100%;
+  max-width: 100%;
+}
+
+.moneyInput :global(.ant-input-number-input) {
+  font-variant-numeric: tabular-nums;
+}

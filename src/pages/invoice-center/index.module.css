@@ -1,0 +1,443 @@
+.summaryStrip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  overflow: hidden;
+  background: var(--ant-color-bg-container, #fff);
+  border: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+  border-radius: 8px;
+}
+
+.summaryStrip > div {
+  display: grid;
+  min-width: 0;
+  padding: 16px 20px;
+  gap: 3px;
+}
+
+.summaryStrip > div + div {
+  border-left: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+}
+
+.summaryStrip span,
+.summaryStrip small {
+  color: var(--ant-color-text-secondary, #666);
+  font-size: 12px;
+}
+
+.summaryStrip strong {
+  color: var(--ant-color-text, #1f1f1f);
+  font-size: 23px;
+  font-variant-numeric: tabular-nums;
+  line-height: 32px;
+}
+
+.summaryStrip .summaryWarning strong {
+  color: var(--ant-color-warning-text, #d46b08);
+}
+
+.listPanel {
+  min-width: 0;
+  overflow: hidden;
+  background: var(--ant-color-bg-container, #fff);
+  border: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+  border-radius: 8px;
+}
+
+.scopeTabs {
+  padding: 12px 16px 0;
+  border-bottom: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+}
+
+.scopeTabs :global(.ant-tabs-nav) {
+  margin-bottom: 12px;
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) 180px 160px;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--ant-color-fill-quaternary, #fafafa);
+  border-bottom: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+}
+
+.invoiceNumberCell {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+.invoiceNumberButton {
+  display: block;
+  flex: 0 1 auto;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0;
+  overflow: hidden;
+  color: var(--ant-color-primary, #1677ff);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.invoiceNumberButton:hover,
+.invoiceNumberButton:focus-visible {
+  color: var(--ant-color-primary-hover, #4096ff);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.invoiceNumberButton:focus-visible {
+  outline: 2px solid var(--ant-color-primary-border, #91caff);
+  outline-offset: 2px;
+}
+
+.copyInvoiceNumber {
+  flex: 0 0 auto;
+  color: var(--ant-color-text-secondary, #666);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.invoiceNumberCell:hover .copyInvoiceNumber,
+.invoiceNumberCell:focus-within .copyInvoiceNumber {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.titleCell,
+.partnerCell > span,
+.amountCell > span {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ant-color-text, #1f1f1f);
+  font-weight: 400;
+  line-height: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.partnerCell small,
+.amountCell small,
+.relationCell small {
+  color: var(--ant-color-text-secondary, #666);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.classificationCell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.classificationCell :global(.ant-tag) {
+  margin-inline-end: 0;
+}
+
+.partnerCell,
+.amountCell,
+.statusCell {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.amountCell {
+  justify-items: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.amountCell .amountPending {
+  color: var(--ant-color-warning-text, #d46b08);
+}
+
+.relationCell {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.relationItem {
+  display: grid;
+  min-width: 0;
+  color: var(--ant-color-text-secondary, #666);
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: 5px;
+}
+
+button.relationItem {
+  width: 100%;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  background: transparent;
+  border: 0;
+}
+
+.relationItemLink {
+  color: var(--ant-color-primary, #1677ff);
+  cursor: pointer;
+}
+
+.relationItemLink:hover,
+.relationItemLink:focus-visible {
+  color: var(--ant-color-primary-hover, #4096ff);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.relationItemLink:focus-visible {
+  outline: 2px solid var(--ant-color-primary-border, #91caff);
+  outline-offset: 2px;
+}
+
+.relationItem span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actionIndicator {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ant-color-error, #ff4d4f);
+  gap: 4px;
+}
+
+.statusCell {
+  justify-items: start;
+}
+
+.drawerContent {
+  display: grid;
+  gap: 22px;
+}
+
+.drawerContent header span,
+.drawerContent header p {
+  margin: 0;
+  color: var(--ant-color-text-secondary, #666);
+}
+
+.drawerContent header h3 {
+  margin: 5px 0;
+  overflow-wrap: anywhere;
+  font-size: 20px;
+  line-height: 28px;
+}
+
+.drawerContent section h4 {
+  margin: 0 0 10px;
+}
+
+.drawerFacts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+  border-bottom: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+}
+
+.drawerFacts > div {
+  display: grid;
+  min-width: 0;
+  padding: 12px 0;
+  gap: 3px;
+}
+
+.drawerFacts span {
+  color: var(--ant-color-text-secondary, #666);
+  font-size: 12px;
+}
+
+.drawerFacts strong {
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+
+.drawerAttachmentSection {
+  display: grid;
+  gap: 10px;
+}
+
+.drawerAttachmentSection h4 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.drawerAttachmentCard {
+  display: flex;
+  min-width: 0;
+  padding: 14px;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--ant-color-primary-bg, #e6f4ff);
+  border: 1px solid var(--ant-color-primary-border, #91caff);
+  border-radius: 8px;
+  gap: 14px;
+}
+
+.drawerAttachmentMeta {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  color: var(--ant-color-primary, #1677ff);
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 9px;
+}
+
+.drawerAttachmentMeta > :global(.anticon) {
+  font-size: 20px;
+}
+
+.drawerAttachmentMeta > div {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.drawerAttachmentMeta span {
+  color: var(--ant-color-text-secondary, #666);
+  font-size: 12px;
+}
+
+.drawerAttachmentMeta strong {
+  color: var(--ant-color-text, #1f1f1f);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.drawerAttachmentEmpty {
+  display: flex;
+  min-height: 68px;
+  align-items: center;
+  justify-content: center;
+  color: var(--ant-color-text-secondary, #666);
+  background: var(--ant-color-fill-quaternary, #fafafa);
+  border: 1px dashed var(--ant-color-border, #d9d9d9);
+  border-radius: 8px;
+  gap: 8px;
+}
+
+.drawerDocumentList {
+  display: grid;
+  border-top: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+}
+
+.drawerDocument {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  padding: 13px 4px;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+  grid-template-columns: 20px minmax(0, 1fr) 18px;
+  gap: 10px;
+}
+
+.drawerDocument:hover,
+.drawerDocument:focus-visible {
+  background: var(--ant-color-fill-quaternary, #fafafa);
+}
+
+.drawerDocumentStatic {
+  cursor: default;
+}
+
+.drawerDocumentStatic:hover {
+  background: transparent;
+}
+
+.drawerDocument > span {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.drawerDocument small,
+.drawerDocument em {
+  color: var(--ant-color-text-secondary, #666);
+  font-size: 12px;
+  font-style: normal;
+}
+
+.drawerDocument strong {
+  color: var(--ant-color-primary, #1677ff);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  .summaryStrip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .summaryStrip > div:nth-child(3) {
+    border-top: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+    border-left: 0;
+  }
+
+  .summaryStrip > div:nth-child(4) {
+    border-top: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+  }
+
+  .toolbar {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .toolbar > :first-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .summaryStrip {
+    grid-template-columns: 1fr;
+  }
+
+  .summaryStrip > div + div {
+    border-top: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+    border-left: 0;
+  }
+
+  .toolbar,
+  .drawerFacts {
+    grid-template-columns: 1fr;
+  }
+
+  .drawerAttachmentCard {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .drawerAttachmentCard :global(.ant-btn) {
+    width: 100%;
+  }
+
+  .toolbar > :first-child {
+    grid-column: auto;
+  }
+
+  .copyInvoiceNumber {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .invoiceNumberButton,
+  .drawerDocument {
+    transition: none;
+  }
+}

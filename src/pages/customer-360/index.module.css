@@ -1,0 +1,266 @@
+.workspace {
+  display: grid;
+  grid-template-columns: 280px minmax(480px, 1fr) 350px;
+  height: calc(100vh - 228px);
+  height: calc(100dvh - 228px);
+  min-height: 520px;
+  overflow: hidden;
+  background: var(--ant-color-bg-container, #fff);
+  border: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+  border-radius: 8px;
+}
+
+.customerRail,
+.relatedRail {
+  min-width: 0;
+  min-height: 0;
+  background: var(--ant-color-fill-quaternary, #fafafa);
+}
+
+.customerRail {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+}
+
+.relatedRail {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 10px;
+  overflow-y: auto;
+  border-left: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+}
+
+.railSearch {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 6px;
+  padding: 10px;
+  border-bottom: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+}
+
+.railLoading {
+  display: grid;
+  min-height: 240px;
+  place-items: center;
+}
+
+.customerList {
+  display: grid;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* grid 默认 align-content 会把行拉伸填满容器，导致每行被拉成超高 */
+  align-content: start;
+}
+
+.customerList > button {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: 13px 12px;
+  gap: 4px 8px;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+}
+
+.customerList > button:hover,
+.customerList .customerActive {
+  background: var(--ant-color-primary-bg, #e6f4ff);
+}
+
+.customerName {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.customerList small,
+.contactList small,
+.followItem small,
+.amountStack small {
+  color: var(--ant-color-text-secondary, #666);
+  font-size: 12px;
+}
+
+.customerList strong {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.customerMain {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+  gap: 10px;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.profileCard,
+.businessCard,
+.emptyMain {
+  min-width: 0;
+}
+
+.profileHeading {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(420px, 1.4fr);
+  gap: 24px;
+}
+
+.profileHeading :global(.ant-typography) {
+  margin: 2px 0 8px;
+}
+
+.statistics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.statistics :global(.ant-statistic-content) {
+  font-size: 19px;
+}
+
+.profileDescriptions {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+}
+
+.businessCard :global(.ant-card-body) {
+  height: 100%;
+  padding-top: 4px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.businessCard {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.emptyMain {
+  grid-row: 1 / -1;
+  height: 100%;
+}
+
+.amountStack,
+.followItem {
+  display: grid;
+  gap: 2px;
+}
+
+.contactList {
+  display: grid;
+  gap: 6px;
+}
+
+.contactList > button {
+  display: grid;
+  padding: 9px;
+  gap: 3px;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+}
+
+.contactList > button:hover {
+  background: var(--ant-color-fill-quaternary, #fafafa);
+  border-color: var(--ant-color-border-secondary, #f0f0f0);
+}
+
+.contactList :global(.ant-tag) {
+  margin-inline-end: 0;
+}
+
+.modalGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 16px;
+}
+
+@media (max-width: 1280px) {
+  .workspace {
+    grid-template-columns: 250px minmax(440px, 1fr) 310px;
+  }
+
+  .profileHeading {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 980px) {
+  .workspace {
+    grid-template-columns: 220px minmax(0, 1fr);
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .customerRail {
+    display: block;
+  }
+
+  .customerList {
+    max-height: 420px;
+  }
+
+  .customerMain {
+    grid-template-rows: auto;
+    overflow: visible;
+  }
+
+  .businessCard,
+  .emptyMain,
+  .businessCard :global(.ant-card-body) {
+    height: auto;
+    overflow: visible;
+  }
+
+  .relatedRail {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow: visible;
+    border-top: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+    border-left: 0;
+  }
+
+  .statistics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .customerRail {
+    border-right: 0;
+    border-bottom: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+  }
+
+  .customerList {
+    max-height: 260px;
+  }
+
+  .relatedRail,
+  .modalGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,135 @@
+.loading {
+  display: grid;
+  min-height: 60vh;
+  place-items: center;
+}
+
+.pageTitle {
+  display: grid;
+  gap: 4px;
+}
+
+.pageTitle :global(.ant-typography) {
+  margin: 0;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.summaryGrid :global(.ant-card-body) {
+  display: grid;
+  gap: 4px;
+}
+
+.summaryGrid strong {
+  font-size: 22px;
+  font-variant-numeric: tabular-nums;
+}
+
+.summaryGrid small,
+.stackCell small,
+.contactList small,
+.invoiceList small {
+  color: var(--ant-color-text-secondary, #666);
+  font-size: 12px;
+}
+
+.twoColumns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+  gap: 12px;
+}
+
+.inlineLink {
+  height: auto;
+  padding: 0;
+}
+
+.stackCell,
+.contactList > div {
+  display: grid;
+  gap: 2px;
+}
+
+.contactList {
+  display: grid;
+  gap: 12px;
+}
+
+.contactList :global(.ant-tag) {
+  width: fit-content;
+}
+
+.invoiceList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 8px;
+}
+
+.receiptList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 8px;
+}
+
+.receiptItem {
+  display: grid;
+  padding: 12px;
+  gap: 4px;
+  background: var(--ant-color-fill-quaternary, #fafafa);
+  border: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+  border-radius: 6px;
+}
+
+.receiptItem > div {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.receiptItem > strong {
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.receiptItem small {
+  color: var(--ant-color-text-secondary, #666);
+  font-size: 12px;
+}
+
+.invoiceList button {
+  display: grid;
+  padding: 12px;
+  gap: 3px;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: var(--ant-color-fill-quaternary, #fafafa);
+  border: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+  border-radius: 6px;
+}
+
+.invoiceList button:hover {
+  border-color: var(--ant-color-primary-border, #91caff);
+}
+
+@media (max-width: 900px) {
+  .summaryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .twoColumns {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .summaryGrid {
+    grid-template-columns: 1fr;
+  }
+}

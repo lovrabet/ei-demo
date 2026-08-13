@@ -1,0 +1,46 @@
+.context {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 16px;
+}
+
+.context strong {
+  color: var(--ant-color-text, #1f1f1f);
+  font-size: 16px;
+}
+
+.context span {
+  color: var(--ant-color-text-secondary, #666);
+}
+
+.form {
+  margin-top: 20px;
+}
+
+.twoColumns,
+.fourColumns {
+  display: grid;
+  gap: 16px;
+}
+
+.twoColumns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fourColumns {
+  grid-template-columns: minmax(90px, 0.65fr) repeat(3, minmax(120px, 1fr));
+}
+
+.twoColumns :global(.ant-picker),
+.fourColumns :global(.ant-input-number),
+.fourColumns :global(.ant-select) {
+  width: 100%;
+}
+
+@media (max-width: 620px) {
+  .twoColumns,
+  .fourColumns {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

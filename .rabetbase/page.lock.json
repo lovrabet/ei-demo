@@ -1,0 +1,713 @@
+{
+  "apps": {
+    "app-4d050189": {
+      "lastSync": "2026-08-11T15:59:49.643Z",
+      "pages": {
+        "1031466": {
+          "hash": "a21605430e54f8fe06c63955ab9e5f8f",
+          "pageId": 1031466,
+          "pageVersion": 1,
+          "type": "FTP",
+          "title": "业务操作记录",
+          "datasetIds": [
+            1015651
+          ],
+          "versionTag": "9426ea73-6482-4818-8fe0-c14578306df3"
+        },
+        "1031467": {
+          "hash": "265c5f9490c613f7ac0f5e06466e520a",
+          "pageId": 1031467,
+          "pageVersion": 1,
+          "type": "CREATE",
+          "title": "创建业务操作记录",
+          "datasetIds": [
+            1015651
+          ],
+          "versionTag": "9426ea73-6482-4818-8fe0-c14578306df3"
+        },
+        "1031468": {
+          "hash": "a1d37a4e3887f5f52dd21c31319e50dd",
+          "pageId": 1031468,
+          "pageVersion": 1,
+          "type": "UPDATE",
+          "title": "编辑业务操作记录",
+          "datasetIds": [
+            1015651
+          ],
+          "versionTag": "9426ea73-6482-4818-8fe0-c14578306df3"
+        },
+        "1031469": {
+          "hash": "12ddbcaf2554488a359ddfb3349a9292",
+          "pageId": 1031469,
+          "pageVersion": 1,
+          "type": "DETAIL",
+          "title": "业务操作记录详情",
+          "datasetIds": [
+            1015651
+          ],
+          "versionTag": "9426ea73-6482-4818-8fe0-c14578306df3"
+        },
+        "1031470": {
+          "hash": "ec90be7ab1f88288380cf1bd9f3e407d",
+          "pageId": 1031470,
+          "pageVersion": 1,
+          "type": "FTP",
+          "title": "发票关联",
+          "datasetIds": [
+            1015649
+          ],
+          "versionTag": "90675dd8-af67-4344-a51e-0bf6a18a3834"
+        },
+        "1031471": {
+          "hash": "ff8568937a7876b15a7470960e0422de",
+          "pageId": 1031471,
+          "pageVersion": 1,
+          "type": "CREATE",
+          "title": "创建发票关联",
+          "datasetIds": [
+            1015649
+          ],
+          "versionTag": "90675dd8-af67-4344-a51e-0bf6a18a3834"
+        },
+        "1031472": {
+          "hash": "ef5a261c8b78c998372f9dbfd2854efa",
+          "pageId": 1031472,
+          "pageVersion": 1,
+          "type": "UPDATE",
+          "title": "编辑发票关联",
+          "datasetIds": [
+            1015649
+          ],
+          "versionTag": "90675dd8-af67-4344-a51e-0bf6a18a3834"
+        },
+        "1031473": {
+          "hash": "0e3d2aab696d3f959ac1993998db503c",
+          "pageId": 1031473,
+          "pageVersion": 1,
+          "type": "DETAIL",
+          "title": "发票关联详情",
+          "datasetIds": [
+            1015649
+          ],
+          "versionTag": "90675dd8-af67-4344-a51e-0bf6a18a3834"
+        },
+        "1031474": {
+          "hash": "e958d74d9fa76a8556fb41b5edee15e6",
+          "pageId": 1031474,
+          "pageVersion": 1,
+          "type": "FTP",
+          "title": "企业资质",
+          "datasetIds": [
+            1015652
+          ],
+          "versionTag": "6f07eb49-cb16-472c-8ed2-bbd10d406acc"
+        },
+        "1031475": {
+          "hash": "b6dd657f2901dbe639400ad6ba54e08e",
+          "pageId": 1031475,
+          "pageVersion": 1,
+          "type": "CREATE",
+          "title": "创建企业资质",
+          "datasetIds": [
+            1015652
+          ],
+          "versionTag": "6f07eb49-cb16-472c-8ed2-bbd10d406acc"
+        },
+        "1031476": {
+          "hash": "67dc32bce11ff9602a9b7ce7dd1ebd9d",
+          "pageId": 1031476,
+          "pageVersion": 1,
+          "type": "UPDATE",
+          "title": "编辑企业资质",
+          "datasetIds": [
+            1015652
+          ],
+          "versionTag": "6f07eb49-cb16-472c-8ed2-bbd10d406acc"
+        },
+        "1031477": {
+          "hash": "cca5133e69c55a7d1f67632c87b9611c",
+          "pageId": 1031477,
+          "pageVersion": 1,
+          "type": "DETAIL",
+          "title": "企业资质详情",
+          "datasetIds": [
+            1015652
+          ],
+          "versionTag": "6f07eb49-cb16-472c-8ed2-bbd10d406acc"
+        },
+        "1031478": {
+          "hash": "da7a73e90b5fd3fc8ba49fa2e019bce1",
+          "pageId": 1031478,
+          "pageVersion": 1,
+          "type": "FTP",
+          "title": "合同申请",
+          "datasetIds": [
+            1015656
+          ],
+          "versionTag": "a51438d2-0193-4ddf-a760-4da980b73e71"
+        },
+        "1031479": {
+          "hash": "f6296ecf959648a4f34f6ce909d0a4da",
+          "pageId": 1031479,
+          "pageVersion": 1,
+          "type": "CREATE",
+          "title": "创建合同申请",
+          "datasetIds": [
+            1015656
+          ],
+          "versionTag": "a51438d2-0193-4ddf-a760-4da980b73e71"
+        },
+        "1031480": {
+          "hash": "762bcec4b0467573fb563a933212d1bb",
+          "pageId": 1031480,
+          "pageVersion": 1,
+          "type": "UPDATE",
+          "title": "编辑合同申请",
+          "datasetIds": [
+            1015656
+          ],
+          "versionTag": "a51438d2-0193-4ddf-a760-4da980b73e71"
+        },
+        "1031481": {
+          "hash": "ae0ef537728e7c6fa98fa19bbe736c92",
+          "pageId": 1031481,
+          "pageVersion": 1,
+          "type": "DETAIL",
+          "title": "合同申请详情",
+          "datasetIds": [
+            1015656
+          ],
+          "versionTag": "a51438d2-0193-4ddf-a760-4da980b73e71"
+        },
+        "1031482": {
+          "hash": "7ac6adc303dc08210c736b6ad5c9df92",
+          "pageId": 1031482,
+          "pageVersion": 1,
+          "type": "FTP",
+          "title": "业务字典",
+          "datasetIds": [
+            1015648
+          ],
+          "versionTag": "5b8974ef-11af-4d73-9d8b-2126ceca75c8"
+        },
+        "1031483": {
+          "hash": "dd9003f46aa2b0fd75233cf76126ee55",
+          "pageId": 1031483,
+          "pageVersion": 1,
+          "type": "CREATE",
+          "title": "创建业务字典",
+          "datasetIds": [
+            1015648
+          ],
+          "versionTag": "5b8974ef-11af-4d73-9d8b-2126ceca75c8"
+        },
+        "1031484": {
+          "hash": "533b5c618c6f92cf4f718411d78020ea",
+          "pageId": 1031484,
+          "pageVersion": 1,
+          "type": "UPDATE",
+          "title": "编辑业务字典",
+          "datasetIds": [
+            1015648
+          ],
+          "versionTag": "5b8974ef-11af-4d73-9d8b-2126ceca75c8"
+        },
+        "1031485": {
+          "hash": "a1cae290c37db5915150ee46a4d42d38",
+          "pageId": 1031485,
+          "pageVersion": 1,
+          "type": "DETAIL",
+          "title": "业务字典详情",
+          "datasetIds": [
+            1015648
+          ],
+          "versionTag": "5b8974ef-11af-4d73-9d8b-2126ceca75c8"
+        },
+        "1031486": {
+          "hash": "253757b73c852c4bb93f24e16b273e41",
+          "pageId": 1031486,
+          "pageVersion": 1,
+          "type": "FTP",
+          "title": "报销明细项",
+          "datasetIds": [
+            1015673
+          ],
+          "versionTag": "d1f60ea5-66b6-35fd-b7cb-fac0d5a69ada"
+        },
+        "1031487": {
+          "hash": "bdb348dab8c0605b4a66f9eae78bfa16",
+          "pageId": 1031487,
+          "pageVersion": 1,
+          "type": "CREATE",
+          "title": "创建报销明细项",
+          "datasetIds": [
+            1015673
+          ],
+          "versionTag": "d1f60ea5-66b6-35fd-b7cb-fac0d5a69ada"
+        },
+        "1031488": {
+          "hash": "f166073ac03472ec16e322de3032598d",
+          "pageId": 1031488,
+          "pageVersion": 1,
+          "type": "UPDATE",
+          "title": "编辑报销明细项",
+          "datasetIds": [
+            1015673
+          ],
+          "versionTag": "d1f60ea5-66b6-35fd-b7cb-fac0d5a69ada"
+        },
+        "1031489": {
+          "hash": "e8e0ddf1dca32ab86f01ee69d25b815b",
+          "pageId": 1031489,
+          "pageVersion": 1,
+          "type": "DETAIL",
+          "title": "报销明细项详情",
+          "datasetIds": [
+            1015673
+          ],
+          "versionTag": "d1f60ea5-66b6-35fd-b7cb-fac0d5a69ada"
+        },
+        "1031490": {
+          "hash": "711434af745545cab4c3616de4598683",
+          "pageId": 1031490,
+          "pageVersion": 1,
+          "type": "FTP",
+          "title": "报销规则",
+          "datasetIds": [
+            1015672
+          ],
+          "versionTag": "a1be96e2-5f9c-3d63-b50c-57d61c853c74"
+        },
+        "1031491": {
+          "hash": "9845728bca33c830e956c78bb69e94b1",
+          "pageId": 1031491,
+          "pageVersion": 1,
+          "type": "CREATE",
+          "title": "创建报销规则",
+          "datasetIds": [
+            1015672
+          ],
+          "versionTag": "a1be96e2-5f9c-3d63-b50c-57d61c853c74"
+        },
+        "1031492": {
+          "hash": "86b34d4ffb64ba575a7a015e8d1afff6",
+          "pageId": 1031492,
+          "pageVersion": 1,
+          "type": "UPDATE",
+          "title": "编辑报销规则",
+          "datasetIds": [
+            1015672
+          ],
+          "versionTag": "a1be96e2-5f9c-3d63-b50c-57d61c853c74"
+        },
+        "1031493": {
+          "hash": "0673ffb0c58c88c2999f79ae02bfbe6c",
+          "pageId": 1031493,
+          "pageVersion": 1,
+          "type": "DETAIL",
+          "title": "报销规则详情",
+          "datasetIds": [
+            1015672
+          ],
+          "versionTag": "a1be96e2-5f9c-3d63-b50c-57d61c853c74"
+        },
+        "1031494": {
+          "hash": "3d38f3a8c9fa485422be4ae2b5db1c33",
+          "pageId": 1031494,
+          "pageVersion": 1,
+          "type": "FTP",
+          "title": "发票记录",
+          "datasetIds": [
+            1015680
+          ],
+          "versionTag": "45fdd754-6895-3152-971f-2820c35f97e9"
+        },
+        "1031495": {
+          "hash": "60e2348f8f11939b72213f5a947bff64",
+          "pageId": 1031495,
+          "pageVersion": 1,
+          "type": "CREATE",
+          "title": "创建发票记录",
+          "datasetIds": [
+            1015680
+          ],
+          "versionTag": "45fdd754-6895-3152-971f-2820c35f97e9"
+        },
+        "1031496": {
+          "hash": "1abad6d6f0fc767dbe67ad7d37b15677",
+          "pageId": 1031496,
+          "pageVersion": 1,
+          "type": "UPDATE",
+          "title": "编辑发票记录",
+          "datasetIds": [
+            1015680
+          ],
+          "versionTag": "45fdd754-6895-3152-971f-2820c35f97e9"
+        },
+        "1031497": {
+          "hash": "43d4028cc7b1953ebf9d4a57d0fd0f84",
+          "pageId": 1031497,
+          "pageVersion": 1,
+          "type": "DETAIL",
+          "title": "发票记录详情",
+          "datasetIds": [
+            1015680
+          ],
+          "versionTag": "45fdd754-6895-3152-971f-2820c35f97e9"
+        },
+        "1031498": {
+          "hash": "2950428e79f8a1da8f3d9151b3f639a3",
+          "pageId": 1031498,
+          "pageVersion": 1,
+          "type": "FTP",
+          "title": "付款申请",
+          "datasetIds": [
+            1015687
+          ],
+          "versionTag": "18e59775-b831-3abf-9ede-b9cece4ba4dd"
+        },
+        "1031499": {
+          "hash": "12bd90ba04faa5ed9601ca765ed6f7ce",
+          "pageId": 1031499,
+          "pageVersion": 1,
+          "type": "CREATE",
+          "title": "创建付款申请",
+          "datasetIds": [
+            1015687
+          ],
+          "versionTag": "18e59775-b831-3abf-9ede-b9cece4ba4dd"
+        },
+        "1031500": {
+          "hash": "ebe49f92c70df43d2bec845d8d308c8c",
+          "pageId": 1031500,
+          "pageVersion": 1,
+          "type": "UPDATE",
+          "title": "编辑付款申请",
+          "datasetIds": [
+            1015687
+          ],
+          "versionTag": "18e59775-b831-3abf-9ede-b9cece4ba4dd"
+        },
+        "1031501": {
+          "hash": "402417fb0ce24e305408988e5984a1ef",
+          "pageId": 1031501,
+          "pageVersion": 1,
+          "type": "DETAIL",
+          "title": "付款申请详情",
+          "datasetIds": [
+            1015687
+          ],
+          "versionTag": "18e59775-b831-3abf-9ede-b9cece4ba4dd"
+        },
+        "1031502": {
+          "hash": "4627d95fa14d3bbb208f6a5ed49a2171",
+          "pageId": 1031502,
+          "pageVersion": 1,
+          "type": "FTP",
+          "title": "出差申请",
+          "datasetIds": [
+            1015689
+          ],
+          "versionTag": "ec6bc143-f142-3452-849d-475cd43c5de5"
+        },
+        "1031503": {
+          "hash": "0de2f6eaece83baaf65fd412487367e4",
+          "pageId": 1031503,
+          "pageVersion": 1,
+          "type": "CREATE",
+          "title": "创建出差申请",
+          "datasetIds": [
+            1015689
+          ],
+          "versionTag": "ec6bc143-f142-3452-849d-475cd43c5de5"
+        },
+        "1031504": {
+          "hash": "ae604a77f971e80d7d60cc5ee1c8e357",
+          "pageId": 1031504,
+          "pageVersion": 1,
+          "type": "UPDATE",
+          "title": "编辑出差申请",
+          "datasetIds": [
+            1015689
+          ],
+          "versionTag": "ec6bc143-f142-3452-849d-475cd43c5de5"
+        },
+        "1031505": {
+          "hash": "31428a0cd9c6c1be3c30ee806f98bd8f",
+          "pageId": 1031505,
+          "pageVersion": 1,
+          "type": "DETAIL",
+          "title": "出差申请详情",
+          "datasetIds": [
+            1015689
+          ],
+          "versionTag": "ec6bc143-f142-3452-849d-475cd43c5de5"
+        },
+        "1031506": {
+          "hash": "7032f490edc54df5bd24a4007747c4a6",
+          "pageId": 1031506,
+          "pageVersion": 1,
+          "type": "FTP",
+          "title": "附件管理",
+          "datasetIds": [
+            1015655
+          ],
+          "versionTag": "b105e4ca-f218-344e-97bb-b7f31aa49e54"
+        },
+        "1031507": {
+          "hash": "25a1be0e4d991b76fa4c6401ce24be81",
+          "pageId": 1031507,
+          "pageVersion": 1,
+          "type": "CREATE",
+          "title": "创建附件管理",
+          "datasetIds": [
+            1015655
+          ],
+          "versionTag": "b105e4ca-f218-344e-97bb-b7f31aa49e54"
+        },
+        "1031508": {
+          "hash": "0c744ccae7dca317a5108bd2237d81b3",
+          "pageId": 1031508,
+          "pageVersion": 1,
+          "type": "UPDATE",
+          "title": "编辑附件管理",
+          "datasetIds": [
+            1015655
+          ],
+          "versionTag": "b105e4ca-f218-344e-97bb-b7f31aa49e54"
+        },
+        "1031509": {
+          "hash": "7ffad074cfec60b2a1df82aa9129b4f8",
+          "pageId": 1031509,
+          "pageVersion": 1,
+          "type": "DETAIL",
+          "title": "附件管理详情",
+          "datasetIds": [
+            1015655
+          ],
+          "versionTag": "b105e4ca-f218-344e-97bb-b7f31aa49e54"
+        },
+        "1031510": {
+          "hash": "f1e9a1b4d627be72a308366bd9b9f10f",
+          "pageId": 1031510,
+          "pageVersion": 1,
+          "type": "FTP",
+          "title": "费用报销申请",
+          "datasetIds": [
+            1015675
+          ],
+          "versionTag": "b0113688-a6c1-3f04-bb8e-968fe03235f1"
+        },
+        "1031511": {
+          "hash": "6194e04b078b38fa028d5bfcbc1db5f4",
+          "pageId": 1031511,
+          "pageVersion": 1,
+          "type": "CREATE",
+          "title": "创建费用报销申请",
+          "datasetIds": [
+            1015675
+          ],
+          "versionTag": "b0113688-a6c1-3f04-bb8e-968fe03235f1"
+        },
+        "1031512": {
+          "hash": "3d3db2f83f0c308779810942f05432e9",
+          "pageId": 1031512,
+          "pageVersion": 1,
+          "type": "UPDATE",
+          "title": "编辑费用报销申请",
+          "datasetIds": [
+            1015675
+          ],
+          "versionTag": "b0113688-a6c1-3f04-bb8e-968fe03235f1"
+        },
+        "1031513": {
+          "hash": "2a26c428c75830a7d2e4aae6c7d4701e",
+          "pageId": 1031513,
+          "pageVersion": 1,
+          "type": "DETAIL",
+          "title": "费用报销申请详情",
+          "datasetIds": [
+            1015675
+          ],
+          "versionTag": "b0113688-a6c1-3f04-bb8e-968fe03235f1"
+        },
+        "1031514": {
+          "hash": "aa1b9cc0734a83ac4e2a6402344f1fff",
+          "pageId": 1031514,
+          "pageVersion": 1,
+          "type": "FTP",
+          "title": "业务伙伴",
+          "datasetIds": [
+            1015650
+          ],
+          "versionTag": "51764181-1cf7-38b1-a745-a723d7170a38"
+        },
+        "1031515": {
+          "hash": "846d796515d8270771849402a2c974a3",
+          "pageId": 1031515,
+          "pageVersion": 1,
+          "type": "CREATE",
+          "title": "创建业务伙伴",
+          "datasetIds": [
+            1015650
+          ],
+          "versionTag": "51764181-1cf7-38b1-a745-a723d7170a38"
+        },
+        "1031516": {
+          "hash": "f8150d4ece8027791764846b6c928927",
+          "pageId": 1031516,
+          "pageVersion": 1,
+          "type": "UPDATE",
+          "title": "编辑业务伙伴",
+          "datasetIds": [
+            1015650
+          ],
+          "versionTag": "51764181-1cf7-38b1-a745-a723d7170a38"
+        },
+        "1031517": {
+          "hash": "bc83cabad7391db3f43fb38d0e56a7b1",
+          "pageId": 1031517,
+          "pageVersion": 1,
+          "type": "DETAIL",
+          "title": "业务伙伴详情",
+          "datasetIds": [
+            1015650
+          ],
+          "versionTag": "51764181-1cf7-38b1-a745-a723d7170a38"
+        },
+        "1031522": {
+          "hash": "29dfc49a165f42a994be70856856e45d",
+          "pageId": 1031522,
+          "pageVersion": 1,
+          "type": "FTP",
+          "title": "收款合同",
+          "datasetIds": [
+            1015662
+          ],
+          "versionTag": "9c0b6cb2-f19c-34a2-95e5-1d04175bd47a"
+        },
+        "1031523": {
+          "hash": "d3826411dd565b425c9c5fabc273fb68",
+          "pageId": 1031523,
+          "pageVersion": 1,
+          "type": "CREATE",
+          "title": "创建收款合同",
+          "datasetIds": [
+            1015662
+          ],
+          "versionTag": "9c0b6cb2-f19c-34a2-95e5-1d04175bd47a"
+        },
+        "1031524": {
+          "hash": "247f46cb8c161f5a481b722822594198",
+          "pageId": 1031524,
+          "pageVersion": 1,
+          "type": "UPDATE",
+          "title": "编辑收款合同",
+          "datasetIds": [
+            1015662
+          ],
+          "versionTag": "9c0b6cb2-f19c-34a2-95e5-1d04175bd47a"
+        },
+        "1031525": {
+          "hash": "0ffe0a423b0af3d19564ae86a7680624",
+          "pageId": 1031525,
+          "pageVersion": 1,
+          "type": "DETAIL",
+          "title": "收款合同详情",
+          "datasetIds": [
+            1015662
+          ],
+          "versionTag": "9c0b6cb2-f19c-34a2-95e5-1d04175bd47a"
+        },
+        "1031526": {
+          "hash": "f74eaebfbf3c6ae9cf18100d591ef8da",
+          "pageId": 1031526,
+          "pageVersion": 1,
+          "type": "FTP",
+          "title": "销项开票申请",
+          "datasetIds": [
+            1015674
+          ],
+          "versionTag": "43a5a900-7a1b-31dd-96a8-7df12a1991ee"
+        },
+        "1031527": {
+          "hash": "04cfcd8300f0065a3320c31ad7699312",
+          "pageId": 1031527,
+          "pageVersion": 1,
+          "type": "CREATE",
+          "title": "创建销项开票申请",
+          "datasetIds": [
+            1015674
+          ],
+          "versionTag": "43a5a900-7a1b-31dd-96a8-7df12a1991ee"
+        },
+        "1031528": {
+          "hash": "1e3468c07f69046cd934ef9006518d46",
+          "pageId": 1031528,
+          "pageVersion": 1,
+          "type": "UPDATE",
+          "title": "编辑销项开票申请",
+          "datasetIds": [
+            1015674
+          ],
+          "versionTag": "43a5a900-7a1b-31dd-96a8-7df12a1991ee"
+        },
+        "1031529": {
+          "hash": "7f1dc5abf2ccdb3f1ac2add433a656fd",
+          "pageId": 1031529,
+          "pageVersion": 1,
+          "type": "DETAIL",
+          "title": "销项开票申请详情",
+          "datasetIds": [
+            1015674
+          ],
+          "versionTag": "43a5a900-7a1b-31dd-96a8-7df12a1991ee"
+        },
+        "1031530": {
+          "hash": "9146f0343df3d7db8a843ef975a44439",
+          "pageId": 1031530,
+          "pageVersion": 1,
+          "type": "FTP",
+          "title": "薪资发放申请",
+          "datasetIds": [
+            1015686
+          ],
+          "versionTag": "d34a537f-4662-3a83-982a-881801ea609c"
+        },
+        "1031531": {
+          "hash": "6ec9002a8f57843b4f2065476be76393",
+          "pageId": 1031531,
+          "pageVersion": 1,
+          "type": "CREATE",
+          "title": "创建薪资发放申请",
+          "datasetIds": [
+            1015686
+          ],
+          "versionTag": "d34a537f-4662-3a83-982a-881801ea609c"
+        },
+        "1031532": {
+          "hash": "6e4697f774bca2149601f10ac83a391d",
+          "pageId": 1031532,
+          "pageVersion": 1,
+          "type": "UPDATE",
+          "title": "编辑薪资发放申请",
+          "datasetIds": [
+            1015686
+          ],
+          "versionTag": "d34a537f-4662-3a83-982a-881801ea609c"
+        },
+        "1031533": {
+          "hash": "ad1797ef5887cb72f49228d8780229a7",
+          "pageId": 1031533,
+          "pageVersion": 1,
+          "type": "DETAIL",
+          "title": "薪资发放申请详情",
+          "datasetIds": [
+            1015686
+          ],
+          "versionTag": "d34a537f-4662-3a83-982a-881801ea609c"
+        }
+      }
+    }
+  }
+}

@@ -33,14 +33,6 @@ npm run start
 rabetbase run start
 ```
 
-对接你自己的 Lovrabet 应用：
-
-```bash
-rabetbase project init --appcode <你的AppCode>
-rabetbase api pull
-rabetbase run start
-```
-
 > 业务数据来自 Lovrabet 平台（通过 `@lovrabet/sdk` 读取），不在本仓库。未登录或缺少数据模型时列表为空、接口报错，属正常现象。
 
 ## 项目结构

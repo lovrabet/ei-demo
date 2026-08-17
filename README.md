@@ -137,7 +137,19 @@ rabetbase run start
 └─────────────────────────────────────────────────────────┘
 ```
 
-**BFF 分层（ENDPOINT / COMMON / HOOK）**：ENDPOINT 是对外接口（`/api/endpoint/<appcode>/...`），前端只调它，负责编排业务动作、校验入参；COMMON 是共享能力（数据读写、权限与数据守卫、流程服务、通知等），不对外暴露，只被其他 BFF 调用；HOOK 挂在数据集读写前后做数据层守卫。平台不允许 ENDPOINT 调 ENDPOINT，公共逻辑统一下沉到 COMMON。
+**BFF 分层（26 COMMON / 35 ENDPOINT / 122 HOOK）**：
+
+- **ENDPOINT（接口层）**：对外暴露的业务函数（`POST /api/endpoint/<appcode>/<name>`），前端直接调用。负责校验入参、编排流程，通过 `bff.execute({ scriptName })` 调 COMMON；平台禁止 ENDPOINT 调 ENDPOINT。
+- **COMMON（共享逻辑层）**：可复用能力，不对外暴露，绝大多数为叶子（不调其它 COMMON）：
+  - `cpoDatasetMap` 数据集映射：集中登记 40+ 数据集 code，产出 `bizType → 主单元数据`、`物理表名 → model key`、`语义名 → SQL code` 三张映射，屏蔽应用级 code 差异；
+  - `cpoDal` 数据访问层：接收 map，返回 `{ model(表名), sql(语义名) }`，BFF 据此读写数据，不硬编码 dataset/sql uuid；
+  - `cpoBizResolver` / `cpoDictionary` / `cpoCurrentActor`：读业务单并归一摘要 / 字典 code→label / 当前操作人；
+  - `cpoWorkflowScenario` / `cpoWorkflowConfig` / `cpoTaskService` / `cpoWorkflowParticipantService` / `cpoWorkflowNotifier`：流程解析、流程定义、任务服务、抄送授权、审批通知；
+  - `cpoActionRecorder`：写 `biz_action_record` 操作流水；
+  - 守卫族：`cpo*ReadFilterGuard` / `cpo*ReadOneGuard` / `cpoDirectWriteGuard` / `cpoLogicalDeleteGuard` 等，做行级可见性与写入管控。
+- **HOOK（数据守卫层）**：挂在数据集 Instant API 操作前后（`HOOK/<dataset>/<op>/before|after/`），复用 COMMON 守卫对读写做行级过滤 / 写入拦截 / 结果增强。
+
+调用约定：ENDPOINT → COMMON（编排）、HOOK → COMMON（守卫）；COMMON 之间不互调，跨 COMMON 的数据（如 `cpoDatasetMap` 的 map）由调用方取好后传参。
 
 ## 许可证
 

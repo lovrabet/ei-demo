@@ -137,6 +137,8 @@ rabetbase run start
 └─────────────────────────────────────────────────────────┘
 ```
 
+**BFF 分层（ENDPOINT / COMMON / HOOK）**：ENDPOINT 是对外接口（`/api/endpoint/<appcode>/...`），前端只调它，负责编排业务动作、校验入参；COMMON 是共享能力（数据读写、权限与数据守卫、流程服务、通知等），不对外暴露，只被其他 BFF 调用；HOOK 挂在数据集读写前后做数据层守卫。平台不允许 ENDPOINT 调 ENDPOINT，公共逻辑统一下沉到 COMMON。
+
 ## 许可证
 
 [Apache License 2.0](./LICENSE)，版权信息见 [NOTICE](./NOTICE)。

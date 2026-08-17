@@ -11,6 +11,27 @@ metadata:
 
 执行前读取并遵守 [runtime-contract.md](references/runtime-contract.md) 和 [output-contract.md](references/output-contract.md)。
 
+## 处理流程
+
+```mermaid
+flowchart TD
+  Start([用户要求发票查重]) --> L1{提供输入}
+  L1 -- 报销单 ID --> P1[按 expenseId 检查]
+  L1 -- 发票号码 --> P2[按 invoiceNos 检查]
+  L1 -- 两者都有 --> P3[优先按报销单<br/>号码作补充核验]
+  P1 --> CALL[调用 cpoCheckInvoiceDuplicates]
+  P2 --> CALL
+  P3 --> CALL
+  CALL --> R1{返回结果}
+  R1 -- hasDuplicates=false --> E1([未发现重复])
+  R1 -- same_expense_multiple_links --> E2([同一报销单内重复关联])
+  R1 -- duplicate_invoice_records --> E3([同一号码多条台账])
+  R1 -- used_by_other_expense --> E4([被其他报销单占用<br/>列出冲突单据])
+  CALL -- INVALID_PARAMS --> E5([请求补充报销单 ID/发票号])
+  CALL -- CPO_READ_FORBIDDEN --> E6([无权查看: 不绕过权限])
+  CALL -- BFF/网络失败 --> E7([failed: 保留错误码稍后重试])
+```
+
 ## 使用边界
 
 - 只检查 CPO 应用 `app-4d050189` 中的发票重复使用情况。

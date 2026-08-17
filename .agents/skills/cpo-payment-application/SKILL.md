@@ -9,6 +9,32 @@ metadata:
 
 # 付款申请助手
 
+## 处理流程
+
+```mermaid
+flowchart TD
+  Start([用户要求创建付款申请]) --> L1[cpoGetContractPaymentContext<br/>查询合同付款上下文]
+  L1 --> L2{选择付款计划}
+  L2 -- 默认取 pendingPlan --> L3[首个待付款计划]
+  L2 -- 用户指定其他有余额计划 --> L4[所选计划]
+  L2 -- 无合同临时付款 --> L5[不关联计划的付款申请]
+  L3 --> F1
+  L4 --> F1
+  L5 --> F1[填写付款字段<br/>金额/期次/接口人/预计付款日]
+  F1 --> F2{金额或日期与计划不一致?}
+  F2 -- 是 --> F3[填写 plan_variance_reason]
+  F2 -- 否 --> F4
+  F3 --> F4[cpoSaveDraft 保存草稿]
+  F4 --> F5[建立附件关系 approval_material<br/>数量门禁]
+  F5 --> F6{门禁一致?}
+  F6 -- 否 --> Stop1([停止并报告缺失文件])
+  F6 -- 是 --> F7{用户明确提交?}
+  F7 -- 否 --> E1([返回草稿链接])
+  F7 -- 是 --> F8[cpoSubmitApplication 提交]
+  F8 --> F9([已提交: 进入审批])
+  F9 --> F10[后续 cpoAdvanceWorkflow<br/>制单/银行/确认付款]
+```
+
 ## 适用场景
 
 当用户要新建、保存草稿、提交、查询启智云图企业智能系统的付款申请，或希望按合同付款计划发起付款时使用本 Skill。对应前端页面是 `/payment-form`，标准列表页提交后跳转到 `/ce56ba4ceec8471cbddf4068ea9c397a`。

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Seed fictional demo data into oa-demo.
+"""Seed fictional demo data into ei-demo.
 
 All business data is fabricated. Platform user 81 (the demo tenant admin)
 is used for every workflow assignee / actor so the demo account can see

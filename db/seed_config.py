@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Seed configuration data (dictionary, expense rules, workflow configs)
-into oa-demo. Source values come from the published config export, but ALL
+into ei-demo. Source values come from the published config export, but ALL
 real user references are remapped to the demo tenant admin (81 梓骞)."""
 import json
 

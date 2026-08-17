@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""Shared database connections for the oa-demo bootstrap scripts.
+"""Shared database connections for the ei-demo bootstrap scripts.
 
 No production credentials live in this repository. Every connection is
 resolved in this order:
 
 1. Environment variables
-     demo database:  OA_DEMO_MYSQL_HOST / OA_DEMO_MYSQL_PORT /
-                     OA_DEMO_MYSQL_USER / OA_DEMO_MYSQL_PASSWORD /
-                     OA_DEMO_MYSQL_DATABASE
+     demo database:  EI_DEMO_MYSQL_HOST / EI_DEMO_MYSQL_PORT /
+                     EI_DEMO_MYSQL_USER / EI_DEMO_MYSQL_PASSWORD /
+                     EI_DEMO_MYSQL_DATABASE
      source database (structure export only): YUNTOO_CPO_MYSQL_URL
                      (a mysql://user:pass@host:port/db DSN)
 2. Gitignored local JSON files beside this module (see .gitignore):
-     db/.demo-db.json  -> oa-demo demo database
+     db/.demo-db.json  -> ei-demo demo database
      db/.src-db.json   -> yuntoo-cpo source database
 3. Localhost placeholders that never reach a real server.
 
@@ -19,7 +19,7 @@ To point the scripts at a real server without touching git, create
 db/.demo-db.json (and db/.src-db.json for the source database):
 
     {"host": "your-db-host", "port": 7707, "user": "your-user",
-     "password": "your-password", "database": "oa-demo"}
+     "password": "your-password", "database": "ei-demo"}
 """
 import json
 import os
@@ -43,25 +43,25 @@ def _local(name):
 
 
 def demo_dsn():
-    """Connection kwargs for the oa-demo demo database."""
+    """Connection kwargs for the ei-demo demo database."""
     local = _local(".demo-db.json")
     return {
-        "host": os.environ.get("OA_DEMO_MYSQL_HOST")
+        "host": os.environ.get("EI_DEMO_MYSQL_HOST")
         or local.get("host")
         or "127.0.0.1",
-        "port": int(os.environ.get("OA_DEMO_MYSQL_PORT") or local.get("port") or 3306),
-        "user": os.environ.get("OA_DEMO_MYSQL_USER") or local.get("user") or "root",
-        "password": os.environ.get("OA_DEMO_MYSQL_PASSWORD")
+        "port": int(os.environ.get("EI_DEMO_MYSQL_PORT") or local.get("port") or 3306),
+        "user": os.environ.get("EI_DEMO_MYSQL_USER") or local.get("user") or "root",
+        "password": os.environ.get("EI_DEMO_MYSQL_PASSWORD")
         or local.get("password")
         or "",
-        "database": os.environ.get("OA_DEMO_MYSQL_DATABASE")
+        "database": os.environ.get("EI_DEMO_MYSQL_DATABASE")
         or local.get("database")
-        or "oa-demo",
+        or "ei-demo",
     }
 
 
 def demo_connect(**overrides):
-    """Open a pymysql connection to the oa-demo demo database."""
+    """Open a pymysql connection to the ei-demo demo database."""
     return pymysql.connect(**{**demo_dsn(), **overrides}, charset="utf8mb4")
 
 

@@ -2,8 +2,6 @@
 
 # ei-demo：基于 Lovrabet 的企业采购与财务审批样板应用
 
-> 说明：GitHub 公开仓库名为 `ei-demo`；工程内部名沿用 `oa-demo`（`package.json`、AppCode 等均为 `oa-demo` 体系）。若需要对外统一命名，可将 `package.json` 的 `name`、README 标题等一并调整。
-
 这是运行在 Lovrabet 平台上的 React 18 + Vite 微前端样板应用（AppCode `app-4d050189`），演示了一整套企业采购与财务审批业务：费用报销、付款申请、销售/采购合同、发票登记与开具、工资发放、差旅申请、应收合同与客户 360 等单据的申请、审批、台账与审批流接入。**所有业务数据均为演示用虚构数据。**
 
 该样板展示了完整的前后端开发形态：
@@ -173,13 +171,13 @@ const data = await lovrabetClient.models.expenseApplication.filter({
 连接解析顺序（`db/demo_db.py`）：
 
 1. 环境变量
-   - 演示库：`OA_DEMO_MYSQL_HOST / PORT / USER / PASSWORD / DATABASE`
+   - 演示库：`EI_DEMO_MYSQL_HOST / PORT / USER / PASSWORD / DATABASE`
    - 源库（仅导出结构用）：`YUNTOO_CPO_MYSQL_URL`（`mysql://user:pass@host:port/db`）
 2. gitignored 本地文件：`db/.demo-db.json`（演示库）、`db/.src-db.json`（源库），例如：
 
 ```json
 { "host": "your-db-host", "port": 3306, "user": "your-user",
-  "password": "your-password", "database": "oa-demo" }
+  "password": "your-password", "database": "ei-demo" }
 ```
 
 3. localhost 占位（`127.0.0.1` / `root` / 空密码，通常连不上真实库）。
@@ -294,7 +292,7 @@ CDN_DOMAIN=https://your-cdn.com/ rabetbase run build
 ```text
 页面名称：工作台
 路由路径：/workbench
-微应用唯一标识：oa-demo
+微应用唯一标识：ei-demo
 资源加载方式：import
 资源加载列表：
   https://your-cdn.com/path/to/assets/main.js

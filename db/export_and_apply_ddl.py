@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Export DDL (structure only) from yuntoo-cpo and apply to oa-demo.
+"""Export DDL (structure only) from yuntoo-cpo and apply to ei-demo.
 
 Reads all tables from yuntoo-cpo, writes a combined DDL file, then applies
-it to the empty oa-demo database. Never copies row data.
+it to the empty ei-demo database. Never copies row data.
 """
 import demo_db
 
@@ -30,7 +30,7 @@ def main():
     out = "/Users/tangshuang/data/gitlab/yuntoo/oa-combo/oa-demo/db/yuntoo-cpo-ddl.sql"
     with open(out, "w") as f:
         f.write("-- DDL exported from yuntoo-cpo (structure only, no data)\n")
-        f.write("-- Target: oa-demo\n\nSET FOREIGN_KEY_CHECKS=0;\n\n")
+        f.write("-- Target: ei-demo\n\nSET FOREIGN_KEY_CHECKS=0;\n\n")
         for t, ddl in ddls:
             f.write(f"-- --------------------------------------------------------\n")
             f.write(f"-- Table: {t}\n")
@@ -49,7 +49,7 @@ def main():
         cur.execute("SHOW TABLES")
         created = [r[0] for r in cur.fetchall()]
     dst.close()
-    print(f"oa-demo now has {len(created)} tables")
+    print(f"ei-demo now has {len(created)} tables")
 
 if __name__ == "__main__":
     main()

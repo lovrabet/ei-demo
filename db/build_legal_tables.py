@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Generate DDL for the 6 legal/entity tables from dataset metadata JSON,
-then apply to oa-demo. Metadata was pulled via `rabetbase dataset detail`
+then apply to ei-demo. Metadata was pulled via `rabetbase dataset detail`
 (no direct yuntoo-pricing DB access)."""
 import glob
 import json

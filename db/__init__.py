@@ -1,1 +1,1 @@
-"""Shared bootstrap helpers for the oa-demo demo database."""
+"""Shared bootstrap helpers for the ei-demo demo database."""

@@ -1,6 +1,8 @@
 [项目更新记录](./CHANGELOG.md)
 
-# oa-demo：Lovrabet 企业采购与审批样板应用
+# ei-demo：基于 Lovrabet 的企业采购与财务审批样板应用
+
+> 说明：GitHub 公开仓库名为 `ei-demo`；工程内部名沿用 `oa-demo`（`package.json`、AppCode 等均为 `oa-demo` 体系）。若需要对外统一命名，可将 `package.json` 的 `name`、README 标题等一并调整。
 
 这是运行在 Lovrabet 平台上的 React 18 + Vite 微前端样板应用（AppCode `app-4d050189`），演示了一整套企业采购与财务审批业务：费用报销、付款申请、销售/采购合同、发票登记与开具、工资发放、差旅申请、应收合同与客户 360 等单据的申请、审批、台账与审批流接入。**所有业务数据均为演示用虚构数据。**
 
@@ -10,83 +12,67 @@
 - 后端使用 BFF 脚本（`.rabetbase/bff/` 下的 COMMON / ENDPOINT / HOOK）承载业务规则与数据守卫；
 - 审批流接入 Lovrabet 平台原生 Flow（Flowable）：单据发起后由平台拦截并转发起审批，状态回写到业务表，审批人从平台审批中心处理。
 
-项目的日常使用方式不是让开发者记住一组命令，而是在 Claude Code、Cursor、Codex 等 Agent 环境里直接描述开发目标。`rabetbase` CLI 提供项目配置、模型同步、构建检查、菜单接入等能力，Agent 根据你的 Prompt 调用这些能力完成开发任务。
+## 三种打开方式（先读这里）
 
-## 公开文档
+| 目的 | 做法 | 说明 |
+| --- | --- | --- |
+| 只想看界面 / 读代码 | `npm install && npm run start` | 纯前端启动，详见[方式一](#方式一快速看界面纯前端) |
+| Lovrabet 完整开发体验 | 安装 `rabetbase` CLI 后 `rabetbase run start` | 项目日常用法，详见[方式二](#方式二lovrabet-完整开发体验推荐) |
+| 对接你自己的 Lovrabet 应用 | 替换 AppCode 后启动 | 详见[方式三](#方式三对接你自己的-lovrabet-应用) |
 
-- [Lovrabet 开放平台文档](https://open.lovrabet.com/docs)
-- [TypeScript SDK](https://open.lovrabet.com/docs/lovrabet-sdk/intro)
-- [CLI 工具](https://open.lovrabet.com/docs/lovrabet-cli/)
-- [MCP](https://open.lovrabet.com/docs/mcp/intro)
-- [快速开始（本仓库）](./docs/quick-start.md)
+> ⚠️ **重要**：本应用是 Lovrabet 平台上的**客户端**——业务数据不落在本仓库，而是通过 `@lovrabet/sdk` 从平台运行态 API 读取。没有登录态 / 没有对应数据模型时，页面能渲染但列表为空或请求报错，这是正常现象，见[数据从哪来](#数据从哪来)。
 
-## 技术栈
+## 功能总览
 
-- `@lovrabet/sdk`：Lovrabet TypeScript SDK 与模型客户端。
-- React 18 + TypeScript：页面开发与类型约束。
-- React Router v6：页面路由。
-- Ant Design v5：企业级 UI 组件。
-- Vite v7：本地开发与生产构建。
-- `@ice/stark-app`：icestark 微前端运行环境识别与 basename 适配。
-- `vite-plugin-pages`：基于 `src/pages` 的文件系统路由。
-- BFF 脚本（`.rabetbase/bff/`）：平台后端函数，承载业务规则与数据守卫。
+覆盖「申请 → 审批 → 台账 → 归档」的完整业务闭环：
 
-## 目录结构
+| 业务域 | 主要页面（路由） | 说明 |
+| --- | --- | --- |
+| 工作台 | `/workbench` | 待办 / 已办 / 草稿统计，审批趋势 |
+| 费用报销 | `/expense-form` | 费用报销申请，费用明细、发票关联 |
+| 付款申请 | `/payment-form` | 商务付款申请，供应商、付款计划 |
+| 工资发放 | `/salary-payment-form` | 工资 / 个税 / 人员成本付款申请 |
+| 差旅申请 | `/travel-form` | 差旅出行申请 |
+| 采购 / 销售合同 | `/contract-form`、`/sales-contract-form` | 采购付款合同、对外销售合同申请 |
+| 合同台账 | `/contracts` | 合同工作台、收款计划 |
+| 发票登记与开具 | `/invoice-form`、`/invoice-archive-form` | 销项开票申请、进项发票归档 |
+| 发票台账 | `/invoice-center` | 进销项发票、客户发票中心 |
+| 客户 360 | `/customer-360` | 客户视图：机会、合同、收款、跟进 |
+| 应收合同 | `/receivable-contract-detail/:id` | 收款合同详情、回款计划 |
+| 供应商 / 服务商 | `/partner-form` | 业务伙伴录入 |
+| 资质证照 | `/credential-form` | 公司资质管理 |
+| 法务协议 | `/legal-agreements` | 法律协议台账、文档生成与导出 |
+| 报销规则 | `/expense-rules` | 费用合规规则 |
+| 审批中心 | `/approval-center`、`/my-todo`、`/my-done`、`/my-submitted`、`/my-drafts` | 待办 / 已办 / 已提交 / 草稿 |
+| 通知测试 | `/notification-test` | 飞书消息推送测试 |
+
+> 完整路由以 `src/pages` 目录为准，`vite-plugin-pages` 会为每个 `.tsx` 文件自动生成对应路由。
+
+## 架构
 
 ```text
-.
-├── src/
-│   ├── api/                    # CLI 生成的 SDK 模型配置 + 统一导出的 SDK 客户端
-│   ├── components/             # 通用业务组件（附件上传、表单布局、金额输入、人员选择等）
-│   ├── features/               # 按业务域组织的功能模块（cpo-workflow、invoice-center 等）
-│   ├── layouts/MainLayout.tsx  # 主布局（icestark 环境下只渲染 <Outlet/>）
-│   ├── pages/                  # 文件系统路由页面（vite-plugin-pages 自动生成路由）
-│   ├── router/index.tsx        # 微前端路由适配
-│   ├── utils/                  # api/format/query 等工具
-│   ├── main.tsx
-│   └── style.css
-├── db/                         # 数据初始化与种子脚本（连接方式见 db/demo_db.py，凭据不入库）
-├── scripts/                    # 审批流迁移辅助脚本
-├── docs/quick-start.md
-├── .rabetbase/
-│   ├── bff/app-4d050189/       # BFF 脚本（COMMON / ENDPOINT / HOOK）
-│   ├── page/app-4d050189/      # 低代码页面配置
-│   └── *.lock.json             # BFF / 页面 / SQL 同步清单
-├── vite.config.ts
-├── tsconfig.json
-└── package.json
+┌─────────────────────────────────────────────────────────┐
+│ 前端（本仓库）                                           │
+│  React 18 + TypeScript + Vite 7                          │
+│  Ant Design v5 · React Router v6 · echarts               │
+│  @ice/stark-app（icestark 微前端，可独立运行 / 嵌入主应用）│
+│  vite-plugin-pages（src/pages 文件系统路由）             │
+└──────────────┬──────────────────────────────────────────┘
+               │ @lovrabet/sdk（models.* CRUD / filter / getList）
+               ▼
+┌─────────────────────────────────────────────────────────┐
+│ Lovrabet 平台                                            │
+│  · 运行态 API（https://runtime.lovrabet.com/api/，Cookie）│
+│  · 数据模型（src/api/api.ts 注册 44 个模型）             │
+│  · BFF 脚本（.rabetbase/bff/：COMMON 公共逻辑 /          │
+│    ENDPOINT 接口 / HOOK 数据守卫）                        │
+│  · 审批流 Flow（Flowable：发起拦截、状态回写、审批中心）  │
+└─────────────────────────────────────────────────────────┘
 ```
 
-## 内置页面
-
-项目使用 `vite-plugin-pages`，路由由 `src/pages` 下的文件自动生成。主要页面：
-
-| 文件                                 | 路由                        | 用途                                    |
-| ------------------------------------ | --------------------------- | --------------------------------------- |
-| `src/pages/index.tsx`                | `/`                         | Rabetbase 开发指南（AppCode 状态、MCP/CLI 配置、文档导航） |
-| `src/pages/workbench/index.tsx`      | `/workbench`                | 工作台（待办/已办/草稿统计）             |
-| `src/pages/expense-form/index.tsx`   | `/expense-form`             | 费用报销申请                             |
-| `src/pages/payment-form/index.tsx`   | `/payment-form`             | 付款申请                                 |
-| `src/pages/salary-payment-form/index.tsx` | `/salary-payment-form` | 工资发放申请                             |
-| `src/pages/travel-form/index.tsx`    | `/travel-form`              | 差旅申请                                 |
-| `src/pages/sales-contract-form/index.tsx` | `/sales-contract-form`  | 销售合同申请                             |
-| `src/pages/contract-form/index.tsx`  | `/contract-form`            | 采购合同申请                             |
-| `src/pages/invoice-form/index.tsx`   | `/invoice-form`             | 发票登记                                 |
-| `src/pages/invoice-archive-form/index.tsx` | `/invoice-archive-form` | 进项发票归档                             |
-| `src/pages/invoice-center/index.tsx` | `/invoice-center`           | 发票台账                                 |
-| `src/pages/contracts/index.tsx`      | `/contracts`                | 合同台账                                 |
-| `src/pages/application-list/index.tsx` | `/application-list`       | 单据列表                                 |
-| `src/pages/approval-center/index.tsx` | `/approval-center`         | 审批中心（待办/已办/已提交）             |
-| `src/pages/my-todo/index.tsx`        | `/my-todo`                  | 我的待办                                 |
-| `src/pages/my-done/index.tsx`        | `/my-done`                  | 我的已办                                 |
-| `src/pages/my-submitted/index.tsx`   | `/my-submitted`             | 我提交的                                 |
-| `src/pages/my-drafts/index.tsx`      | `/my-drafts`                | 我的草稿                                 |
-| `src/pages/customer-360/index.tsx`   | `/customer-360`             | 客户 360                                 |
-| `src/pages/legal-agreements/index.tsx` | `/legal-agreements`        | 法律协议台账                             |
-| `src/pages/expense-rules/index.tsx`  | `/expense-rules`            | 费用规则                                 |
-| `src/pages/notification-test/index.tsx` | `/notification-test`      | 飞书消息测试                             |
-
-新增页面时，在 `src/pages` 下添加 `.tsx` 文件即可。例如 `src/pages/customer/index.tsx` 会生成 `/customer` 路由。
+- **数据层**：项目统一从 `src/api/client.ts` 导出 `lovrabetClient`（基于 `@lovrabet/sdk`），模型清单与别名见 `src/api/api.ts`。
+- **后端逻辑**：业务规则、读写守卫、流程状态同步由 BFF 脚本承载，不在前端重复实现。
+- **审批流**：单据发起走平台 Flow，状态回写业务表，审批动作（通过 / 驳回）由平台审批中心处理。
 
 ## 快速开始
 
@@ -102,14 +88,40 @@ rabetbase --help
 
 模板本身不内置 `rabetbase` 依赖，`rabetbase run start` 等命令依赖全局 CLI。
 
-### 克隆后启动
+### 方式一：快速看界面（纯前端）
+
+不需要任何平台账号，适合先跑起来看 UI / 读代码：
 
 ```bash
 npm install
+npm run start
+```
+
+服务默认监听 `5173` 端口。由于 `vite.config.ts` 会尝试从平台开发证书端点拉取 HTTPS 证书（外部环境不可达时自动降级），本地直接访问：
+
+```text
+http://localhost:5173
+```
+
+如需换端口：
+
+```bash
+PORT=3000 npm run start
+```
+
+> 该方式下页面框架、路由、表单都能正常渲染；但业务数据来自 Lovrabet 平台，未登录或没有对应数据模型时列表为空、接口报错，均属预期。
+
+### 方式二：Lovrabet 完整开发体验（推荐）
+
+这是项目日常的打开方式，能访问真实平台数据与审批流：
+
+```bash
+npm install
+rabetbase auth login        # 首次登录平台账号
 rabetbase run start
 ```
 
-本地服务默认打开：
+默认访问：
 
 ```text
 https://dev.lovrabet.com:5173
@@ -117,21 +129,27 @@ https://dev.lovrabet.com:5173
 
 需要换端口时可执行 `PORT=3000 rabetbase run start`。
 
-### 拉取 SDK 配置
+### 方式三：对接你自己的 Lovrabet 应用
 
-如果当前目录还没有配置 AppCode，先执行：
+把样板指向你自己平台里的应用：
 
 ```bash
-rabetbase project init --appcode app-4d050189
-rabetbase api pull
+rabetbase project init --appcode <你的AppCode>
+rabetbase api pull          # 拉取该应用的 SDK 模型配置
+rabetbase run start
 ```
+
+拉取后重点检查：
+
+- `src/api/api.ts` 中的 AppCode 是否正确；
+- `models` 是否包含页面用到的数据模型（别名见 `src/api/api.ts`）；
+- 如果页面调用的模型不在你的应用里，需要先在平台侧补齐数据模型，否则页面会报模型不存在。
 
 项目统一从 `src/api/client.ts` 导出 SDK 客户端：
 
 ```typescript
 import { lovrabetClient } from "@/api/client";
 
-const models = lovrabetClient.getModelList();
 const data = await lovrabetClient.models.expenseApplication.filter({
   currentPage: 1,
   pageSize: 20,
@@ -139,6 +157,90 @@ const data = await lovrabetClient.models.expenseApplication.filter({
 ```
 
 模型别名来自生成后的 `src/api/api.ts`，实际使用前请以该文件为准。
+
+### 数据从哪来
+
+- 前端通过 `@lovrabet/sdk` 请求平台运行态 API（`runtime.lovrabet.com`），登录态以 Cookie 携带（见 `src/utils/api.ts` 的 `credentials: "include"`）。
+- 本仓库**不包含数据库结构**（除法务主体等少数表的结构 DDL，见下节），也不包含任何真实业务数据。
+- 需要在本地完整还原演示数据时，参照[演示数据与数据库脚本](#演示数据与数据库脚本db)。
+
+## 演示数据与数据库脚本（db/）
+
+`db/` 目录下的脚本用于在演示数据库里初始化**虚构演示数据**。**所有脚本都不包含真实凭据**：数据库连接通过环境变量或 gitignored 的本地 JSON 文件解析（见 `db/demo_db.py`）。
+
+### 连接配置
+
+连接解析顺序（`db/demo_db.py`）：
+
+1. 环境变量
+   - 演示库：`OA_DEMO_MYSQL_HOST / PORT / USER / PASSWORD / DATABASE`
+   - 源库（仅导出结构用）：`YUNTOO_CPO_MYSQL_URL`（`mysql://user:pass@host:port/db`）
+2. gitignored 本地文件：`db/.demo-db.json`（演示库）、`db/.src-db.json`（源库），例如：
+
+```json
+{ "host": "your-db-host", "port": 3306, "user": "your-user",
+  "password": "your-password", "database": "oa-demo" }
+```
+
+3. localhost 占位（`127.0.0.1` / `root` / 空密码，通常连不上真实库）。
+
+### 脚本清单
+
+| 脚本 | 作用 | 说明 |
+| --- | --- | --- |
+| `db/export_and_apply_ddl.py` | 从源库导出表结构并应用到演示库 | 仅结构、不拷贝行数据；源库需自己准备 |
+| `db/build_legal_tables.py` | 从数据集元数据生成法务/主体等 6 张表 DDL 并应用 | 元数据来自 `rabetbase dataset detail` |
+| `db/seed_config.py` | 灌入字典、报销规则、审批流配置 | 来源为已发布的配置导出；**所有真实用户引用会被重映射为演示管理员**（用户 81「梓骞」） |
+| `db/seed_demo_data.py` | 灌入虚构业务数据 | 员工、主体、供应商、客户、机会、合同、收款、各类申请单、发票、工资等 |
+| `db/legal-entity-ddl.sql` | 法务 / 主体表结构 DDL | 仓库内唯一提交的结构 DDL |
+
+> **关于完整还原演示数据**：上述脚本面向「在具备对应数据模型的 Lovrabet 演示环境内初始化数据」。完整表结构（`db/yuntoo-cpo-ddl.sql`）属于生成产物、不入库（见 `.gitignore`）。外部开发者要完整还原，需要在平台侧准备好相同数据模型，或用 `rabetbase` 从自己的应用导出结构后再跑初始化脚本。
+
+### 审批流脚本（scripts/）
+
+| 脚本 | 作用 |
+| --- | --- |
+| `scripts/flow_client.py` | Lovrabet 平台审批流 HTTP 客户端（复用 CLI 登录态） |
+| `scripts/migrate_flows.py` | 将业务配置的 7 条已发布流程迁移为平台 Flow 定义并发布 |
+| `scripts/mock_platform_flows.py` | 废弃 legacy 自建状态机数据，用平台 Flow 重新 mock 审批演示数据 |
+
+## 目录结构
+
+```text
+.
+├── src/
+│   ├── api/                    # SDK 模型配置（api.ts）+ 统一导出的客户端（client.ts）
+│   ├── components/             # 通用业务组件（附件上传、表单布局、金额输入、人员选择等）
+│   ├── features/               # 按业务域组织的功能模块（cpo-workflow、invoice-center 等）
+│   ├── layouts/MainLayout.tsx  # 主布局（icestark 环境下只渲染 <Outlet/>）
+│   ├── pages/                  # 文件系统路由页面（vite-plugin-pages 自动生成路由）
+│   ├── router/index.tsx        # 微前端路由适配
+│   ├── utils/                  # api/format/query 等工具
+│   ├── main.tsx
+│   └── style.css
+├── db/                         # 数据初始化与种子脚本（连接方式见 db/demo_db.py，凭据不入库）
+├── scripts/                    # 审批流迁移辅助脚本
+├── docs/quick-start.md         # Rabetbase 子应用快速开始（面向模板使用者）
+├── .rabetbase/
+│   ├── bff/app-4d050189/       # BFF 脚本（COMMON / ENDPOINT / HOOK）
+│   ├── page/app-4d050189/      # 低代码页面配置
+│   └── *.lock.json             # BFF / 页面 / SQL 同步清单
+├── .agents/skills/             # Lovrabet AI 助手技能（业务操作 / 平台运维类）
+├── vite.config.ts
+├── tsconfig.json
+└── package.json
+```
+
+## 技术栈
+
+- `@lovrabet/sdk`：Lovrabet TypeScript SDK 与模型客户端。
+- React 18 + TypeScript：页面开发与类型约束。
+- React Router v6：页面路由。
+- Ant Design v5：企业级 UI 组件。
+- Vite v7：本地开发与生产构建。
+- `@ice/stark-app`：icestark 微前端运行环境识别与 basename 适配。
+- `vite-plugin-pages`：基于 `src/pages` 的文件系统路由。
+- BFF 脚本（`.rabetbase/bff/`）：平台后端函数，承载业务规则与数据守卫。
 
 ## 开发说明
 
@@ -152,7 +254,7 @@ rabetbase run build
 rabetbase run preview
 ```
 
-底层脚本定义在 `package.json`，目前对应 Vite 的 `start`、`build`、`preview`。
+底层脚本定义在 `package.json`，目前对应 Vite 的 `start`、`build`、`preview`。不依赖 CLI 时也可以直接执行 `npm run start` 等。
 
 ### 微前端入口
 
@@ -227,14 +329,23 @@ src/pages/customer/[id].tsx   ->  /customer/:id
 
 ## 常见问题
 
-1. 端口被占用：执行 `PORT=3000 rabetbase run start`。
-2. HTTPS 证书获取失败：确认本地开发域名已加入平台开发证书信任范围（`rabetbase` CLI 会自动处理证书）。
-3. 路由不生效：确认页面位于 `src/pages` 下，并使用 `.tsx` 后缀。
-4. SDK 调用失败：执行 `rabetbase api pull`，并检查 `src/api/api.ts` 是否包含正确 AppCode 和模型别名。
-5. 嵌入后页面空白：确认 Lovrabet 页面使用 `import` 加载，并指向构建后的 `main.js` 与 `main.css`。
+1. **页面能渲染但没有数据 / 接口报错**：本应用的数据来自 Lovrabet 平台。请确认已 `rabetbase auth login` 登录、AppCode 正确，且应用具备页面用到的数据模型（`rabetbase api pull` 后可查看 `src/api/api.ts`）。
+2. **本地 https 打不开（`https://dev.lovrabet.com:5173`）**：外部环境拿不到平台开发证书时，Vite 会降级为 http。改用 `http://localhost:5173` 访问；平台内开发时先确认已加入证书信任范围。
+3. **端口被占用**：执行 `PORT=3000 rabetbase run start`。
+4. **路由不生效**：确认页面位于 `src/pages` 下，并使用 `.tsx` 后缀。
+5. **SDK 调用失败 / 模型不存在**：执行 `rabetbase api pull`，并检查 `src/api/api.ts` 是否包含正确 AppCode 和页面需要的模型别名。
+6. **嵌入后页面空白**：确认 Lovrabet 页面使用 `import` 加载，并指向构建后的 `main.js` 与 `main.css`。
+7. **`npm run start` 和 `rabetbase run start` 有什么区别**：底层都是 Vite 的 `start`；`rabetbase run start` 额外做项目上下文检查，且通常配好了登录态与证书。
+
+## 许可证
+
+本项目采用 [Apache License 2.0](./LICENSE) 开源协议，版权信息见 [NOTICE](./NOTICE)。
 
 ## 更多文档
 
-- [快速开始](./docs/quick-start.md)
+- [快速开始（Rabetbase 子应用）](./docs/quick-start.md)
 - [更新记录](./CHANGELOG.md)
 - [Lovrabet 开放平台文档](https://open.lovrabet.com/docs)
+- [TypeScript SDK](https://open.lovrabet.com/docs/lovrabet-sdk/intro)
+- [CLI 工具](https://open.lovrabet.com/docs/lovrabet-cli/)
+- [MCP](https://open.lovrabet.com/docs/mcp/intro)

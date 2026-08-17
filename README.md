@@ -7,7 +7,7 @@
 - **应用**：Lovrabet 平台应用 `app-4d050189`（ei-demo）
 - **入口地址**：https://app.lovrabet.com/app/app-4d050189/
   - 应用配置后台：https://app.lovrabet.com/app/app-4d050189/data/intro/
-  - 业务详情页：https://app-4d050189.app.lovrabet.com/application-detail/...
+  - Agent 入口：https://app-4d050189.app.lovrabet.com/chat
 
 **基本功能**：
 

@@ -1,457 +1,297 @@
 /**
- * Title: Rabetbase 开发指南
+ * Title: 企业采购与财务审批样板
  */
-import React from "react";
-import { Typography, Card, Row, Col, Button, Alert, Space, Tag } from "antd";
+import { Button, Tag, Typography } from "antd";
 import {
-  CodeOutlined,
-  RobotOutlined,
-  ToolOutlined,
-  BookOutlined,
+  ApartmentOutlined,
   ArrowRightOutlined,
-  CopyOutlined,
-  CheckOutlined,
-  RocketOutlined,
-  ExclamationCircleOutlined,
+  AuditOutlined,
+  BankOutlined,
+  FileDoneOutlined,
+  FileSearchOutlined,
+  FileTextOutlined,
+  InboxOutlined,
+  RobotOutlined,
+  SafetyCertificateOutlined,
+  TeamOutlined,
 } from "@ant-design/icons";
-import ProjectTabs from "@/components/project-tabs";
+import { Link } from "react-router-dom";
+import styles from "./index.module.css";
 
 const { Title, Paragraph, Text } = Typography;
 
-// 可复制的代码块
-function CopyableCode({ code, label }: { code: string; label: string }) {
-  const [copied, setCopied] = React.useState(false);
+const quickEntries = [
+  {
+    title: "工作台",
+    description: "查看待办、申请和经营概览",
+    path: "/workbench",
+    icon: <ApartmentOutlined />,
+  },
+  {
+    title: "审批中心",
+    description: "统一处理平台 Flow 待办与已办",
+    path: "/approval-center",
+    icon: <AuditOutlined />,
+  },
+  {
+    title: "申请单汇总",
+    description: "按状态检索各类业务单据",
+    path: "/application-list",
+    icon: <FileSearchOutlined />,
+  },
+  {
+    title: "新建报销",
+    description: "体验发票识别与规则校验",
+    path: "/expense-form",
+    icon: <FileDoneOutlined />,
+  },
+];
 
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+const capabilities = [
+  {
+    key: "expense",
+    title: "费用报销",
+    description:
+      "识别票面信息，匹配金额、时限与费用类别规则，标记异常并拦截重复报销。",
+    path: "/expense-form",
+    action: "发起报销",
+    icon: <FileDoneOutlined />,
+    className: styles.capabilityExpense,
+  },
+  {
+    key: "contract",
+    title: "合同审查",
+    description:
+      "覆盖主体授权、价税资金、交付验收、知识产权和违约解除等风险维度。",
+    path: "/contracts",
+    action: "进入合同工作台",
+    icon: <SafetyCertificateOutlined />,
+    className: styles.capabilityContract,
+  },
+  {
+    key: "invoice",
+    title: "发票查重与登记",
+    description: "定位冲突单据，统一管理进销项发票、开票申请和归档状态。",
+    path: "/invoice-center",
+    action: "查看发票中心",
+    icon: <InboxOutlined />,
+    className: styles.capabilityInvoice,
+  },
+  {
+    key: "salary",
+    title: "工资发放",
+    description: "解析工资表，校验月份与合计，并按主体拆分生成付款申请。",
+    path: "/salary-payment-form",
+    action: "新建工资付款",
+    icon: <BankOutlined />,
+    className: styles.capabilitySalary,
+  },
+  {
+    key: "customer",
+    title: "客户 360 与应收",
+    description: "整合机会、合同、收款和跟进信息，辅助判断催收优先级。",
+    path: "/customer-360",
+    action: "查看客户视图",
+    icon: <TeamOutlined />,
+    className: styles.capabilityCustomer,
+  },
+  {
+    key: "workflow",
+    title: "平台原生审批流转",
+    description:
+      "单据提交后进入平台 Flow，由流程驱动节点处理、状态回写、批量审批和飞书通知。",
+    path: "/approval-center",
+    action: "处理审批",
+    icon: <AuditOutlined />,
+    className: styles.capabilityWorkflow,
+  },
+];
 
-  return (
-    <div style={{ marginBottom: 12 }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 8,
-        }}
-      >
-        <Text type="secondary">{label}</Text>
-        <Button
-          type="primary"
-          size="small"
-          icon={copied ? <CheckOutlined /> : <CopyOutlined />}
-          onClick={handleCopy}
-        >
-          {copied ? "已复制" : "复制"}
-        </Button>
-      </div>
-      <pre
-        style={{
-          background: "#1e1e1e",
-          borderRadius: 8,
-          padding: "16px 20px",
-          margin: 0,
-          fontFamily: "'JetBrains Mono', 'Monaco', monospace",
-          fontSize: 13,
-          lineHeight: 1.6,
-          color: "#e4e4e7",
-          overflowX: "auto",
-        }}
-      >
-        <code>{code}</code>
-      </pre>
-    </div>
-  );
-}
+const architectureLayers = [
+  {
+    title: "业务前端",
+    meta: "React 18 + TypeScript + Vite 7",
+    description: "负责业务申请、工作台、审批中心和各类业务视图。",
+    icon: <FileTextOutlined />,
+  },
+  {
+    title: "Lovrabet 数据与业务层",
+    meta: "44 个数据模型 + BFF",
+    description:
+      "Instant API 连接数据，ENDPOINT 编排业务，HOOK 在读写侧执行守卫。",
+    icon: <ApartmentOutlined />,
+  },
+  {
+    title: "平台 Flow 与 AI Agent",
+    meta: "流程驱动 + AI 全程参与",
+    description: "统一审批流转，支持规则核验、风险识别、批量处理与消息通知。",
+    icon: <RobotOutlined />,
+  },
+];
 
-// 从 api.ts 提取 appCode
-function getAppCodeFromApi(content: string): string | null {
-  const match =
-    content.match(/RABETBASE_APP_CODE\s*=\s*["']([^"']+)["']/) ||
-    content.match(/appCode:\s*["']([^"']+)["']/);
-  return match ? match[1] : null;
-}
+const boundaries = [
+  "BFF 创建的部分单据仍在迁移到平台原生 Flow，标准页面创建的记录已接入平台审批流。",
+  "当前通过 cpoDatasetMap 与 cpoDal 管理数据集映射，后续将替换为平台统一 DAL。",
+  "行级权限与写入管控目前依赖 Instant API Hooks，后续将收敛到平台 API 访问策略。",
+];
 
 function HomePage() {
-  const [appCode, setAppCode] = React.useState<string | null>(null);
-  const [loading, setLoading] = React.useState(true);
-
-  React.useEffect(() => {
-    const loadAppCode = async () => {
-      try {
-        const modules = import.meta.glob("/src/api/*.ts", {
-          query: "?raw",
-          import: "default",
-        });
-        const apiPath = "/src/api/api.ts";
-
-        if (apiPath in modules) {
-          const content = await modules[apiPath]();
-          const code = getAppCodeFromApi(content as string);
-          setAppCode(code);
-        }
-      } catch (err) {
-        console.error("加载 api.ts 失败:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadAppCode();
-  }, []);
-
-  // 检查是否已配置
-  const isNotSet = appCode === "NOT-SET" || appCode === null;
-  const displayAppCode = isNotSet ? "your-app-code" : appCode;
-
-  const mcpConfig = `{
-  "mcpServers": {
-    "lovrabet-dataset": {
-      "command": "npx",
-      "args": ["-y", "@lovrabet/dataset-mcp-server"],
-      "env": {
-        "RABETBASE_APP_CODE": "${displayAppCode}"
-      }
-    }
-  }
-}`;
-
-  const cliCode = `# 拉取最新 API 配置
-lovrabet api pull
-
-# 微前端子应用同步菜单
-lovrabet menu sync`;
-
-  const configTabs = [
-    {
-      key: "mcp",
-      label: (
-        <span>
-          <RobotOutlined /> MCP 配置
-        </span>
-      ),
-      children: (
-        <div>
-          <Paragraph>claude code 配置：</Paragraph>
-          <Paragraph style={{ fontSize: 12, color: "#666" }}>
-            配置文件路径：
-            <br />
-            macOS: ~/Library/Application
-            Support/Claude/claude_desktop_config.json
-            <br />
-            Windows: %APPDATA%/Claude/claude_desktop_config.json
-          </Paragraph>
-          <CopyableCode code={mcpConfig} label="claude_desktop_config.json" />
-
-          <Paragraph style={{ marginTop: 16 }}>Cursor 配置：</Paragraph>
-          <Paragraph style={{ fontSize: 12, color: "#666" }}>
-            设置 → MCP → 添加服务器
-          </Paragraph>
-          <CopyableCode
-            code={`// Cursor MCP 配置
-{
-  "mcpServers": {
-    "lovrabet-dataset": {
-      "command": "npx",
-      "args": ["-y", "@lovrabet/dataset-mcp-server"],
-      "env": {
-        "RABETBASE_APP_CODE": "${displayAppCode}"
-      }
-    }
-  }
-}`}
-            label="Cursor MCP 配置"
-          />
-
-          <Paragraph style={{ marginTop: 16 }}>
-            Claude Code (VS Code 扩展)：
-          </Paragraph>
-          <CopyableCode
-            code={`claude mcp add lovrabet-dataset npx @lovrabet/dataset-mcp-server@latest -e RABETBASE_APP_CODE=${displayAppCode}`}
-            label="Claude Code 终端命令"
-          />
-
-          <Button
-            type="link"
-            href="https://open.lovrabet.com/docs/mcp/intro"
-            target="_blank"
-          >
-            查看完整文档 <ArrowRightOutlined />
-          </Button>
-        </div>
-      ),
-    },
-    {
-      key: "cli",
-      label: (
-        <span>
-          <ToolOutlined /> CLI 命令
-        </span>
-      ),
-      children: (
-        <div>
-          <Paragraph>常用 CLI 命令：</Paragraph>
-          <CopyableCode code={cliCode} label="终端命令" />
-          <Button
-            type="link"
-            href="https://open.lovrabet.com/docs/lovrabet-cli/quickstart"
-            target="_blank"
-          >
-            查看完整文档 <ArrowRightOutlined />
-          </Button>
-        </div>
-      ),
-    },
-  ];
-
-  const docLinks = [
-    {
-      title: "入门指南",
-      icon: <RocketOutlined />,
-      links: [
-        {
-          label: "5 分钟上手指引",
-          url: "https://open.lovrabet.com/docs/guides/step-guide",
-        },
-        {
-          label: "开发者工具全景",
-          url: "https://open.lovrabet.com/docs/guides/toolchain",
-        },
-        { label: "常见问题", url: "https://open.lovrabet.com/docs/guides/faq" },
-      ],
-    },
-    {
-      title: "开发文档",
-      icon: <BookOutlined />,
-      links: [
-        {
-          label: "TypeScript SDK",
-          url: "https://open.lovrabet.com/docs/lovrabet-sdk/intro",
-        },
-        {
-          label: "Java SDK",
-          url: "https://open.lovrabet.com/docs/java-opensdk/quickstart",
-        },
-        {
-          label: "OpenAPI",
-          url: "https://open.lovrabet.com/docs/openapi/intro",
-        },
-        { label: "MCP", url: "https://open.lovrabet.com/docs/mcp/intro" },
-        {
-          label: "Backend Function",
-          url: "https://open.lovrabet.com/docs/guides/best-practices",
-        },
-      ],
-    },
-  ];
-
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "24px" }}>
-      {/* 标题区 */}
-      <div style={{ marginBottom: 32 }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            flexWrap: "wrap",
-            gap: 16,
-          }}
-        >
-          <div>
-            <Title level={2} style={{ margin: 0 }}>
-              Rabetbase 开发指南
-            </Title>
-            <Paragraph style={{ color: "#666", marginTop: 8, marginBottom: 0 }}>
-              基于 Lovrabet 平台的后端即服务（BaaS）
-            </Paragraph>
+    <main className={styles.homepage}>
+      <section className={styles.hero} aria-labelledby="home-title">
+        <div className={styles.heroCopy}>
+          <Text className={styles.eyebrow}>Lovrabet 企业智能应用样板</Text>
+          <Title id="home-title" level={1} className={styles.heroTitle}>
+            AI 原生的企业采购与财务审批样板
+          </Title>
+          <Paragraph className={styles.heroText}>
+            把规则、流程与 AI 放进每一张业务单据，覆盖申请、审查、审批和归档。
+          </Paragraph>
+          <div className={styles.heroActions}>
+            <Link to="/workbench">
+              <Button type="primary" size="large" icon={<ApartmentOutlined />}>
+                进入工作台
+              </Button>
+            </Link>
+            <Button
+              size="large"
+              icon={<RobotOutlined />}
+              href="https://app-4d050189.app.lovrabet.com/chat"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Agent 数字员工
+            </Button>
           </div>
-          <Space size="middle">
-            <a
-              href="https://open.lovrabet.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Rabetbase官网
-            </a>
-            <a
-              href="https://open.lovrabet.com/docs/changelog"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              更新日志
-            </a>
-            {!isNotSet && appCode && (
-              <a
-                href={`https://app.lovrabet.com/app/${appCode}/data/intro/`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                应用配置后台
-              </a>
-            )}
-          </Space>
         </div>
-      </div>
 
-      {/* Rabetbase 介绍卡片 */}
-      <Card style={{ marginBottom: 24 }}>
-        <Row gutter={[24, 16]} align="middle">
-          <Col xs={24} lg={16}>
-            <Title level={3} style={{ marginBottom: 12 }}>
-              什么是 Rabetbase？
-            </Title>
-            <Paragraph
-              style={{ fontSize: 15, marginBottom: 16, color: "#595959" }}
-            >
-              <strong>Rabetbase 是 Lovrabet 面向技术岗位的开发者平台。</strong>
-              <br />
-              Lovrabet 工作台让业务人员用 AI
-              生成管理系统，但有些个性化需求（如小程序、ERP
-              对接、复杂业务逻辑）需要开发者介入。 Rabetbase 把 Lovrabet
-              平台的数据能力开放出来，让开发者专注于写业务逻辑。
-            </Paragraph>
-            <Space wrap>
-              <Button
-                size="small"
-                href="https://open.lovrabet.com/docs/category/openapi"
-                target="_blank"
-              >
-                OpenAPI
-              </Button>
-              <Button
-                size="small"
-                href="https://open.lovrabet.com/docs/category/lovrabet-node-sdk"
-                target="_blank"
-              >
-                TypeScript SDK
-              </Button>
-              <Button
-                size="small"
-                href="https://open.lovrabet.com/docs/category/java-opensdk"
-                target="_blank"
-              >
-                Java SDK
-              </Button>
-              <Button
-                size="small"
-                href="https://open.lovrabet.com/docs/mcp/intro"
-                target="_blank"
-              >
-                MCP
-              </Button>
-              <Button
-                size="small"
-                href="https://open.lovrabet.com/docs/lovrabet-cli/"
-                target="_blank"
-              >
-                CLI 工具
-              </Button>
-            </Space>
-          </Col>
-          <Col xs={24} lg={8}>
-            <div
-              style={{
-                background: "#f5f5f5",
-                borderRadius: 8,
-                padding: 20,
-              }}
-            >
-              <Text
-                style={{ fontSize: 14, display: "block", marginBottom: 12 }}
-              >
-                <strong>核心价值：</strong>
-              </Text>
-              <ul
-                style={{
-                  color: "#595959",
-                  margin: 0,
-                  paddingLeft: 20,
-                  fontSize: 14,
-                }}
-              >
-                <li style={{ marginBottom: 8 }}>AI 自动理解业务模型</li>
-                <li style={{ marginBottom: 8 }}>现成的 API 和 SDK</li>
-                <li style={{ marginBottom: 8 }}>开发效率提升 2~5 倍</li>
-                <li>你只需要专注写业务逻辑</li>
-              </ul>
-            </div>
-          </Col>
-        </Row>
-      </Card>
+        <figure className={styles.heroVisual}>
+          <img
+            src="/enterprise-workflow-hero.jpg"
+            alt="合同、发票与审批印章组成的企业流程工作台"
+            width="1448"
+            height="1086"
+            fetchPriority="high"
+          />
+          <figcaption>
+            <RobotOutlined aria-hidden="true" />
+            规则系统强制，流程系统驱动，AI 全程参与
+          </figcaption>
+        </figure>
+      </section>
 
-      {/* 未配置提示 */}
-      {isNotSet && !loading && (
-        <Alert
-          type="warning"
-          icon={<ExclamationCircleOutlined />}
-          message="项目尚未配置 AppCode"
-          description={
-            <div style={{ marginTop: 8 }}>
-              <Paragraph style={{ marginBottom: 8 }}>
-                请先执行以下命令初始化项目（替换{" "}
-                <code>&lt;your-app-code&gt;</code> 为你的应用代码）：
-              </Paragraph>
-              <CopyableCode
-                code={`# 1. 设置 AppCode
-lovrabet config set app <your-app-code>
-
-# 2. 拉取 API 配置
-lovrabet api pull`}
-                label="初始化命令"
-              />
-              <Paragraph style={{ marginBottom: 0 }}>
-                执行完成后刷新页面即可。
-              </Paragraph>
-            </div>
-          }
-          style={{ marginBottom: 24 }}
-        />
-      )}
-
-      {/* 配置代码 */}
-      <Card style={{ marginBottom: 24 }}>
-        <ProjectTabs items={configTabs} />
-      </Card>
-
-      {/* 文档链接 */}
-      <Row gutter={16}>
-        {docLinks.map((section) => (
-          <Col xs={24} md={12} key={section.title}>
-            <Card style={{ height: "100%" }}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  marginBottom: 16,
-                }}
-              >
-                {section.icon}
-                <Title level={4} style={{ margin: 0 }}>
-                  {section.title}
-                </Title>
-              </div>
-              {section.links.map((link) => (
-                <div key={link.label}>
-                  <Button
-                    type="link"
-                    href={link.url}
-                    target="_blank"
-                    style={{ padding: "8px 0" }}
-                  >
-                    {link.label} <ArrowRightOutlined />
-                  </Button>
-                </div>
-              ))}
-            </Card>
-          </Col>
+      <nav className={styles.quickEntries} aria-label="常用业务入口">
+        {quickEntries.map((entry) => (
+          <Link key={entry.path} to={entry.path} className={styles.quickEntry}>
+            <span className={styles.entryIcon}>{entry.icon}</span>
+            <span>
+              <strong>{entry.title}</strong>
+              <small>{entry.description}</small>
+            </span>
+            <ArrowRightOutlined className={styles.entryArrow} />
+          </Link>
         ))}
-      </Row>
-    </div>
+      </nav>
+
+      <section className={styles.section} aria-labelledby="capability-title">
+        <header className={styles.sectionHeader}>
+          <Title id="capability-title" level={2}>
+            AI 深入六个高频业务场景
+          </Title>
+          <Paragraph>
+            不是在系统旁边增加一个问答框，而是在数据读写、规则核验和审批流转中直接参与。
+          </Paragraph>
+        </header>
+
+        <div className={styles.capabilityGrid}>
+          {capabilities.map((capability) => (
+            <article
+              key={capability.key}
+              className={`${styles.capabilityCard} ${capability.className}`}
+            >
+              <span className={styles.capabilityIcon}>{capability.icon}</span>
+              <div>
+                <Title level={3}>{capability.title}</Title>
+                <Paragraph>{capability.description}</Paragraph>
+              </div>
+              <Link to={capability.path} className={styles.textLink}>
+                {capability.action} <ArrowRightOutlined />
+              </Link>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section
+        className={styles.architectureSection}
+        aria-labelledby="architecture-title"
+      >
+        <div className={styles.architectureIntro}>
+          <Text className={styles.sectionKicker}>默认架构</Text>
+          <Title id="architecture-title" level={2}>
+            守卫在数据层，流程在平台层
+          </Title>
+          <Paragraph>
+            即使绕过前端界面，业务规则仍由 BFF 在数据读写侧执行。审批状态由平台
+            Flow 统一驱动和回写。
+          </Paragraph>
+          <div className={styles.factRow}>
+            <div>
+              <strong>26</strong>
+              <span>COMMON</span>
+            </div>
+            <div>
+              <strong>35</strong>
+              <span>ENDPOINT</span>
+            </div>
+            <div>
+              <strong>122</strong>
+              <span>HOOK</span>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.architectureStack}>
+          {architectureLayers.map((layer) => (
+            <article key={layer.title} className={styles.architectureLayer}>
+              <span className={styles.layerIcon}>{layer.icon}</span>
+              <div>
+                <div className={styles.layerHeading}>
+                  <strong>{layer.title}</strong>
+                  <Tag>{layer.meta}</Tag>
+                </div>
+                <p>{layer.description}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section
+        className={styles.boundarySection}
+        aria-labelledby="boundary-title"
+      >
+        <div>
+          <FileSearchOutlined className={styles.boundaryIcon} />
+          <Title id="boundary-title" level={2}>
+            当前边界
+          </Title>
+          <Paragraph>
+            这是持续演进的样板应用。以下能力已明确列入 README 的后续工作。
+          </Paragraph>
+        </div>
+        <ol className={styles.boundaryList}>
+          {boundaries.map((boundary) => (
+            <li key={boundary}>{boundary}</li>
+          ))}
+        </ol>
+      </section>
+
+      <footer className={styles.footer}>
+        <span>所有业务数据均为演示用虚构数据。</span>
+        <span>基于 Lovrabet 平台构建，采用 MIT 开源协议。</span>
+      </footer>
+    </main>
   );
 }
 

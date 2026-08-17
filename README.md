@@ -124,7 +124,7 @@ rabetbase run start
 │  @ice/stark-app（icestark 微前端，可独立运行 / 嵌入主应用）│
 │  vite-plugin-pages（src/pages 文件系统路由）             │
 └──────────────┬──────────────────────────────────────────┘
-               │ @lovrabet/sdk（models.* CRUD / filter / getList）
+               │ @lovrabet/sdk（models.* 经 Instant API 读写数据）
                ▼
 ┌─────────────────────────────────────────────────────────┐
 │ Lovrabet 平台                                            │

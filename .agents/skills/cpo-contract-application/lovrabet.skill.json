@@ -1,12 +1,26 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "appCode": "app-4d050189",
   "skillCode": "cpo-contract-application",
   "skillName": "合同申请助手",
-  "scope": "personal",
-  "readonly": false,
-  "version": "20260811.192556",
+  "description": "在启智云图企业智能系统中创建、保存草稿、提交和查询合同申请。用户提供合同或审批材料时必须主动上传、逐项关联申请单并清点数量；不得绕过受控 Backend Function 直接修改流程状态。",
+  "scope": "company",
+  "readonly": true,
+  "version": "20260817.165231",
   "tags": [],
-  "contentHash": "ec164d8e96ef9ad1e9867ba1a97e12ae0262c4769a8be34ddd7c282c19a25ea1",
-  "pulledAt": "2026-08-11T11:25:56.201Z"
+  "contentHash": "a8007a9cc9c12a2e9938bfd82d4fd4487a5cedcbf1b93251fce3dc9fe0ac6bb8",
+  "fileHashes": {
+    "SKILL.md": "a8007a9cc9c12a2e9938bfd82d4fd4487a5cedcbf1b93251fce3dc9fe0ac6bb8"
+  },
+  "treeHash": "5884b1e36b3a435ef92dc8b4020c0d9b20cb95430712babd14a8206917044dda",
+  "zipSha256": "95a7135379d566a9b143a310d3c6c95d469fece03632711d83dae766021de8c4",
+  "zipSize": 9866,
+  "files": [
+    {
+      "path": "SKILL.md",
+      "hash": "a8007a9cc9c12a2e9938bfd82d4fd4487a5cedcbf1b93251fce3dc9fe0ac6bb8",
+      "size": 9752
+    }
+  ],
+  "pulledAt": "2026-08-17T08:52:31.787Z"
 }

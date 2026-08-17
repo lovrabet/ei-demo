@@ -3,13 +3,14 @@
   "appCode": "app-4d050189",
   "skillCode": "cpo-contract-analysis-and-entry",
   "skillName": "合同风险分析与分期入库",
-  "scope": "personal",
-  "readonly": false,
-  "version": "20260811.192724",
+  "description": "启智云图企业智能系统中的合同专家审查与安全录入能力。用于逐页核验 PDF、扫描件或 Word 合同，提取签约主体、服务范围、金额、期限及付款或收款分期，按主体授权、价税资金、交付验收、发票退款、知识产权、违约解除、合规和争议解决等维度识别合同风险并给出处置建议，核对供应商或客户资料，再通过 Lovrabet BFF 安全录入、修正和复核；也适用于提交合同前风险把关及排查历史合同、资金单据、附件和合作方关联错误。",
+  "scope": "company",
+  "readonly": true,
+  "version": "20260817.165207",
   "tags": [],
-  "contentHash": "298c7a983cf6589b5d3a14307054041d69d5e4b00f1e3811acad21ce78cb58ab",
+  "contentHash": "8c383c0153891d21ef655fe7f69b5735604664301bf47499d5a1fa08816a956d",
   "fileHashes": {
-    "SKILL.md": "298c7a983cf6589b5d3a14307054041d69d5e4b00f1e3811acad21ce78cb58ab",
+    "SKILL.md": "8c383c0153891d21ef655fe7f69b5735604664301bf47499d5a1fa08816a956d",
     "agents/openai.yaml": "2ac443cbcea1d795f52aacd61d9339611408d6a425313d6ff1e20a5794d4460a",
     "references/contract-review-rules.md": "66e934682204c6249c763b026ba38a68811bbe4f211de6c636b20210ce29c7c0",
     "references/contract-risk-review.md": "511fa098e4b57a59de7217de9e304e763c827a67b911b70e21b08563f0fa349f",
@@ -17,14 +18,14 @@
     "references/system-entry.md": "a5408d0ecee207173f5672ddfdf6edbe07836438af7330938c13271c7dc86177",
     "scripts/validate_contract_analysis.py": "df5ebfddcb9a46769bac579a086e72ce9eb9bd1bec418b7d326fbf99a444c0d2"
   },
-  "treeHash": "3b1021c13c414ad87f8a95d7f32387ec764675aeeebd04475c6be450af95cfa2",
-  "zipSha256": "024076b7983e27eb3dbb6fd08f6f4e2b1a654a67406b76948fd5220ef1849dba",
-  "zipSize": 52599,
+  "treeHash": "3aa0c3bb79a1722a1a9b321c3a1ce27162cc2fbd6bd2c271ad7eb7b838d7da57",
+  "zipSha256": "dfe0b66ec45dab1750f6022fc8df698da35d485b805575dbbb364ab88e9bac40",
+  "zipSize": 53931,
   "files": [
     {
       "path": "SKILL.md",
-      "hash": "298c7a983cf6589b5d3a14307054041d69d5e4b00f1e3811acad21ce78cb58ab",
-      "size": 8596
+      "hash": "8c383c0153891d21ef655fe7f69b5735604664301bf47499d5a1fa08816a956d",
+      "size": 9928
     },
     {
       "path": "agents/openai.yaml",
@@ -57,5 +58,5 @@
       "size": 18965
     }
   ],
-  "pulledAt": "2026-08-11T11:27:25.484Z"
+  "pulledAt": "2026-08-17T08:52:08.154Z"
 }

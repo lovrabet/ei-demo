@@ -1,12 +1,26 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "appCode": "app-4d050189",
   "skillCode": "cpo-payment-application",
   "skillName": "付款申请助手",
-  "scope": "personal",
-  "readonly": false,
-  "version": "20260811.192554",
+  "description": "在启智云图企业智能系统中创建、保存草稿、提交和查询商务付款申请。用户提供付款材料时必须主动上传、逐项关联申请单并清点数量；不得绕过受控 Backend Function 直接修改付款及银行状态。",
+  "scope": "company",
+  "readonly": true,
+  "version": "20260817.165109",
   "tags": [],
-  "contentHash": "6e044f02766fbe3d9c86a531257481e19822bc9334309f3664b5a4b2bc40ad03",
-  "pulledAt": "2026-08-11T11:25:54.942Z"
+  "contentHash": "531b2964fa6249b6a15bc775cb73b87b5ad596747c0875e6e8ed7d84fe2a5f5e",
+  "fileHashes": {
+    "SKILL.md": "531b2964fa6249b6a15bc775cb73b87b5ad596747c0875e6e8ed7d84fe2a5f5e"
+  },
+  "treeHash": "5eb7f03cf3171a8bb3e9729fb6a25ad137a6e14c45eca9afaac19e77576d8c8b",
+  "zipSha256": "815e7d6141bb60189a4d7189508db7b623ec092d617fad1b5132ed57ef28aaaf",
+  "zipSize": 11778,
+  "files": [
+    {
+      "path": "SKILL.md",
+      "hash": "531b2964fa6249b6a15bc775cb73b87b5ad596747c0875e6e8ed7d84fe2a5f5e",
+      "size": 11664
+    }
+  ],
+  "pulledAt": "2026-08-17T08:51:09.273Z"
 }

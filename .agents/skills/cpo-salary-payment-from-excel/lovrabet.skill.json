@@ -3,26 +3,27 @@
   "appCode": "app-4d050189",
   "skillCode": "cpo-salary-payment-from-excel",
   "skillName": "工资付款 Excel 自动录入",
-  "scope": "personal",
-  "readonly": false,
-  "version": "20260811.192704",
+  "description": "在启智云图企业智能系统中，从一份或多份启智云图、梅柚流码及启智云图上海分公司的工资、人员成本 Excel 安全提取付款金额和人数，完成月份校验、公式与合计对账，并默认拆分为启智云图工资、梅柚流码工资、启智云图向上海分公司支付工资及个税往来款三类工资付款草稿，分别保留相关原始附件。用于用户要求分析工资表、规划工资申请拆单、录入工资付款申请或核对工资附件时。",
+  "scope": "company",
+  "readonly": true,
+  "version": "20260817.165127",
   "tags": [],
-  "contentHash": "bcfcae47757ec726dd5da0e75e996c00fa84aa9ac841010bf61e2d17ea0cbfbb",
+  "contentHash": "4928b6bdcd9540ea6cadaac91548ad0141f5d36956220ec60cfc7e2f48cdd79b",
   "fileHashes": {
-    "SKILL.md": "bcfcae47757ec726dd5da0e75e996c00fa84aa9ac841010bf61e2d17ea0cbfbb",
+    "SKILL.md": "4928b6bdcd9540ea6cadaac91548ad0141f5d36956220ec60cfc7e2f48cdd79b",
     "agents/openai.yaml": "d9196d2848a49b6cd119b789e439b18028c77edc21f9dcab2b9dd8a523f7078f",
     "references/application-contract.md": "18c31069503149cd4aeed0b90a18c327998cf6db46745ce3a35bde8d5f9b0cb5",
     "references/workbook-rules.md": "b70cf5e3a3b1a95418fd45687b6a666d2563e51497cff5298ceb21e78afdfc28",
     "scripts/analyze_salary_workbook.py": "466afff5b8e8c17bb9ec5fe31688625215408c27e3f5a1893445c96c08275fc1"
   },
-  "treeHash": "2010b8c1b7fe719d947def44c570b7b1f097dbfeb8ee6266b789aeb8862c0792",
-  "zipSha256": "c5258d1139a9230d671fd75679a649f022fe119b15243195245516f5f96495ed",
-  "zipSize": 49850,
+  "treeHash": "b80db24646514ec2f3a83cd877cb03494a61bbcf2b370022f6423cf2e033fc78",
+  "zipSha256": "b935ef43ada2575816a39b6f40afbe19e13c14834929b537acc4027307d6f53b",
+  "zipSize": 50749,
   "files": [
     {
       "path": "SKILL.md",
-      "hash": "bcfcae47757ec726dd5da0e75e996c00fa84aa9ac841010bf61e2d17ea0cbfbb",
-      "size": 5941
+      "hash": "4928b6bdcd9540ea6cadaac91548ad0141f5d36956220ec60cfc7e2f48cdd79b",
+      "size": 6840
     },
     {
       "path": "agents/openai.yaml",
@@ -45,5 +46,5 @@
       "size": 31846
     }
   ],
-  "pulledAt": "2026-08-11T11:27:05.169Z"
+  "pulledAt": "2026-08-17T08:51:27.665Z"
 }

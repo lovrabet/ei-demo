@@ -3,27 +3,28 @@
   "appCode": "app-4d050189",
   "skillCode": "cpo-batch-workflow-approval",
   "skillName": "批量审批核查助手",
-  "scope": "personal",
-  "readonly": false,
-  "version": "20260811.192714",
+  "description": "在启智云图企业智能系统中批量核验当前用户本人待办的审批步骤，识别合规与业务风险，给出直接审批或补充询问建议，并在用户确认后安全办理；适用于报销、合同、付款、发票、差旅、薪资等业务审批，不用于签署、付款、制单、归档等操作步骤。",
+  "scope": "company",
+  "readonly": true,
+  "version": "20260817.164926",
   "tags": [],
-  "contentHash": "33dea8b232f9e88b5ec77b50c5079ec678021d303e40c04947bef8148c324514",
+  "contentHash": "a060a72452e06d0eb9dde1b0859efe6b5d2f14b55e0cb43e85c31806fcb196b1",
   "fileHashes": {
-    "SKILL.md": "33dea8b232f9e88b5ec77b50c5079ec678021d303e40c04947bef8148c324514",
+    "SKILL.md": "a060a72452e06d0eb9dde1b0859efe6b5d2f14b55e0cb43e85c31806fcb196b1",
     "agents/openai.yaml": "319722c6e95999c20f32bf0673a74d3dd31cc7243f881bb10e7be1c9a0bd1962",
     "references/output-contract.md": "76a3f03ab7cc9fd937585649d49b71a7867f3f824f04b9aaa013bdd583f26ee4",
     "references/review-policy.md": "2b0e96861001f0ed95804a600b33d93b586c02195ffb6968293712fbaa6a58a8",
     "references/runtime-contract.md": "e25d88f8b90d7c2e9e4215c874ee3782b132e876c454dc7516e5859b4f71f9c5",
     "scripts/validate_batch_plan.py": "f4106ede0c524488b88ffdb4fbe9d0639217e0bde965f2cddcb8ec04be154251"
   },
-  "treeHash": "57238ca174f677db2001c1b98563e05d0434d794e3ccc05b248deb4f229d1212",
-  "zipSha256": "cc60ace6721ce13c64ed63f908814211af613a49a145de0374edf743f46bd24c",
-  "zipSize": 26010,
+  "treeHash": "3d654e3f80a457a620970ae3813d3e307a57af9ab3e8590aff1d0f2e8f3a2574",
+  "zipSha256": "71e3139940bd138df49a41358d52bd8efd7e97125876569c61a82e9a21cce215",
+  "zipSize": 27134,
   "files": [
     {
       "path": "SKILL.md",
-      "hash": "33dea8b232f9e88b5ec77b50c5079ec678021d303e40c04947bef8148c324514",
-      "size": 5596
+      "hash": "a060a72452e06d0eb9dde1b0859efe6b5d2f14b55e0cb43e85c31806fcb196b1",
+      "size": 6720
     },
     {
       "path": "agents/openai.yaml",
@@ -51,5 +52,5 @@
       "size": 6628
     }
   ],
-  "pulledAt": "2026-08-11T11:27:15.361Z"
+  "pulledAt": "2026-08-17T08:49:27.555Z"
 }

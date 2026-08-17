@@ -1,12 +1,26 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "appCode": "app-4d050189",
   "skillCode": "cpo-expense-application",
   "skillName": "报销申请助手",
-  "scope": "personal",
-  "readonly": false,
-  "version": "20260811.192553",
+  "description": "在启智云图企业智能系统中根据用户上传的发票文件创建、保存草稿、提交或查询报销申请。创建和提交报销时必须先上传真实发票文件，并把同一文件保存到报销附件池和发票台账；不得绕过受控 Backend Function 直接写业务表。",
+  "scope": "company",
+  "readonly": true,
+  "version": "20260817.165016",
   "tags": [],
-  "contentHash": "c0ffde06e42d3969f1472efd03dbfa348ee739b0f1b5750ce57b2290b0b936ae",
-  "pulledAt": "2026-08-11T11:25:53.549Z"
+  "contentHash": "901e505e195867e28a9b37323fc1923d1777f0863bb131f6cc79d6c50b85f861",
+  "fileHashes": {
+    "SKILL.md": "901e505e195867e28a9b37323fc1923d1777f0863bb131f6cc79d6c50b85f861"
+  },
+  "treeHash": "3b42548012ff9807d6351b519387b0ed2f4bdfcd1a7bddc2145341cf04478120",
+  "zipSha256": "dbe3c54849e1ac685d488a408b05338ad9f0574f7b570214464edb1dbb6d81a2",
+  "zipSize": 17155,
+  "files": [
+    {
+      "path": "SKILL.md",
+      "hash": "901e505e195867e28a9b37323fc1923d1777f0863bb131f6cc79d6c50b85f861",
+      "size": 17041
+    }
+  ],
+  "pulledAt": "2026-08-17T08:50:16.335Z"
 }

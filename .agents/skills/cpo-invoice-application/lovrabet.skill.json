@@ -1,12 +1,26 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "appCode": "app-4d050189",
   "skillCode": "cpo-invoice-application",
   "skillName": "发票与开票申请助手",
-  "scope": "personal",
-  "readonly": false,
-  "version": "20260811.192557",
+  "description": "在启智云图企业智能系统中创建和提交销项开票申请、登记真实进销项发票，并按金额维护开票申请履约及应收期次开票分摊。用户提供开票材料或发票文件时必须主动上传、逐项关联业务单并清点数量。",
+  "scope": "company",
+  "readonly": true,
+  "version": "20260817.165034",
   "tags": [],
-  "contentHash": "a9e9b6b30cac963b63921d5443dfa9ac2317518816387e288fdec71aff3de060",
-  "pulledAt": "2026-08-11T11:25:57.533Z"
+  "contentHash": "bd0e7f92f2ea9bb76264b630338add9ef797de22189af740f8baf72b62f43255",
+  "fileHashes": {
+    "SKILL.md": "bd0e7f92f2ea9bb76264b630338add9ef797de22189af740f8baf72b62f43255"
+  },
+  "treeHash": "304a08b5c63c596ca5baf8b2c9675be965210a3683d99d63d6f31c9b4f374948",
+  "zipSha256": "fd0b63b46e9b35f48095754fc93489f90fbdd13aac0d85fc00920d92c9eec46e",
+  "zipSize": 14524,
+  "files": [
+    {
+      "path": "SKILL.md",
+      "hash": "bd0e7f92f2ea9bb76264b630338add9ef797de22189af740f8baf72b62f43255",
+      "size": 14410
+    }
+  ],
+  "pulledAt": "2026-08-17T08:50:34.201Z"
 }

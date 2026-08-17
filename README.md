@@ -153,4 +153,4 @@ rabetbase run start
 
 ## 许可证
 
-[Apache License 2.0](./LICENSE)，版权信息见 [NOTICE](./NOTICE)。
+本项目采用 [MIT](./LICENSE) 开源协议。

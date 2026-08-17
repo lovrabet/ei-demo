@@ -17,7 +17,7 @@ npm install
 npm run start
 ```
 
-然后浏览器打开 **http://localhost:5173**（默认端口 5173；换端口用 `PORT=3000 npm run start`）。
+然后浏览器打开 **https://dev.lovrabet.com:5173**（默认端口 5173；换端口用 `PORT=3000 npm run start`）。
 
 > 这种方式启动后，页面框架、路由、表单都能正常渲染；但**业务数据来自 Lovrabet 平台**，未登录或没有对应数据模型时列表为空、接口报错，均属预期，原因见[数据从哪来](#数据从哪来)。
 
@@ -279,7 +279,7 @@ src/pages/customer/[id].tsx   ->  /customer/:id
 ## 常见问题
 
 1. **启动后页面能渲染但没有数据 / 接口报错**：这是预期行为——本应用的数据来自 Lovrabet 平台。请确认已 `rabetbase auth login` 登录、AppCode 正确，且应用具备页面用到的数据模型（`rabetbase api pull` 后可查看 `src/api/api.ts`）。只想看界面的话用[方式一](#快速启动)即可。
-2. **本地 https 打不开（`https://dev.lovrabet.com:5173`）**：外部环境拿不到平台开发证书时，Vite 会降级为 http。改用 `http://localhost:5173` 访问；平台内开发时先确认已加入证书信任范围。
+2. **本地 https 打不开（`https://dev.lovrabet.com:5173`）**：外部环境拿不到平台开发证书时，Vite 会降级为 http，改用 `http://dev.lovrabet.com:5173` 访问；平台内开发时先确认已加入证书信任范围。注意开发域名是 `dev.lovrabet.com`（需解析到本机，平台 CORS 只对该域名放行），不要用 `localhost`。
 3. **端口被占用**：执行 `PORT=3000 rabetbase run start`。
 4. **路由不生效**：确认页面位于 `src/pages` 下，并使用 `.tsx` 后缀。
 5. **SDK 调用失败 / 模型不存在**：执行 `rabetbase api pull`，并检查 `src/api/api.ts` 是否包含正确 AppCode 和页面需要的模型别名。

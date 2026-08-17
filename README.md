@@ -4,21 +4,62 @@
 
 这是运行在 Lovrabet 平台上的 React 18 + Vite 微前端样板应用（AppCode `app-4d050189`），演示了一整套企业采购与财务审批业务：费用报销、付款申请、销售/采购合同、发票登记与开具、工资发放、差旅申请、应收合同与客户 360 等单据的申请、审批、台账与审批流接入。**所有业务数据均为演示用虚构数据。**
 
-该样板展示了完整的前后端开发形态：
+> 环境要求：**Node.js 20+**。`rabetbase` CLI 不是启动必需项，仅在需要对接 Lovrabet 平台数据时才安装。
 
-- 前端通过 `@lovrabet/sdk` 调用平台数据模型，`vite-plugin-pages` 按 `src/pages` 生成路由，构建后以 icestark 微前端方式嵌入 Lovrabet 主应用；
-- 后端使用 BFF 脚本（`.rabetbase/bff/` 下的 COMMON / ENDPOINT / HOOK）承载业务规则与数据守卫；
-- 审批流接入 Lovrabet 平台原生 Flow（Flowable）：单据发起后由平台拦截并转发起审批，状态回写到业务表，审批人从平台审批中心处理。
+---
 
-## 三种打开方式（先读这里）
+## 🚀 快速启动
 
-| 目的 | 做法 | 说明 |
+### ① 最快跑起来 —— 纯前端看界面（无需任何账号）
+
+```bash
+npm install
+npm run start
+```
+
+然后浏览器打开 **http://localhost:5173**（默认端口 5173；换端口用 `PORT=3000 npm run start`）。
+
+> 这种方式启动后，页面框架、路由、表单都能正常渲染；但**业务数据来自 Lovrabet 平台**，未登录或没有对应数据模型时列表为空、接口报错，均属预期，原因见[数据从哪来](#数据从哪来)。
+
+### ② 完整体验 —— 对接 Lovrabet 平台数据（推荐，开发日常用这条）
+
+```bash
+npm install -g @lovrabet/rabetbase-cli
+npm install
+rabetbase auth login        # 首次登录平台账号
+rabetbase run start
+```
+
+默认访问 **https://dev.lovrabet.com:5173**（换端口：`PORT=3000 rabetbase run start`）。
+
+### ③ 对接你自己的 Lovrabet 应用
+
+```bash
+rabetbase project init --appcode <你的AppCode>
+rabetbase api pull          # 拉取该应用的 SDK 模型配置
+rabetbase run start
+```
+
+拉取后重点检查 `src/api/api.ts` 中的 AppCode 与模型别名是否匹配页面调用。
+
+### 怎么选
+
+| 你的目的 | 用哪条 | 需要 |
 | --- | --- | --- |
-| 只想看界面 / 读代码 | `npm install && npm run start` | 纯前端启动，详见[方式一](#方式一快速看界面纯前端) |
-| Lovrabet 完整开发体验 | 安装 `rabetbase` CLI 后 `rabetbase run start` | 项目日常用法，详见[方式二](#方式二lovrabet-完整开发体验推荐) |
-| 对接你自己的 Lovrabet 应用 | 替换 AppCode 后启动 | 详见[方式三](#方式三对接你自己的-lovrabet-应用) |
+| 只看界面 / 读代码 | ① `npm run start` | 仅 Node.js |
+| 用平台数据 + 审批流做开发 | ② `rabetbase run start` | rabetbase CLI + 平台账号 |
+| 换自己的应用跑起来 | ③ `project init` + `api pull` | 自己的 Lovrabet 应用 |
 
-> ⚠️ **重要**：本应用是 Lovrabet 平台上的**客户端**——业务数据不落在本仓库，而是通过 `@lovrabet/sdk` 从平台运行态 API 读取。没有登录态 / 没有对应数据模型时，页面能渲染但列表为空或请求报错，这是正常现象，见[数据从哪来](#数据从哪来)。
+---
+
+## 数据从哪来
+
+启动前先看这一节，避免误以为项目坏了。
+
+- 前端通过 `@lovrabet/sdk` 请求平台运行态 API（`runtime.lovrabet.com`），登录态以 Cookie 携带（见 `src/utils/api.ts` 的 `credentials: "include"`）。
+- 本仓库**不包含数据库结构**（除法务主体等少数表的结构 DDL，见[演示数据与数据库脚本](#演示数据与数据库脚本db)），也不包含任何真实业务数据。
+- 没有登录态 / 没有对应数据模型时，页面能渲染但列表为空或请求报错——这是**预期行为**，不是启动失败。
+- 需要在本地完整还原演示数据时，参照[演示数据与数据库脚本](#演示数据与数据库脚本db)。
 
 ## 功能总览
 
@@ -71,96 +112,6 @@
 - **数据层**：项目统一从 `src/api/client.ts` 导出 `lovrabetClient`（基于 `@lovrabet/sdk`），模型清单与别名见 `src/api/api.ts`。
 - **后端逻辑**：业务规则、读写守卫、流程状态同步由 BFF 脚本承载，不在前端重复实现。
 - **审批流**：单据发起走平台 Flow，状态回写业务表，审批动作（通过 / 驳回）由平台审批中心处理。
-
-## 快速开始
-
-### 环境要求
-
-- Node.js 20+
-- 已安装 `rabetbase` CLI；需要拉取真实 API 配置时还需要完成登录
-
-```bash
-npm install -g @lovrabet/rabetbase-cli
-rabetbase --help
-```
-
-模板本身不内置 `rabetbase` 依赖，`rabetbase run start` 等命令依赖全局 CLI。
-
-### 方式一：快速看界面（纯前端）
-
-不需要任何平台账号，适合先跑起来看 UI / 读代码：
-
-```bash
-npm install
-npm run start
-```
-
-服务默认监听 `5173` 端口。由于 `vite.config.ts` 会尝试从平台开发证书端点拉取 HTTPS 证书（外部环境不可达时自动降级），本地直接访问：
-
-```text
-http://localhost:5173
-```
-
-如需换端口：
-
-```bash
-PORT=3000 npm run start
-```
-
-> 该方式下页面框架、路由、表单都能正常渲染；但业务数据来自 Lovrabet 平台，未登录或没有对应数据模型时列表为空、接口报错，均属预期。
-
-### 方式二：Lovrabet 完整开发体验（推荐）
-
-这是项目日常的打开方式，能访问真实平台数据与审批流：
-
-```bash
-npm install
-rabetbase auth login        # 首次登录平台账号
-rabetbase run start
-```
-
-默认访问：
-
-```text
-https://dev.lovrabet.com:5173
-```
-
-需要换端口时可执行 `PORT=3000 rabetbase run start`。
-
-### 方式三：对接你自己的 Lovrabet 应用
-
-把样板指向你自己平台里的应用：
-
-```bash
-rabetbase project init --appcode <你的AppCode>
-rabetbase api pull          # 拉取该应用的 SDK 模型配置
-rabetbase run start
-```
-
-拉取后重点检查：
-
-- `src/api/api.ts` 中的 AppCode 是否正确；
-- `models` 是否包含页面用到的数据模型（别名见 `src/api/api.ts`）；
-- 如果页面调用的模型不在你的应用里，需要先在平台侧补齐数据模型，否则页面会报模型不存在。
-
-项目统一从 `src/api/client.ts` 导出 SDK 客户端：
-
-```typescript
-import { lovrabetClient } from "@/api/client";
-
-const data = await lovrabetClient.models.expenseApplication.filter({
-  currentPage: 1,
-  pageSize: 20,
-});
-```
-
-模型别名来自生成后的 `src/api/api.ts`，实际使用前请以该文件为准。
-
-### 数据从哪来
-
-- 前端通过 `@lovrabet/sdk` 请求平台运行态 API（`runtime.lovrabet.com`），登录态以 Cookie 携带（见 `src/utils/api.ts` 的 `credentials: "include"`）。
-- 本仓库**不包含数据库结构**（除法务主体等少数表的结构 DDL，见下节），也不包含任何真实业务数据。
-- 需要在本地完整还原演示数据时，参照[演示数据与数据库脚本](#演示数据与数据库脚本db)。
 
 ## 演示数据与数据库脚本（db/）
 
@@ -327,7 +278,7 @@ src/pages/customer/[id].tsx   ->  /customer/:id
 
 ## 常见问题
 
-1. **页面能渲染但没有数据 / 接口报错**：本应用的数据来自 Lovrabet 平台。请确认已 `rabetbase auth login` 登录、AppCode 正确，且应用具备页面用到的数据模型（`rabetbase api pull` 后可查看 `src/api/api.ts`）。
+1. **启动后页面能渲染但没有数据 / 接口报错**：这是预期行为——本应用的数据来自 Lovrabet 平台。请确认已 `rabetbase auth login` 登录、AppCode 正确，且应用具备页面用到的数据模型（`rabetbase api pull` 后可查看 `src/api/api.ts`）。只想看界面的话用[方式一](#快速启动)即可。
 2. **本地 https 打不开（`https://dev.lovrabet.com:5173`）**：外部环境拿不到平台开发证书时，Vite 会降级为 http。改用 `http://localhost:5173` 访问；平台内开发时先确认已加入证书信任范围。
 3. **端口被占用**：执行 `PORT=3000 rabetbase run start`。
 4. **路由不生效**：确认页面位于 `src/pages` 下，并使用 `.tsx` 后缀。

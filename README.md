@@ -151,6 +151,12 @@ rabetbase run start
 
 调用约定：ENDPOINT → COMMON（编排）、HOOK → COMMON（守卫）；COMMON 之间不互调，跨 COMMON 的数据（如 `cpoDatasetMap` 的 map）由调用方取好后传参。
 
+## TODO（已知局限）
+
+- **切换为平台原生审批流**：目前经 BFF（`cpoSaveDraft` / `cpoSubmitApplication`）创建的单据走 legacy 自建待办（`biz_task`），只有标准页面创建的记录才接入平台 Flow。后续统一改为平台审批流，让所有入口都走 Flowable。
+- **使用平台 DAL 层做数据集管理**（平台正在建设中）：当前通过自建的 `cpoDatasetMap` / `cpoDal` 做数据集映射与数据访问，待平台统一 DAL 层上线后替换。
+- **用平台 API 访问策略替代大量 Instant API Hooks**（平台正在建设中）：当前通过大量 `HOOK/<dataset>/<op>/before|after` 守卫做行级权限与写入管控，待平台 API 访问策略上线后收敛。
+
 ## 许可证
 
 本项目采用 [MIT](./LICENSE) 开源协议。

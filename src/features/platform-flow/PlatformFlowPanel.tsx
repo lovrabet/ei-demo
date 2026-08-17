@@ -72,6 +72,7 @@ export const PlatformFlowPanel: React.FC<Props> = ({
 }) => {
   const [loading, setLoading] = useState(true);
   const [timeline, setTimeline] = useState<PlatformTimeline | null>(null);
+  const [timelineError, setTimelineError] = useState<string | null>(null);
   const [myTask, setMyTask] = useState<PlatformTaskRecord | null>(null);
   const [actionModal, setActionModal] = useState<{
     approved: boolean;
@@ -95,13 +96,20 @@ export const PlatformFlowPanel: React.FC<Props> = ({
         })),
       ]);
       setTimeline(tl);
+      setTimelineError(null);
       setMyTask(
         todo.records.find(
           (r) => r.processInstanceId === processInstanceId,
         ) || null,
       );
     } catch (e: any) {
-      message.error(`加载审批进度失败：${e?.message || e}`);
+      const errMsg = e?.message || String(e || "获取审批时间线失败");
+      setTimelineError(errMsg);
+      // 流程实例历史不存在（平台侧 404，实例缺失）属可降级场景：保留流程状态标签、
+      // 不弹错误提示，面板内给出说明即可。其它异常（网络/服务端错误）仍以 toast 提示。
+      if (!/历史不存在|not found|404/i.test(errMsg)) {
+        message.error(`加载审批进度失败：${errMsg}`);
+      }
     } finally {
       setLoading(false);
     }
@@ -222,7 +230,11 @@ export const PlatformFlowPanel: React.FC<Props> = ({
           />
         ) : (
           <div style={{ color: "#86868b", padding: "8px 0" }}>
-            {loading ? "加载中…" : "暂无审批节点信息"}
+            {loading
+              ? "加载中…"
+              : timelineError
+                ? "审批进度暂不可用（流程实例未找到）"
+                : "暂无审批节点信息"}
           </div>
         )}
       </Spin>

@@ -2,28 +2,6 @@
 
 基于 Lovrabet 平台的 React 18 + Vite 微前端样板，演示企业采购与财务审批业务（报销、付款、合同、发票、工资、差旅、客户 360 等）。**所有业务数据均为演示用虚构数据。**
 
-## 架构
-
-```text
-┌─────────────────────────────────────────────────────────┐
-│ 前端（本仓库）                                           │
-│  React 18 + TypeScript + Vite 7                          │
-│  Ant Design v5 · React Router v6 · echarts               │
-│  @ice/stark-app（icestark 微前端，可独立运行 / 嵌入主应用）│
-│  vite-plugin-pages（src/pages 文件系统路由）             │
-└──────────────┬──────────────────────────────────────────┘
-               │ @lovrabet/sdk（models.* CRUD / filter / getList）
-               ▼
-┌─────────────────────────────────────────────────────────┐
-│ Lovrabet 平台                                            │
-│  · 运行态 API（https://runtime.lovrabet.com/api/，Cookie）│
-│  · 数据模型（src/api/api.ts 注册 44 个模型）             │
-│  · BFF 脚本（.rabetbase/bff/：COMMON 公共逻辑 /          │
-│    ENDPOINT 接口 / HOOK 数据守卫）                        │
-│  · 审批流 Flow（Flowable：发起拦截、状态回写、审批中心）  │
-└─────────────────────────────────────────────────────────┘
-```
-
 ## 安装
 
 环境要求：Node.js 20+
@@ -76,6 +54,28 @@ rabetbase run start
 ├── .agents/skills/       # Lovrabet AI 助手技能
 ├── vite.config.ts
 └── package.json
+```
+
+## 架构
+
+```text
+┌─────────────────────────────────────────────────────────┐
+│ 前端（本仓库）                                           │
+│  React 18 + TypeScript + Vite 7                          │
+│  Ant Design v5 · React Router v6 · echarts               │
+│  @ice/stark-app（icestark 微前端，可独立运行 / 嵌入主应用）│
+│  vite-plugin-pages（src/pages 文件系统路由）             │
+└──────────────┬──────────────────────────────────────────┘
+               │ @lovrabet/sdk（models.* CRUD / filter / getList）
+               ▼
+┌─────────────────────────────────────────────────────────┐
+│ Lovrabet 平台                                            │
+│  · 运行态 API（https://runtime.lovrabet.com/api/，Cookie）│
+│  · 数据模型（src/api/api.ts 注册 44 个模型）             │
+│  · BFF 脚本（.rabetbase/bff/：COMMON 公共逻辑 /          │
+│    ENDPOINT 接口 / HOOK 数据守卫）                        │
+│  · 审批流 Flow（Flowable：发起拦截、状态回写、审批中心）  │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ## 许可证

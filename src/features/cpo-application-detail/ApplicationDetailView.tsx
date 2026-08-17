@@ -3013,7 +3013,11 @@ export default function ApplicationDetailView({
 }: ApplicationDetailViewProps) {
   const config = APPLICATION_DETAIL_CONFIG[bizType];
   // 平台原生审批流：主单 CREATE 被平台拦截发起审批后带 process_instance_id
-  const platformPiid = text(detail.biz.process_instance_id);
+  const platformPiid =
+    detail.biz.process_instance_id === undefined ||
+    detail.biz.process_instance_id === null
+      ? ""
+      : String(detail.biz.process_instance_id).trim();
   const currentTask = useMemo(
     () => selectCurrentTask(detail.tasks),
     [detail.tasks],
@@ -3045,9 +3049,12 @@ export default function ApplicationDetailView({
       Boolean(detail.workflowPlan.length || detail.actions.length) &&
       !platformPiid,
   };
-  const visibleModules = config.modules.filter(
-    (module) => module.showWhenEmpty || modulePresence[module.key],
-  );
+  const visibleModules = config.modules.filter((module) => {
+    // 平台 Flow 已接管审批进度时，只展示 PlatformFlowPanel；
+    // workflowModule.showWhenEmpty 不能让 legacy 流程重新进入页面。
+    if (module.key === "workflow" && platformPiid) return false;
+    return module.showWhenEmpty || modulePresence[module.key];
+  });
   const hasActionDock = Boolean(
     detail.canAct && detail.availableActions.length,
   );

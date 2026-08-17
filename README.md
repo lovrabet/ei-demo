@@ -49,7 +49,7 @@ rabetbase run start
 │   └── utils/            # 工具
 ├── db/                   # 演示数据初始化脚本（虚构数据）
 ├── scripts/              # 审批流迁移辅助脚本
-├── .rabetbase/           # BFF 脚本 / 低代码页面配置 / 同步清单
+├── .rabetbase/           # BFF 脚本 / 页面配置 / 同步清单
 ├── docs/quick-start.md   # Rabetbase 子应用快速开始
 ├── .agents/skills/       # Lovrabet AI 助手技能
 ├── vite.config.ts

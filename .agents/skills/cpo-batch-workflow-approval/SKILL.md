@@ -21,7 +21,7 @@ metadata:
 
 ```mermaid
 flowchart TD
-  Start([用户要求核验待办]) --> P1[cpoGetMyTodoList 获取本人待办<br/>完整翻页, 每批 ≤20 条]
+  Start([用户要求核验待办]) --> P1[cpoGetMyTodoList 获取本人待办 完整翻页, 每批 ≤20 条]
   P1 --> P2[逐条 cpoGetBizTimeline 取完整业务上下文]
   P2 --> P3{逐条形成结论}
   P3 -- approve_recommended --> C1[建议直接通过]
@@ -34,13 +34,13 @@ flowchart TD
   C4 --> P4
   P4 --> P5{用户明确确认?}
   P5 -- 否 --> E1([结束: 不办理])
-  P5 -- 是 --> P6[逐条重新校验<br/>任务仍属本人 / 仍可执行 / 关键信息未变]
+  P5 -- 是 --> P6[逐条重新校验 任务仍属本人 / 仍可执行 / 关键信息未变]
   P6 --> P7{校验通过?}
-  P7 -- 否 --> P8[改判 not_eligible / ask_first<br/>停止办理该条]
-  P7 -- 是 --> P9[经 cpoAdvanceWorkflow 办理<br/>review_pass / 逐项授权的 review_reject]
-  P9 --> P10[每条写后复核<br/>cpoGetBizTimeline + 刷新待办]
+  P7 -- 否 --> P8[改判 not_eligible / ask_first 停止办理该条]
+  P7 -- 是 --> P9[经 cpoAdvanceWorkflow 办理 review_pass / 逐项授权的 review_reject]
+  P9 --> P10[每条写后复核 cpoGetBizTimeline + 刷新待办]
   P10 --> P11{单条失败?}
-  P11 -- 是 --> Stop([停止本批次剩余写操作<br/>报告成功/失败/未执行])
+  P11 -- 是 --> Stop([停止本批次剩余写操作 报告成功/失败/未执行])
   P11 -- 否 --> E2([本批完成: 输出三组结果])
 ```
 

@@ -15,17 +15,17 @@ metadata:
 
 ```mermaid
 flowchart TD
-  Start([用户提供工资 Excel]) --> L1[脚本只读分析<br/>analyze_salary_workbook.py]
-  L1 --> L2[确认拆单计划<br/>QZYT / MYLM / QZYT_SH]
+  Start([用户提供工资 Excel]) --> L1[脚本只读分析 analyze_salary_workbook.py]
+  L1 --> L2[确认拆单计划 QZYT / MYLM / QZYT_SH]
   L2 --> L3{合规边界通过?}
   L3 -- 用户要求与边界冲突 --> Stop1([停止: 不得擅自合并])
-  L3 -- 通过 --> L4{可自动录入?<br/>cell_errors 空 / 对账 PASS / 月份一致}
+  L3 -- 通过 --> L4{可自动录入? cell_errors 空 / 对账 PASS / 月份一致}
   L4 -- 否 --> Stop2([停止: 修正后重试])
-  L4 -- 是 --> L5[展示确认摘要<br/>不展示个人信息]
+  L4 -- 是 --> L5[展示确认摘要 不展示个人信息]
   L5 --> L6{用户意图}
   L6 -- 仅分析 --> E1([结束: 不创建记录])
-  L6 -- 录入/创建 --> L7[逐张 cpoSaveDraft 创建草稿<br/>一张失败即停止后续]
-  L7 --> L8[逐张写后复核<br/>金额/明细数/附件/路径门禁]
+  L6 -- 录入/创建 --> L7[逐张 cpoSaveDraft 创建草稿 一张失败即停止后续]
+  L7 --> L8[逐张写后复核 金额/明细数/附件/路径门禁]
   L8 --> L9{用户明确提交审批?}
   L9 -- 否 --> E2([返回各草稿链接])
   L9 -- 是 --> L10[逐张提交审批]

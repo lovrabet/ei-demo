@@ -16,21 +16,21 @@ metadata:
 ```mermaid
 flowchart TD
   Start([用户要求分析/录入合同]) --> L1{确认意图与权限}
-  L1 -- 只读分析 --> L2[逐页核验合同<br/>PDF 渲染 / OCR 辅助 / 回看原页]
+  L1 -- 只读分析 --> L2[逐页核验合同 PDF 渲染 / OCR 辅助 / 回看原页]
   L1 -- 录入/创建 --> L2
   L1 -- 提交审批 --> L2
-  L2 --> L3[形成结构化分析<br/>主体/金额/期限/分期/条款]
-  L3 --> L4[合同专家风险审查<br/>critical / high / medium / low]
+  L2 --> L3[形成结构化分析 主体/金额/期限/分期/条款]
+  L3 --> L4[合同专家风险审查 critical / high / medium / low]
   L4 --> L5{风险等级}
   L5 -- critical --> R1([只保留分析: 不得自动提交])
   L5 -- legal_review_required / do_not_submit --> R2([最多保存带风险摘要的草稿])
-  L5 -- 其他 --> L6[validate_contract_analysis.py 校验<br/>金额/期次/证据/维度全覆盖]
+  L5 -- 其他 --> L6[validate_contract_analysis.py 校验 金额/期次/证据/维度全覆盖]
   L6 --> L7{校验通过?}
   L7 -- 否 --> Stop1([修正分析后重试: 不得写入])
   L7 -- 是 --> L8{判断收付方向}
-  L8 -- payable --> P1[付款合同: cpoSaveDraft<br/>+ cpoSyncContractPaymentPlans]
+  L8 -- payable --> P1[付款合同: cpoSaveDraft + cpoSyncContractPaymentPlans]
   L8 -- receivable --> P2[客户收款合同: 应收计划模型]
-  P1 --> L9[对账现有系统<br/>附件关联 + contract_assessment]
+  P1 --> L9[对账现有系统 附件关联 + contract_assessment]
   P2 --> L9
   L9 --> L10{entry_gate}
   L10 -- needs_confirmation / draft_only / blocked --> E1([仅保存: 不得自动提交])

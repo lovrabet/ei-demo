@@ -24,7 +24,6 @@ import {
   CalculatorOutlined,
   SafetyCertificateOutlined,
   PercentageOutlined,
-  MessageOutlined,
   InboxOutlined,
   FileProtectOutlined,
 } from "@ant-design/icons";
@@ -66,7 +65,6 @@ const routeConfig = [
   { path: "/invoice-archive-form", title: "进项发票归档" },
   { path: "/credential-form", title: "新建资质" },
   { path: "/legal-agreements", title: "法务协议" },
-  { path: "/notification-test", title: "飞书消息测试" },
 ];
 
 const MainLayout: React.FC = () => {
@@ -200,11 +198,6 @@ const MainLayout: React.FC = () => {
       key: "/legal-agreements",
       icon: <SafetyCertificateOutlined />,
       label: "法务协议",
-    },
-    {
-      key: "/notification-test",
-      icon: <MessageOutlined />,
-      label: "飞书消息测试",
     },
   ];
 

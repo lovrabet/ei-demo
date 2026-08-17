@@ -13,12 +13,12 @@ metadata:
 
 ```mermaid
 flowchart TD
-  Start([用户要求开票/登记发票/归档]) --> ID1[识别业务对象<br/>4 种事实不得混写]
+  Start([用户要求开票/登记发票/归档]) --> ID1[识别业务对象 4 种事实不得混写]
   ID1 --> ID2{判断方向}
-  ID2 -- 我方向客户申请开票 --> A1[创建 invoice_application<br/>上传申请资料附件]
-  ID2 -- 我方已实际开票 --> B1[创建 outgoing invoice_record<br/>上传真实票面]
-  ID2 -- 对方向我方开票 --> C1[创建 incoming invoice_record<br/>上传真实票面]
-  ID2 -- 报销中的票据 --> D1[走报销 Skill<br/>经发票关系 items［］.invoices 登记]
+  ID2 -- 我方向客户申请开票 --> A1[创建 invoice_application 上传申请资料附件]
+  ID2 -- 我方已实际开票 --> B1[创建 outgoing invoice_record 上传真实票面]
+  ID2 -- 对方向我方开票 --> C1[创建 incoming invoice_record 上传真实票面]
+  ID2 -- 报销中的票据 --> D1[走报销 Skill 经发票关系 items［］.invoices 登记]
   A1 --> G1{数量门禁通过?}
   G1 -- 否 --> Stop([停止并报告缺失文件])
   G1 -- 是 --> A2[cpoSaveDraft 保存申请草稿]

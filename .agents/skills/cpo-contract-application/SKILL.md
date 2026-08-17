@@ -13,27 +13,27 @@ metadata:
 
 ```mermaid
 flowchart TD
-  Start([用户要求新建/保存/提交合同]) --> P1[建立输入附件清单<br/>合同正文/协议/签章页/审批材料]
-  P1 --> P2[选合同类型/我方角色/付款要求<br/>contract_type / our_role]
+  Start([用户要求新建/保存/提交合同]) --> P1[建立输入附件清单 合同正文/协议/签章页/审批材料]
+  P1 --> P2[选合同类型/我方角色/付款要求 contract_type / our_role]
   P2 --> P3{payment_requirement}
   P3 -- unknown --> DraftOnly[仅允许保存草稿]
   P3 -- required --> P4a[需付款: 至少一条有效付款计划]
   P3 -- not_required --> P4b[无需付款: 计划必须为空]
   DraftOnly --> L1
   P4a --> L1
-  P4b --> L1[选对外接口人<br/>员工数据集 deleted=0 on_job=1]
-  L1 --> L2[cpoSaveDraft 保存合同草稿<br/>取真实 bizId]
-  L2 --> L3[为每个文件建立附件关系<br/>attachment_type=contract_file]
+  P4b --> L1[选对外接口人 员工数据集 deleted=0 on_job=1]
+  L1 --> L2[cpoSaveDraft 保存合同草稿 取真实 bizId]
+  L2 --> L3[为每个文件建立附件关系 attachment_type=contract_file]
   L3 --> L4{需要付款?}
-  L4 -- 是 --> P5[cpoSyncContractPaymentPlans<br/>同步 1~N 条付款计划]
+  L4 -- 是 --> P5[cpoSyncContractPaymentPlans 同步 1~N 条付款计划]
   L4 -- 否 --> P6
-  P5 --> P6[cpoGetBizTimeline 写后复核<br/>数量/路径门禁]
+  P5 --> P6[cpoGetBizTimeline 写后复核 数量/路径门禁]
   P6 --> L5{门禁一致?}
   L5 -- 否 --> Stop1([停止: 报告缺失/重复文件])
   L5 -- 是 --> L6{用户明确提交?}
   L6 -- 否 --> E1([返回草稿链接])
   L6 -- 是 --> L7{cpoSubmitApplication 提交}
-  L7 -- 缺合同附件 --> Stop2([SUBMIT_REQUIRED_MISSING<br/>contract_file])
+  L7 -- 缺合同附件 --> Stop2([SUBMIT_REQUIRED_MISSING contract_file])
   L7 -- 成功 --> E2([返回已提交链接])
 ```
 

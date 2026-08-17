@@ -13,23 +13,23 @@ metadata:
 
 ```mermaid
 flowchart TD
-  Start([用户提供发票文件]) --> L1[建立输入附件清单<br/>按文件名/大小/哈希]
+  Start([用户提供发票文件]) --> L1[建立输入附件清单 按文件名/大小/哈希]
   L1 --> L2{文件可读取?}
   L2 -- 否 --> Stop1([停止: 请先上传真实发票])
-  L2 -- 是 --> L3[解析票面事实<br/>发票号/日期/销售方/金额]
-  L3 --> L4[逐文件 file upload<br/>取真实 filePath]
+  L2 -- 是 --> L3[解析票面事实 发票号/日期/销售方/金额]
+  L3 --> L4[逐文件 file upload 取真实 filePath]
   L4 --> L5{上传全部成功?}
   L5 -- 否 --> Stop2([停止: 不得虚构路径])
-  L5 -- 是 --> L6[读取生效报销规则<br/>cpoListEffectiveExpenseRules]
-  L6 --> L7[按事项拆分报销明细<br/>建立发票关系 items［］.invoices]
+  L5 -- 是 --> L6[读取生效报销规则 cpoListEffectiveExpenseRules]
+  L6 --> L7[按事项拆分报销明细 建立发票关系 items［］.invoices]
   L7 --> L8{销售方处理}
   L8 -- 关联现有供应商 --> L9a[查询供应商→用户确认→关联]
-  L8 -- 仅记录销售方名称 --> L9b[保存真实 seller_name<br/>partner_source=manual]
+  L8 -- 仅记录销售方名称 --> L9b[保存真实 seller_name partner_source=manual]
   L9a --> L10[上传结果并入附件池 attachments]
   L9b --> L10
   L10 --> L11[调用 cpoSaveDraft 保存草稿]
   L11 --> L12[cpoGetBizTimeline 写后重读]
-  L12 --> L13{四方数量门禁一致?<br/>输入=上传=关联=写后}
+  L12 --> L13{四方数量门禁一致? 输入=上传=关联=写后}
   L13 -- 否 --> Stop3([停止: 报告缺失/重复文件])
   L13 -- 是 --> L14{用户明确要求提交?}
   L14 -- 否 --> E1([返回草稿链接与状态])

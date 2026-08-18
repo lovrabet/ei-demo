@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Seed configuration data (dictionary, expense rules, workflow configs)
+"""Seed configuration data (dictionary and expense rules)
 into ei-demo. Source values come from the published config export, but ALL
 real user references are remapped to the demo tenant admin (81 梓骞)."""
 import json
@@ -71,33 +71,6 @@ rule_rows = [
     for r in cfg["expense_rule"]
 ]
 insert("expense_rule", rule_rows)
-
-# ---------------------------------------------------------- workflow step config
-step_rows = []
-for r in cfg["cpo_workflow_step_config"]:
-    row = {k: r[k] for k in (
-        "biz_type", "workflow_key", "version_no", "definition_status", "step_no",
-        "task_type", "node_type", "step_name", "from_status", "pass_action",
-        "pass_to_status", "reject_action", "reject_to_status", "assignee_user_id",
-        "assignee_name_snapshot", "assignee_role", "enabled", "is_deleted",
-    )}
-    row["assignee_user_id"] = remap_user(row["assignee_user_id"])
-    row["assignee_name_snapshot"] = ADMIN_NAME
-    step_rows.append(row)
-insert("cpo_workflow_step_config", step_rows)
-
-# ---------------------------------------------------------- workflow action config
-action_rows = []
-for r in cfg["cpo_workflow_action_config"]:
-    row = {k: r[k] for k in (
-        "biz_type", "workflow_key", "version_no", "definition_status", "action_code",
-        "action_label", "from_status", "to_status", "current_step_no", "current_task_type",
-        "next_step_no", "actor_scope", "actor_role", "danger", "comment_required",
-        "manual_allowed", "visible_condition", "handler_codes_json", "field_updates_json",
-        "display_order", "enabled", "is_deleted",
-    )}
-    action_rows.append(row)
-insert("cpo_workflow_action_config", action_rows)
 
 conn.commit()
 conn.close()

@@ -1952,6 +1952,9 @@ export default async function cpoSaveDraft(params, context) {
   }
 
   const numericBizId = normalizeBizId(params.bizId ?? params.id);
+  // 平台 Flow 绑定主数据集 CREATE。标准申请入口直接创建 submitted
+  // 单据，避免“草稿记录已自动进入审批”的双重语义。
+  const submit = params.submit === true;
   const bff = context.client.bff;
   const [datasetMap, actor] = await Promise.all([
     bff.execute({ scriptName: "cpoDatasetMap", params: {} }),
@@ -2048,6 +2051,7 @@ export default async function cpoSaveDraft(params, context) {
       applicant_user_id: actor.userId || "",
       applicant_name_snapshot: actor.userName || "",
       status: "draft",
+      [meta.statusField || "status"]: submit ? "submitted" : "draft",
     };
     await assertRequestedRelationsAllowed({
       bizType,
@@ -2121,7 +2125,7 @@ export default async function cpoSaveDraft(params, context) {
     return {
       bizType,
       bizId: createdId,
-      status: "draft",
+      status: submit ? "submitted" : "draft",
       mode: "create",
       ...(expenseSummary ? { expenseSummary } : {}),
       ...(syncedItems
@@ -2177,7 +2181,11 @@ export default async function cpoSaveDraft(params, context) {
     invoiceResolution = resolved.invoiceResolution;
   }
 
-  const updatePayload = { id: numericBizId, ...businessFields };
+  const updatePayload = {
+    id: numericBizId,
+    ...businessFields,
+    ...(submit ? { [meta.statusField || "status"]: "submitted" } : {}),
+  };
   if (!existing.applicant_user_id && actor.userId) {
     updatePayload.applicant_user_id = actor.userId;
     updatePayload.applicant_name_snapshot = actor.userName || "";
@@ -2256,7 +2264,7 @@ export default async function cpoSaveDraft(params, context) {
   return {
     bizType,
     bizId: numericBizId,
-    status: currentStatus,
+    status: submit ? "submitted" : currentStatus,
     mode: "update",
     ...(expenseSummary ? { expenseSummary } : {}),
     ...(syncedItems

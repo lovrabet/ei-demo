@@ -27,6 +27,7 @@ import {
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { lovrabetClient } from "@/api/client";
+import AgentFormGuide from "@/components/agent-form-guide";
 import AttachmentUpload from "@/components/attachment-upload";
 import FormFooter from "@/components/form-footer";
 import FormLayout, { FormRow } from "@/components/form-layout";
@@ -305,6 +306,7 @@ const ContractForm: React.FC = () => {
         bizType: "contract",
         bizId: isEdit ? Number(editId) : undefined,
         values: payload,
+        submit: thenSubmit,
       },
     });
     await lovrabetClient.bff.execute({
@@ -355,14 +357,6 @@ const ContractForm: React.FC = () => {
       });
       form.setFieldValue(ATTACHMENTS_FIELD, attachments);
       if (thenSubmit) {
-        await lovrabetClient.bff.execute({
-          scriptName: "cpoSubmitApplication",
-          params: {
-            bizType: "contract",
-            bizId: id,
-            comment: values.contract_name,
-          },
-        });
         message.success("已提交审核");
         navigate("/4cf8289fc0df45a4a13818fce6bfcc59");
       } else {
@@ -397,6 +391,14 @@ const ContractForm: React.FC = () => {
         </Space>
       }
     >
+      {readOnly ? null : (
+        <AgentFormGuide
+          skillCode="cpo-contract-application"
+          skillName="合同申请助手"
+          prompt="请根据我上传的合同或审批材料创建并提交合同申请"
+          description="上传合同或审批材料后，Agent 可提取关键信息、整理付款分期并完成申请。"
+        />
+      )}
       <Form
         form={form}
         layout="vertical"
@@ -974,7 +976,6 @@ const ContractForm: React.FC = () => {
       {readOnly ? null : (
         <FormFooter
           onCancel={() => navigate(CPO_FORM_CANCEL_PATH)}
-          onSaveDraft={() => onSave(false)}
           onSaveAndSubmit={() => onSave(true)}
           saving={saving}
         />

@@ -1,0 +1,37 @@
+.guide {
+  margin-bottom: 20px;
+  border-color: #91caff;
+  background: #f0f7ff;
+}
+
+.guide :global(.ant-alert-message) {
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.guide :global(.ant-alert-description) {
+  max-width: 760px;
+  color: #475569;
+  line-height: 1.65;
+}
+
+.guide :global(.ant-alert-action) {
+  align-self: center;
+  margin-inline-start: 24px;
+}
+
+.guide :global(.ant-btn) {
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .guide :global(.ant-alert-content) {
+    min-width: 0;
+  }
+
+  .guide :global(.ant-alert-action) {
+    align-self: flex-start;
+    margin-block-start: 12px;
+    margin-inline-start: 0;
+  }
+}

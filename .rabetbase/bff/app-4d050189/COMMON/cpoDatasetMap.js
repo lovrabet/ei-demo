@@ -14,12 +14,8 @@
  */
 export default async function cpoDatasetMap(params, context) {
   const DATASET_CODES = {
-    bizTask: "da9cddc0fd244545b94ae7cddfde21ea", // 数据集: 业务任务 | 数据表: biz_task
     bizRelation: "1a4139b6d59a493ea89111d936e27238", // 数据集: 业务关系 | 数据表: biz_relation
     bizActionRecord: "65619b5104e44f03b0dcea52b4d8c397", // 数据集: 业务操作日志 | 数据表: biz_action_record
-    workflowStepConfig: "e541dc67b0b1410998c8c9c645f06f83", // 数据集: 工作流配置 | 数据表: cpo_workflow_step_config
-    workflowActionConfig: "d3e59fb7cdf943e8af7e6edee5586cdd", // 数据集: 工作流动作配置 | 数据表: cpo_workflow_action_config
-    workflowParticipant: "464ca3622eab43a3a4b4b4f23af26a8c", // 数据集: 工作流参与者 | 数据表: cpo_workflow_participant
     paymentApplication: "7da208a5059b4b13896d7c7ae29c8492", // 数据集: 付款申请 | 数据表: payment_application
     contractPaymentPlan: "08e17d8ba3a24e938fef89816c8f4ccb", // 数据集: 合同付款计划 | 数据表: contract_payment_plan
     salaryPaymentApplication: "235e11a9cb7945c8926b4d31fe64843f", // 数据集: 薪资发放申请 | 数据表: salary_payment_application
@@ -210,15 +206,11 @@ export default async function cpoDatasetMap(params, context) {
     biz_action_record: `dataset_${DATASET_CODES.bizActionRecord}`,
     biz_invoice_link: `dataset_${DATASET_CODES.bizInvoiceLink}`,
     biz_relation: `dataset_${DATASET_CODES.bizRelation}`,
-    biz_task: `dataset_${DATASET_CODES.bizTask}`,
     business_partner: `dataset_${DATASET_CODES.businessPartner}`,
     company_credential: `dataset_${DATASET_CODES.companyCredential}`,
     contract_application: `dataset_${DATASET_CODES.contractApplication}`,
     contract_payment_plan: `dataset_${DATASET_CODES.contractPaymentPlan}`,
     cpo_dictionary: `dataset_${DATASET_CODES.dictionary}`,
-    cpo_workflow_action_config: `dataset_${DATASET_CODES.workflowActionConfig}`,
-    cpo_workflow_participant: `dataset_${DATASET_CODES.workflowParticipant}`,
-    cpo_workflow_step_config: `dataset_${DATASET_CODES.workflowStepConfig}`,
     crm_company: `dataset_${DATASET_CODES.crmCompany}`,
     crm_contact: `dataset_${DATASET_CODES.crmContact}`,
     crm_contract: `dataset_${DATASET_CODES.crmContract}`,

@@ -25,6 +25,7 @@ import { ArrowLeftOutlined, EditOutlined } from "@ant-design/icons";
 import { YtUserSelect, useUserList } from "@yuntoo/components";
 import dayjs from "dayjs";
 import { lovrabetClient } from "@/api/client";
+import AgentFormGuide from "@/components/agent-form-guide";
 import AttachmentUpload from "@/components/attachment-upload";
 import FormFooter from "@/components/form-footer";
 import FormLayout, { FormRow } from "@/components/form-layout";
@@ -534,6 +535,7 @@ const PaymentForm: React.FC = () => {
           bizType: "payment",
           bizId: isEdit ? Number(editId) : undefined,
           values: payload,
+          submit: thenSubmit,
         },
       });
       const id = saved.bizId;
@@ -545,18 +547,10 @@ const PaymentForm: React.FC = () => {
         uploadedBy: values.applicant_name_snapshot,
       });
       form.setFieldValue(ATTACHMENTS_FIELD, attachments);
-      message.success(isEdit ? "已更新" : "已创建草稿");
-
       if (thenSubmit) {
-        await lovrabetClient.bff.execute({
-          scriptName: "cpoSubmitApplication",
-          params: {
-            bizType: "payment",
-            bizId: id,
-            comment: values._comment || "提交",
-          },
-        });
         message.success("已提交，进入审核");
+      } else {
+        message.success(isEdit ? "已更新" : "已创建草稿");
       }
       navigate("/ce56ba4ceec8471cbddf4068ea9c397a");
     } catch (e: any) {
@@ -583,6 +577,14 @@ const PaymentForm: React.FC = () => {
         </Space>
       }
     >
+      {readOnly ? null : (
+        <AgentFormGuide
+          skillCode="cpo-payment-application"
+          skillName="付款申请助手"
+          prompt="请根据合同和付款材料创建并提交付款申请"
+          description="提供合同和付款材料后，Agent 可核对付款计划、整理附件并完成申请。"
+        />
+      )}
       <Form
         form={form}
         layout="vertical"
@@ -1014,7 +1016,6 @@ const PaymentForm: React.FC = () => {
       {readOnly ? null : (
         <FormFooter
           onCancel={() => navigate(CPO_FORM_CANCEL_PATH)}
-          onSaveDraft={() => onSave(false)}
           onSaveAndSubmit={() => onSave(true)}
           saving={saving}
         />

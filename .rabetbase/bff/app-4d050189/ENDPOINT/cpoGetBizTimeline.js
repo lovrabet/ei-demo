@@ -1,5 +1,5 @@
 /**
- * 业务详情聚合查询：主单 + 任务 + 操作流水 + 附件 + 业务明细与关联摘要。
+ * 业务详情聚合查询：主单 + 附件 + 业务明细与关联摘要。
  *
  * [脚本描述] 按 biz_type+biz_id 聚合详情，并补充报销明细、合作方、合同与银行回单摘要
  * [接口路径] POST /api/endpoint/app-4d050189/cpoGetBizTimeline
@@ -15,44 +15,8 @@ function rowsOf(response) {
   return Array.isArray(response?.tableData) ? response.tableData : [];
 }
 
-const INTERNAL_PRINT_AUDIT_ACTIONS = new Set([
-  "print_summary_requested",
-  "print_full_requested",
-  "print_confirmed",
-  "print_confirmation_revoked",
-]);
-
 function optionalText(value) {
   return String(value ?? "").trim();
-}
-
-const LEGACY_WORKFLOW_KEYS = {
-  expense: "expense_reimbursement",
-  travel: "travel_request",
-  payment: "vendor_payment",
-  salary_payment: "salary_payment",
-  contract: "external_service_contract",
-  crm_contract: "receivable_sales_contract",
-  invoice: "outgoing_invoice_application",
-  invoice_application: "outgoing_invoice_application",
-};
-
-async function resolveScenario(bff, bizType, record, task) {
-  try {
-    return await bff.execute({
-      scriptName: "cpoWorkflowScenario",
-      params: { bizType, record, task },
-    });
-  } catch (error) {
-    const workflowKey =
-      optionalText(task?.workflow_key) || LEGACY_WORKFLOW_KEYS[bizType];
-    if (!workflowKey) throw error;
-    return {
-      workflowKey,
-      versionNo: Number(task?.workflow_version) || null,
-      scenario: { executionMode: "workflow", label: "" },
-    };
-  }
 }
 
 function timestampOf(value) {
@@ -778,13 +742,12 @@ export default async function cpoGetBizTimeline(params, context) {
   const meta = map.BIZ_TYPE_TO_DATASET[bizType];
   if (!meta) throw new Error(`INVALID_BIZ_TYPE:${bizType}`);
 
-  const [{ record, summary }, dict, workflow, actor] = await Promise.all([
+  const [{ record, summary }, dict, actor] = await Promise.all([
     context.client.bff.execute({
       scriptName: "cpoBizResolver",
       params: { bizType, bizId: numericBizId, meta },
     }),
     context.client.bff.execute({ scriptName: "cpoDictionary", params: {} }),
-    context.client.bff.execute({ scriptName: "cpoWorkflowConfig", params: {} }),
     context.client.bff.execute({ scriptName: "cpoCurrentActor", params: {} }),
   ]);
 
@@ -919,9 +882,6 @@ export default async function cpoGetBizTimeline(params, context) {
       : Promise.resolve({ tableData: [] });
 
   const [
-    tasks,
-    participants,
-    actions,
     attachments,
     directInvoiceLinks,
     expenseItems,
@@ -937,24 +897,6 @@ export default async function cpoGetBizTimeline(params, context) {
     bankReceipt,
     invoiceApplicationFulfillments,
   ] = await Promise.all([
-    models[`dataset_${C.bizTask}`].filter({
-      where: bizWhere,
-      currentPage: 1,
-      pageSize: 100,
-      orderBy: [{ created_at: "desc" }],
-    }),
-    models[`dataset_${C.workflowParticipant}`].filter({
-      where: bizWhere,
-      currentPage: 1,
-      pageSize: 100,
-      orderBy: [{ granted_at: "asc" }],
-    }),
-    models[`dataset_${C.bizActionRecord}`].filter({
-      where: bizWhere,
-      currentPage: 1,
-      pageSize: 100,
-      orderBy: [{ created_at: "desc" }],
-    }),
     models[`dataset_${C.attachment}`].filter({
       where: bizWhere,
       currentPage: 1,
@@ -989,12 +931,10 @@ export default async function cpoGetBizTimeline(params, context) {
   ]);
 
   const attachmentRows = rowsOf(attachments);
-  const taskRows = rowsOf(tasks);
-  const participantRows = rowsOf(participants);
-  const actionRows = rowsOf(actions);
-  const visibleActionRows = actionRows.filter(
-    (action) => !INTERNAL_PRINT_AUDIT_ACTIONS.has(action?.action),
-  );
+  // 审批时间线、参与人和可执行动作统一由平台 Flow API 提供。
+  const taskRows = [];
+  const participantRows = [];
+  const visibleActionRows = [];
   const expenseItemRows = rowsOf(expenseItems);
   const salaryItemRows = rowsOf(salaryItems);
   const contractPaymentRows = rowsOf(contractPayments);
@@ -1313,47 +1253,10 @@ export default async function cpoGetBizTimeline(params, context) {
     ...item,
     invoice_links: linksByItemId.get(Number(item.id)) || [],
   }));
-  const currentTask = selectCurrentTask(taskRows);
-  const scenario = await resolveScenario(
-    context.client.bff,
-    bizType,
-    record,
-    currentTask,
-  );
-  const pinnedVersion = Number(scenario.versionNo) || 0;
-  const versionedDefinition = pinnedVersion
-    ? workflow.WORKFLOW_CONFIG_BY_KEY_VERSION?.[
-        `${scenario.workflowKey}@${pinnedVersion}`
-      ]
-    : workflow.WORKFLOW_CONFIG_BY_KEY?.[scenario.workflowKey];
-  const legacySteps = workflow.WORKFLOW_STEPS_BY_TYPE?.[bizType];
-  const legacyTransitions = workflow.WORKFLOW_TRANSITIONS_BY_TYPE?.[bizType];
-  const definition =
-    versionedDefinition ||
-    (legacySteps || legacyTransitions
-      ? {
-          versionNo: 1,
-          steps: legacySteps || [],
-          transitions: legacyTransitions || [],
-        }
-      : null);
-  const recordUsesWorkflow =
-    bizType !== "crm_contract" || Number(record.workflow_managed) === 1;
-  const workflowSteps = recordUsesWorkflow ? definition?.steps || [] : [];
-  const workflowTransitions = recordUsesWorkflow
-    ? definition?.transitions || []
-    : [];
-  // 流程管理员和平台系统管理员可以代操作；申请单汇总可见用户仅扩大读取范围。
+  const currentTask = null;
+  // 管理权限只服务单据 360 的业务管理能力，不参与平台审批权限判定。
   const canOverrideAssignment = actorCanOverrideAssignment(actor, dict);
-  const availableActions = availableActionsFor(
-    currentTask,
-    workflowTransitions,
-    actor,
-    record,
-    canOverrideAssignment,
-    paymentPlan,
-    meta.statusField,
-  );
+  const availableActions = [];
   const counterpartyPortfolio = partner
     ? await buildCounterpartyPortfolio({ models, codes: C, partner })
     : undefined;
@@ -1929,19 +1832,12 @@ export default async function cpoGetBizTimeline(params, context) {
     tasks: taskRows,
     actions: visibleActionRows,
     workflowDefinition: {
-      workflowKey: scenario.workflowKey,
-      versionNo: definition?.versionNo || null,
-      label: scenario.scenario?.label || "",
-      executionMode: recordUsesWorkflow
-        ? scenario.scenario?.executionMode || "workflow"
-        : "managed",
+      workflowKey: "platform_flow",
+      versionNo: null,
+      label: "平台审批流",
+      executionMode: "platform",
     },
-    workflowPlan: buildWorkflowPlan(
-      workflowSteps,
-      taskRows,
-      visibleActionRows,
-      participantRows,
-    ),
+    workflowPlan: [],
     participants: participantRows,
     currentTask: currentTask || null,
     availableActions,

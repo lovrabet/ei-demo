@@ -20,6 +20,7 @@ import dayjs from "dayjs";
 import { lovrabetClient } from "@/api/client";
 import { listCrmCustomers, type CrmCustomer } from "@/api/crm";
 import { CURRENT_APP_MODEL_KEYS } from "@/api/model-keys";
+import AgentFormGuide from "@/components/agent-form-guide";
 import AttachmentUpload from "@/components/attachment-upload";
 import FormFooter from "@/components/form-footer";
 import FormLayout, { FormRow } from "@/components/form-layout";
@@ -158,7 +159,7 @@ export default function SalesContractFormPage() {
     [customers],
   );
 
-  const persist = async (values: FormValues) => {
+  const persist = async (values: FormValues, submit: boolean) => {
     const contract = {
       companyId: values.company_id,
       opportunityId: values.opportunity_id || null,
@@ -172,8 +173,13 @@ export default function SalesContractFormPage() {
     };
     const result = await manageReceivableContract(
       editId
-        ? { action: "update_contract", contractId: editId, contract }
-        : { action: "create_draft", contract },
+        ? {
+            action: "update_contract",
+            contractId: editId,
+            contract,
+            submit,
+          }
+        : { action: submit ? "create_application" : "create_draft", contract },
     );
     return Number(result.contractId);
   };
@@ -192,7 +198,7 @@ export default function SalesContractFormPage() {
     }
     setSaving(true);
     try {
-      const contractId = await persist(values);
+      const contractId = await persist(values, submit);
       const attachments = await syncAttachmentRecords({
         bizType: "crm_contract",
         bizId: contractId,
@@ -201,14 +207,6 @@ export default function SalesContractFormPage() {
       });
       form.setFieldValue("attachments", attachments);
       if (submit) {
-        await lovrabetClient.bff.execute({
-          scriptName: "cpoSubmitApplication",
-          params: {
-            bizType: "crm_contract",
-            bizId: contractId,
-            comment: values.title,
-          },
-        });
         message.success("销售合同已提交审批");
         navigate(`/receivable-contract-detail/${contractId}`);
         return;
@@ -254,6 +252,14 @@ export default function SalesContractFormPage() {
         </Space>
       }
     >
+      {readOnly ? null : (
+        <AgentFormGuide
+          skillCode="cpo-contract-analysis-and-entry"
+          skillName="合同风险分析与分期入库"
+          prompt="请分析我上传的客户合同风险，提取收款分期并录入系统"
+          description="上传客户合同后，Agent 可审查风险，提取金额、期限和收款分期并完成录入。"
+        />
+      )}
       {readOnly ? (
         <Alert
           type="info"
@@ -375,7 +381,6 @@ export default function SalesContractFormPage() {
         <FormFooter
           saving={saving}
           onCancel={() => navigate("/contracts")}
-          onSaveDraft={() => void save(false)}
           onSaveAndSubmit={() => void save(true)}
           hint="提交后进入销售合同审核，审批通过后由签署节点确认合同签署完成。"
         />

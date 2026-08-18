@@ -124,12 +124,6 @@ export const LOVRABET_MODELS_CONFIG: ModelsConfig = {
       alias: "customerReceiptAllocation",
     },
     {
-      datasetCode: "d980e72f89f54474be37a45d3b563dac",
-      tableName: "legacy_approval_archive",
-      name: "审批归档",
-      alias: "legacyApprovalArchive",
-    },
-    {
       datasetCode: "c095e4a857dd41bd9ef182617e9d634c",
       tableName: "crm_company",
       name: "客户公司",
@@ -146,24 +140,6 @@ export const LOVRABET_MODELS_CONFIG: ModelsConfig = {
       tableName: "crm_customer_status",
       name: "客户状态字典",
       alias: "crmCustomerStatus",
-    },
-    {
-      datasetCode: "da9cddc0fd244545b94ae7cddfde21ea",
-      tableName: "biz_task",
-      name: "工作流任务",
-      alias: "bizTask",
-    },
-    {
-      datasetCode: "d3e59fb7cdf943e8af7e6edee5586cdd",
-      tableName: "cpo_workflow_action_config",
-      name: "工作流动作配置",
-      alias: "cpoWorkflowActionConfig",
-    },
-    {
-      datasetCode: "e541dc67b0b1410998c8c9c645f06f83",
-      tableName: "cpo_workflow_step_config",
-      name: "工作流步骤配置",
-      alias: "cpoWorkflowStepConfig",
     },
     {
       datasetCode: "392bcb15b9124da69bb8329eb5c4ecf2",
@@ -230,12 +206,6 @@ export const LOVRABET_MODELS_CONFIG: ModelsConfig = {
       tableName: "legal_status_log",
       name: "法务状态日志",
       alias: "legalStatusLog",
-    },
-    {
-      datasetCode: "464ca3622eab43a3a4b4b4f23af26a8c",
-      tableName: "cpo_workflow_participant",
-      name: "流程参与者",
-      alias: "cpoWorkflowParticipant",
     },
     {
       datasetCode: "a7f95d3929fe4c9fa0fb0fd863d1d4e6",

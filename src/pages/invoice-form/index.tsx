@@ -31,6 +31,7 @@ import {
   type CrmCustomer,
   type LocalPartner,
 } from "@/api/crm";
+import AgentFormGuide from "@/components/agent-form-guide";
 import AttachmentUpload from "@/components/attachment-upload";
 import FormFooter from "@/components/form-footer";
 import FormLayout, { FormRow } from "@/components/form-layout";
@@ -890,6 +891,7 @@ const InvoiceForm: React.FC = () => {
           bizType: applicationBizType,
           bizId: isEdit ? Number(editId) : undefined,
           values: isIncomingArchive ? invoicePayload : applicationPayload,
+          submit: action === "submit",
           ...(isIncomingArchive
             ? {
                 paymentAllocations: values[PAYMENT_ALLOCATIONS_FIELD] || [],
@@ -922,18 +924,6 @@ const InvoiceForm: React.FC = () => {
       });
       form.setFieldValue(ATTACHMENTS_FIELD, attachments);
       if (action === "submit") {
-        await lovrabetClient.bff.execute({
-          scriptName: "cpoSubmitApplication",
-          params: {
-            bizType: "invoice_application",
-            bizId: id,
-            comment:
-              invoiceTitle ||
-              values.invoice_no ||
-              values.partner_name_snapshot ||
-              "开票申请",
-          },
-        });
         message.success("已提交审核");
       } else if (action === "archive") {
         await lovrabetClient.bff.execute({
@@ -981,6 +971,22 @@ const InvoiceForm: React.FC = () => {
         </Space>
       }
     >
+      {!readOnly ? (
+        <AgentFormGuide
+          skillCode="cpo-invoice-application"
+          skillName="发票与开票申请助手"
+          prompt={
+            isIncomingArchive
+              ? "请根据我上传的发票文件完成进项发票归档"
+              : "请根据客户合同和开票材料创建并提交开票申请"
+          }
+          description={
+            isIncomingArchive
+              ? "上传发票文件后，Agent 可识别票面信息、核验业务关联并完成进项发票归档。"
+              : "提供客户合同和开票材料后，Agent 可核对业务信息、整理附件并完成开票申请。"
+          }
+        />
+      ) : null}
       <Form
         form={form}
         layout="vertical"

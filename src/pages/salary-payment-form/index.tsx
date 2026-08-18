@@ -25,6 +25,7 @@ import {
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { lovrabetClient } from "@/api/client";
+import AgentFormGuide from "@/components/agent-form-guide";
 import AttachmentUpload from "@/components/attachment-upload";
 import FormFooter from "@/components/form-footer";
 import FormLayout, { FormRow } from "@/components/form-layout";
@@ -251,6 +252,7 @@ const SalaryPaymentForm: React.FC = () => {
             remark: item.remark?.trim() || "",
           })),
           attachments: values[ATTACHMENTS_FIELD] || [],
+          submit: thenSubmit,
         },
       });
       const id = saved.bizId;
@@ -259,14 +261,6 @@ const SalaryPaymentForm: React.FC = () => {
       }
 
       if (thenSubmit) {
-        await lovrabetClient.bff.execute({
-          scriptName: "cpoSubmitApplication",
-          params: {
-            bizType: "salary_payment",
-            bizId: id,
-            comment: values._comment || "提交工资付款申请",
-          },
-        });
         message.success("已提交，进入工资付款审批");
         navigate(getCpoDetailPath("salary_payment", id));
         return;
@@ -306,6 +300,14 @@ const SalaryPaymentForm: React.FC = () => {
         </Space>
       }
     >
+      {readOnly ? null : (
+        <AgentFormGuide
+          skillCode="cpo-salary-payment-from-excel"
+          skillName="工资付款 Excel 自动录入"
+          prompt="请根据我上传的工资 Excel 核对并创建工资付款申请"
+          description="上传工资 Excel 后，Agent 可校验月份和合计、按主体拆分并完成工资付款申请。"
+        />
+      )}
       <Alert
         type="info"
         showIcon
@@ -584,7 +586,6 @@ const SalaryPaymentForm: React.FC = () => {
       {readOnly ? null : (
         <FormFooter
           onCancel={() => navigate(CPO_FORM_CANCEL_PATH)}
-          onSaveDraft={() => onSave(false)}
           onSaveAndSubmit={() => onSave(true)}
           saving={saving}
         />

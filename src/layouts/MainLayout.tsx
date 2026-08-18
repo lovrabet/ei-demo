@@ -20,7 +20,6 @@ import {
   FileTextOutlined,
   FileSearchOutlined,
   AuditOutlined,
-  EditOutlined,
   CalculatorOutlined,
   SafetyCertificateOutlined,
   PercentageOutlined,
@@ -45,7 +44,6 @@ const routeConfig = [
   { path: "/approval-center", title: "审批中心" },
   { path: "/my-todo", title: "审批待办" },
   { path: "/my-submitted", title: "我提交的流程" },
-  { path: "/my-drafts", title: "我的草稿" },
   { path: "/my-done", title: "审批已办" },
   { path: "/application-list", title: "申请单汇总" },
   { path: "/contracts", title: "合同工作台" },
@@ -111,11 +109,6 @@ const MainLayout: React.FC = () => {
       key: "/my-submitted",
       icon: <FileTextOutlined />,
       label: "我提交的流程",
-    },
-    {
-      key: "/my-drafts",
-      icon: <EditOutlined />,
-      label: "我的草稿",
     },
     {
       key: "/application-list",

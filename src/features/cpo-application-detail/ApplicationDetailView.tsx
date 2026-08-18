@@ -3055,9 +3055,6 @@ export default function ApplicationDetailView({
     if (module.key === "workflow" && platformPiid) return false;
     return module.showWhenEmpty || modulePresence[module.key];
   });
-  const hasActionDock = Boolean(
-    detail.canAct && detail.availableActions.length,
-  );
   const modulesByArea = {
     main: visibleModules.filter((module) => module.area === "main"),
     aside: visibleModules.filter((module) => module.area === "aside"),
@@ -3126,9 +3123,7 @@ export default function ApplicationDetailView({
 
   return (
     <div
-      className={`${styles.root} ${
-        hasActionDock ? styles.rootHasActionDock : ""
-      }`}
+      className={styles.root}
     >
       <Document360Overview
         detail={detail}
@@ -3165,11 +3160,6 @@ export default function ApplicationDetailView({
           onChanged={onWorkflowChanged}
         />
       ) : null}
-      <WorkflowActionBar
-        detail={detail}
-        bizType={bizType}
-        onChanged={onWorkflowChanged}
-      />
     </div>
   );
 }

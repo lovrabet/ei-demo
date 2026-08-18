@@ -10,15 +10,14 @@
  */
 const ENDPOINT_HINTS = {
   expenseApplication:
-    "cpoSaveDraft（草稿创建/编辑）或 cpoApplicantFlowAction（草稿删除/提交/撤回/作废）",
+    "cpoSaveDraft（聚合创建并由平台 Flow 自动发起）",
   expenseItem: "cpoSaveDraft（明细与发票关联须随报销单一起保存）",
   salaryPaymentItem: "cpoSaveDraft（工资付款明细须随工资付款申请一起保存）",
   contractPaymentPlan:
     "cpoSyncContractPaymentPlans（付款计划须随合同草稿一起保存）",
   bizInvoiceLink:
-    "cpoSaveDraft（创建/修改关联）或 cpoApplicantFlowAction（草稿删除/作废时自动释放）",
+    "cpoSaveDraft（随业务单据同步关联）",
   invoiceRecord: "cpoSaveDraft（随业务单据受控创建）",
-  workflowParticipant: "cpoWorkflowParticipantService（流程参与人受控变更）",
 };
 
 export default async function cpoDirectWriteGuard(params) {

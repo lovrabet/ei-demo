@@ -120,7 +120,8 @@ export default async function cpoManageReceivableContract(params, context) {
   const contractModel = context.client.models[`dataset_${C.crmContract}`];
   const planModel = context.client.models[`dataset_${C.crmReceivablePlan}`];
 
-  if (action === "create_draft") {
+  if (action === "create_draft" || action === "create_application") {
+    const submit = action === "create_application";
     const values = params?.contract || {};
     const companyId = positiveId(values.companyId, "companyId");
     const opportunityId = Number(values.opportunityId) || 0;
@@ -150,7 +151,7 @@ export default async function cpoManageReceivableContract(params, context) {
       title,
       amount,
       currency: text(values.currency) || "CNY",
-      sign_status: "draft",
+      sign_status: submit ? "submitted" : "draft",
       signed_date: null,
       start_date: dateOrNull(values.startDate),
       end_date: dateOrNull(values.endDate),
@@ -160,7 +161,9 @@ export default async function cpoManageReceivableContract(params, context) {
           : null,
       applicant_user_id: text(actor.userId),
       applicant_name_snapshot: text(actor.userName) || null,
-      submitted_at: null,
+      submitted_at: submit
+        ? new Date().toISOString().slice(0, 19).replace("T", " ")
+        : null,
       workflow_managed: 1,
       remark: text(values.remark) || null,
       payment_periods: 0,
@@ -218,7 +221,9 @@ export default async function cpoManageReceivableContract(params, context) {
       currency:
         text(params?.contract?.currency) || text(contract.currency) || "CNY",
       sign_status: workflowManaged
-        ? text(contract.sign_status)
+        ? params?.submit === true
+          ? "submitted"
+          : text(contract.sign_status)
         : signStatus || text(contract.sign_status),
       signed_date: workflowManaged
         ? contract.signed_date || null

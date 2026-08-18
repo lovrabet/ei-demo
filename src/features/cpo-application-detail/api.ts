@@ -83,8 +83,6 @@ export async function advanceApplicationWorkflow(params: {
   action: string;
   comment?: string;
 }): Promise<AdvanceWorkflowResponse> {
-  return lovrabetClient.bff.execute<AdvanceWorkflowResponse>({
-    scriptName: "cpoAdvanceWorkflow",
-    params,
-  });
+  void params;
+  throw new Error("审批操作已迁移到平台 Flow 面板");
 }

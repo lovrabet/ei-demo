@@ -22,6 +22,7 @@ import {
   PlusOutlined,
 } from "@ant-design/icons";
 import { lovrabetClient } from "@/api/client";
+import AgentFormGuide from "@/components/agent-form-guide";
 import AttachmentUpload from "@/components/attachment-upload";
 import FormFooter from "@/components/form-footer";
 import FormLayout, { FormRow } from "@/components/form-layout";
@@ -523,6 +524,7 @@ const ExpenseForm: React.FC = () => {
           values: payload,
           items: normalizedItems,
           relations: buildExpenseRelations(values),
+          submit: thenSubmit,
         },
       });
       const id = saved.bizId;
@@ -546,10 +548,6 @@ const ExpenseForm: React.FC = () => {
       });
 
       if (thenSubmit) {
-        await lovrabetClient.bff.execute({
-          scriptName: "cpoSubmitApplication",
-          params: { bizType: "expense", bizId: id, comment: values.title },
-        });
         message.success("已提交审核");
         navigate("/25a3c0821c9144609c4d081f3af76f9e");
       } else {
@@ -580,6 +578,14 @@ const ExpenseForm: React.FC = () => {
         </Space>
       }
     >
+      {readOnly ? null : (
+        <AgentFormGuide
+          skillCode="cpo-expense-application"
+          skillName="报销申请助手"
+          prompt="请根据我上传的发票和报销材料创建并提交报销申请"
+          description="上传发票和报销材料后，Agent 可自动识别票面信息、核验重复风险并完成申请。"
+        />
+      )}
       <Form
         form={form}
         layout="vertical"
@@ -1110,7 +1116,6 @@ const ExpenseForm: React.FC = () => {
       {readOnly ? null : (
         <FormFooter
           onCancel={() => navigate(CPO_FORM_CANCEL_PATH)}
-          onSaveDraft={() => onSave(false)}
           onSaveAndSubmit={() => onSave(true)}
           saving={saving}
         />

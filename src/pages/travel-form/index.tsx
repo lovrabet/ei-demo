@@ -322,6 +322,7 @@ const TravelForm: React.FC = () => {
           bizType: "travel",
           bizId: isEdit ? Number(editId) : undefined,
           values: payload,
+          submit: thenSubmit,
         },
       });
       const id = saved.bizId;
@@ -336,14 +337,6 @@ const TravelForm: React.FC = () => {
       form.setFieldValue(ATTACHMENTS_FIELD, attachments);
 
       if (thenSubmit) {
-        await lovrabetClient.bff.execute({
-          scriptName: "cpoSubmitApplication",
-          params: {
-            bizType: "travel",
-            bizId: id,
-            comment: values.title,
-          },
-        });
         message.success("已提交审核");
         navigate("/my-submitted");
       } else {
@@ -562,7 +555,6 @@ const TravelForm: React.FC = () => {
       {readOnly ? null : (
         <FormFooter
           onCancel={() => navigate(CPO_FORM_CANCEL_PATH)}
-          onSaveDraft={() => onSave(false)}
           onSaveAndSubmit={() => onSave(true)}
           saving={saving}
         />

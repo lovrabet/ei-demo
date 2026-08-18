@@ -130,7 +130,7 @@ const architectureLayers = [
 ];
 
 const boundaries = [
-  "BFF 创建的部分单据仍在迁移到平台原生 Flow，标准页面创建的记录已接入平台审批流。",
+  "所有审批类单据统一由平台原生 Flow 发起、流转和回写，不再维护自研审批状态机。",
   "当前通过 cpoDatasetMap 与 cpoDal 管理数据集映射，后续将替换为平台统一 DAL。",
   "行级权限与写入管控目前依赖 Instant API Hooks，后续将收敛到平台 API 访问策略。",
 ];
@@ -274,10 +274,10 @@ function HomePage() {
         <div>
           <FileSearchOutlined className={styles.boundaryIcon} />
           <Title id="boundary-title" level={2}>
-            当前边界
+            标准实现边界
           </Title>
           <Paragraph>
-            这是持续演进的样板应用。以下能力已明确列入 README 的后续工作。
+            本项目只展示当前推荐的标准实现，同时保留以下明确的工程边界。
           </Paragraph>
         </div>
         <ol className={styles.boundaryList}>

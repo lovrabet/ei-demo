@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Space, Tooltip } from "antd";
+import { Button, Space } from "antd";
 import {
   SaveOutlined,
   SendOutlined,
@@ -12,8 +12,9 @@ type Mode = "workflow" | "single";
 type Props = {
   mode?: Mode;
   onCancel: () => void;
-  onSaveDraft: () => void;
-  /** workflow 模式：传一个会触发"保存并提交"的 callback；single 模式不传 */
+  /** 仅 single 模式使用，例如进项发票归档。 */
+  onSaveDraft?: () => void;
+  /** workflow 模式直接创建单据并触发平台 Flow。 */
   onSaveAndSubmit?: () => void;
   saving: boolean;
   hint?: string;
@@ -22,7 +23,7 @@ type Props = {
 
 /**
  * FormFooter: sticky 底部操作栏。
- * workflow 模式 = 取消 + 保存草稿 + 保存并提交
+ * workflow 模式 = 取消 + 提交申请（主单 CREATE 后由平台 Flow 自动发起）
  * single 模式   = 取消 + 保存（无提交按钮）
  */
 const FormFooter: React.FC<Props> = ({
@@ -49,18 +50,6 @@ const FormFooter: React.FC<Props> = ({
         <Button onClick={onCancel} disabled={saving}>
           取消
         </Button>
-        {mode === "workflow" && (
-          <Tooltip title="保存为草稿，可稍后继续编辑">
-            <Button
-              onClick={onSaveDraft}
-              loading={saving}
-              disabled={saving}
-              icon={<SaveOutlined />}
-            >
-              {saving ? "保存中" : "保存草稿"}
-            </Button>
-          </Tooltip>
-        )}
         {mode === "workflow" && onSaveAndSubmit && (
           <Button
             type="primary"
@@ -69,7 +58,7 @@ const FormFooter: React.FC<Props> = ({
             disabled={saving}
             icon={<SendOutlined />}
           >
-            {saving ? "提交中" : "保存并提交"}
+            {saving ? "提交中" : "提交申请"}
           </Button>
         )}
         {mode === "single" && (

@@ -144,7 +144,7 @@ rabetbase run start
   - `cpoDatasetMap` 数据集映射：集中登记 40+ 数据集 code，产出 `bizType → 主单元数据`、`物理表名 → model key`、`语义名 → SQL code` 三张映射，屏蔽应用级 code 差异；
   - `cpoDal` 数据访问层：接收 map，返回 `{ model(表名), sql(语义名) }`，BFF 据此读写数据，不硬编码 dataset/sql uuid；
   - `cpoBizResolver` / `cpoDictionary` / `cpoCurrentActor`：读业务单并归一摘要 / 字典 code→label / 当前操作人；
-  - `cpoWorkflowScenario` / `cpoWorkflowConfig` / `cpoTaskService` / `cpoWorkflowParticipantService` / `cpoWorkflowNotifier`：流程解析、流程定义、任务服务、抄送授权、审批通知；
+  - 审批发起、节点流转、抄送与通知全部使用平台 Flow；BFF 只保留业务数据聚合、校验和回写；
   - `cpoActionRecorder`：写 `biz_action_record` 操作流水；
   - 守卫族：`cpo*ReadFilterGuard` / `cpo*ReadOneGuard` / `cpoDirectWriteGuard` / `cpoLogicalDeleteGuard` 等，做行级可见性与写入管控。
 - **HOOK（数据守卫层）**：挂在数据集 Instant API 操作前后（`HOOK/<dataset>/<op>/before|after/`），复用 COMMON 守卫对读写做行级过滤 / 写入拦截 / 结果增强。
@@ -152,9 +152,9 @@ rabetbase run start
 调用约定：ENDPOINT → COMMON（编排）、HOOK → COMMON（守卫）；COMMON 之间不互调，跨 COMMON 的数据（如 `cpoDatasetMap` 的 map）由调用方取好后传参。
 
 ## TODO
-[]  **切换为平台原生审批流**：目前经 BFF（`cpoSaveDraft` / `cpoSubmitApplication`）创建的单据走 legacy 自建待办（`biz_task`），只有标准页面创建的记录才接入平台 Flow。后续统一改为平台审批流，让所有入口都走 Flowable。
-[] **使用平台 DAL 层做数据集管理**（平台正在建设中）：当前通过自建的 `cpoDatasetMap` / `cpoDal` 做数据集映射与数据访问，待平台统一 DAL 层上线后替换。
-[] **用平台 API 访问策略替代大量 Instant API Hooks**（平台正在建设中）：当前通过大量 `HOOK/<dataset>/<op>/before|after` 守卫做行级权限与写入管控，待平台 API 访问策略上线后收敛。
+- [x] **统一使用平台原生审批流**：审批类单据已由平台 Flow 统一发起、流转和回写，不再维护自研审批状态机。
+- [ ] **使用平台 DAL 层做数据集管理**（平台正在建设中）：当前通过自建的 `cpoDatasetMap` / `cpoDal` 做数据集映射与数据访问，待平台统一 DAL 层上线后替换。
+- [ ] **用平台 API 访问策略替代大量 Instant API Hooks**（平台正在建设中）：当前通过大量 `HOOK/<dataset>/<op>/before|after` 守卫做行级权限与写入管控，待平台 API 访问策略上线后收敛。
 
 ## 许可证
 

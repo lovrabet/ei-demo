@@ -165,7 +165,7 @@ export const ApprovalDoneList: React.FC<ApprovalDoneListProps> = ({
         }}
         options={[
           { value: "expense", label: "报销" },
-          { value: "invoice", label: "发票" },
+          { value: "invoice_application", label: "销项开票申请" },
           { value: "contract", label: "合同" },
           { value: "payment", label: "付款" },
           { value: "salary_payment", label: "工资付款" },

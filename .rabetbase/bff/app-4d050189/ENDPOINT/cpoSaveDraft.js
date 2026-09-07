@@ -56,6 +56,7 @@ const BIZ_FIELD_WHITELIST = {
     "expense_type",
     "travel_type",
     "title",
+    "project_name",
     "total_original_amount",
     "total_cny_amount",
     "reimbursable_cny_amount",
@@ -143,6 +144,7 @@ const BIZ_FIELD_WHITELIST = {
     "payment_plan_id",
     "payment_type",
     "title",
+    "project_name",
     "amount",
     "planned_amount_snapshot",
     "currency",
@@ -1984,6 +1986,12 @@ export default async function cpoSaveDraft(params, context) {
       : null;
   let invoiceResolution = [];
   let businessFields = pickBusinessFields(bizType, values);
+  if (
+    (bizType === "expense" || bizType === "payment") &&
+    !optionalText(businessFields.project_name)
+  ) {
+    throw new Error("INVALID_PARAMS:project_name is required");
+  }
   const invoicePaymentAllocations =
     bizType === "invoice"
       ? normalizeInvoicePaymentAllocations(params.paymentAllocations)

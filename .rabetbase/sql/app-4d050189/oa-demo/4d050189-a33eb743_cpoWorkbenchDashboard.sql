@@ -49,34 +49,6 @@ UNION ALL
 
 SELECT
   'metric',
-  'pending_tasks',
-  CAST(NULL AS CHAR(7)),
-  CAST(NULL AS CHAR(16)),
-  COUNT(*),
-  CAST(NULL AS DECIMAL(20, 2))
-FROM biz_task
-WHERE is_deleted = 0
-  AND status = 'pending'
-
-UNION ALL
-
-SELECT
-  'metric',
-  'overdue_tasks',
-  CAST(NULL AS CHAR(7)),
-  CAST(NULL AS CHAR(16)),
-  COUNT(*),
-  CAST(NULL AS DECIMAL(20, 2))
-FROM biz_task
-WHERE is_deleted = 0
-  AND status = 'pending'
-  AND due_at IS NOT NULL
-  AND due_at < NOW()
-
-UNION ALL
-
-SELECT
-  'metric',
   'credential_risks',
   CAST(NULL AS CHAR(7)),
   'credential',
@@ -85,20 +57,6 @@ SELECT
 FROM company_credential
 WHERE is_deleted = 0
   AND status IN ('expiring', 'expired')
-
-UNION ALL
-
-SELECT
-  'workload',
-  'pending_tasks',
-  CAST(NULL AS CHAR(7)),
-  biz_type,
-  COUNT(*),
-  CAST(NULL AS DECIMAL(20, 2))
-FROM biz_task
-WHERE is_deleted = 0
-  AND status = 'pending'
-GROUP BY biz_type
 
 UNION ALL
 

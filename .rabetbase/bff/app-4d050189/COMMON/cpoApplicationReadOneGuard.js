@@ -1,18 +1,9 @@
 /**
  * CPO application detail read guard.
  *
- * Checks a getOne-like result after the record has been loaded. Ordinary users
- * can read records they applied for, plus records connected to tasks assigned
- * to or completed by them. Admin roles keep the original result.
+ * Lovrabet 管理员、应用 owner 和财务顾问可读取全部申请；普通用户只能读取本人申请
+ * 或平台 Flow 写入 node_process_user 的当前流程参与单据。
  */
-const READ_ALL_USER_CATEGORIES = [
-  "workflow_admin_user",
-  "application_read_all_user",
-];
-
-const BIZ_TASK_MODEL_KEY = "dataset_da9cddc0fd244545b94ae7cddfde21ea";
-const WORKFLOW_PARTICIPANT_MODEL_KEY =
-  "dataset_464ca3622eab43a3a4b4b4f23af26a8c";
 const VALID_BIZ_TYPES = new Set([
   "expense",
   "invoice",
@@ -33,6 +24,22 @@ function normalizeRole(value) {
   return optionalText(value).toLowerCase();
 }
 
+function normalizeRoles(roleLike) {
+  const values = Array.isArray(roleLike) ? roleLike : [roleLike];
+  return values
+    .map((item) =>
+      typeof item === "string"
+        ? item
+        : item?.code ||
+          item?.name ||
+          item?.value ||
+          item?.roleCode ||
+          item?.roleName,
+    )
+    .map(normalizeRole)
+    .filter(Boolean);
+}
+
 function pickFirstText(...values) {
   for (const value of values) {
     const text = optionalText(value);
@@ -50,34 +57,36 @@ function currentActorFromContext(context) {
 
 function actorHasReadAllRole(actor, context) {
   const userInfo = context?.userInfo || {};
-  return normalizeRole(userInfo.role) === "admin";
-}
-
-async function actorIsConfiguredReadAllUser(actor, context) {
-  const actorUserId = optionalText(actor?.userId);
-  const execute = context?.client?.bff?.execute;
-  if (!actorUserId || typeof execute !== "function") return false;
-  try {
-    const dictionary = await execute({
-      scriptName: "cpoDictionary",
-      params: {},
-    });
-    return READ_ALL_USER_CATEGORIES.some((category) =>
-      Object.prototype.hasOwnProperty.call(
-        dictionary?.[category] || {},
-        actorUserId,
-      ),
-    );
-  } catch {
-    return false;
+  if (
+    userInfo.isAdmin === true ||
+    userInfo.admin === true ||
+    userInfo.is_super_admin === true
+  ) {
+    return true;
   }
+  const roles = [
+    ...normalizeRoles(userInfo.roles),
+    ...normalizeRoles(userInfo.roleList),
+    ...normalizeRoles(userInfo.roleCodes),
+    ...normalizeRoles(userInfo.role),
+  ];
+  return roles.some((role) =>
+    [
+      "admin",
+      "administrator",
+      "super_admin",
+      "owner",
+      "cpo_admin",
+      "管理员",
+      "应用owner",
+      "finance_advisor",
+      "财务顾问",
+    ].includes(role),
+  );
 }
 
-async function actorCanReadAll(actor, context) {
-  return (
-    actorHasReadAllRole(actor, context) ||
-    (await actorIsConfiguredReadAllUser(actor, context))
-  );
+function actorCanReadAll(actor, context) {
+  return actorHasReadAllRole(actor, context);
 }
 
 function assertBizType(bizType) {
@@ -94,53 +103,6 @@ function normalizeResult(params) {
     return params.values;
   }
   return params;
-}
-
-function readRows(response) {
-  const rows =
-    response?.tableData ||
-    response?.data?.tableData ||
-    response?.result?.tableData ||
-    response?.data?.result?.tableData ||
-    [];
-  return Array.isArray(rows) ? rows : [];
-}
-
-async function actorHasTaskAccess(context, bizType, bizId, actorUserId) {
-  const taskModel = context?.client?.models?.[BIZ_TASK_MODEL_KEY];
-  if (!taskModel?.filter) return false;
-
-  const response = await taskModel.filter({
-    where: {
-      biz_type: { $eq: bizType },
-      biz_id: { $eq: Number(bizId) },
-      $or: [
-        { assignee_user_id: { $eq: actorUserId } },
-        { completed_by_user_id: { $eq: actorUserId } },
-      ],
-    },
-    select: ["id"],
-    currentPage: 1,
-    pageSize: 1,
-  });
-  return readRows(response).length > 0;
-}
-
-async function actorHasCcAccess(context, bizType, bizId, actorUserId) {
-  const model = context?.client?.models?.[WORKFLOW_PARTICIPANT_MODEL_KEY];
-  if (!model?.filter) return false;
-  const response = await model.filter({
-    where: {
-      biz_type: { $eq: bizType },
-      biz_id: { $eq: Number(bizId) },
-      participant_user_id: { $eq: actorUserId },
-      participant_type: { $eq: "cc" },
-    },
-    select: ["id"],
-    currentPage: 1,
-    pageSize: 1,
-  });
-  return readRows(response).length > 0;
 }
 
 /**
@@ -182,7 +144,8 @@ export default async function cpoApplicationReadOneGuard(params, context) {
   if (!result || typeof result !== "object" || !result.id) return result;
 
   const actor = currentActorFromContext(context);
-  if (await actorCanReadAll(actor, context)) return result;
+
+  if (actorCanReadAll(actor, context)) return result;
 
   const actorUserId = optionalText(actor.userId);
   if (!actorUserId) throw new Error("CPO_ACTOR_MISSING");
@@ -193,14 +156,6 @@ export default async function cpoApplicationReadOneGuard(params, context) {
 
   // 平台审批人（node_process_user 中的人）可读该单据，不依赖 legacy biz_task。
   if (parseNodeProcessUserIds(result.node_process_user).includes(actorUserId)) {
-    return result;
-  }
-
-  const [hasTaskAccess, hasCcAccess] = await Promise.all([
-    actorHasTaskAccess(context, bizType, result.id, actorUserId),
-    actorHasCcAccess(context, bizType, result.id, actorUserId),
-  ]);
-  if (hasTaskAccess || hasCcAccess) {
     return result;
   }
 

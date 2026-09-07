@@ -8,11 +8,6 @@
  * { "scope": "all|incoming|outgoing|action_required", "status": "", "purpose": "", "keyword": "", "page": 1, "pageSize": 20 }
  */
 
-const READ_ALL_USER_CATEGORIES = [
-  "workflow_admin_user",
-  "application_read_all_user",
-];
-
 function rowsOf(response) {
   return Array.isArray(response?.tableData) ? response.tableData : [];
 }
@@ -38,6 +33,7 @@ function unique(values) {
 }
 
 function actorIsAdmin(actor) {
+  if (actor?.isAdmin === true) return true;
   const roles = Array.isArray(actor?.roles) ? actor.roles : [actor?.roles];
   return roles.some((role) => {
     const value = text(
@@ -45,20 +41,23 @@ function actorIsAdmin(actor) {
         ? role
         : role?.code || role?.name || role?.value || role?.roleCode,
     ).toLowerCase();
-    return ["admin", "administrator", "super_admin", "cpo_admin"].includes(
-      value,
-    );
+    return [
+      "admin",
+      "administrator",
+      "super_admin",
+      "owner",
+      "cpo_admin",
+      "管理员",
+      "应用owner",
+    ].includes(value);
   });
 }
 
-async function assertReader(actor, dictionary) {
-  if (actorIsAdmin(actor)) return;
+function assertReader(actor) {
+  if (actorIsAdmin(actor) || actor?.isFinanceAdvisor === true) return;
   const userId = text(actor?.userId);
   if (!userId) throw new Error("CPO_ACTOR_MISSING");
-  const configured = READ_ALL_USER_CATEGORIES.some((category) =>
-    Object.prototype.hasOwnProperty.call(dictionary?.[category] || {}, userId),
-  );
-  if (!configured) throw new Error("CPO_INVOICE_CENTER_ACCESS_REQUIRED");
+  throw new Error("CPO_INVOICE_CENTER_ACCESS_REQUIRED");
 }
 
 function comparableTime(value) {
@@ -178,7 +177,7 @@ export default async function cpoGetInvoiceCenter(params, context) {
     bff.execute({ scriptName: "cpoDictionary", params: {} }),
     bff.execute({ scriptName: "cpoCurrentActor", params: {} }),
   ]);
-  await assertReader(actor, dictionary);
+  await assertReader(actor);
 
   const C = map.DATASET_CODES;
   const models = context.client.models;

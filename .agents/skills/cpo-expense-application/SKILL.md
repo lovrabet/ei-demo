@@ -34,7 +34,7 @@ flowchart TD
   L13 -- 是 --> L14{用户明确要求提交?}
   L14 -- 否 --> E1([返回草稿链接与状态])
   L14 -- 是 --> L15[cpoCheckInvoiceDuplicates 预查重]
-  L15 --> L16{cpoSubmitApplication 提交}
+  L15 --> L16{cpoSaveDraft submit=true 一次创建并提交}
   L16 -- DUPLICATE_INVOICE --> Stop4([被拦截: 发票被占用])
   L16 -- 成功 --> E2([返回已提交链接与状态])
 ```
@@ -52,13 +52,13 @@ flowchart TD
 - 附件信息：`ab17964f0efd46f78cecb4969140f257`，表 `attachment`
 - 商业伙伴：`68c70907e27c481cbefb96dd3906936e`，表 `business_partner`
 - 创建或更新草稿：只能调用 `cpoSaveDraft`
-- 提交审批：只能调用 `cpoSubmitApplication`
+- 提交审批：只能在最终确认后的完整 `cpoSaveDraft` 请求中传 `submit=true`
 - 读取生效报销规则：只能调用 `cpoListEffectiveExpenseRules`
 - 查询详情：只能调用 `cpoGetBizTimeline`
-- 查询草稿：可调用 `cpoGetMyDrafts`
+- 查询草稿：使用应用 `/my-drafts` 页面；不调用旧工作流草稿接口
 - 提交前查重：可调用 `cpoCheckInvoiceDuplicates`；最终提交仍会在服务端再次查重
 
-不得直接调用 `data create/update/delete/batchCreate` 写报销主表、报销明细、发票台账或发票关联表。标准写接口已有 Hook 封堵，页面禁用仅用于交互提示，权限边界在 Backend Function 和 Hook。
+不得直接调用 `data create/update/delete/batchCreate` 写报销主表、报销明细、发票台账或发票关联表。标准写接口由 Instant API Policy 封堵，页面禁用仅用于交互提示，权限边界在 Policy、Lovrabet 角色和受控 Backend Function。
 
 `is_deleted` 是 Lovrabet 平台系统字段。Skill、页面、Backend Function、Hook 和脚本都不得读取、筛选、赋默认值或更新该字段；删除必须调用 Lovrabet 模型的 `delete`。
 
@@ -75,7 +75,7 @@ flowchart TD
 9. 调用 `cpoSaveDraft` 保存草稿，检查响应中的 `attachments` 与上传结果路径一致
 10. 调用 `cpoGetBizTimeline` 重读，确认每张发票的 `file_path` 与报销附件池中的同路径文件都存在
 11. 按输入附件清单逐项核对输入、上传、关联和写后读取数量及路径集合，任何缺失、额外或重复都必须停止
-12. 用户明确要求提交时，先展示查重结果；只有附件、发票关系、路径和数量复核全部通过后才调用 `cpoSubmitApplication`
+12. 用户明确要求提交时，先展示查重结果；只有附件、发票关系、路径和数量复核全部通过后，才用完整参数调用一次 `cpoSaveDraft(submit=true)`
 
 缺少会改变报销金额、供应商关系或提交意图的关键信息时应询问用户；不得猜测。
 
@@ -272,15 +272,7 @@ lovrabet --appcode app-4d050189 bff exec \
   --params '{"expenseId":123}'
 ```
 
-只有用户明确要求提交时才调用：
-
-```bash
-lovrabet --appcode app-4d050189 bff exec \
-  --name cpoSubmitApplication \
-  --params '{"bizType":"expense","bizId":123,"comment":"7 月公司固话通信费报销"}'
-```
-
-`cpoSubmitApplication` 会再次执行发票查重。发现同单重复、重复台账或发票已被其他有效报销占用时会返回 `DUPLICATE_INVOICE` 并拒绝提交。缺少启用的第一步审批人时会返回 `WORKFLOW_CONFIG_MISSING` 或 `WORKFLOW_STEP_ASSIGNEE_MISSING`。
+只有用户明确要求提交时，才在上面的完整 `cpoSaveDraft` 参数根级增加 `"submit":true`；不得先落草稿再调用旧提交接口。`cpoSaveDraft` 会执行服务端发票查重，发现同单重复、重复台账或发票已被其他有效报销占用时返回 `DUPLICATE_INVOICE` 并拒绝创建。
 
 提交时每条报销明细都必须关联至少一张实际发票；每张发票都必须有非空 `file_path`，且同一路径必须存在于报销主单的 `attachment_type=approval_material` 附件池中。缺少附件时返回 `SUBMIT_REQUIRED_MISSING:expense:approval_material`，缺少明细发票或发票文件时返回相应 `SUBMIT_REQUIRED_MISSING:expense:*`，发票路径与附件池不一致时返回 `SUBMIT_CONFLICT:expense:invoice_attachment:*`。
 

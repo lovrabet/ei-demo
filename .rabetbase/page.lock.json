@@ -1,12 +1,12 @@
 {
   "apps": {
     "app-4d050189": {
-      "lastSync": "2026-08-11T15:59:49.643Z",
+      "lastSync": "2026-09-07T05:08:29.448Z",
       "pages": {
         "1031466": {
-          "hash": "a21605430e54f8fe06c63955ab9e5f8f",
+          "hash": "4a54bd06b42aff71f18acfb652249677",
           "pageId": 1031466,
-          "pageVersion": 1,
+          "pageVersion": 2,
           "type": "FTP",
           "title": "业务操作记录",
           "datasetIds": [
@@ -15,9 +15,9 @@
           "versionTag": "9426ea73-6482-4818-8fe0-c14578306df3"
         },
         "1031467": {
-          "hash": "265c5f9490c613f7ac0f5e06466e520a",
+          "hash": "d924dd415a8bad51d5f24154bc6bde69",
           "pageId": 1031467,
-          "pageVersion": 1,
+          "pageVersion": 2,
           "type": "CREATE",
           "title": "创建业务操作记录",
           "datasetIds": [
@@ -26,9 +26,9 @@
           "versionTag": "9426ea73-6482-4818-8fe0-c14578306df3"
         },
         "1031468": {
-          "hash": "a1d37a4e3887f5f52dd21c31319e50dd",
+          "hash": "163598072b9cc68dec52234bdbda5532",
           "pageId": 1031468,
-          "pageVersion": 1,
+          "pageVersion": 2,
           "type": "UPDATE",
           "title": "编辑业务操作记录",
           "datasetIds": [
@@ -37,9 +37,9 @@
           "versionTag": "9426ea73-6482-4818-8fe0-c14578306df3"
         },
         "1031469": {
-          "hash": "12ddbcaf2554488a359ddfb3349a9292",
+          "hash": "1f108476f9de28d94ae39f67bf4f8317",
           "pageId": 1031469,
-          "pageVersion": 1,
+          "pageVersion": 2,
           "type": "DETAIL",
           "title": "业务操作记录详情",
           "datasetIds": [

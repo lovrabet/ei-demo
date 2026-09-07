@@ -111,11 +111,11 @@ python3 <skill-dir>/scripts/analyze_salary_workbook.py \
 
 ## 6. 提交审批
 
-只有用户明确说“提交审批”时才逐张提交。提交前再次展示全部申请的最终摘要，并确认整批及每张申请的附件数量与路径集合完全一致；提交后逐张返回业务标题、状态和可点击详情入口。不得因用户只确认其中一张而自动提交其他草稿。
+只有用户明确说“提交审批”时，才逐张以完整 `cpoSaveDraft` 参数并设置 `submit=true` 一次创建和提交。提交前再次展示全部申请的最终摘要，并确认整批及每张申请的附件数量与路径集合完全一致；不得先创建草稿再调用旧提交接口，也不得因用户只确认其中一张而自动提交其他申请。
 
 ## 7. 成功结果与详情链接
 
-每次 `cpoSaveDraft` 或 `cpoSubmitApplication` 成功后，使用该次响应中的真实 `bizId` 构造工资付款详情地址，并调用 `cpoGetBizTimeline` 重读标题、合计金额、明细数、附件数和状态：
+每次 `cpoSaveDraft` 成功后，使用该次响应中的真实 `bizId` 构造工资付款详情地址，并调用 `cpoGetBizTimeline` 重读标题、合计金额、明细数、附件数和状态：
 
 ```markdown
 [查看“杭州启智云图科技有限公司发放2026年7月员工工资”工资付款申请](https://app-4d050189.app.lovrabet.com/application-detail/salary_payment/123)

@@ -325,7 +325,7 @@ const MySubmitted: React.FC = () => {
             }}
             options={[
               { value: "expense", label: "报销" },
-              { value: "invoice", label: "发票" },
+              { value: "invoice_application", label: "销项开票申请" },
               { value: "contract", label: "合同" },
               { value: "crm_contract", label: "对外销售合同" },
               { value: "payment", label: "付款" },

@@ -48,10 +48,16 @@ const COMPLETED_STATUSES_BY_TYPE = {
   salary_payment: ["paid_confirmed", "completed"],
   travel: ["reviewed", "completed"],
 };
-const READ_ALL_USER_CATEGORIES = [
-  "workflow_admin_user",
-  "application_read_all_user",
-];
+const APPLICATION_LIST_ROLES = new Set([
+  "admin",
+  "administrator",
+  "super_admin",
+  "owner",
+  "workflow_admin",
+  "流程管理员",
+  "finance_advisor",
+  "财务顾问",
+]);
 const DETAIL_PATH = {
   expense: (id) =>
     `/application-detail/expense/${encodeURIComponent(String(id))}`,
@@ -110,25 +116,34 @@ function comparableTime(value) {
   return Number.isFinite(time) ? time : 0;
 }
 
-function actorHasReadAllRole(actor) {
-  return optionalText(actor?.roles?.[0]).toLowerCase() === "admin";
+function normalizeRoles(roleLike) {
+  const values = Array.isArray(roleLike) ? roleLike : [roleLike];
+  return values
+    .map((item) =>
+      typeof item === "string"
+        ? item
+        : item?.code ||
+          item?.name ||
+          item?.value ||
+          item?.roleCode ||
+          item?.roleName,
+    )
+    .map((role) => optionalText(role).toLowerCase())
+    .filter(Boolean);
 }
 
-async function assertApplicationListReader(actor, bff) {
-  if (actorHasReadAllRole(actor)) return;
+function actorHasApplicationListRole(actor) {
+  if (actor?.isAdmin === true) return true;
+  return normalizeRoles(actor?.roles).some((role) =>
+    APPLICATION_LIST_ROLES.has(role),
+  );
+}
+
+function assertApplicationListReader(actor) {
+  if (actorHasApplicationListRole(actor)) return;
   const userId = optionalText(actor?.userId);
   if (!userId) throw new Error("CPO_ACTOR_MISSING");
-
-  const dictionary = await bff.execute({
-    scriptName: "cpoDictionary",
-    params: {},
-  });
-  const configured = READ_ALL_USER_CATEGORIES.some((category) =>
-    Object.prototype.hasOwnProperty.call(dictionary?.[category] || {}, userId),
-  );
-  if (!configured) {
-    throw new Error("CPO_APPLICATION_LIST_ACCESS_REQUIRED");
-  }
+  throw new Error("CPO_APPLICATION_LIST_ACCESS_REQUIRED");
 }
 
 function labelOf(dictionary, category, code) {
@@ -392,11 +407,11 @@ async function fetchApplicationsByType(
 
   do {
     const statusWhere = statusScopeWhere(bizType, meta, scope);
-    const where = applicantUserId
-      ? {
-          $and: [statusWhere, { applicant_user_id: { $eq: applicantUserId } }],
-        }
-      : statusWhere;
+    const whereParts = [statusWhere];
+    if (applicantUserId) {
+      whereParts.push({ applicant_user_id: { $eq: applicantUserId } });
+    }
+    const where = whereParts.length === 1 ? statusWhere : { $and: whereParts };
     const response = await model.filter({
       where: applicationScopeWhere(bizType, where),
       select: selectFieldsFor(bizType, meta),
@@ -461,7 +476,7 @@ export default async function cpoGetApplicationList(params, context) {
     scriptName: "cpoCurrentActor",
     params: {},
   });
-  await assertApplicationListReader(actor, bff);
+  await assertApplicationListReader(actor);
 
   const [map, dictionary] = await Promise.all([
     bff.execute({ scriptName: "cpoDatasetMap", params: {} }),

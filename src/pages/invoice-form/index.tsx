@@ -1037,9 +1037,11 @@ const InvoiceForm: React.FC = () => {
             typeName="request_type"
             partnerName="partner_id"
             partnerLabel={
-              isIncomingArchive ? "供应商 / 服务商（可选）" : "客户"
+              isIncomingArchive
+                ? "供应商 / 服务商（可选）"
+                : "关联客户（可选）"
             }
-            partnerRequired={!isIncomingArchive}
+            partnerRequired={false}
             hideType
             isSalesType={() => !isIncomingArchive}
           >
@@ -1251,6 +1253,11 @@ const InvoiceForm: React.FC = () => {
               label="购买方"
               name="buyer_name"
               rules={[{ required: true, message: "请输入购买方" }]}
+              extra={
+                isIncomingArchive
+                  ? undefined
+                  : "未关联客户库时，可直接填写个人或其他散户的开票抬头。"
+              }
             >
               <Input placeholder="发票抬头或付款方名称" />
             </Form.Item>

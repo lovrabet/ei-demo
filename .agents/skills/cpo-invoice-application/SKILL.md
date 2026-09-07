@@ -22,7 +22,7 @@ flowchart TD
   A1 --> G1{数量门禁通过?}
   G1 -- 否 --> Stop([停止并报告缺失文件])
   G1 -- 是 --> A2[cpoSaveDraft 保存申请草稿]
-  A2 --> A3[cpoSubmitApplication 提交审批]
+  A2 --> A3[cpoSaveDraft submit=true 一次创建并提交]
   A3 --> A4([申请已提交: reviewed 后待履约])
   B1 --> G2{数量门禁通过?}
   G2 -- 否 --> Stop
@@ -58,12 +58,12 @@ flowchart TD
 - CRM 收款合同、收款期次通过当前应用客户端提供的模型读取，不创建跨应用客户端
 - 附件数据集：`ab17964f0efd46f78cecb4969140f257`
 - 销项开票申请草稿只调用 `cpoSaveDraft`
-- 销项开票申请提交只调用 `cpoSubmitApplication`
+- 销项开票申请提交只在完整 `cpoSaveDraft` 请求中传 `submit=true`
 - 真实进项发票归档只调用 `cpoArchiveIncomingInvoice`
 - 已开具销项发票登记只调用 `cpoRegisterIssuedInvoice`
 - 开票申请与实际发票履约只调用 `cpoFulfillInvoiceApplication`
 - 销项发票、客户回款与收款期次分摊只调用 `cpoManageReceivableSettlement`
-- 后续审批动作只调用 `cpoAdvanceWorkflow`
+- 后续审批动作只在 Lovrabet 平台 Flow 中办理
 - 不得直接修改流程状态、申请人、提交时间等受控字段，也不得直接写履约或分摊关系表
 - `is_deleted` 是平台系统字段，任何 Skill、BF、Hook 或脚本都不得读取、筛选、赋值或更新；删除调用 Lovrabet `delete`，业务撤销使用受控 BF
 
@@ -163,17 +163,7 @@ lovrabet bff exec --appcode app-4d050189 --name cpoSaveDraft --params '{
 
 内部 ID 仅用于参数和数据连接，不得作为最终答复中的显示文本。
 
-提交审批：
-
-```bash
-lovrabet bff exec --appcode app-4d050189 --name cpoSubmitApplication --params '{
-  "bizType": "invoice_application",
-  "bizId": 123,
-  "comment": "按客户合同申请开具技术服务费发票"
-}'
-```
-
-提交前必须确认标题、客户名称、我方主体、购方名称、发票类型、开票内容和正数申请价税合计完整；用户提供过申请资料时还必须确认附件数量门禁通过。审批通过后状态为 `reviewed`；只有实际发票履约金额覆盖申请总额后，申请才是 `completed`。
+提交审批时，在最终确认的完整 `cpoSaveDraft` 参数根级增加 `"submit":true`，由主 Dataset CREATE 触发 Lovrabet 平台 Flow。提交前必须确认标题、客户名称、我方主体、购方名称、发票类型、开票内容和正数申请价税合计完整；用户提供过申请资料时还必须确认附件数量门禁通过。审批通过后状态为 `reviewed`；只有实际发票履约金额覆盖申请总额后，申请才是 `completed`。
 
 开票申请资料附件使用 `biz_type=invoice_application`、`attachment_type=invoice_application_material`。资料附件不是实际发票票面，不得冒充发票附件。
 

@@ -30,9 +30,9 @@ flowchart TD
   F6 -- 否 --> Stop1([停止并报告缺失文件])
   F6 -- 是 --> F7{用户明确提交?}
   F7 -- 否 --> E1([返回草稿链接])
-  F7 -- 是 --> F8[cpoSubmitApplication 提交]
+  F7 -- 是 --> F8[cpoSaveDraft submit=true 一次创建并提交]
   F8 --> F9([已提交: 进入审批])
-  F9 --> F10[后续 cpoAdvanceWorkflow 制单/银行/确认付款]
+  F9 --> F10[后续审批与业务动作由 Lovrabet 平台 Flow 办理]
 ```
 
 ## 适用场景
@@ -50,8 +50,8 @@ flowchart TD
 - 创建/更新草稿只能调用 `cpoSaveDraft`
 - 查询合同、付款计划、首个待付款计划和历史付款只能调用 `cpoGetContractPaymentContext`
 - 合同草稿中的付款计划只能调用 `cpoSyncContractPaymentPlans` 同步
-- 提交审批只能调用 `cpoSubmitApplication`
-- 付款后续制单、提交银行、确认付款等动作只能调用 `cpoAdvanceWorkflow`
+- 提交审批只能在最终确认后的完整 `cpoSaveDraft` 请求中传 `submit=true`；不得先创建草稿再调用旧提交接口
+- 付款后续制单、提交银行、确认付款等动作由 Lovrabet 平台 Flow 节点及 `cpoFlowBizStateSync` 回调处理
 - 不要直接 update 付款申请的 `status`、`bank_status`、银行确认字段，也不要直接修改付款计划的 `status`、`linked_payment_application_id`、实付字段
 - `is_deleted` 是 Lovrabet 平台系统字段，Skill、BF、Hook 和脚本不得读取、筛选、赋默认值或更新；删除业务记录时调用 Lovrabet `delete` 或受控 BF
 
@@ -162,19 +162,11 @@ lovrabet bff exec --appcode app-4d050189 --name cpoSaveDraft --params '{
 
 ## 保存并提交
 
-```bash
-lovrabet bff exec --appcode app-4d050189 --name cpoSubmitApplication --params '{
-  "bizType": "payment",
-  "bizId": 123,
-  "comment": "提交付款申请"
-}'
-```
-
-提交要求 `payment` 已配置启用的第一步审批人。用户提供过付款材料时，还必须先完成所有材料的上传、申请单关联和写后数量复核；不能忽略附件后继续提交。
+用户明确提交时，在上面的完整 `cpoSaveDraft` 参数根级增加 `"submit":true`，由主 Dataset CREATE 触发 Lovrabet 平台 Flow。不要调用旧的二次提交接口。用户提供过付款材料时，必须在首次创建前完成上传与数量复核；不能忽略附件后继续提交。
 
 ## 成功结果与详情链接
 
-`cpoSaveDraft` 或 `cpoSubmitApplication` 成功后，必须使用该次响应中的真实 `bizType` 和 `bizId` 构造详情地址，并调用 `cpoGetBizTimeline` 重读标题、金额和状态。在最终答复中返回：
+`cpoSaveDraft` 成功后，必须使用该次响应中的真实 `bizType` 和 `bizId` 构造详情地址，并调用 `cpoGetBizTimeline` 重读标题、金额和状态。在最终答复中返回：
 
 ```markdown
 [查看“XX 服务费首付款”付款申请](https://app-4d050189.app.lovrabet.com/application-detail/payment/123)
@@ -203,9 +195,7 @@ lovrabet bff exec --appcode app-4d050189 --name cpoSubmitApplication --params '{
 
 任一数量或路径不一致时，停止提交并报告预期数、实际数及缺失或重复文件名。上传到文件服务但未关联付款申请不算成功，也不得用备注中的文件名替代附件。
 
-银行回单如需关联到确认付款动作，使用 `cpoAdvanceWorkflow` 的 `payload.bank_receipt_attachment_id`，不要直接改主表银行字段。
-
-确认付款成功后，`cpoAdvanceWorkflow(action=confirm_paid)` 会按该计划下所有付款记录汇总实付金额；累计达到计划金额才标记为 `paid`，部分付款保持 `processing`。取消或驳回一笔付款后同样重算，不会错误释放同一期的其他付款。银行失败重试不删除原付款关系。
+银行回单和确认付款必须在 Lovrabet 平台 Flow 对应节点办理，并由 `cpoFlowBizStateSync` 回写业务状态；不要直接改主表银行字段。付款计划实付汇总由受控业务回调维护，Agent 不再调用自建工作流动作接口。
 
 ## 查询
 

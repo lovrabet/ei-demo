@@ -2066,7 +2066,7 @@ function ExpenseItems({ rows }: { rows: ExpenseItemRecord[] }) {
         EXPENSE_CATEGORY_LABELS[String(value || "")] || text(value),
     },
     {
-      title: "说明",
+      title: "报销名称",
       dataIndex: "description",
       width: 220,
       render: (value) => <span className={styles.longText}>{text(value)}</span>,

@@ -24,7 +24,7 @@
 - 不修改或提交报销单。
 - 不把发票预查成功视为提交成功。
 
-正式提交报销时，`cpoSubmitApplication` 会再次调用同一服务端守卫；发现重复时返回 `DUPLICATE_INVOICE` 并保持原单状态不变。
+正式创建并提交报销时，`cpoSaveDraft(submit=true)` 会再次调用同一服务端守卫；发现重复时返回 `DUPLICATE_INVOICE` 并拒绝创建。
 
 ## 核对
 

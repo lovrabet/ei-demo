@@ -19,7 +19,6 @@ const DATASET_CODES = {
   crmReceivablePlan: "c4c7c35bfe244a78b08667e649b05640",
   bizInvoiceLink: "9dd0d102219145ddbb67d1c247a84fb9",
   bizRelation: "1a4139b6d59a493ea89111d936e27238",
-  bizTask: "da9cddc0fd244545b94ae7cddfde21ea",
 };
 
 function normalizeBizId(value) {
@@ -183,21 +182,6 @@ async function logicalDeleteDraftAggregate({
     }
     if (optionalText(current.applicant_user_id) !== actorUserId) {
       throw new Error(`APPLICANT_MISMATCH:${bizType}:${bizId}`);
-    }
-
-    const taskModel = modelOf(models, DATASET_CODES.bizTask, "bizTask");
-    const pendingTasks = await findRows(
-      taskModel,
-      {
-        biz_type: { $eq: bizType },
-        biz_id: { $eq: bizId },
-        status: { $eq: "pending" },
-      },
-      ["id"],
-      100,
-    );
-    if (pendingTasks.length) {
-      throw new Error(`DRAFT_DELETE_PENDING_TASK_EXISTS:${bizType}:${bizId}`);
     }
 
     const attachmentModel = modelOf(
@@ -365,7 +349,6 @@ async function logicalDeleteReceivableDraftAggregate({
     context.client.models[`dataset_${DATASET_CODES.crmReceivablePlan}`];
   const attachmentModel =
     context.client.models[`dataset_${DATASET_CODES.attachment}`];
-  const taskModel = context.client.models[`dataset_${DATASET_CODES.bizTask}`];
   const current = await mainModel.getOne({ id: bizId });
   if (!current?.id) {
     throw new Error(`BIZ_NOT_FOUND:crm_contract:${bizId}`);
@@ -377,19 +360,6 @@ async function logicalDeleteReceivableDraftAggregate({
   }
   if (optionalText(current.applicant_user_id) !== actorUserId) {
     throw new Error(`APPLICANT_MISMATCH:crm_contract:${bizId}`);
-  }
-  const pendingTasks = await findRows(
-    taskModel,
-    {
-      biz_type: { $eq: "crm_contract" },
-      biz_id: { $eq: bizId },
-      status: { $eq: "pending" },
-    },
-    ["id"],
-    100,
-  );
-  if (pendingTasks.length) {
-    throw new Error(`DRAFT_DELETE_PENDING_TASK_EXISTS:crm_contract:${bizId}`);
   }
   const [plans, attachments] = await Promise.all([
     findRows(planModel, { contract_id: { $eq: bizId } }, ["id"], 500),

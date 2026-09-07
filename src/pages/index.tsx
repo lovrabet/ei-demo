@@ -116,9 +116,9 @@ const architectureLayers = [
   },
   {
     title: "Lovrabet 数据与业务层",
-    meta: "44 个数据模型 + BFF",
+    meta: "42 个数据模型 + BFF",
     description:
-      "Instant API 连接数据，ENDPOINT 编排业务，HOOK 在读写侧执行守卫。",
+      "Instant API 连接数据，ENDPOINT 编排业务，Policy 统一路由与拦截。",
     icon: <ApartmentOutlined />,
   },
   {
@@ -132,7 +132,7 @@ const architectureLayers = [
 const boundaries = [
   "所有审批类单据统一由平台原生 Flow 发起、流转和回写，不再维护自研审批状态机。",
   "当前通过 cpoDatasetMap 与 cpoDal 管理数据集映射，后续将替换为平台统一 DAL。",
-  "行级权限与写入管控目前依赖 Instant API Hooks，后续将收敛到平台 API 访问策略。",
+  "行级读取与写入管控统一由 Instant API Policy 路由、拒绝规则和平台角色执行。",
 ];
 
 function HomePage() {
@@ -237,16 +237,16 @@ function HomePage() {
           </Paragraph>
           <div className={styles.factRow}>
             <div>
-              <strong>26</strong>
+              <strong>27</strong>
               <span>COMMON</span>
             </div>
             <div>
-              <strong>35</strong>
+              <strong>43</strong>
               <span>ENDPOINT</span>
             </div>
             <div>
-              <strong>122</strong>
-              <span>HOOK</span>
+              <strong>16</strong>
+              <span>POLICY</span>
             </div>
           </div>
         </div>

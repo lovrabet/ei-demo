@@ -10,6 +10,10 @@ export type CurrentActor = {
   applicant_user_id?: string;
   applicant_name_snapshot?: string;
   roles?: string[];
+  isAdmin?: boolean;
+  isFinanceAdvisor?: boolean;
+  isWorkflowAdmin?: boolean;
+  canReadAllApplications?: boolean;
   raw?: RawUserInfo;
 };
 

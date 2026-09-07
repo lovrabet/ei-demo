@@ -127,14 +127,7 @@ lovrabet data filter --appcode app-4d050189 \
 
 ## 提交审批
 
-默认只保存草稿。只有用户明确要求提交时调用：
-
-```bash
-lovrabet bff exec --appcode app-4d050189 \
-  --name cpoSubmitApplication \
-  --params '{"bizType":"contract","bizId":123,"comment":"提交合同审核"}' \
-  --format compress
-```
+默认只保存草稿。只有用户明确要求提交时，才在最终确认的完整 `cpoSaveDraft` 参数中设置 `submit=true`，一次创建并触发 Lovrabet 平台 Flow；不得调用旧提交接口。
 
 提交前重新展示合同、风险等级与处置状态、合作方、金额、分期和附件摘要，并确认附件输入、上传、关联和写后读取数量及路径集合完全一致。只有 `entry_gate=ready`、附件复核通过且用户明确要求提交时才执行；其余状态仅保存草稿或停止。
 

@@ -19,7 +19,7 @@ export const PLATFORM_DATASET_BIZ_TYPE: Record<string, string> = {
   "53869993f80f45ae8ef6cdf051d8e355": "contract",
   "28494f18f334400c893576b6e168d3f6": "travel",
   "235e11a9cb7945c8926b4d31fe64843f": "salary_payment",
-  "ae51202c44e140828ba87e4571094d1a": "invoice",
+  "ae51202c44e140828ba87e4571094d1a": "invoice_application",
   "804e3a5ed3224074be329b9ed4799cc3": "crm_contract",
 };
 
@@ -202,7 +202,7 @@ export const PLATFORM_BIZ_SUMMARY_FIELDS: Record<
     amount: "amount",
     applicant: "applicant_name_snapshot",
   },
-  invoice: {
+  invoice_application: {
     title: "application_title",
     amount: "requested_total_amount",
     applicant: "applicant_name_snapshot",

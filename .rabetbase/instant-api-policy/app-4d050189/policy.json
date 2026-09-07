@@ -1,0 +1,168 @@
+{
+  "version": "1",
+  "appCode": "app-4d050189",
+  "defaults": {
+    "instantApi": "allow"
+  },
+  "rules": [
+    {
+      "name": "route-expense-application-read",
+      "description": "报销申请读取经 Policy 路由并使用 Lovrabet 角色与平台 Flow 人员信息鉴权",
+      "datasets": [{ "datasetCode": "7851365c96244a1896e834daec447ddb" }],
+      "apis": ["filter", "getOne", "getOneOrigin"],
+      "action": "route",
+      "backendFunction": "cpoPolicyReadExpenseApplication"
+    },
+    {
+      "name": "route-contract-application-read",
+      "description": "合同申请读取经 Policy 路由",
+      "datasets": [{ "datasetCode": "53869993f80f45ae8ef6cdf051d8e355" }],
+      "apis": ["filter", "getOne", "getOneOrigin"],
+      "action": "route",
+      "backendFunction": "cpoPolicyReadContractApplication"
+    },
+    {
+      "name": "route-payment-application-read",
+      "description": "付款申请读取经 Policy 路由",
+      "datasets": [{ "datasetCode": "7da208a5059b4b13896d7c7ae29c8492" }],
+      "apis": ["filter", "getOne", "getOneOrigin"],
+      "action": "route",
+      "backendFunction": "cpoPolicyReadPaymentApplication"
+    },
+    {
+      "name": "route-salary-payment-application-read",
+      "description": "薪资付款申请读取经 Policy 路由",
+      "datasets": [{ "datasetCode": "235e11a9cb7945c8926b4d31fe64843f" }],
+      "apis": ["filter", "getOne", "getOneOrigin"],
+      "action": "route",
+      "backendFunction": "cpoPolicyReadSalaryPaymentApplication"
+    },
+    {
+      "name": "route-invoice-application-read",
+      "description": "销项开票申请读取经 Policy 路由",
+      "datasets": [{ "datasetCode": "ae51202c44e140828ba87e4571094d1a" }],
+      "apis": ["filter", "getOne", "getOneOrigin"],
+      "action": "route",
+      "backendFunction": "cpoPolicyReadInvoiceApplication"
+    },
+    {
+      "name": "route-invoice-record-read",
+      "description": "发票台账读取经 Policy 路由",
+      "datasets": [{ "datasetCode": "fc11e2d760b94b2ca2ccf0485ed40ca8" }],
+      "apis": ["filter", "getOne", "getOneOrigin"],
+      "action": "route",
+      "backendFunction": "cpoPolicyReadInvoiceRecord"
+    },
+    {
+      "name": "route-travel-application-read",
+      "description": "出差申请读取经 Policy 路由",
+      "datasets": [{ "datasetCode": "28494f18f334400c893576b6e168d3f6" }],
+      "apis": ["filter", "getOne", "getOneOrigin"],
+      "action": "route",
+      "backendFunction": "cpoPolicyReadTravelApplication"
+    },
+    {
+      "name": "route-expense-item-read",
+      "description": "报销明细读取继承报销主单权限",
+      "datasets": [{ "datasetCode": "d99c32ef07b749948cc24fd391f8fd2c" }],
+      "apis": ["filter", "getOne", "getOneOrigin"],
+      "action": "route",
+      "backendFunction": "cpoPolicyReadExpenseItem"
+    },
+    {
+      "name": "route-contract-payment-plan-read",
+      "description": "合同付款计划读取继承合同主单权限",
+      "datasets": [{ "datasetCode": "08e17d8ba3a24e938fef89816c8f4ccb" }],
+      "apis": ["filter", "getOne", "getOneOrigin"],
+      "action": "route",
+      "backendFunction": "cpoPolicyReadContractPaymentPlan"
+    },
+    {
+      "name": "route-salary-payment-item-read",
+      "description": "工资支付明细读取继承薪资申请主单权限",
+      "datasets": [{ "datasetCode": "19ef166f3d2242a19911ccb8a5685bb8" }],
+      "apis": ["filter", "getOne", "getOneOrigin"],
+      "action": "route",
+      "backendFunction": "cpoPolicyReadSalaryPaymentItem"
+    },
+    {
+      "name": "route-invoice-link-filter",
+      "description": "发票关联查询与申请单展示字段补充迁移到 Policy 路由",
+      "datasets": [{ "datasetCode": "9dd0d102219145ddbb67d1c247a84fb9" }],
+      "apis": ["filter"],
+      "action": "route",
+      "backendFunction": "cpoPolicyReadBizInvoiceLink"
+    },
+    {
+      "name": "deny-sensitive-generic-list-apis",
+      "description": "敏感业务数据只开放受控 filter/detail；通用列表、下拉、导出与聚合默认拒绝",
+      "datasets": [
+        { "datasetCode": "7851365c96244a1896e834daec447ddb" },
+        { "datasetCode": "53869993f80f45ae8ef6cdf051d8e355" },
+        { "datasetCode": "7da208a5059b4b13896d7c7ae29c8492" },
+        { "datasetCode": "235e11a9cb7945c8926b4d31fe64843f" },
+        { "datasetCode": "ae51202c44e140828ba87e4571094d1a" },
+        { "datasetCode": "fc11e2d760b94b2ca2ccf0485ed40ca8" },
+        { "datasetCode": "28494f18f334400c893576b6e168d3f6" },
+        { "datasetCode": "d99c32ef07b749948cc24fd391f8fd2c" },
+        { "datasetCode": "08e17d8ba3a24e938fef89816c8f4ccb" },
+        { "datasetCode": "19ef166f3d2242a19911ccb8a5685bb8" }
+      ],
+      "apis": ["getList", "getSelectOptions", "excelExport", "aggregate"],
+      "action": "deny"
+    },
+    {
+      "name": "deny-controlled-aggregate-writes",
+      "description": "聚合子表、关联表和审计表只能由受控 Backend Function 写入",
+      "datasets": [
+        { "datasetCode": "65619b5104e44f03b0dcea52b4d8c397" },
+        { "datasetCode": "9dd0d102219145ddbb67d1c247a84fb9" },
+        { "datasetCode": "08e17d8ba3a24e938fef89816c8f4ccb" },
+        { "datasetCode": "d99c32ef07b749948cc24fd391f8fd2c" },
+        { "datasetCode": "392bcb15b9124da69bb8329eb5c4ecf2" },
+        { "datasetCode": "c8962eed35894816b4d7462986037299" },
+        { "datasetCode": "19ef166f3d2242a19911ccb8a5685bb8" }
+      ],
+      "apis": ["create", "batchCreate", "update", "delete"],
+      "action": "deny"
+    },
+    {
+      "name": "deny-main-record-direct-update-delete",
+      "description": "主单修改和删除只能走受控业务 BFF 或平台 Flow",
+      "datasets": [
+        { "datasetCode": "7851365c96244a1896e834daec447ddb" },
+        { "datasetCode": "53869993f80f45ae8ef6cdf051d8e355" },
+        { "datasetCode": "7da208a5059b4b13896d7c7ae29c8492" },
+        { "datasetCode": "235e11a9cb7945c8926b4d31fe64843f" },
+        { "datasetCode": "ae51202c44e140828ba87e4571094d1a" },
+        { "datasetCode": "fc11e2d760b94b2ca2ccf0485ed40ca8" },
+        { "datasetCode": "28494f18f334400c893576b6e168d3f6" }
+      ],
+      "apis": ["update", "delete"],
+      "action": "deny"
+    },
+    {
+      "name": "deny-main-record-direct-create",
+      "description": "这些主单创建必须走 cpoSaveDraft；平台 Flow 直接绑定的其他主单 CREATE 保持开放",
+      "datasets": [
+        { "datasetCode": "7851365c96244a1896e834daec447ddb" },
+        { "datasetCode": "ae51202c44e140828ba87e4571094d1a" },
+        { "datasetCode": "fc11e2d760b94b2ca2ccf0485ed40ca8" }
+      ],
+      "apis": ["create", "batchCreate"],
+      "action": "deny"
+    },
+    {
+      "name": "deny-physical-delete",
+      "description": "生命周期数据禁止通过 Instant API 物理删除",
+      "datasets": [
+        { "datasetCode": "ab17964f0efd46f78cecb4969140f257" },
+        { "datasetCode": "1a4139b6d59a493ea89111d936e27238" },
+        { "datasetCode": "68c70907e27c481cbefb96dd3906936e" },
+        { "datasetCode": "ecebe4f9726b46ccb19aaca00aa93dd0" }
+      ],
+      "apis": ["delete"],
+      "action": "deny"
+    }
+  ]
+}

@@ -43,6 +43,7 @@ import {
   type CurrentActor,
 } from "@/features/current-actor/api";
 import { useCpoDictionaryOptions } from "@/features/cpo-dictionary/options";
+import { useProjectOptions } from "@/features/cpo-project/options";
 import InvoiceSellerInput from "@/features/cpo-invoice-counterparty/InvoiceSellerInput";
 import { normalizeInvoiceDate } from "./date";
 import styles from "./index.module.css";
@@ -280,6 +281,11 @@ const ExpenseForm: React.FC = () => {
     loading: expenseTypeOptionsLoading,
     error: expenseTypeOptionsError,
   } = useCpoDictionaryOptions("expense_type");
+  const {
+    options: projectNameOptions,
+    loading: projectNameOptionsLoading,
+    error: projectNameOptionsError,
+  } = useProjectOptions();
   const isEdit = !!editId;
   const readOnly = isWorkflowReadonly(recordStatus, mode);
 
@@ -505,6 +511,7 @@ const ExpenseForm: React.FC = () => {
       const payload: any = {
         expense_type: values.expense_type ?? null,
         title: values.title ?? "",
+        project_name: values.project_name ?? "",
         total_original_amount: summary.totalOriginal,
         total_cny_amount: summary.totalCny,
         reimbursable_cny_amount: summary.reimbursable,
@@ -605,6 +612,24 @@ const ExpenseForm: React.FC = () => {
             />
           </Form.Item>
 
+          <Form.Item
+            label="项目名称"
+            name="project_name"
+            rules={[{ required: true, message: "请选择项目名称" }]}
+          >
+            <Select
+              showSearch
+              optionFilterProp="label"
+              placeholder="请选择高新/立项项目"
+              loading={projectNameOptionsLoading}
+              status={projectNameOptionsError ? "error" : undefined}
+              notFoundContent={
+                projectNameOptionsError ? "项目字典加载失败" : undefined
+              }
+              options={projectNameOptions}
+            />
+          </Form.Item>
+
           <FormRow
             template={expenseType === "travel" ? "minmax(0, 1fr) 140px" : "1fr"}
           >
@@ -701,7 +726,7 @@ const ExpenseForm: React.FC = () => {
                           gridTemplateColumns: EXPENSE_ITEM_TABLE_COLUMNS,
                         }}
                       >
-                        <div>报销项目</div>
+                        <div>报销名称</div>
                         <div>发票金额</div>
                         <div>实际报销金额</div>
                         <div>备注</div>

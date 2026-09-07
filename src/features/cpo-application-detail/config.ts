@@ -163,6 +163,7 @@ export const APPLICATION_DETAIL_CONFIG: Record<
         title: "申请信息",
         fields: [
           { name: "title", label: "报销标题" },
+          { name: "project_name", label: "项目名称" },
           { name: "applicant_name_snapshot", label: "申请人" },
           {
             name: "expense_type_label",
@@ -585,6 +586,7 @@ export const APPLICATION_DETAIL_CONFIG: Record<
         title: "付款信息",
         fields: [
           { name: "title", label: "付款标题" },
+          { name: "project_name", label: "项目名称" },
           {
             name: "payment_type",
             label: "付款类型",

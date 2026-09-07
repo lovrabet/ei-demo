@@ -38,7 +38,7 @@ flowchart TD
 - 支持按报销单 ID 检查，或按一个或多个发票号码检查。
 - 只调用服务端 `cpoCheckInvoiceDuplicates`，不得自行组合 Instant API 查询推断结果。
 - 不创建、更新、删除发票、报销明细或发票关联。
-- 报销提交由 `cpoSubmitApplication` 在服务端再次强制查重；本 Skill 的预查不能代替提交校验。
+- 报销提交由 `cpoSaveDraft(submit=true)` 在服务端再次强制查重；本 Skill 的预查不能代替提交校验。
 
 ## 输入
 

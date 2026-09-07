@@ -37,6 +37,7 @@ import {
   syncAttachmentRecords,
 } from "@/features/attachments/api";
 import { collectCpoFormValues } from "@/features/cpo-workflow/form-submit";
+import { useProjectOptions } from "@/features/cpo-project/options";
 import {
   CPO_FORM_CANCEL_PATH,
   isWorkflowReadonly,
@@ -147,6 +148,11 @@ const PaymentForm: React.FC = () => {
     useState<ContractPaymentContext | null>(null);
   const [contextLoading, setContextLoading] = useState(false);
   const [planFieldsEditing, setPlanFieldsEditing] = useState(false);
+  const {
+    options: projectNameOptions,
+    loading: projectNameOptionsLoading,
+    error: projectNameOptionsError,
+  } = useProjectOptions();
   const watchedContractId = Form.useWatch("contract_id", form);
   const watchedPaymentPlanId = Form.useWatch("payment_plan_id", form);
   const watchedLiaisonUserId = Form.useWatch("liaison_user_id", form);
@@ -496,6 +502,7 @@ const PaymentForm: React.FC = () => {
         payment_plan_id: withContract ? values.payment_plan_id : null,
         payment_type: values.payment_type ?? null,
         title: values.title ?? "",
+        project_name: values.project_name ?? "",
         amount: values.amount ?? 0,
         planned_amount_snapshot: withContract
           ? (values.planned_amount_snapshot ?? null)
@@ -706,6 +713,24 @@ const PaymentForm: React.FC = () => {
                   ]}
                 />
               </PartySelector>
+
+              <Form.Item
+                label="项目名称"
+                name="project_name"
+                rules={[{ required: true, message: "请选择项目名称" }]}
+              >
+                <Select
+                  showSearch
+                  optionFilterProp="label"
+                  placeholder="请选择项目名称"
+                  loading={projectNameOptionsLoading}
+                  status={projectNameOptionsError ? "error" : undefined}
+                  notFoundContent={
+                    projectNameOptionsError ? "项目字典加载失败" : undefined
+                  }
+                  options={projectNameOptions}
+                />
+              </Form.Item>
 
               <FormRow template="110px">
                 <Form.Item label="币种" name="currency" initialValue="CNY">

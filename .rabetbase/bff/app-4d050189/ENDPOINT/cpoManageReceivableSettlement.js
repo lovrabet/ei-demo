@@ -18,10 +18,6 @@
  */
 
 const INACTIVE_STATUSES = new Set(["cancelled", "rejected", "invalid"]);
-const MANAGER_CATEGORIES = [
-  "workflow_admin_user",
-  "application_read_all_user",
-];
 
 function rowsOf(response) {
   return Array.isArray(response?.tableData) ? response.tableData : [];
@@ -61,10 +57,24 @@ function actorIsAdmin(actor) {
   );
 }
 
+function actorIsFinanceAdvisor(actor) {
+  if (actor?.isFinanceAdvisor === true) return true;
+  const roles = Array.isArray(actor?.roles) ? actor.roles : [actor?.roles];
+  return roles.some((role) =>
+    ["finance_advisor", "财务顾问"].includes(
+      text(
+        typeof role === "string"
+          ? role
+          : role?.code || role?.name || role?.value || role?.roleCode,
+      ).toLowerCase(),
+    ),
+  );
+}
+
 function assertManagerAccess(contract, models) {
   const actorUserId = text(models.actor?.userId);
   if (!actorUserId) throw new Error("CPO_ACTOR_MISSING");
-  if (actorIsAdmin(models.actor)) return;
+  if (actorIsAdmin(models.actor) || actorIsFinanceAdvisor(models.actor)) return;
   if (
     [contract?.applicant_user_id, contract?.owner_user_id]
       .map(text)
@@ -72,13 +82,7 @@ function assertManagerAccess(contract, models) {
   ) {
     return;
   }
-  const configured = MANAGER_CATEGORIES.some((category) =>
-    Object.prototype.hasOwnProperty.call(
-      models.dictionary?.[category] || {},
-      actorUserId,
-    ),
-  );
-  if (!configured) throw new Error("RECEIVABLE_SETTLEMENT_ACCESS_REQUIRED");
+  throw new Error("RECEIVABLE_SETTLEMENT_ACCESS_REQUIRED");
 }
 
 function createdId(result) {
@@ -99,7 +103,7 @@ function modelOf(models, code, label, methods) {
 }
 
 async function loadContext(params, context) {
-  const [map, actor, dictionary] = await Promise.all([
+  const [map, actor] = await Promise.all([
     context.client.bff.execute({
       scriptName: "cpoDatasetMap",
       params: {},
@@ -108,17 +112,12 @@ async function loadContext(params, context) {
       scriptName: "cpoCurrentActor",
       params: {},
     }),
-    context.client.bff.execute({
-      scriptName: "cpoDictionary",
-      params: {},
-    }),
   ]);
   const C = map.DATASET_CODES;
   const models = context.client.models;
   return {
     C,
     actor,
-    dictionary,
     contractModel: modelOf(models, C.crmContract, "crmContract", ["getOne"]),
     planModel: modelOf(models, C.crmReceivablePlan, "crmReceivablePlan", [
       "getOne",

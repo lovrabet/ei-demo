@@ -78,41 +78,42 @@
                 "id"
               ],
               "headers": {}
+            },
+            "isSync": true,
+            "dataHandler": {
+              "type": "JSFunction",
+              "value": "function(response) { if (this.state) { this.state['1015651_getOne'] = response; } return response; }"
             }
           },
           {
             "type": "fetch",
-            "id": "dataset_d3e59fb7cdf943e8af7e6edee5586cdd_workflow_version_options",
+            "id": "d8e2be71fbf14f93a589ebe96b64e004_getOne",
             "isInit": true,
+            "isSync": true,
             "source": "dataset",
             "options": {
               "method": "POST",
-              "uri": "/api/app-4d050189/d3e59fb7cdf943e8af7e6edee5586cdd/getSelectOptions",
+              "uri": "/api/app-4d050189/d8e2be71fbf14f93a589ebe96b64e004/getOne",
               "isCors": true,
               "timeout": 5000,
               "paramsArr": [
                 {
-                  "name": "code",
-                  "value": "version_no",
-                  "type": "string",
-                  "required": true
-                },
-                {
-                  "name": "label",
-                  "value": "action_label",
-                  "type": "string",
+                  "name": "id",
+                  "value": "this.state['1015651_getOne']?.actor_user_id",
+                  "type": "expression",
                   "required": true
                 }
               ],
+              "headersArr": [],
               "params": {
-                "code": "version_no",
-                "label": "action_label"
+                "id": {
+                  "type": "JSExpression",
+                  "value": "this.state['1015651_getOne']?.actor_user_id"
+                }
               },
               "requiredParams": [
-                "code",
-                "label"
+                "id"
               ],
-              "headersArr": [],
               "headers": {}
             }
           },
@@ -143,78 +144,6 @@
               "params": {
                 "code": "id",
                 "label": "full_name"
-              },
-              "requiredParams": [
-                "code",
-                "label"
-              ],
-              "headersArr": [],
-              "headers": {}
-            }
-          },
-          {
-            "type": "fetch",
-            "id": "dataset_e541dc67b0b1410998c8c9c645f06f83_current_step_no_options",
-            "isInit": true,
-            "source": "dataset",
-            "options": {
-              "method": "POST",
-              "uri": "/api/app-4d050189/e541dc67b0b1410998c8c9c645f06f83/getSelectOptions",
-              "isCors": true,
-              "timeout": 5000,
-              "paramsArr": [
-                {
-                  "name": "code",
-                  "value": "step_no",
-                  "type": "string",
-                  "required": true
-                },
-                {
-                  "name": "label",
-                  "value": "step_name",
-                  "type": "string",
-                  "required": true
-                }
-              ],
-              "params": {
-                "code": "step_no",
-                "label": "step_name"
-              },
-              "requiredParams": [
-                "code",
-                "label"
-              ],
-              "headersArr": [],
-              "headers": {}
-            }
-          },
-          {
-            "type": "fetch",
-            "id": "dataset_e541dc67b0b1410998c8c9c645f06f83_next_step_no_options",
-            "isInit": true,
-            "source": "dataset",
-            "options": {
-              "method": "POST",
-              "uri": "/api/app-4d050189/e541dc67b0b1410998c8c9c645f06f83/getSelectOptions",
-              "isCors": true,
-              "timeout": 5000,
-              "paramsArr": [
-                {
-                  "name": "code",
-                  "value": "step_no",
-                  "type": "string",
-                  "required": true
-                },
-                {
-                  "name": "label",
-                  "value": "step_name",
-                  "type": "string",
-                  "required": true
-                }
-              ],
-              "params": {
-                "code": "step_no",
-                "label": "step_name"
               },
               "requiredParams": [
                 "code",
@@ -261,6 +190,14 @@
                     "h": 13,
                     "x": 0,
                     "y": 0,
+                    "autoHeight": true
+                  },
+                  {
+                    "i": "node_q0lkl038",
+                    "w": 12,
+                    "h": 13,
+                    "x": 0,
+                    "y": 14,
                     "autoHeight": true
                   }
                 ]
@@ -355,31 +292,38 @@
                         "options": [
                           {
                             "label": "报销",
-                            "value": "expense"
+                            "value": "expense",
+                            "children": null
                           },
                           {
                             "label": "发票",
-                            "value": "invoice"
+                            "value": "invoice",
+                            "children": null
                           },
                           {
                             "label": "合同",
-                            "value": "contract"
+                            "value": "contract",
+                            "children": null
                           },
                           {
                             "label": "付款",
-                            "value": "payment"
+                            "value": "payment",
+                            "children": null
                           },
                           {
                             "label": "工资发放",
-                            "value": "salary_payment"
+                            "value": "salary_payment",
+                            "children": null
                           },
                           {
                             "label": "合作伙伴",
-                            "value": "partner"
+                            "value": "partner",
+                            "children": null
                           },
                           {
                             "label": "凭证",
-                            "value": "credential"
+                            "value": "credential",
+                            "children": null
                           }
                         ],
                         "rules": [
@@ -545,31 +489,38 @@
                         "options": [
                           {
                             "label": "提交",
-                            "value": "submit"
+                            "value": "submit",
+                            "children": null
                           },
                           {
                             "label": "审核通过",
-                            "value": "review_pass"
+                            "value": "review_pass",
+                            "children": null
                           },
                           {
                             "label": "审核拒绝",
-                            "value": "review_reject"
+                            "value": "review_reject",
+                            "children": null
                           },
                           {
                             "label": "创建凭证",
-                            "value": "create_voucher"
+                            "value": "create_voucher",
+                            "children": null
                           },
                           {
                             "label": "提交银行",
-                            "value": "submit_to_bank"
+                            "value": "submit_to_bank",
+                            "children": null
                           },
                           {
                             "label": "确认付款",
-                            "value": "confirm_paid"
+                            "value": "confirm_paid",
+                            "children": null
                           },
                           {
                             "label": "标记付款失败",
-                            "value": "mark_payment_failed"
+                            "value": "mark_payment_failed",
+                            "children": null
                           }
                         ],
                         "rules": [
@@ -625,23 +576,28 @@
                         "options": [
                           {
                             "label": "申请人",
-                            "value": "applicant"
+                            "value": "applicant",
+                            "children": null
                           },
                           {
                             "label": "审核人",
-                            "value": "reviewer"
+                            "value": "reviewer",
+                            "children": null
                           },
                           {
                             "label": "凭证创建人",
-                            "value": "voucher_creator"
+                            "value": "voucher_creator",
+                            "children": null
                           },
                           {
                             "label": "付款人",
-                            "value": "payer"
+                            "value": "payer",
+                            "children": null
                           },
                           {
                             "label": "管理员",
-                            "value": "admin"
+                            "value": "admin",
+                            "children": null
                           }
                         ],
                         "rules": null,
@@ -772,11 +728,13 @@
                         "options": [
                           {
                             "label": "正常",
-                            "value": 0
+                            "value": 0,
+                            "children": null
                           },
                           {
                             "label": "已删除",
-                            "value": 1
+                            "value": 1,
+                            "children": null
                           }
                         ],
                         "rules": [
@@ -800,6 +758,154 @@
                   "meta": {
                     "datasetId": 1015651,
                     "datasetCode": "65619b5104e44f03b0dcea52b4d8c397"
+                  },
+                  "hidden": false,
+                  "title": "",
+                  "isLocked": false,
+                  "condition": true,
+                  "conditionGroup": ""
+                },
+                {
+                  "componentName": "LrSmartDetail",
+                  "id": "node_q0lkl038",
+                  "props": {
+                    "items": [
+                      {
+                        "name": "id",
+                        "label": "主键ID",
+                        "componentName": "YtInputNumber",
+                        "doType": "NUMBER",
+                        "options": null
+                      },
+                      {
+                        "name": "yuntoo_email",
+                        "label": "云兔邮箱",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "options": null
+                      },
+                      {
+                        "name": "lovrabet_member_id",
+                        "label": "平台成员ID",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "options": null
+                      },
+                      {
+                        "name": "username",
+                        "label": "登录名",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "options": null
+                      },
+                      {
+                        "name": "work_no",
+                        "label": "工号",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "options": null
+                      },
+                      {
+                        "name": "full_name",
+                        "label": "姓名",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "options": null
+                      },
+                      {
+                        "name": "title",
+                        "label": "职位",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "options": null
+                      },
+                      {
+                        "name": "nickname",
+                        "label": "昵称",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "options": null
+                      },
+                      {
+                        "name": "mobile",
+                        "label": "手机号",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "options": null
+                      },
+                      {
+                        "name": "email",
+                        "label": "邮箱",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "options": null
+                      },
+                      {
+                        "name": "user_type",
+                        "label": "用户类型",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "options": null
+                      },
+                      {
+                        "name": "avatar",
+                        "label": "头像",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "options": null
+                      },
+                      {
+                        "name": "on_job",
+                        "label": "是否在职",
+                        "componentName": "YtInput",
+                        "doType": "TEXT",
+                        "options": null
+                      },
+                      {
+                        "name": "deleted",
+                        "label": "删除标志",
+                        "componentName": "YtSingleSelect",
+                        "doType": "SELECT",
+                        "options": [
+                          {
+                            "label": "正常",
+                            "value": 0,
+                            "children": null
+                          },
+                          {
+                            "label": "已删除",
+                            "value": 1,
+                            "children": null
+                          }
+                        ]
+                      },
+                      {
+                        "name": "created_at",
+                        "label": "创建时间",
+                        "componentName": "YtDatePicker",
+                        "doType": "DATETIME",
+                        "options": null
+                      },
+                      {
+                        "name": "updated_at",
+                        "label": "更新时间",
+                        "componentName": "YtDatePicker",
+                        "doType": "DATETIME",
+                        "options": null
+                      }
+                    ],
+                    "preview": true,
+                    "title": "员工信息",
+                    "_bindDataSource": "d8e2be71fbf14f93a589ebe96b64e004_getOne",
+                    "defaultValue": {
+                      "type": "JSExpression",
+                      "value": "this.state['d8e2be71fbf14f93a589ebe96b64e004_getOne']"
+                    }
+                  },
+                  "meta": {
+                    "datasetId": 1015671,
+                    "datasetCode": "d8e2be71fbf14f93a589ebe96b64e004",
+                    "tableName": "employee"
                   },
                   "hidden": false,
                   "title": "",

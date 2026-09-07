@@ -12,10 +12,6 @@
  * { scope: "application_reader", summary: {...}, scopeCounts: {...}, paging: {...}, tableData: [...] }
  */
 
-const READ_ALL_USER_CATEGORIES = [
-  "workflow_admin_user",
-  "application_read_all_user",
-];
 const VOIDED_STATUSES = new Set(["cancelled", "invalid"]);
 const SIGNED_STATUSES = new Set(["signed", "archived", "completed"]);
 const INACTIVE_PAYMENT_STATUSES = new Set(["draft", "rejected", "cancelled"]);
@@ -71,6 +67,7 @@ function parseApproverUserIds(raw) {
 const PLATFORM_VOIDED_FLOWS = new Set(["REJECTED", "CANCELLED"]);
 
 function actorIsAdmin(actor) {
+  if (actor?.isAdmin === true) return true;
   const roles = Array.isArray(actor?.roles) ? actor.roles : [actor?.roles];
   return roles.some((role) => {
     const value = text(
@@ -78,20 +75,23 @@ function actorIsAdmin(actor) {
         ? role
         : role?.code || role?.name || role?.value || role?.roleCode,
     ).toLowerCase();
-    return ["admin", "administrator", "super_admin", "cpo_admin"].includes(
-      value,
-    );
+    return [
+      "admin",
+      "administrator",
+      "super_admin",
+      "owner",
+      "cpo_admin",
+      "管理员",
+      "应用owner",
+    ].includes(value);
   });
 }
 
-async function assertReader(actor, dictionary) {
-  if (actorIsAdmin(actor)) return;
+function assertReader(actor) {
+  if (actorIsAdmin(actor) || actor?.isFinanceAdvisor === true) return;
   const userId = text(actor?.userId);
   if (!userId) throw new Error("CPO_ACTOR_MISSING");
-  const configured = READ_ALL_USER_CATEGORIES.some((category) =>
-    Object.prototype.hasOwnProperty.call(dictionary?.[category] || {}, userId),
-  );
-  if (!configured) throw new Error("CPO_CONTRACT_CENTER_ACCESS_REQUIRED");
+  throw new Error("CPO_CONTRACT_CENTER_ACCESS_REQUIRED");
 }
 
 function timeOf(value) {
@@ -305,7 +305,7 @@ export default async function cpoGetContractCenter(params, context) {
     scriptName: "cpoDal",
     params: { map },
   });
-  await assertReader(actor, dictionary);
+  assertReader(actor);
 
   // CRM 收款合同走 Custom SQL（同库 LEFT JOIN crm_company 取 company_name），
   // 替代原先 crmContract filter + crmCompany 全表扫描两次调用

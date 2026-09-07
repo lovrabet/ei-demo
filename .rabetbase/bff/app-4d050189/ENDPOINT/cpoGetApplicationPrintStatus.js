@@ -63,14 +63,13 @@ export default async function cpoGetApplicationPrintStatus(params, context) {
   const bizType = optionalText(params?.bizType);
   const bizId = positiveId(params?.bizId, "bizId");
   const bff = context.client.bff;
-  const [map, actor, dictionary] = await Promise.all([
+  const [map, actor] = await Promise.all([
     bff.execute({ scriptName: "cpoDatasetMap", params: {} }),
     bff.execute({ scriptName: "cpoCurrentActor", params: {} }),
-    bff.execute({ scriptName: "cpoDictionary", params: {} }),
   ]);
   const actorScope = await bff.execute({
     scriptName: "cpoPrintActorScope",
-    params: { bizType, bizId, actor, dictionary },
+    params: { bizType, bizId, actor },
   });
   await loadReadableRecord(context, map, bizType, bizId);
   const result = await bff.execute({

@@ -32,7 +32,7 @@ flowchart TD
   L5 -- 否 --> Stop1([停止: 报告缺失/重复文件])
   L5 -- 是 --> L6{用户明确提交?}
   L6 -- 否 --> E1([返回草稿链接])
-  L6 -- 是 --> L7{cpoSubmitApplication 提交}
+  L6 -- 是 --> L7{cpoSaveDraft submit=true 一次创建并提交}
   L7 -- 缺合同附件 --> Stop2([SUBMIT_REQUIRED_MISSING contract_file])
   L7 -- 成功 --> E2([返回已提交链接])
 ```
@@ -51,7 +51,7 @@ flowchart TD
 - 附件数据集：`ab17964f0efd46f78cecb4969140f257`
 - 创建/更新草稿只能调用 `cpoSaveDraft`
 - 合同付款计划只能调用 `cpoSyncContractPaymentPlans` 同步；付款事实汇总由 `cpoPaymentPlanSummary` 维护
-- 提交审批只能调用 `cpoSubmitApplication`
+- 提交审批只能在最终确认后的完整 `cpoSaveDraft` 请求中传 `submit=true`
 - 不要直接 update 合同主表的 `status`、签署时间、申请人等系统字段
 - `is_deleted` 是 Lovrabet 平台系统字段，Skill、BF、Hook 和脚本不得读取、筛选、赋默认值或更新；删除业务记录时调用 Lovrabet `delete` 或受控 BF
 
@@ -128,19 +128,11 @@ lovrabet bff exec --appcode app-4d050189 --name cpoSaveDraft --params '{
 
 ## 保存并提交
 
-```bash
-lovrabet bff exec --appcode app-4d050189 --name cpoSubmitApplication --params '{
-  "bizType": "contract",
-  "bizId": 123,
-  "comment": "某某服务合同"
-}'
-```
-
-提交要求 `contract` 已配置启用的第一步审批人、至少有一条 `attachment_type=contract_file` 且 `file_path` 非空的合同附件，并且付款要求已经明确：需要付款时至少有一条有效计划，无需付款时不能残留有效计划。附件缺失时 `cpoSubmitApplication` 返回 `SUBMIT_REQUIRED_MISSING:contract:contract_file`；用户已提供文件但附件数量或路径复核不一致时也不得提交。保存草稿不受服务端最低附件数限制，但本 Skill 不得保存一个遗漏用户已提供附件的草稿。审批通过后的合同签署和归档动作走 `cpoAdvanceWorkflow`，不要直接改状态。
+用户明确提交时，在完整 `cpoSaveDraft` 参数根级增加 `"submit":true`，由主 Dataset CREATE 触发 Lovrabet 平台 Flow。提交前必须确认至少有一条 `attachment_type=contract_file` 且 `file_path` 非空的合同附件，并且付款要求明确：需要付款时至少有一条有效计划，无需付款时不能残留有效计划。附件数量或路径复核不一致时不得提交。审批后的签署和归档由平台 Flow 节点及受控合同能力完成，不调用旧工作流接口。
 
 ## 成功结果与详情链接
 
-`cpoSaveDraft` 或 `cpoSubmitApplication` 成功后，必须使用该次响应中的真实 `bizType` 和 `bizId` 构造详情地址，不得复用猜测值。随后调用 `cpoGetBizTimeline` 重读标题和状态，并在最终答复中返回可点击链接：
+`cpoSaveDraft` 成功后，必须使用该次响应中的真实 `bizType` 和 `bizId` 构造详情地址，不得复用猜测值。随后调用 `cpoGetBizTimeline` 重读标题和状态，并在最终答复中返回可点击链接：
 
 ```markdown
 [查看“某某服务合同”合同申请](https://app-4d050189.app.lovrabet.com/application-detail/contract/123)

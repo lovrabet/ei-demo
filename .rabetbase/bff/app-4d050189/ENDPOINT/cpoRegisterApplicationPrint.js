@@ -122,14 +122,13 @@ export default async function cpoRegisterApplicationPrint(params, context) {
   if (reason.length > 500) throw new Error("PRINT_REASON_TOO_LONG");
 
   const bff = context.client.bff;
-  const [map, actor, dictionary] = await Promise.all([
+  const [map, actor] = await Promise.all([
     bff.execute({ scriptName: "cpoDatasetMap", params: {} }),
     bff.execute({ scriptName: "cpoCurrentActor", params: {} }),
-    bff.execute({ scriptName: "cpoDictionary", params: {} }),
   ]);
   const actorScope = await bff.execute({
     scriptName: "cpoPrintActorScope",
-    params: { bizType, bizId, actor, dictionary },
+    params: { bizType, bizId, actor },
   });
   await loadReadableRecord(context, map, bizType, bizId);
   const before = await loadPrintStatus(bff, bizType, bizId, actorScope);

@@ -130,14 +130,15 @@ rabetbase run start
 ┌─────────────────────────────────────────────────────────┐
 │ Lovrabet 平台                                            │
 │  · 运行态 API（https://runtime.lovrabet.com/api/，Cookie）│
-│  · 数据模型（src/api/api.ts 注册 44 个模型）             │
+│  · 数据模型（平台 42 个 Dataset，前端注册 39 个模型）    │
 │  · BFF 脚本（.rabetbase/bff/：COMMON 公共逻辑 /          │
-│    ENDPOINT 接口 / HOOK 数据守卫）                        │
+│    ENDPOINT 接口）                                        │
+│  · Instant API Policy（路由、拒绝与平台角色鉴权）         │
 │  · 审批流 Flow（Flowable：发起拦截、状态回写、审批中心）  │
 └─────────────────────────────────────────────────────────┘
 ```
 
-**BFF 分层（26 COMMON / 35 ENDPOINT / 122 HOOK）**：
+**BFF 与 Policy 分层（27 COMMON / 43 ENDPOINT / 16 Policy rules / 0 HOOK）**：
 
 - **ENDPOINT（接口层）**：对外暴露的业务函数（`POST /api/endpoint/<appcode>/<name>`），前端直接调用。负责校验入参、编排流程，通过 `bff.execute({ scriptName })` 调 COMMON；平台禁止 ENDPOINT 调 ENDPOINT。
 - **COMMON（共享逻辑层）**：可复用能力，不对外暴露，绝大多数为叶子（不调其它 COMMON）：
@@ -146,15 +147,14 @@ rabetbase run start
   - `cpoBizResolver` / `cpoDictionary` / `cpoCurrentActor`：读业务单并归一摘要 / 字典 code→label / 当前操作人；
   - 审批发起、节点流转、抄送与通知全部使用平台 Flow；BFF 只保留业务数据聚合、校验和回写；
   - `cpoActionRecorder`：写 `biz_action_record` 操作流水；
-  - 守卫族：`cpo*ReadFilterGuard` / `cpo*ReadOneGuard` / `cpoDirectWriteGuard` / `cpoLogicalDeleteGuard` 等，做行级可见性与写入管控。
-- **HOOK（数据守卫层）**：挂在数据集 Instant API 操作前后（`HOOK/<dataset>/<op>/before|after/`），复用 COMMON 守卫对读写做行级过滤 / 写入拦截 / 结果增强。
+- **Policy（API 策略层）**：敏感数据的读取通过 Policy 路由到受控 ENDPOINT，按 Lovrabet 平台角色和 Flow 节点人员做行级鉴权；通用列表、直写和物理删除由拒绝规则统一拦截。
 
-调用约定：ENDPOINT → COMMON（编排）、HOOK → COMMON（守卫）；COMMON 之间不互调，跨 COMMON 的数据（如 `cpoDatasetMap` 的 map）由调用方取好后传参。
+调用约定：Instant API → Policy → ENDPOINT/拒绝，业务 ENDPOINT → COMMON（编排）；COMMON 之间不互调，跨 COMMON 的数据（如 `cpoDatasetMap` 的 map）由调用方取好后传参。
 
 ## TODO
 - [x] **统一使用平台原生审批流**：审批类单据已由平台 Flow 统一发起、流转和回写，不再维护自研审批状态机。
 - [ ] **使用平台 DAL 层做数据集管理**（平台正在建设中）：当前通过自建的 `cpoDatasetMap` / `cpoDal` 做数据集映射与数据访问，待平台统一 DAL 层上线后替换。
-- [ ] **用平台 API 访问策略替代大量 Instant API Hooks**（平台正在建设中）：当前通过大量 `HOOK/<dataset>/<op>/before|after` 守卫做行级权限与写入管控，待平台 API 访问策略上线后收敛。
+- [x] **用平台 API 访问策略替代 Instant API Hooks**：122 个 Hook 已下线，敏感读取改由 Policy 路由，直写、通用导出/聚合和物理删除由 Policy 拒绝规则管控。
 
 ## 许可证
 

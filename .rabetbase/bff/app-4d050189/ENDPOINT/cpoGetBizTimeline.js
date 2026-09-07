@@ -153,8 +153,11 @@ const ADMIN_ROLES = new Set([
   "administrator",
   "super_admin",
   "cpo_admin",
-  "workflow_admin",
+  "owner",
+  "管理员",
+  "应用owner",
 ]);
+const WORKFLOW_ADMIN_ROLES = new Set(["workflow_admin", "流程管理员"]);
 
 function normalizeRoles(value) {
   const values = Array.isArray(value) ? value : [value];
@@ -180,15 +183,11 @@ function actorIsAdmin(actor) {
   return normalizeRoles(actor?.roles).some((role) => ADMIN_ROLES.has(role));
 }
 
-function actorCanOverrideAssignment(actor, dictionary) {
-  if (actorIsAdmin(actor)) return true;
-  const userId = optionalText(actor?.userId);
-  return Boolean(
-    userId &&
-    Object.prototype.hasOwnProperty.call(
-      dictionary?.workflow_admin_user || {},
-      userId,
-    ),
+function actorCanOverrideAssignment(actor) {
+  return (
+    actorIsAdmin(actor) ||
+    actor?.isWorkflowAdmin === true ||
+    normalizeRoles(actor?.roles).some((role) => WORKFLOW_ADMIN_ROLES.has(role))
   );
 }
 
@@ -1255,7 +1254,7 @@ export default async function cpoGetBizTimeline(params, context) {
   }));
   const currentTask = null;
   // 管理权限只服务单据 360 的业务管理能力，不参与平台审批权限判定。
-  const canOverrideAssignment = actorCanOverrideAssignment(actor, dict);
+  const canOverrideAssignment = actorCanOverrideAssignment(actor);
   const availableActions = [];
   const counterpartyPortfolio = partner
     ? await buildCounterpartyPortfolio({ models, codes: C, partner })

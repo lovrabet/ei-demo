@@ -100,7 +100,6 @@
                     "action",
                     "actor_name_snapshot",
                     "employee.full_name",
-                    "cpo_workflow_action_config.action_label",
                     "actor_role_snapshot",
                     "biz_id",
                     "from_status",
@@ -136,7 +135,6 @@
                   "action",
                   "actor_name_snapshot",
                   "employee.full_name",
-                  "cpo_workflow_action_config.action_label",
                   "actor_role_snapshot",
                   "biz_id",
                   "from_status",
@@ -168,7 +166,11 @@
               "timeout": 5000,
               "requiredParams": [
                 "id"
-              ]
+              ],
+              "paramsArr": [],
+              "headersArr": [],
+              "params": {},
+              "headers": {}
             }
           },
           {
@@ -202,7 +204,6 @@
                     "action",
                     "actor_name_snapshot",
                     "employee.full_name",
-                    "cpo_workflow_action_config.action_label",
                     "actor_role_snapshot",
                     "biz_id",
                     "from_status",
@@ -230,7 +231,6 @@
                   "action",
                   "actor_name_snapshot",
                   "employee.full_name",
-                  "cpo_workflow_action_config.action_label",
                   "actor_role_snapshot",
                   "biz_id",
                   "from_status",
@@ -245,42 +245,6 @@
                 "type": "JSFunction",
                 "value": "({ filter, selectKeys, select, ...rest }) => ({ ...rest, ...filter, select, ...selectKeys })"
               }
-            }
-          },
-          {
-            "type": "fetch",
-            "id": "dataset_d3e59fb7cdf943e8af7e6edee5586cdd_workflow_version_options",
-            "isInit": true,
-            "source": "dataset",
-            "options": {
-              "method": "POST",
-              "uri": "/api/app-4d050189/d3e59fb7cdf943e8af7e6edee5586cdd/getSelectOptions",
-              "isCors": true,
-              "timeout": 5000,
-              "paramsArr": [
-                {
-                  "name": "code",
-                  "value": "version_no",
-                  "type": "string",
-                  "required": true
-                },
-                {
-                  "name": "label",
-                  "value": "action_label",
-                  "type": "string",
-                  "required": true
-                }
-              ],
-              "params": {
-                "code": "version_no",
-                "label": "action_label"
-              },
-              "requiredParams": [
-                "code",
-                "label"
-              ],
-              "headersArr": [],
-              "headers": {}
             }
           },
           {
@@ -310,78 +274,6 @@
               "params": {
                 "code": "id",
                 "label": "full_name"
-              },
-              "requiredParams": [
-                "code",
-                "label"
-              ],
-              "headersArr": [],
-              "headers": {}
-            }
-          },
-          {
-            "type": "fetch",
-            "id": "dataset_e541dc67b0b1410998c8c9c645f06f83_current_step_no_options",
-            "isInit": true,
-            "source": "dataset",
-            "options": {
-              "method": "POST",
-              "uri": "/api/app-4d050189/e541dc67b0b1410998c8c9c645f06f83/getSelectOptions",
-              "isCors": true,
-              "timeout": 5000,
-              "paramsArr": [
-                {
-                  "name": "code",
-                  "value": "step_no",
-                  "type": "string",
-                  "required": true
-                },
-                {
-                  "name": "label",
-                  "value": "step_name",
-                  "type": "string",
-                  "required": true
-                }
-              ],
-              "params": {
-                "code": "step_no",
-                "label": "step_name"
-              },
-              "requiredParams": [
-                "code",
-                "label"
-              ],
-              "headersArr": [],
-              "headers": {}
-            }
-          },
-          {
-            "type": "fetch",
-            "id": "dataset_e541dc67b0b1410998c8c9c645f06f83_next_step_no_options",
-            "isInit": true,
-            "source": "dataset",
-            "options": {
-              "method": "POST",
-              "uri": "/api/app-4d050189/e541dc67b0b1410998c8c9c645f06f83/getSelectOptions",
-              "isCors": true,
-              "timeout": 5000,
-              "paramsArr": [
-                {
-                  "name": "code",
-                  "value": "step_no",
-                  "type": "string",
-                  "required": true
-                },
-                {
-                  "name": "label",
-                  "value": "step_name",
-                  "type": "string",
-                  "required": true
-                }
-              ],
-              "params": {
-                "code": "step_no",
-                "label": "step_name"
               },
               "requiredParams": [
                 "code",
@@ -475,12 +367,15 @@
                       {
                         "lcAsItemId": null,
                         "name": "actor_user_id",
-                        "label": "操作人",
+                        "label": "操作人ID",
                         "componentName": "YtUserSelect",
                         "doType": "USER",
                         "isShown": true,
                         "placeholder": "请选择操作人",
-                        "options": null,
+                        "options": {
+                          "type": "JSExpression",
+                          "value": "this.state.dataset_d8e2be71fbf14f93a589ebe96b64e004_actor_user_id_options"
+                        },
                         "indexType": "index",
                         "__lc_as_item_id__": "9lusoxb5zk"
                       },
@@ -495,31 +390,38 @@
                         "options": [
                           {
                             "label": "报销",
-                            "value": "expense"
+                            "value": "expense",
+                            "children": null
                           },
                           {
                             "label": "发票",
-                            "value": "invoice"
+                            "value": "invoice",
+                            "children": null
                           },
                           {
                             "label": "合同",
-                            "value": "contract"
+                            "value": "contract",
+                            "children": null
                           },
                           {
                             "label": "付款",
-                            "value": "payment"
+                            "value": "payment",
+                            "children": null
                           },
                           {
                             "label": "工资发放",
-                            "value": "salary_payment"
+                            "value": "salary_payment",
+                            "children": null
                           },
                           {
                             "label": "合作伙伴",
-                            "value": "partner"
+                            "value": "partner",
+                            "children": null
                           },
                           {
                             "label": "凭证",
-                            "value": "credential"
+                            "value": "credential",
+                            "children": null
                           }
                         ],
                         "indexType": "index",
@@ -536,31 +438,38 @@
                         "options": [
                           {
                             "label": "提交",
-                            "value": "submit"
+                            "value": "submit",
+                            "children": null
                           },
                           {
                             "label": "审核通过",
-                            "value": "review_pass"
+                            "value": "review_pass",
+                            "children": null
                           },
                           {
                             "label": "审核拒绝",
-                            "value": "review_reject"
+                            "value": "review_reject",
+                            "children": null
                           },
                           {
                             "label": "创建凭证",
-                            "value": "create_voucher"
+                            "value": "create_voucher",
+                            "children": null
                           },
                           {
                             "label": "提交银行",
-                            "value": "submit_to_bank"
+                            "value": "submit_to_bank",
+                            "children": null
                           },
                           {
                             "label": "确认付款",
-                            "value": "confirm_paid"
+                            "value": "confirm_paid",
+                            "children": null
                           },
                           {
                             "label": "标记付款失败",
-                            "value": "mark_payment_failed"
+                            "value": "mark_payment_failed",
+                            "children": null
                           }
                         ],
                         "indexType": "index",
@@ -577,23 +486,28 @@
                         "options": [
                           {
                             "label": "申请人",
-                            "value": "applicant"
+                            "value": "applicant",
+                            "children": null
                           },
                           {
                             "label": "审核人",
-                            "value": "reviewer"
+                            "value": "reviewer",
+                            "children": null
                           },
                           {
                             "label": "凭证创建人",
-                            "value": "voucher_creator"
+                            "value": "voucher_creator",
+                            "children": null
                           },
                           {
                             "label": "付款人",
-                            "value": "payer"
+                            "value": "payer",
+                            "children": null
                           },
                           {
                             "label": "管理员",
-                            "value": "admin"
+                            "value": "admin",
+                            "children": null
                           }
                         ],
                         "indexType": null,
@@ -670,11 +584,13 @@
                         "options": [
                           {
                             "label": "正常",
-                            "value": 0
+                            "value": 0,
+                            "children": null
                           },
                           {
                             "label": "已删除",
-                            "value": 1
+                            "value": 1,
+                            "children": null
                           }
                         ],
                         "indexType": null,
@@ -764,7 +680,7 @@
                       {
                         "lcAsItemId": null,
                         "dataIndex": "id",
-                        "title": "主键ID",
+                        "title": "主键",
                         "pkField": true,
                         "doType": "NUMBER",
                         "format": "text",
@@ -933,27 +849,6 @@
                         "defaultSortOrder": null,
                         "indexType": null,
                         "__lc_as_item_id__": "tnvfd2l2gx"
-                      },
-                      {
-                        "lcAsItemId": null,
-                        "dataIndex": "cpo_workflow_action_config.action_label",
-                        "title": "动作标签",
-                        "pkField": false,
-                        "doType": "TEXT",
-                        "format": "text",
-                        "isShown": true,
-                        "isFetched": true,
-                        "fixed": null,
-                        "width": null,
-                        "align": null,
-                        "tooltip": null,
-                        "sortable": null,
-                        "defaultSortOrder": null,
-                        "formatOptions": {
-                          "ellipsis": true
-                        },
-                        "indexType": null,
-                        "__lc_as_item_id__": "2cij1ikz0y"
                       },
                       {
                         "lcAsItemId": null,

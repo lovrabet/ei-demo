@@ -2,7 +2,7 @@
   "apps": {
     "app-4d050189": {
       "scriptsRoot": ".rabetbase/bff/app-4d050189",
-      "lastSync": "2026-09-07T08:39:22.143Z",
+      "lastSync": "2026-09-07T08:42:42.671Z",
       "functions": {
         "COMMON/cpoActionRecorder": {
           "hash": "1c55a2c5c785a503257570d1d47b2f2c",
@@ -55,9 +55,9 @@
           "version": 7
         },
         "COMMON/cpoDal": {
-          "hash": "8352e418969296735cb7c1128f3ce2d6",
+          "hash": "aa0083e395c8522c0b8c5a78715e0f4c",
           "remoteId": 2081,
-          "version": 6
+          "version": 7
         },
         "COMMON/cpoDatasetMap": {
           "hash": "a3202769c27b2cc1826b24d82edb4bb1",

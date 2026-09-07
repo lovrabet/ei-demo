@@ -402,19 +402,19 @@ function portfolioItem({
   };
 }
 
-async function buildCounterpartyPortfolio({ models, codes, partner }) {
+async function buildCounterpartyPortfolio({ models, partner }) {
   const partnerId = positiveId(partner?.id);
   const partnerName = optionalText(partner?.name);
   if (!partnerId || !partnerName) return undefined;
   const requiredModels = [
-    codes.contractApplication,
-    codes.paymentApplication,
-    codes.invoiceRecord,
-    codes.quoteCustomer,
-    codes.quoteHeader,
-    codes.bizInvoiceLink,
-    codes.bizRelation,
-  ].map((code) => models[`dataset_${code}`]);
+    "contract_application",
+    "payment_application",
+    "invoice_record",
+    "quote_customer",
+    "quote_header",
+    "biz_invoice_link",
+    "biz_relation",
+  ].map((tableName) => models.byTable(tableName));
   if (requiredModels.some((model) => typeof model?.filter !== "function")) {
     return undefined;
   }
@@ -425,25 +425,25 @@ async function buildCounterpartyPortfolio({ models, codes, partner }) {
     invoicesResponse,
     customersResponse,
   ] = await Promise.all([
-    models[`dataset_${codes.contractApplication}`].filter({
+    models.byTable("contract_application").filter({
       where: { partner_id: { $eq: partnerId } },
       currentPage: 1,
       pageSize: 500,
       orderBy: [{ updated_at: "desc" }, { id: "desc" }],
     }),
-    models[`dataset_${codes.paymentApplication}`].filter({
+    models.byTable("payment_application").filter({
       where: { partner_id: { $eq: partnerId } },
       currentPage: 1,
       pageSize: 500,
       orderBy: [{ updated_at: "desc" }, { id: "desc" }],
     }),
-    models[`dataset_${codes.invoiceRecord}`].filter({
+    models.byTable("invoice_record").filter({
       where: { partner_id: { $eq: partnerId } },
       currentPage: 1,
       pageSize: 500,
       orderBy: [{ invoice_date: "desc" }, { id: "desc" }],
     }),
-    models[`dataset_${codes.quoteCustomer}`].filter({
+    models.byTable("quote_customer").filter({
       where: { customer_name: { $eq: partnerName } },
       currentPage: 1,
       pageSize: 100,
@@ -456,7 +456,7 @@ async function buildCounterpartyPortfolio({ models, codes, partner }) {
     .map((contract) => positiveId(contract.id))
     .filter(Boolean);
   const relationResponse = contractIds.length
-    ? await models[`dataset_${codes.bizRelation}`].filter({
+    ? await models.byTable("biz_relation").filter({
         where: {
           source_biz_type: { $eq: "contract" },
           source_biz_id: { $in: contractIds },
@@ -492,7 +492,7 @@ async function buildCounterpartyPortfolio({ models, codes, partner }) {
     ...(customerIds.length ? [{ customer_id: { $in: customerIds } }] : []),
   ];
   const quoteResponse = quoteBranches.length
-    ? await models[`dataset_${codes.quoteHeader}`].filter({
+    ? await models.byTable("quote_header").filter({
         where:
           quoteBranches.length === 1
             ? quoteBranches[0]
@@ -507,7 +507,7 @@ async function buildCounterpartyPortfolio({ models, codes, partner }) {
     .map((invoice) => positiveId(invoice.id))
     .filter(Boolean);
   const invoiceLinkResponse = invoiceIds.length
-    ? await models[`dataset_${codes.bizInvoiceLink}`].filter({
+    ? await models.byTable("biz_invoice_link").filter({
         where: {
           invoice_id: { $in: invoiceIds },
         },
@@ -756,7 +756,6 @@ export default async function cpoGetBizTimeline(params, context) {
   });
 
   const models = context.client.models;
-  const C = map.DATASET_CODES;
   const bizWhere = {
     biz_type: { $eq: bizType },
     biz_id: { $eq: numericBizId },
@@ -770,7 +769,7 @@ export default async function cpoGetBizTimeline(params, context) {
 
   const expenseItemsPromise =
     bizType === "expense"
-      ? models[`dataset_${C.expenseItem}`].filter({
+      ? models.byTable("expense_item").filter({
           where: { expense_id: { $eq: numericBizId } },
           currentPage: 1,
           pageSize: 200,
@@ -779,7 +778,7 @@ export default async function cpoGetBizTimeline(params, context) {
       : Promise.resolve({ tableData: [] });
   const salaryItemsPromise =
     bizType === "salary_payment"
-      ? models[`dataset_${C.salaryPaymentItem}`].filter({
+      ? models.byTable("salary_payment_item").filter({
           where: {
             salary_payment_id: { $eq: numericBizId },
           },
@@ -791,24 +790,24 @@ export default async function cpoGetBizTimeline(params, context) {
   const partnerPromise = ["contract", "payment", "travel", "invoice"].includes(
     bizType,
   )
-    ? getOptional(models[`dataset_${C.businessPartner}`], record.partner_id)
+    ? getOptional(models.byTable("business_partner"), record.partner_id)
     : Promise.resolve(undefined);
   const contractPromise = ["payment", "invoice"].includes(bizType)
     ? getOptional(
-        models[`dataset_${C.contractApplication}`],
+        models.byTable("contract_application"),
         record.contract_id,
       )
     : Promise.resolve(undefined);
   const paymentPlanPromise =
-    bizType === "payment" && C.contractPaymentPlan
+    bizType === "payment"
       ? getOptional(
-          models[`dataset_${C.contractPaymentPlan}`],
+          models.byTable("contract_payment_plan"),
           record.payment_plan_id,
         )
       : Promise.resolve(undefined);
   const contractPaymentPlansPromise =
-    contextContractId && C.contractPaymentPlan
-      ? models[`dataset_${C.contractPaymentPlan}`].filter({
+    contextContractId
+      ? models.byTable("contract_payment_plan").filter({
           where: {
             contract_id: { $eq: contextContractId },
           },
@@ -818,7 +817,7 @@ export default async function cpoGetBizTimeline(params, context) {
         })
       : Promise.resolve({ tableData: [] });
   const contractPaymentsPromise = contextContractId
-    ? models[`dataset_${C.paymentApplication}`].filter({
+    ? models.byTable("payment_application").filter({
         where: {
           contract_id: { $eq: contextContractId },
         },
@@ -828,7 +827,7 @@ export default async function cpoGetBizTimeline(params, context) {
       })
     : Promise.resolve({ tableData: [] });
   const contractInvoicesPromise = contextContractId
-    ? models[`dataset_${C.invoiceRecord}`].filter({
+    ? models.byTable("invoice_record").filter({
         where: {
           contract_id: { $eq: contextContractId },
         },
@@ -837,7 +836,7 @@ export default async function cpoGetBizTimeline(params, context) {
         orderBy: [{ invoice_date: "desc" }, { id: "desc" }],
       })
     : Promise.resolve({ tableData: [] });
-  const outgoingRelationsPromise = models[`dataset_${C.bizRelation}`].filter({
+  const outgoingRelationsPromise = models.byTable("biz_relation").filter({
     where: {
       source_biz_type: { $eq: bizType },
       source_biz_id: { $eq: numericBizId },
@@ -847,7 +846,7 @@ export default async function cpoGetBizTimeline(params, context) {
     pageSize: 100,
     orderBy: [{ created_at: "desc" }, { id: "desc" }],
   });
-  const incomingRelationsPromise = models[`dataset_${C.bizRelation}`].filter({
+  const incomingRelationsPromise = models.byTable("biz_relation").filter({
     where: {
       target_biz_type: { $eq: bizType },
       target_biz_id: { $eq: numericBizId },
@@ -861,15 +860,14 @@ export default async function cpoGetBizTimeline(params, context) {
     bizType,
   )
     ? getOptional(
-        models[`dataset_${C.attachment}`],
+        models.byTable("attachment"),
         record.bank_receipt_attachment_id,
       )
     : Promise.resolve(undefined);
   const invoiceApplicationFulfillmentsPromise =
     bizType === "invoice_application" &&
-    C.invoiceApplicationFulfillment &&
-    models[`dataset_${C.invoiceApplicationFulfillment}`]?.filter
-      ? models[`dataset_${C.invoiceApplicationFulfillment}`].filter({
+    models.byTable("invoice_application_fulfillment")?.filter
+      ? models.byTable("invoice_application_fulfillment").filter({
           where: {
             invoice_application_id: { $eq: numericBizId },
             relation_status: { $eq: "active" },
@@ -896,7 +894,7 @@ export default async function cpoGetBizTimeline(params, context) {
     bankReceipt,
     invoiceApplicationFulfillments,
   ] = await Promise.all([
-    models[`dataset_${C.attachment}`].filter({
+    models.byTable("attachment").filter({
       where: bizWhere,
       currentPage: 1,
       pageSize: 100,
@@ -904,7 +902,7 @@ export default async function cpoGetBizTimeline(params, context) {
     }),
     bizType === "expense"
       ? Promise.resolve({ tableData: [] })
-      : models[`dataset_${C.bizInvoiceLink}`].filter({
+      : models.byTable("biz_invoice_link").filter({
           where:
             bizType === "invoice"
               ? {
@@ -951,7 +949,7 @@ export default async function cpoGetBizTimeline(params, context) {
     ),
   ];
   const fulfilledInvoiceResponse = fulfilledInvoiceIds.length
-    ? await models[`dataset_${C.invoiceRecord}`].filter({
+    ? await models.byTable("invoice_record").filter({
         where: { id: { $in: fulfilledInvoiceIds } },
         currentPage: 1,
         pageSize: Math.min(500, fulfilledInvoiceIds.length),
@@ -992,9 +990,7 @@ export default async function cpoGetBizTimeline(params, context) {
       (id) => !paymentById.has(id),
     );
     if (missingPaymentIds.length) {
-      const linkedPayments = await models[
-        `dataset_${C.paymentApplication}`
-      ].filter({
+      const linkedPayments = await models.byTable("payment_application").filter({
         where: {
           id: { $in: missingPaymentIds },
         },
@@ -1045,9 +1041,7 @@ export default async function cpoGetBizTimeline(params, context) {
       .map((payment) => positiveId(payment.id))
       .filter(Boolean);
     if (paymentIds.length) {
-      const allocationResponse = await models[
-        `dataset_${C.bizInvoiceLink}`
-      ].filter({
+      const allocationResponse = await models.byTable("biz_invoice_link").filter({
         where: {
           biz_type: { $eq: "payment" },
           biz_id: { $in: [...new Set(paymentIds)] },
@@ -1065,9 +1059,7 @@ export default async function cpoGetBizTimeline(params, context) {
         ),
       ];
       if (allocatedInvoiceIds.length) {
-        const allocatedInvoiceResponse = await models[
-          `dataset_${C.invoiceRecord}`
-        ].filter({
+        const allocatedInvoiceResponse = await models.byTable("invoice_record").filter({
           where: {
             id: { $in: allocatedInvoiceIds },
           },
@@ -1091,7 +1083,7 @@ export default async function cpoGetBizTimeline(params, context) {
       .map((item) => positiveId(item.id))
       .filter(Boolean);
     if (itemIds.length) {
-      const linkResponse = await models[`dataset_${C.bizInvoiceLink}`].filter({
+      const linkResponse = await models.byTable("biz_invoice_link").filter({
         where: {
           biz_type: { $eq: "expense_item" },
           biz_id: { $in: itemIds },
@@ -1117,7 +1109,7 @@ export default async function cpoGetBizTimeline(params, context) {
   ];
   let invoiceById = new Map();
   if (invoiceIds.length) {
-    const invoiceResponse = await models[`dataset_${C.invoiceRecord}`].filter({
+    const invoiceResponse = await models.byTable("invoice_record").filter({
       where: { id: { $in: invoiceIds } },
       currentPage: 1,
       pageSize: Math.min(500, invoiceIds.length),
@@ -1152,7 +1144,7 @@ export default async function cpoGetBizTimeline(params, context) {
       .map((link) => positiveId(link.biz_id))
       .filter(Boolean);
     if (expenseItemIds.length) {
-      const usedExpenseItems = await models[`dataset_${C.expenseItem}`].filter({
+      const usedExpenseItems = await models.byTable("expense_item").filter({
         where: {
           id: { $in: [...new Set(expenseItemIds)] },
         },
@@ -1167,9 +1159,7 @@ export default async function cpoGetBizTimeline(params, context) {
         ),
       ];
       if (expenseIds.length) {
-        const usedExpenses = await models[
-          `dataset_${C.expenseApplication}`
-        ].filter({
+        const usedExpenses = await models.byTable("expense_application").filter({
           where: { id: { $in: expenseIds } },
           currentPage: 1,
           pageSize: Math.min(500, expenseIds.length),
@@ -1193,9 +1183,7 @@ export default async function cpoGetBizTimeline(params, context) {
       .map((link) => positiveId(link.biz_id))
       .filter(Boolean);
     if (paymentIds.length) {
-      const usedPayments = await models[
-        `dataset_${C.paymentApplication}`
-      ].filter({
+      const usedPayments = await models.byTable("payment_application").filter({
         where: {
           id: { $in: [...new Set(paymentIds)] },
         },
@@ -1226,7 +1214,7 @@ export default async function cpoGetBizTimeline(params, context) {
       ].filter((contractId) => contractId !== contextContractId);
       for (const contractId of derivedContractIds) {
         const derivedContract = await getOptional(
-          models[`dataset_${C.contractApplication}`],
+          models.byTable("contract_application"),
           contractId,
         );
         const item = relatedDocument({
@@ -1257,7 +1245,7 @@ export default async function cpoGetBizTimeline(params, context) {
   const canOverrideAssignment = actorCanOverrideAssignment(actor);
   const availableActions = [];
   const counterpartyPortfolio = partner
-    ? await buildCounterpartyPortfolio({ models, codes: C, partner })
+    ? await buildCounterpartyPortfolio({ models, partner })
     : undefined;
   const relatedDocuments = [];
   if (bizType === "contract") {
@@ -1294,7 +1282,7 @@ export default async function cpoGetBizTimeline(params, context) {
       const targetBizType = optionalText(relation.target_biz_type);
       const targetMeta = map.BIZ_TYPE_TO_DATASET[targetBizType];
       const target = await getOptional(
-        models[targetMeta?.modelKey],
+        targetMeta?.tableName ? models.byTable(targetMeta.tableName) : null,
         relation.target_biz_id,
       );
       if (!target) continue;
@@ -1432,7 +1420,7 @@ export default async function cpoGetBizTimeline(params, context) {
       const targetBizType = optionalText(relation.target_biz_type);
       const targetMeta = map.BIZ_TYPE_TO_DATASET[targetBizType];
       const target = await getOptional(
-        models[targetMeta?.modelKey],
+        targetMeta?.tableName ? models.byTable(targetMeta.tableName) : null,
         relation.target_biz_id,
       );
       if (!target) continue;
@@ -1468,7 +1456,7 @@ export default async function cpoGetBizTimeline(params, context) {
     const sourceBizType = optionalText(relation.source_biz_type);
     const sourceMeta = map.BIZ_TYPE_TO_DATASET[sourceBizType];
     const source = await getOptional(
-      models[sourceMeta?.modelKey],
+      sourceMeta?.tableName ? models.byTable(sourceMeta.tableName) : null,
       relation.source_biz_id,
     );
     if (!source) continue;

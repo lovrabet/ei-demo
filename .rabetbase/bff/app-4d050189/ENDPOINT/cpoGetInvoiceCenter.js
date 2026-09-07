@@ -172,16 +172,14 @@ export default async function cpoGetInvoiceCenter(params, context) {
   const currentPage = positiveInt(page, 1);
   const normalizedPageSize = Math.min(positiveInt(pageSize, 20), 100);
   const bff = context.client.bff;
-  const [map, dictionary, actor] = await Promise.all([
-    bff.execute({ scriptName: "cpoDatasetMap", params: {} }),
+  const [dictionary, actor] = await Promise.all([
     bff.execute({ scriptName: "cpoDictionary", params: {} }),
     bff.execute({ scriptName: "cpoCurrentActor", params: {} }),
   ]);
   await assertReader(actor);
 
-  const C = map.DATASET_CODES;
   const models = context.client.models;
-  const invoiceResponse = await models[`dataset_${C.invoiceRecord}`].filter({
+  const invoiceResponse = await models.byTable("invoice_record").filter({
     currentPage: 1,
     pageSize: 1000,
     orderBy: [{ invoice_date: "desc" }, { updated_at: "desc" }, { id: "desc" }],
@@ -191,7 +189,7 @@ export default async function cpoGetInvoiceCenter(params, context) {
   const [linkResponse, receivableAllocationResponse, fulfillmentResponse] =
     invoiceIds.length
       ? await Promise.all([
-          models[`dataset_${C.bizInvoiceLink}`].filter({
+          models.byTable("biz_invoice_link").filter({
             where: {
               invoice_id: { $in: invoiceIds },
             },
@@ -199,9 +197,8 @@ export default async function cpoGetInvoiceCenter(params, context) {
             pageSize: 3000,
             orderBy: [{ created_at: "desc" }, { id: "desc" }],
           }),
-          C.receivableInvoiceAllocation &&
-          models[`dataset_${C.receivableInvoiceAllocation}`]?.filter
-            ? models[`dataset_${C.receivableInvoiceAllocation}`].filter({
+          models.byTable("receivable_invoice_allocation")?.filter
+            ? models.byTable("receivable_invoice_allocation").filter({
                 where: {
                   invoice_id: { $in: invoiceIds },
                   relation_status: { $eq: "active" },
@@ -210,9 +207,8 @@ export default async function cpoGetInvoiceCenter(params, context) {
                 pageSize: 3000,
               })
             : Promise.resolve({ tableData: [] }),
-          C.invoiceApplicationFulfillment &&
-          models[`dataset_${C.invoiceApplicationFulfillment}`]?.filter
-            ? models[`dataset_${C.invoiceApplicationFulfillment}`].filter({
+          models.byTable("invoice_application_fulfillment")?.filter
+            ? models.byTable("invoice_application_fulfillment").filter({
                 where: {
                   invoice_id: { $in: invoiceIds },
                   relation_status: { $eq: "active" },
@@ -238,14 +234,14 @@ export default async function cpoGetInvoiceCenter(params, context) {
   );
   const [paymentResponse, expenseItemResponse] = await Promise.all([
     paymentIds.length
-      ? models[`dataset_${C.paymentApplication}`].filter({
+      ? models.byTable("payment_application").filter({
           where: { id: { $in: paymentIds } },
           currentPage: 1,
           pageSize: Math.min(1000, paymentIds.length),
         })
       : Promise.resolve({ tableData: [] }),
     expenseItemIds.length
-      ? models[`dataset_${C.expenseItem}`].filter({
+      ? models.byTable("expense_item").filter({
           where: { id: { $in: expenseItemIds } },
           currentPage: 1,
           pageSize: Math.min(1000, expenseItemIds.length),
@@ -278,37 +274,36 @@ export default async function cpoGetInvoiceCenter(params, context) {
   ] =
     await Promise.all([
       contractIds.length
-        ? models[`dataset_${C.contractApplication}`].filter({
+        ? models.byTable("contract_application").filter({
             where: { id: { $in: contractIds } },
             currentPage: 1,
             pageSize: Math.min(1000, contractIds.length),
           })
         : Promise.resolve({ tableData: [] }),
       expenseIds.length
-        ? models[`dataset_${C.expenseApplication}`].filter({
+        ? models.byTable("expense_application").filter({
             where: { id: { $in: expenseIds } },
             currentPage: 1,
             pageSize: Math.min(1000, expenseIds.length),
           })
         : Promise.resolve({ tableData: [] }),
       partnerIds.length
-        ? models[`dataset_${C.businessPartner}`].filter({
+        ? models.byTable("business_partner").filter({
             where: { id: { $in: partnerIds } },
             currentPage: 1,
             pageSize: Math.min(1000, partnerIds.length),
           })
         : Promise.resolve({ tableData: [] }),
-      crmContractIds.length && models[`dataset_${C.crmContract}`]?.filter
-        ? models[`dataset_${C.crmContract}`].filter({
+      crmContractIds.length && models.byTable("crm_contract")?.filter
+        ? models.byTable("crm_contract").filter({
             where: { id: { $in: crmContractIds } },
             currentPage: 1,
             pageSize: Math.min(1000, crmContractIds.length),
           })
         : Promise.resolve({ tableData: [] }),
       invoiceApplicationIds.length &&
-      C.invoiceApplication &&
-      models[`dataset_${C.invoiceApplication}`]?.filter
-        ? models[`dataset_${C.invoiceApplication}`].filter({
+      models.byTable("invoice_application")?.filter
+        ? models.byTable("invoice_application").filter({
             where: { id: { $in: invoiceApplicationIds } },
             currentPage: 1,
             pageSize: Math.min(1000, invoiceApplicationIds.length),

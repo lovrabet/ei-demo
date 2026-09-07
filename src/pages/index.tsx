@@ -131,7 +131,7 @@ const architectureLayers = [
 
 const boundaries = [
   "所有审批类单据统一由平台原生 Flow 发起、流转和回写，不再维护自研审批状态机。",
-  "当前通过 cpoDatasetMap 与 cpoDal 管理数据集映射，后续将替换为平台统一 DAL。",
+  "数据表与 Custom SQL 统一由平台 DAL 按物理表名和唯一资源名解析，业务代码不再维护资源 UUID 映射。",
   "行级读取与写入管控统一由 Instant API Policy 路由、拒绝规则和平台角色执行。",
 ];
 

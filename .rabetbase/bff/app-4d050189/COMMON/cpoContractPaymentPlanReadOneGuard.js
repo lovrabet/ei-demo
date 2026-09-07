@@ -14,8 +14,7 @@ export default async function cpoContractPaymentPlanReadOneGuard(
     throw new Error("CPO_RESOURCE_NOT_FOUND:contractPaymentPlan");
   }
 
-  const contractCode = "53869993f80f45ae8ef6cdf051d8e355";
-  const contractModel = context.client.models[`dataset_${contractCode}`];
+  const contractModel = context.client.models.byTable("contract_application");
   if (!contractModel?.getOne) {
     throw new Error("MODEL_MISSING:contractApplication");
   }

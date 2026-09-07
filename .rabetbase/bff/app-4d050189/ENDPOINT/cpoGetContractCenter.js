@@ -295,22 +295,17 @@ export default async function cpoGetContractCenter(params, context) {
   const currentPage = positiveInt(page, 1);
   const normalizedPageSize = Math.min(positiveInt(pageSize, 20), 100);
   const bff = context.client.bff;
-  const [map, dictionary, actor] = await Promise.all([
-    bff.execute({ scriptName: "cpoDatasetMap", params: {} }),
+  const [dictionary, actor] = await Promise.all([
     bff.execute({ scriptName: "cpoDictionary", params: {} }),
     bff.execute({ scriptName: "cpoCurrentActor", params: {} }),
   ]);
-  // cpoDal 需要 cpoDatasetMap 返回的映射；平台不允许 COMMON 互调，故由调用方传入 map
-  const dal = await bff.execute({
-    scriptName: "cpoDal",
-    params: { map },
-  });
+  const models = context.client.models;
   assertReader(actor);
 
   // CRM 收款合同走 Custom SQL（同库 LEFT JOIN crm_company 取 company_name），
   // 替代原先 crmContract filter + crmCompany 全表扫描两次调用
   const [contractResponse, crmContractResult] = await Promise.all([
-    dal.model("contract_application").filter({
+    models.byTable("contract_application").filter({
       select: [
         "id",
         "contract_no",
@@ -342,7 +337,9 @@ export default async function cpoGetContractCenter(params, context) {
       pageSize: 1000,
       orderBy: [{ updated_at: "desc" }, { id: "desc" }],
     }),
-    dal.sql("contractCenterCrmContracts", {}),
+    context.client.sql
+      .byName("oaDemoCpoContractCenterCrmContracts")
+      .execute({ params: {} }),
   ]);
   const contracts = rowsOf(contractResponse);
   const crmContracts = Array.isArray(crmContractResult)
@@ -355,7 +352,7 @@ export default async function cpoGetContractCenter(params, context) {
 
   const [partnerResponse, planResponse, paymentResponse] = await Promise.all([
     partnerIds.length
-      ? dal.model("business_partner").filter({
+      ? models.byTable("business_partner").filter({
           where: { id: { $in: partnerIds } },
           select: ["id", "name"],
           currentPage: 1,
@@ -363,7 +360,7 @@ export default async function cpoGetContractCenter(params, context) {
         })
       : Promise.resolve({ tableData: [] }),
     contractIds.length
-      ? dal.model("contract_payment_plan").filter({
+      ? models.byTable("contract_payment_plan").filter({
           where: {
             contract_id: { $in: contractIds },
           },
@@ -373,7 +370,7 @@ export default async function cpoGetContractCenter(params, context) {
         })
       : Promise.resolve({ tableData: [] }),
     contractIds.length
-      ? dal.model("payment_application").filter({
+      ? models.byTable("payment_application").filter({
           where: {
             contract_id: { $in: contractIds },
           },
@@ -411,7 +408,7 @@ export default async function cpoGetContractCenter(params, context) {
   const paymentIds = unique(payments.map((payment) => payment.id));
   const [directInvoiceResponse, invoiceLinkResponse] = await Promise.all([
     contractIds.length
-      ? dal.model("invoice_record").filter({
+      ? models.byTable("invoice_record").filter({
           where: {
             contract_id: { $in: contractIds },
           },
@@ -420,7 +417,7 @@ export default async function cpoGetContractCenter(params, context) {
         })
       : Promise.resolve({ tableData: [] }),
     contractIds.length || paymentIds.length
-      ? dal.model("biz_invoice_link").filter({
+      ? models.byTable("biz_invoice_link").filter({
           where: {
             $or: [
               ...(contractIds.length
@@ -456,7 +453,7 @@ export default async function cpoGetContractCenter(params, context) {
     (id) => !directInvoiceIds.has(id),
   );
   const linkedInvoiceResponse = missingInvoiceIds.length
-    ? await dal.model("invoice_record").filter({
+    ? await models.byTable("invoice_record").filter({
         where: { id: { $in: missingInvoiceIds } },
         currentPage: 1,
         pageSize: Math.min(missingInvoiceIds.length, 3000),
@@ -476,7 +473,7 @@ export default async function cpoGetContractCenter(params, context) {
     crmFlowResponse,
   ] = await Promise.all([
     crmContractIds.length
-      ? dal.model("biz_relation").filter({
+      ? models.byTable("biz_relation").filter({
           where: {
             target_biz_type: { $eq: "crm_contract" },
             target_biz_id: { $in: crmContractIds },
@@ -489,7 +486,7 @@ export default async function cpoGetContractCenter(params, context) {
         })
       : Promise.resolve({ tableData: [] }),
     crmContractIds.length
-      ? dal.model("crm_contract_receivable_plan").filter({
+      ? models.byTable("crm_contract_receivable_plan").filter({
           where: { contract_id: { $in: crmContractIds } },
           currentPage: 1,
           pageSize: 5000,
@@ -497,7 +494,7 @@ export default async function cpoGetContractCenter(params, context) {
         })
       : Promise.resolve({ tableData: [] }),
     crmContractIds.length
-      ? dal.model("customer_receipt_allocation").filter({
+      ? models.byTable("customer_receipt_allocation").filter({
           where: {
             target_biz_type: { $eq: "crm_contract" },
             target_biz_id: { $in: crmContractIds },
@@ -514,7 +511,7 @@ export default async function cpoGetContractCenter(params, context) {
         })
       : Promise.resolve({ tableData: [] }),
     crmContractIds.length
-      ? dal.model("crm_contract").filter({
+      ? models.byTable("crm_contract").filter({
           where: { id: { $in: crmContractIds } },
           select: [
             "id",
@@ -538,7 +535,7 @@ export default async function cpoGetContractCenter(params, context) {
     crmInvoiceRelations.map((relation) => relation.source_biz_id),
   );
   const crmInvoiceResponse = crmInvoiceIds.length
-    ? await dal.model("invoice_record").filter({
+    ? await models.byTable("invoice_record").filter({
         where: { id: { $in: crmInvoiceIds } },
         currentPage: 1,
         pageSize: Math.min(crmInvoiceIds.length, 3000),
@@ -564,7 +561,7 @@ export default async function cpoGetContractCenter(params, context) {
     crmReceiptAllocations.map((allocation) => allocation.receipt_id),
   );
   const crmReceiptResponse = crmReceiptIds.length
-    ? await dal.model("customer_receipt").filter({
+    ? await models.byTable("customer_receipt").filter({
         where: {
           id: { $in: crmReceiptIds },
           status: { $eq: "confirmed" },

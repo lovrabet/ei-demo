@@ -7,9 +7,6 @@ function rowsOf(response) {
   return Array.isArray(response?.tableData) ? response.tableData : [];
 }
 
-const SALARY_PAYMENT_APPLICATION_CODE =
-  "235e11a9cb7945c8926b4d31fe64843f";
-
 export default async function cpoSalaryPaymentItemReadFilterGuard(
   params,
   context,
@@ -20,9 +17,8 @@ export default async function cpoSalaryPaymentItemReadFilterGuard(
       : params && typeof params === "object"
         ? params
         : {};
-  const mainCode = SALARY_PAYMENT_APPLICATION_CODE;
-  const mainModel = context.client.models[`dataset_${mainCode}`];
-  if (!mainCode || !mainModel?.filter) {
+  const mainModel = context.client.models.byTable("salary_payment_application");
+  if (!mainModel?.filter) {
     throw new Error("MODEL_MISSING:salaryPaymentApplication");
   }
 

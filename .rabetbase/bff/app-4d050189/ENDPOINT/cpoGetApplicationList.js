@@ -492,7 +492,7 @@ export default async function cpoGetApplicationList(params, context) {
   const lists = await Promise.all(
     selectedBizTypes.map((type) => {
       const meta = metas[type];
-      const model = context.client.models[meta.modelKey];
+      const model = context.client.models.byTable(meta.tableName);
       return model?.filter
         ? fetchApplicationsByType(
             model,

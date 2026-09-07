@@ -60,7 +60,7 @@ export default async function cpoFlowBizStateSync(params, context) {
   const numericBizId = normalizeBizId(bizId);
 
   const bff = context.client.bff;
-  const [{ BIZ_TYPE_TO_DATASET, DATASET_CODES }, actor] = await Promise.all([
+  const [{ BIZ_TYPE_TO_DATASET }, actor] = await Promise.all([
     bff.execute({ scriptName: "cpoDatasetMap", params: {} }),
     bff.execute({ scriptName: "cpoCurrentActor", params: {} }),
   ]);
@@ -68,8 +68,8 @@ export default async function cpoFlowBizStateSync(params, context) {
   const meta = BIZ_TYPE_TO_DATASET[bizType];
   if (!meta) throw new Error(`INVALID_BIZ_TYPE:${bizType}`);
 
-  const model = context.client.models[meta.modelKey];
-  if (!model?.update) throw new Error(`MODEL_MISSING:${meta.modelKey}`);
+  const model = context.client.models.byTable(meta.tableName);
+  if (!model?.update) throw new Error(`MODEL_MISSING:${meta.tableName}`);
 
   const record = await model.getOne({ id: numericBizId });
   if (!record?.id) throw new Error(`BIZ_RECORD_NOT_FOUND:${bizType}:${numericBizId}`);
@@ -119,8 +119,8 @@ export default async function cpoFlowBizStateSync(params, context) {
   await model.update(updateFields);
 
   // 激活收款计划
-  if (handlerSet.has("activate_receivable_plans") && DATASET_CODES?.crmReceivablePlan) {
-    const planModel = context.client.models[`dataset_${DATASET_CODES.crmReceivablePlan}`];
+  if (handlerSet.has("activate_receivable_plans")) {
+    const planModel = context.client.models.byTable("crm_contract_receivable_plan");
     if (planModel?.filter && planModel?.update) {
       const planResp = await planModel.filter({
         where: {

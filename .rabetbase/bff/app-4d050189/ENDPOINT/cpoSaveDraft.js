@@ -373,9 +373,8 @@ async function syncApplicationAttachments({
   context,
 }) {
   if (attachments === undefined) return undefined;
-  const attachmentCode = datasetMap?.DATASET_CODES?.attachment;
-  const model = context.client.models[`dataset_${attachmentCode}`];
-  if (!attachmentCode || !model?.filter || !model?.create || !model?.update) {
+  const model = context.client.models.byTable("attachment");
+  if (!model?.filter || !model?.create || !model?.update) {
     throw new Error("MODEL_MISSING:attachment");
   }
 
@@ -461,9 +460,8 @@ async function resolveSalaryPaymentEntity(businessFields, datasetMap, context) {
   if (!Number.isFinite(entityId) || entityId <= 0) {
     return businessFields;
   }
-  const entityCode = datasetMap?.DATASET_CODES?.internalLegalEntity;
-  const model = context.client.models[`dataset_${entityCode}`];
-  if (!entityCode || !model?.getOne) {
+  const model = context.client.models.byTable("internal_legal_entity");
+  if (!model?.getOne) {
     throw new Error("MODEL_MISSING:internal_legal_entity");
   }
   const entity = await model.getOne({ id: entityId });
@@ -553,9 +551,8 @@ function normalizeSalaryPaymentItems(items) {
 
 async function resolveSalaryPaymentItems(items, datasetMap, context) {
   if (!Array.isArray(items)) return items;
-  const entityCode = datasetMap?.DATASET_CODES?.internalLegalEntity;
-  const model = context.client.models[`dataset_${entityCode}`];
-  if (!entityCode || !model?.getOne) {
+  const model = context.client.models.byTable("internal_legal_entity");
+  if (!model?.getOne) {
     throw new Error("MODEL_MISSING:internal_legal_entity");
   }
 
@@ -971,15 +968,12 @@ function normalizePositiveId(value, fieldName) {
 async function resolvePaymentPlan({ values, paymentId, datasetMap, context }) {
   const planId = normalizePositiveId(values.payment_plan_id, "payment_plan_id");
   if (!planId) return null;
-  const planCode = datasetMap.DATASET_CODES?.contractPaymentPlan;
-  if (!planCode) throw new Error("DATASET_CODE_MISSING:contractPaymentPlan");
-  const planModel = context.client.models[`dataset_${planCode}`];
-  const paymentCode = datasetMap.DATASET_CODES?.paymentApplication;
-  const paymentModel = context.client.models[`dataset_${paymentCode}`];
+  const planModel = context.client.models.byTable("contract_payment_plan");
+  const paymentModel = context.client.models.byTable("payment_application");
   if (!planModel?.getOne || !planModel?.filter) {
-    throw new Error(`MODEL_MISSING:dataset_${planCode}`);
+    throw new Error("MODEL_MISSING:contract_payment_plan");
   }
-  if (!paymentCode || !paymentModel?.filter) {
+  if (!paymentModel?.filter) {
     throw new Error("MODEL_MISSING:paymentApplication");
   }
   const plan = await planModel.getOne({ id: planId });
@@ -1208,12 +1202,12 @@ async function assertRequestedRelationsAllowed({
     }
 
     const targetMeta = datasetMap.BIZ_TYPE_TO_DATASET[relation.targetBizType];
-    if (!targetMeta?.modelKey) {
+    if (!targetMeta?.tableName) {
       throw new Error(`RELATION_TARGET_META_MISSING:${relation.targetBizType}`);
     }
-    const targetModel = context.client.models[targetMeta.modelKey];
+    const targetModel = context.client.models.byTable(targetMeta.tableName);
     if (!targetModel?.getOne) {
-      throw new Error(`MODEL_MISSING:${targetMeta.modelKey}`);
+      throw new Error(`MODEL_MISSING:${targetMeta.tableName}`);
     }
     const targetRecord = await targetModel.getOne({ id: relation.targetBizId });
     if (!targetRecord?.id) {
@@ -1266,15 +1260,13 @@ async function syncBusinessRelations({
   }
   if (!supportedRelationTypes.length) return;
 
-  const relationCode = datasetMap.DATASET_CODES?.bizRelation;
-  if (!relationCode) throw new Error("DATASET_CODE_MISSING:bizRelation");
-  const relationModel = context.client.models[`dataset_${relationCode}`];
+  const relationModel = context.client.models.byTable("biz_relation");
   if (
     !relationModel?.filter ||
     !relationModel?.create ||
     !relationModel?.update
   ) {
-    throw new Error(`MODEL_MISSING:dataset_${relationCode}`);
+    throw new Error("MODEL_MISSING:biz_relation");
   }
 
   const existingResponse = await relationModel.filter({
@@ -1356,11 +1348,9 @@ async function resolveExpenseInvoiceRefs({
   if (!Array.isArray(items)) return { items, invoiceResolution: [] };
   const allRefs = items.flatMap((item) => item.__invoiceRefs || []);
   if (!allRefs.length) return { items, invoiceResolution: [] };
-  const invoiceCode = datasetMap.DATASET_CODES?.invoiceRecord;
-  if (!invoiceCode) throw new Error("DATASET_CODE_MISSING:invoiceRecord");
-  const invoiceModel = context.client.models[`dataset_${invoiceCode}`];
+  const invoiceModel = context.client.models.byTable("invoice_record");
   if (!invoiceModel?.filter || !invoiceModel?.create) {
-    throw new Error(`MODEL_MISSING:dataset_${invoiceCode}`);
+    throw new Error("MODEL_MISSING:invoice_record");
   }
 
   const ids = [...new Set(allRefs.map((ref) => ref.invoiceId).filter(Boolean))];
@@ -1545,11 +1535,9 @@ async function resolveExpenseInvoiceRefs({
 
 async function syncExpenseItems({ bizId, items, datasetMap, context }) {
   if (items === null) return;
-  const expenseItemCode = datasetMap.DATASET_CODES?.expenseItem;
-  if (!expenseItemCode) throw new Error("DATASET_CODE_MISSING:expenseItem");
-  const itemModel = context.client.models[`dataset_${expenseItemCode}`];
+  const itemModel = context.client.models.byTable("expense_item");
   if (!itemModel?.filter || !itemModel?.create || !itemModel?.update) {
-    throw new Error(`MODEL_MISSING:dataset_${expenseItemCode}`);
+    throw new Error("MODEL_MISSING:expense_item");
   }
 
   const existingResponse = await itemModel.filter({
@@ -1591,7 +1579,7 @@ async function syncExpenseItems({ bizId, items, datasetMap, context }) {
     .filter((id) => Number.isFinite(id) && !savedIds.has(id));
   if (deletedItemIds.length) {
     if (!itemModel?.delete) {
-      throw new Error(`MODEL_DELETE_MISSING:dataset_${expenseItemCode}`);
+      throw new Error("MODEL_DELETE_MISSING:expense_item");
     }
     await Promise.all(deletedItemIds.map((id) => itemModel.delete({ id })));
   }
@@ -1600,11 +1588,9 @@ async function syncExpenseItems({ bizId, items, datasetMap, context }) {
 
 async function syncSalaryPaymentItems({ bizId, items, datasetMap, context }) {
   if (items === null) return undefined;
-  const itemCode = datasetMap.DATASET_CODES?.salaryPaymentItem;
-  if (!itemCode) throw new Error("DATASET_CODE_MISSING:salaryPaymentItem");
-  const itemModel = context.client.models[`dataset_${itemCode}`];
+  const itemModel = context.client.models.byTable("salary_payment_item");
   if (!itemModel?.filter || !itemModel?.create || !itemModel?.update) {
-    throw new Error(`MODEL_MISSING:dataset_${itemCode}`);
+    throw new Error("MODEL_MISSING:salary_payment_item");
   }
 
   const existingResponse = await itemModel.filter({
@@ -1649,7 +1635,7 @@ async function syncSalaryPaymentItems({ bizId, items, datasetMap, context }) {
     .filter((id) => Number.isFinite(id) && !savedIds.has(id));
   if (deletedItemIds.length) {
     if (!itemModel?.delete) {
-      throw new Error(`MODEL_DELETE_MISSING:dataset_${itemCode}`);
+      throw new Error("MODEL_DELETE_MISSING:salary_payment_item");
     }
     await Promise.all(deletedItemIds.map((id) => itemModel.delete({ id })));
   }
@@ -1662,11 +1648,9 @@ async function syncExpenseInvoiceLinks({
   datasetMap,
   context,
 }) {
-  const linkCode = datasetMap.DATASET_CODES?.bizInvoiceLink;
-  if (!linkCode) throw new Error("DATASET_CODE_MISSING:bizInvoiceLink");
-  const linkModel = context.client.models[`dataset_${linkCode}`];
+  const linkModel = context.client.models.byTable("biz_invoice_link");
   if (!linkModel?.filter || !linkModel?.create || !linkModel?.update) {
-    throw new Error(`MODEL_MISSING:dataset_${linkCode}`);
+    throw new Error("MODEL_MISSING:biz_invoice_link");
   }
 
   const itemIds = [
@@ -1729,7 +1713,7 @@ async function syncExpenseInvoiceLinks({
     );
   if (obsoleteLinks.length) {
     if (!linkModel?.delete) {
-      throw new Error(`MODEL_DELETE_MISSING:dataset_${linkCode}`);
+      throw new Error("MODEL_DELETE_MISSING:biz_invoice_link");
     }
     await Promise.all(
       obsoleteLinks.map((row) => linkModel.delete({ id: row.id })),
@@ -1762,17 +1746,13 @@ async function syncInvoicePaymentAllocations({
   validateOnly = false,
 }) {
   if (allocations === null) return null;
-  const paymentCode = datasetMap.DATASET_CODES?.paymentApplication;
-  const linkCode = datasetMap.DATASET_CODES?.bizInvoiceLink;
-  if (!paymentCode) throw new Error("DATASET_CODE_MISSING:paymentApplication");
-  if (!linkCode) throw new Error("DATASET_CODE_MISSING:bizInvoiceLink");
-  const paymentModel = context.client.models[`dataset_${paymentCode}`];
-  const linkModel = context.client.models[`dataset_${linkCode}`];
+  const paymentModel = context.client.models.byTable("payment_application");
+  const linkModel = context.client.models.byTable("biz_invoice_link");
   if (!paymentModel?.filter) {
-    throw new Error(`MODEL_MISSING:dataset_${paymentCode}`);
+    throw new Error("MODEL_MISSING:payment_application");
   }
   if (!linkModel?.filter || !linkModel?.create || !linkModel?.update) {
-    throw new Error(`MODEL_MISSING:dataset_${linkCode}`);
+    throw new Error("MODEL_MISSING:biz_invoice_link");
   }
 
   const paymentIds = allocations.map((item) => item.paymentId);
@@ -1904,7 +1884,7 @@ async function syncInvoicePaymentAllocations({
   );
   if (obsoleteLinks.length) {
     if (!linkModel?.delete) {
-      throw new Error(`MODEL_DELETE_MISSING:dataset_${linkCode}`);
+      throw new Error("MODEL_DELETE_MISSING:biz_invoice_link");
     }
     await Promise.all(
       obsoleteLinks.map((row) => linkModel.delete({ id: row.id })),
@@ -1975,8 +1955,8 @@ export default async function cpoSaveDraft(params, context) {
     throw new Error(`PAYMENT_ALLOCATIONS_UNSUPPORTED:${bizType}`);
   }
 
-  const model = context.client.models[meta.modelKey];
-  if (!model) throw new Error(`MODEL_MISSING:${meta.modelKey}`);
+  const model = context.client.models.byTable(meta.tableName);
+  if (!model) throw new Error(`MODEL_MISSING:${meta.tableName}`);
 
   let expenseItems =
     bizType === "expense" ? normalizeExpenseItems(params.items) : null;

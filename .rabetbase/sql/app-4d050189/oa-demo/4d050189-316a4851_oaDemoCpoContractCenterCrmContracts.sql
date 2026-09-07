@@ -1,5 +1,5 @@
 -- @lovrabet.sqlCode: 4d050189-316a4851
--- @lovrabet.sqlName: cpoContractCenterCrmContracts
+-- @lovrabet.sqlName: oaDemoCpoContractCenterCrmContracts
 -- @lovrabet.dbId: 10384
 -- @lovrabet.dbName: oa-demo
 -- @lovrabet.mode: sql

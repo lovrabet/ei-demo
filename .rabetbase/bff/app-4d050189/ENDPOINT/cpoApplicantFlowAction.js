@@ -11,14 +11,14 @@
  * [返回数据结构]
  * { bizType, bizId, action, status, isDeleted, attachmentId?, cleanup?, summary? }
  */
-const DATASET_CODES = {
-  attachment: "ab17964f0efd46f78cecb4969140f257",
-  expenseItem: "d99c32ef07b749948cc24fd391f8fd2c",
-  salaryPaymentItem: "19ef166f3d2242a19911ccb8a5685bb8",
-  contractPaymentPlan: "08e17d8ba3a24e938fef89816c8f4ccb",
-  crmReceivablePlan: "c4c7c35bfe244a78b08667e649b05640",
-  bizInvoiceLink: "9dd0d102219145ddbb67d1c247a84fb9",
-  bizRelation: "1a4139b6d59a493ea89111d936e27238",
+const TABLES = {
+  attachment: "attachment",
+  expenseItem: "expense_item",
+  salaryPaymentItem: "salary_payment_item",
+  contractPaymentPlan: "contract_payment_plan",
+  crmReceivablePlan: "crm_contract_receivable_plan",
+  bizInvoiceLink: "biz_invoice_link",
+  bizRelation: "biz_relation",
 };
 
 function normalizeBizId(value) {
@@ -65,8 +65,8 @@ function idsOf(rows) {
   );
 }
 
-function modelOf(models, datasetCode, label) {
-  const model = models[`dataset_${datasetCode}`];
+function modelOf(models, tableName, label) {
+  const model = models.byTable(tableName);
   if (!model?.filter || !model?.update) {
     throw new Error(`MODEL_MISSING:${label}`);
   }
@@ -115,8 +115,7 @@ async function deleteOwnedDraftAttachment({
   bizId,
   attachmentId,
 }) {
-  const attachmentModel =
-    context.client.models[`dataset_${DATASET_CODES.attachment}`];
+  const attachmentModel = context.client.models.byTable(TABLES.attachment);
   if (
     !attachmentModel?.getOne ||
     !attachmentModel?.filter ||
@@ -167,9 +166,9 @@ async function logicalDeleteDraftAggregate({
 
   return context.client.db.transaction(async (tx) => {
     const models = tx.models;
-    const mainModel = models[meta.modelKey];
+    const mainModel = models.byTable(meta.tableName);
     if (!mainModel?.getOne || !mainModel?.update || !mainModel?.delete) {
-      throw new Error(`MODEL_MISSING:${meta.modelKey}`);
+      throw new Error(`MODEL_MISSING:${meta.tableName}`);
     }
 
     const current = await mainModel.getOne({ id: bizId });
@@ -186,17 +185,17 @@ async function logicalDeleteDraftAggregate({
 
     const attachmentModel = modelOf(
       models,
-      DATASET_CODES.attachment,
+      TABLES.attachment,
       "attachment",
     );
     const relationModel = modelOf(
       models,
-      DATASET_CODES.bizRelation,
+      TABLES.bizRelation,
       "bizRelation",
     );
     const invoiceLinkModel = modelOf(
       models,
-      DATASET_CODES.bizInvoiceLink,
+      TABLES.bizInvoiceLink,
       "bizInvoiceLink",
     );
 
@@ -258,7 +257,7 @@ async function logicalDeleteDraftAggregate({
     let expenseItemInvoiceLinks = [];
 
     if (bizType === "expense") {
-      childModel = modelOf(models, DATASET_CODES.expenseItem, "expenseItem");
+      childModel = modelOf(models, TABLES.expenseItem, "expenseItem");
       childRows = await findRows(childModel, { expense_id: { $eq: bizId } }, [
         "id",
       ]);
@@ -276,7 +275,7 @@ async function logicalDeleteDraftAggregate({
     } else if (bizType === "salary_payment") {
       childModel = modelOf(
         models,
-        DATASET_CODES.salaryPaymentItem,
+        TABLES.salaryPaymentItem,
         "salaryPaymentItem",
       );
       childRows = await findRows(
@@ -287,7 +286,7 @@ async function logicalDeleteDraftAggregate({
     } else if (bizType === "contract") {
       childModel = modelOf(
         models,
-        DATASET_CODES.contractPaymentPlan,
+        TABLES.contractPaymentPlan,
         "contractPaymentPlan",
       );
       childRows = await findRows(childModel, { contract_id: { $eq: bizId } }, [
@@ -344,11 +343,9 @@ async function logicalDeleteReceivableDraftAggregate({
   bizId,
   actorUserId,
 }) {
-  const mainModel = context.client.models[meta.modelKey];
-  const planModel =
-    context.client.models[`dataset_${DATASET_CODES.crmReceivablePlan}`];
-  const attachmentModel =
-    context.client.models[`dataset_${DATASET_CODES.attachment}`];
+  const mainModel = context.client.models.byTable(meta.tableName);
+  const planModel = context.client.models.byTable(TABLES.crmReceivablePlan);
+  const attachmentModel = context.client.models.byTable(TABLES.attachment);
   const current = await mainModel.getOne({ id: bizId });
   if (!current?.id) {
     throw new Error(`BIZ_NOT_FOUND:crm_contract:${bizId}`);
@@ -382,7 +379,7 @@ async function logicalDeleteReceivableDraftAggregate({
   if (idsOf(plans).length) {
     await planModel.update({ id: idsOf(plans), status: "CANCELLED" });
   }
-  if (!mainModel?.delete) throw new Error(`MODEL_MISSING:${meta.modelKey}`);
+  if (!mainModel?.delete) throw new Error(`MODEL_MISSING:${meta.tableName}`);
   await mainModel.delete({ id: bizId });
   await assertDraftDeleted(mainModel, "crm_contract", bizId);
   return cleanup;

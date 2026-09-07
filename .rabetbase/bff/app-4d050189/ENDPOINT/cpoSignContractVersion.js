@@ -20,8 +20,8 @@
  * }
  */
 const TABLES = {
-  contract: "dataset_53869993f80f45ae8ef6cdf051d8e355", // 数据集: 合同申请 | 数据表: contract_application
-  version: "dataset_f54c0d114e0b44ea96e8e3754fd1de72", // 数据集: 合同版本 | 数据表: contract_version
+  contract: "contract_application",
+  version: "contract_version",
 };
 
 // MySQL DATETIME(3) 兼容的 Asia/Shanghai 时间字符串。
@@ -46,12 +46,12 @@ export default async function cpoSignContractVersion(params, context) {
 
   const models = context.client.models;
 
-  const contract = await models[TABLES.contract].getOne({ id: contractId });
+  const contract = await models.byTable(TABLES.contract).getOne({ id: contractId });
   if (!contract) {
     throw new Error("contract not found: " + contractId);
   }
 
-  const version = await models[TABLES.version].getOne({ id: versionId });
+  const version = await models.byTable(TABLES.version).getOne({ id: versionId });
   if (!version) {
     throw new Error("version not found: " + versionId);
   }
@@ -68,7 +68,7 @@ export default async function cpoSignContractVersion(params, context) {
       : mysqlNow();
 
   const result = await context.client.db.transaction(async (tx) => {
-    const current = await tx.models[TABLES.version].filter({
+    const current = await tx.models.byTable(TABLES.version).filter({
       where: {
         contract_id: { $eq: contractId },
         is_current: { $eq: 1 },
@@ -80,21 +80,21 @@ export default async function cpoSignContractVersion(params, context) {
     const supersededIds = currentIds.filter((id) => id !== versionId);
 
     if (supersededIds.length > 0) {
-      await tx.models[TABLES.version].update({
+      await tx.models.byTable(TABLES.version).update({
         id: supersededIds,
         is_current: 0,
         status: "superseded",
       });
     }
 
-    await tx.models[TABLES.version].update({
+    await tx.models.byTable(TABLES.version).update({
       id: versionId,
       is_current: 1,
       status: "signed",
       signed_at: signedAt,
     });
 
-    await tx.models[TABLES.contract].update({
+    await tx.models.byTable(TABLES.contract).update({
       id: contractId,
       current_version_id: versionId,
       status: "signed",

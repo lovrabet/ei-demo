@@ -79,10 +79,10 @@ export default async function cpoListRelatableBizOptions(params, context) {
   const pageSize = Math.min(positiveInt(params?.pageSize, 20), 100);
 
   const bff = context.client.bff;
-  const [datasetMap, actor] = await Promise.all([
-    bff.execute({ scriptName: "cpoDatasetMap", params: {} }),
-    bff.execute({ scriptName: "cpoCurrentActor", params: {} }),
-  ]);
+  const actor = await bff.execute({
+    scriptName: "cpoCurrentActor",
+    params: {},
+  });
   const actorUserId = optionalText(actor?.userId);
   if (!actorUserId) {
     return { tableData: [], paging: { currentPage: 1, pageSize, totalCount: 0 } };
@@ -92,10 +92,9 @@ export default async function cpoListRelatableBizOptions(params, context) {
     throw new Error(`RELATION_TARGET_UNSUPPORTED:${rule.targetBizType}`);
   }
 
-  const travelCode = datasetMap.DATASET_CODES?.travelApplication;
-  const travelModel = context.client.models[`dataset_${travelCode}`];
+  const travelModel = context.client.models.byTable("travel_application");
   if (!travelModel?.filter) {
-    throw new Error(`MODEL_MISSING:dataset_${travelCode}`);
+    throw new Error("MODEL_MISSING:travel_application");
   }
 
   const response = await travelModel.filter({

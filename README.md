@@ -138,22 +138,22 @@ rabetbase run start
 └─────────────────────────────────────────────────────────┘
 ```
 
-**BFF 与 Policy 分层（27 COMMON / 43 ENDPOINT / 16 Policy rules / 0 HOOK）**：
+**BFF 与 Policy 分层（26 COMMON / 43 ENDPOINT / 16 Policy rules / 0 HOOK）**：
 
 - **ENDPOINT（接口层）**：对外暴露的业务函数（`POST /api/endpoint/<appcode>/<name>`），前端直接调用。负责校验入参、编排流程，通过 `bff.execute({ scriptName })` 调 COMMON；平台禁止 ENDPOINT 调 ENDPOINT。
 - **COMMON（共享逻辑层）**：可复用能力，不对外暴露，绝大多数为叶子（不调其它 COMMON）：
-  - `cpoDatasetMap` 数据集映射：集中登记 40+ 数据集 code，产出 `bizType → 主单元数据`、`物理表名 → model key`、`语义名 → SQL code` 三张映射，屏蔽应用级 code 差异；
-  - `cpoDal` 数据访问层：接收 map，返回 `{ model(表名), sql(语义名) }`，BFF 据此读写数据，不硬编码 dataset/sql uuid；
+  - `cpoDatasetMap` 只维护 `bizType → 物理表名/展示字段` 的业务元数据，不再登记 Dataset UUID 或 SQL code；
+  - 数据访问统一使用平台 DAL：DB_TABLE 通过 `context.client.models.byTable(物理表名)` 解析，Custom SQL 通过 `context.client.sql.byName(唯一名称)` 执行；
   - `cpoBizResolver` / `cpoDictionary` / `cpoCurrentActor`：读业务单并归一摘要 / 字典 code→label / 当前操作人；
   - 审批发起、节点流转、抄送与通知全部使用平台 Flow；BFF 只保留业务数据聚合、校验和回写；
   - `cpoActionRecorder`：写 `biz_action_record` 操作流水；
 - **Policy（API 策略层）**：敏感数据的读取通过 Policy 路由到受控 ENDPOINT，按 Lovrabet 平台角色和 Flow 节点人员做行级鉴权；通用列表、直写和物理删除由拒绝规则统一拦截。
 
-调用约定：Instant API → Policy → ENDPOINT/拒绝，业务 ENDPOINT → COMMON（编排）；COMMON 之间不互调，跨 COMMON 的数据（如 `cpoDatasetMap` 的 map）由调用方取好后传参。
+调用约定：Instant API → Policy → ENDPOINT/拒绝，业务 ENDPOINT → COMMON（编排）；COMMON 之间不互调，业务类型元数据由调用方通过 `cpoDatasetMap` 获取后传参，数据资源由平台 DAL 解析。
 
 ## TODO
 - [x] **统一使用平台原生审批流**：审批类单据已由平台 Flow 统一发起、流转和回写，不再维护自研审批状态机。
-- [ ] **使用平台 DAL 层做数据集管理**（平台正在建设中）：当前通过自建的 `cpoDatasetMap` / `cpoDal` 做数据集映射与数据访问，待平台统一 DAL 层上线后替换。
+- [x] **使用平台 DAL 层做数据集管理**：BFF 的 DB_TABLE 与 Custom SQL 已分别迁移到 `models.byTable()` 和 `sql.byName()`；仅平台 Flow 返回 `datasetCode` 的摘要批查接口保留 Dataset code 作为外部关联键。
 - [x] **用平台 API 访问策略替代 Instant API Hooks**：122 个 Hook 已下线，敏感读取改由 Policy 路由，直写、通用导出/聚合和物理删除由 Policy 拒绝规则管控。
 
 ## 许可证

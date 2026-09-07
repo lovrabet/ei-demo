@@ -2,12 +2,12 @@
   "apps": {
     "app-4d050189": {
       "scriptsRoot": ".rabetbase/bff/app-4d050189",
-      "lastSync": "2026-09-07T05:35:27.793Z",
+      "lastSync": "2026-09-07T08:39:22.143Z",
       "functions": {
         "COMMON/cpoActionRecorder": {
-          "hash": "56aeb26df63fdc5ec0d7367a7570f71f",
+          "hash": "1c55a2c5c785a503257570d1d47b2f2c",
           "remoteId": 2071,
-          "version": 6
+          "version": 7
         },
         "COMMON/cpoApplicationDeleteGuard": {
           "hash": "3d8848e5307309fa7f56011b7b49b129",
@@ -15,9 +15,9 @@
           "version": 6
         },
         "COMMON/cpoApplicationPrintStatusService": {
-          "hash": "0d100b5e2378e0f12d975a98bed70c2f",
+          "hash": "7202cf65e5089d90f9db86dcecd6e7c3",
           "remoteId": 2073,
-          "version": 6
+          "version": 7
         },
         "COMMON/cpoApplicationReadFilterGuard": {
           "hash": "8d66db389b9e33417ef92b395e7f7f9d",
@@ -30,24 +30,24 @@
           "version": 7
         },
         "COMMON/cpoApplicationUpdateGuard": {
-          "hash": "9ef5e4407b28932d1b7bbd48ba32c3eb",
+          "hash": "120c59c932491f358dbbdefd03663f5a",
           "remoteId": 2076,
-          "version": 6
+          "version": 7
         },
         "COMMON/cpoBizResolver": {
-          "hash": "6927651805ac3284da3271d43479f441",
+          "hash": "d3b621233838f1b73bfae860aaccd121",
           "remoteId": 2077,
-          "version": 6
+          "version": 7
         },
         "COMMON/cpoContractPaymentPlanReadFilterGuard": {
-          "hash": "5a61e9caeed52f567407c1f1fe0a86a4",
+          "hash": "f6023efc984198781c56d35853b0e04b",
           "remoteId": 2078,
-          "version": 6
+          "version": 7
         },
         "COMMON/cpoContractPaymentPlanReadOneGuard": {
-          "hash": "266bbf80cdbf94eda0c55d440c584a20",
+          "hash": "2672b87492dbe1d860f5a2839e6850a2",
           "remoteId": 2079,
-          "version": 6
+          "version": 7
         },
         "COMMON/cpoCurrentActor": {
           "hash": "1a2921391f3fcb7e776c21d0b76d8a6f",
@@ -60,14 +60,14 @@
           "version": 6
         },
         "COMMON/cpoDatasetMap": {
-          "hash": "d45a0effc5f23da42b6781fbeee73654",
+          "hash": "a3202769c27b2cc1826b24d82edb4bb1",
           "remoteId": 2082,
-          "version": 9
+          "version": 10
         },
         "COMMON/cpoDictionary": {
-          "hash": "3274550f300b99ad4e34d417aff9d202",
+          "hash": "1caf792b5a842aa184b851f74ca135cf",
           "remoteId": 2083,
-          "version": 6
+          "version": 7
         },
         "COMMON/cpoDirectWriteGuard": {
           "hash": "1f2694c4ec063a9936935860b53e3340",
@@ -75,14 +75,14 @@
           "version": 7
         },
         "COMMON/cpoInvoiceCoverage": {
-          "hash": "54d8a820a05875802dec6263b4da5935",
+          "hash": "1c60365f37b9a1e870a63530a105b187",
           "remoteId": 2085,
-          "version": 6
+          "version": 7
         },
         "COMMON/cpoInvoiceDuplicateGuard": {
-          "hash": "7f7f8b843eb4f589ca124adf7438aebd",
+          "hash": "a4423a2d546ba4c40aa4b149f47682e9",
           "remoteId": 2086,
-          "version": 6
+          "version": 7
         },
         "COMMON/cpoLogicalDeleteGuard": {
           "hash": "8de320510673a13c7468a580ded6ed4c",
@@ -90,9 +90,9 @@
           "version": 6
         },
         "COMMON/cpoPaymentPlanSummary": {
-          "hash": "e772d6c44ddbabcf8858a91bbee1e4d4",
+          "hash": "cf61b2d667ef0d2decd23c37f2ece686",
           "remoteId": 2088,
-          "version": 6
+          "version": 7
         },
         "COMMON/cpoPrintActorScope": {
           "hash": "5a2b3d8f020511d8e5c1b89be370fdb0",
@@ -100,14 +100,14 @@
           "version": 8
         },
         "COMMON/cpoSalaryPaymentItemReadFilterGuard": {
-          "hash": "3c07abba0122c29c9dcc6bba5153d83c",
+          "hash": "eba2f089401df63c37aa302d8574b012",
           "remoteId": 2090,
-          "version": 6
+          "version": 7
         },
         "COMMON/cpoSalaryPaymentItemReadOneGuard": {
-          "hash": "f42d167b7d0700a79b585f0c5d42a7d7",
+          "hash": "060779a7194507c4201585989e4207ee",
           "remoteId": 2091,
-          "version": 6
+          "version": 7
         },
         "COMMON/cpoTaskService": {
           "hash": "79b65444e4b8a5f478c8940f95016121",
@@ -135,19 +135,19 @@
           "version": 7
         },
         "ENDPOINT/cpoApplicantFlowAction": {
-          "hash": "95e8d8dcd8dcb0bbfef2ea822a04c784",
+          "hash": "eea65eb41706714560f0e43dd3c17391",
           "remoteId": 2098,
-          "version": 7
+          "version": 8
         },
         "ENDPOINT/cpoArchiveIncomingInvoice": {
-          "hash": "f7fe46f9f3b172e0509d76f17e6677dc",
+          "hash": "5f8909bf2277c7e8008926d4703ab565",
           "remoteId": 2099,
-          "version": 6
+          "version": 7
         },
         "ENDPOINT/cpoBizSummaryBatch": {
-          "hash": "a6e5bc5f39f4f078d6e68b47fdc2a2b6",
+          "hash": "ad72a9c9b1d8044818b4f1898f2074dc",
           "remoteId": 2267,
-          "version": 7
+          "version": 8
         },
         "ENDPOINT/cpoCheckInvoiceDuplicates": {
           "hash": "b7ee2236e5f232995d30774d69e58050",
@@ -155,44 +155,44 @@
           "version": 6
         },
         "ENDPOINT/cpoFlowBizStateSync": {
-          "hash": "2a3915536b5141a6fd8268a61eea9fc6",
+          "hash": "fd80ff27baaad9f46612a7160df82c71",
           "remoteId": 2103,
-          "version": 6
-        },
-        "ENDPOINT/cpoFulfillInvoiceApplication": {
-          "hash": "f78c2ce6eb6ca8fae81082d6d05820e0",
-          "remoteId": 2105,
-          "version": 6
-        },
-        "ENDPOINT/cpoGetApplicationList": {
-          "hash": "97f9c3a70f1e18b5bc4503e97c7c712c",
-          "remoteId": 2106,
-          "version": 8
-        },
-        "ENDPOINT/cpoGetApplicationPrintStatus": {
-          "hash": "63a987b71f3eb0b91f7ede78ef2cf6aa",
-          "remoteId": 2107,
           "version": 7
         },
-        "ENDPOINT/cpoGetBizRelations": {
-          "hash": "5302478da77883b0b150f87a52124230",
-          "remoteId": 2108,
-          "version": 6
+        "ENDPOINT/cpoFulfillInvoiceApplication": {
+          "hash": "7b3a6ba420679951fa6de37f34837de4",
+          "remoteId": 2105,
+          "version": 7
         },
-        "ENDPOINT/cpoGetBizTimeline": {
-          "hash": "c7cf875b95a1a8750f6ea0fe493103b9",
-          "remoteId": 2109,
-          "version": 8
-        },
-        "ENDPOINT/cpoGetContractCenter": {
-          "hash": "607f59273f1c278367f2d8366d939968",
-          "remoteId": 2110,
+        "ENDPOINT/cpoGetApplicationList": {
+          "hash": "9f47e69596cdab2b0704a46f8776030a",
+          "remoteId": 2106,
           "version": 9
         },
+        "ENDPOINT/cpoGetApplicationPrintStatus": {
+          "hash": "6515d1d6773a93ce7ea887fceabb11bd",
+          "remoteId": 2107,
+          "version": 8
+        },
+        "ENDPOINT/cpoGetBizRelations": {
+          "hash": "5c9aef9b487ecf548b9d0e5012416d55",
+          "remoteId": 2108,
+          "version": 7
+        },
+        "ENDPOINT/cpoGetBizTimeline": {
+          "hash": "d6e17df34d978cfaf1d72992336361d6",
+          "remoteId": 2109,
+          "version": 9
+        },
+        "ENDPOINT/cpoGetContractCenter": {
+          "hash": "6c1bad05871add9c45ec496281ae077e",
+          "remoteId": 2110,
+          "version": 10
+        },
         "ENDPOINT/cpoGetContractPaymentContext": {
-          "hash": "935957b379002e9ab206002f7ad4d51d",
+          "hash": "ed0bae8bd695c496eab2074aba0d6d38",
           "remoteId": 2111,
-          "version": 6
+          "version": 7
         },
         "ENDPOINT/cpoGetCurrentActor": {
           "hash": "b6ff7becd3431232d6f18e841f9ebed7",
@@ -200,9 +200,9 @@
           "version": 6
         },
         "ENDPOINT/cpoGetCustomer360": {
-          "hash": "2f076e0c9cb24c0f49bc13a2239c8e5c",
+          "hash": "8aefc287486c334d957b81fedc87d5f6",
           "remoteId": 2113,
-          "version": 6
+          "version": 7
         },
         "ENDPOINT/cpoGetDictionaryOptions": {
           "hash": "c5d9294e6012d6c559938839d098b823",
@@ -210,69 +210,69 @@
           "version": 6
         },
         "ENDPOINT/cpoGetInvoiceCenter": {
-          "hash": "205f0140be666d4317c561d8ec7355f5",
+          "hash": "17895a6749e3b498b99114469749c116",
           "remoteId": 2115,
-          "version": 7
+          "version": 8
         },
         "ENDPOINT/cpoGetReceivableContractDetail": {
-          "hash": "b650c4c679767ba53fb29f69b61408e5",
+          "hash": "f376e0a5d21ff2f3fd1b53b463a69c6b",
           "remoteId": 2120,
-          "version": 6
+          "version": 7
         },
         "ENDPOINT/cpoGetWorkbenchStats": {
-          "hash": "53aea78c579e0af6a0a337428b47433f",
+          "hash": "d3ee3e93269c5c199bbb8ba4dcaea3de",
           "remoteId": 2121,
-          "version": 9
+          "version": 10
         },
         "ENDPOINT/cpoListDocument360Options": {
-          "hash": "ad4ea21d76ab2f383adc47900d88533a",
+          "hash": "11cb693b65090e0094ebc6f3ea15874d",
           "remoteId": 2122,
-          "version": 6
+          "version": 7
         },
         "ENDPOINT/cpoListEffectiveExpenseRules": {
-          "hash": "2912f36c5249144da591533917192151",
+          "hash": "cdeefbf7d8c6e955c68d6d9caf36be91",
           "remoteId": 2123,
-          "version": 6
+          "version": 7
         },
         "ENDPOINT/cpoListRelatableBizOptions": {
-          "hash": "551cfa1c85a0cf0a12e23ecbd0e1b1bd",
+          "hash": "24c421a60d4e0b915aa22252c8c6e7ec",
           "remoteId": 2124,
-          "version": 6
+          "version": 7
         },
         "ENDPOINT/cpoManageCustomer360": {
-          "hash": "0d55e94e308ebf36d8aa5786c88165bd",
+          "hash": "99ed31d6277069ade13ea885fdf8eb96",
           "remoteId": 2125,
-          "version": 6
+          "version": 7
         },
         "ENDPOINT/cpoManageDocument360": {
-          "hash": "747f2400d83ca07dae12d2022115f34f",
+          "hash": "7f2ed34031edc7f314bdd8931e7862d0",
           "remoteId": 2126,
-          "version": 6
+          "version": 7
         },
         "ENDPOINT/cpoManageReceivableContract": {
-          "hash": "c932f1b82b2b36051a5b5d0eeaf586c1",
+          "hash": "abc1e6bcc263bd4c4a51f396b1dc1340",
           "remoteId": 2127,
-          "version": 7
+          "version": 8
         },
         "ENDPOINT/cpoManageReceivableSettlement": {
-          "hash": "3dd251f2d5bf840a7cef30a9292985d6",
+          "hash": "bc55e43348dfb53f44f1ceb4925d747d",
           "remoteId": 2128,
-          "version": 7
+          "version": 8
         },
         "ENDPOINT/cpoRegisterApplicationPrint": {
-          "hash": "a63946a8acd1e3d2d6c2f386abc44927",
+          "hash": "4b27d5c22eac6075bb246bdf1927e72c",
           "remoteId": 2130,
-          "version": 7
+          "version": 8
         },
         "ENDPOINT/cpoRegisterIssuedInvoice": {
-          "hash": "2e6d34c5cd0870c49f1cc62d02b80af0",
+          "hash": "97cf28c6fa1d2b80f69640ae4bc3456d",
           "remoteId": 2131,
-          "version": 6
+          "version": 7
         },
         "ENDPOINT/cpoSaveDraft": {
-          "hash": "614ae0ec288217f4fd4ecb90684b2fef",
+          "hash": "1950163a75bc79707925e9839b251999",
           "remoteId": 2132,
-          "version": 8
+          "version": 9
         },
         "ENDPOINT/cpoSendFeishuTestMessage": {
           "hash": "031f2b01b0ac5c2655a2fd69def685e2",
@@ -280,79 +280,79 @@
           "version": 6
         },
         "ENDPOINT/cpoSignContractVersion": {
-          "hash": "eb7ea19b03bd9fbf099dadcceb22aa66",
+          "hash": "f277d241547e89555cd3f6de231e67ab",
           "remoteId": 2134,
-          "version": 6
+          "version": 7
         },
         "ENDPOINT/cpoSyncContractPaymentPlans": {
-          "hash": "dfe75649b3590f060a6569b31c573dc7",
+          "hash": "754e2cf35999bdb190480c216c3d524c",
           "remoteId": 2136,
-          "version": 6
+          "version": 7
         },
         "ENDPOINT/cpo_create_legal_agreement_draft": {
-          "hash": "c58fbe53bd599679338befc9c50fb44b",
+          "hash": "3e41a392df037ef7ccc07ca5375ae5ee",
           "remoteId": 2137,
-          "version": 6
+          "version": 7
         },
         "COMMON/cpoPolicyRead": {
-          "hash": "f794befe93090dd11531f9f0fa909aaa",
+          "hash": "decc005cbd272cbf8e860023218cfa25",
           "remoteId": 3010,
-          "version": 3
+          "version": 4
         },
         "ENDPOINT/cpoPolicyReadExpenseApplication": {
-          "hash": "9342649bb748eec4bb85e5537df7879a",
+          "hash": "79988967b48e13952a761c3669b8edee",
           "remoteId": 3011,
-          "version": 1
+          "version": 2
         },
         "ENDPOINT/cpoPolicyReadContractApplication": {
-          "hash": "1ba9996e7cc9480a2d9a89077f400b0d",
+          "hash": "e43e7908fa815c0eb70400e48c7ecfc7",
           "remoteId": 3012,
-          "version": 1
+          "version": 2
         },
         "ENDPOINT/cpoPolicyReadPaymentApplication": {
-          "hash": "a86e6f44cd167f1e084796e8b4207347",
+          "hash": "353fcba759128390d2fc21efe2059f53",
           "remoteId": 3013,
-          "version": 1
+          "version": 2
         },
         "ENDPOINT/cpoPolicyReadSalaryPaymentApplication": {
-          "hash": "8db149449ad02f5e9284759ab8515a7f",
+          "hash": "49cb3e00f6260ae5eb0b6c5115d1fe5f",
           "remoteId": 3014,
-          "version": 1
+          "version": 2
         },
         "ENDPOINT/cpoPolicyReadInvoiceApplication": {
-          "hash": "eaaafdc3b5f9dac0967c9a1c7c34907f",
+          "hash": "d81ee898edbf4563e0429bf6f21615bc",
           "remoteId": 3015,
-          "version": 1
+          "version": 2
         },
         "ENDPOINT/cpoPolicyReadInvoiceRecord": {
-          "hash": "0eb2674ea71ee156ea7be609e64b417b",
+          "hash": "3ed1ca0993f698ae81b668e4871fef88",
           "remoteId": 3016,
-          "version": 1
+          "version": 2
         },
         "ENDPOINT/cpoPolicyReadTravelApplication": {
-          "hash": "0a6957b188349e6fa84a9ea8fe6366ec",
+          "hash": "83621f472a9ce15bc2a7e64d87acb60c",
           "remoteId": 3017,
-          "version": 1
+          "version": 2
         },
         "ENDPOINT/cpoPolicyReadExpenseItem": {
-          "hash": "fb46e660f7d10a13f186a05c19e7f3ce",
+          "hash": "3dc8f2a063db53f3f6ae71c725c89b40",
           "remoteId": 3018,
-          "version": 1
+          "version": 2
         },
         "ENDPOINT/cpoPolicyReadContractPaymentPlan": {
-          "hash": "822197240fdb282de20589464c4fd1b8",
+          "hash": "d4e9330ffffcdb654e4402e451809ee5",
           "remoteId": 3019,
-          "version": 1
+          "version": 2
         },
         "ENDPOINT/cpoPolicyReadSalaryPaymentItem": {
-          "hash": "477a7bc143951342bb3318e65cd1270e",
+          "hash": "dd0b1bdb9f1987d7e6df3cb3d5f29b64",
           "remoteId": 3020,
-          "version": 1
+          "version": 2
         },
         "ENDPOINT/cpoPolicyReadBizInvoiceLink": {
-          "hash": "17c356885a0054258539098f07affffa",
+          "hash": "55dfedfd90694d20ce232ce47fa238bf",
           "remoteId": 3021,
-          "version": 1
+          "version": 2
         }
       }
     }

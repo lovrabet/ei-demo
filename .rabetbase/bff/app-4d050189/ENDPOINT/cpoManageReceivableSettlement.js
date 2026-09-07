@@ -94,48 +94,40 @@ function createdId(result) {
   );
 }
 
-function modelOf(models, code, label, methods) {
-  const model = models[`dataset_${code}`];
-  if (!code || !model || methods.some((method) => !model[method])) {
+function modelOf(models, tableName, label, methods) {
+  const model = models.byTable(tableName);
+  if (!model || methods.some((method) => !model[method])) {
     throw new Error(`MODEL_MISSING:${label}`);
   }
   return model;
 }
 
 async function loadContext(params, context) {
-  const [map, actor] = await Promise.all([
-    context.client.bff.execute({
-      scriptName: "cpoDatasetMap",
-      params: {},
-    }),
-    context.client.bff.execute({
-      scriptName: "cpoCurrentActor",
-      params: {},
-    }),
-  ]);
-  const C = map.DATASET_CODES;
+  const actor = await context.client.bff.execute({
+    scriptName: "cpoCurrentActor",
+    params: {},
+  });
   const models = context.client.models;
   return {
-    C,
     actor,
-    contractModel: modelOf(models, C.crmContract, "crmContract", ["getOne"]),
-    planModel: modelOf(models, C.crmReceivablePlan, "crmReceivablePlan", [
+    contractModel: modelOf(models, "crm_contract", "crmContract", ["getOne"]),
+    planModel: modelOf(models, "crm_contract_receivable_plan", "crmReceivablePlan", [
       "getOne",
       "update",
     ]),
-    invoiceModel: modelOf(models, C.invoiceRecord, "invoiceRecord", ["getOne"]),
+    invoiceModel: modelOf(models, "invoice_record", "invoiceRecord", ["getOne"]),
     invoiceAllocationModel: modelOf(
       models,
-      C.receivableInvoiceAllocation,
+      "receivable_invoice_allocation",
       "receivableInvoiceAllocation",
       ["filter", "create", "update"],
     ),
-    receiptModel: modelOf(models, C.customerReceipt, "customerReceipt", [
+    receiptModel: modelOf(models, "customer_receipt", "customerReceipt", [
       "getOne",
     ]),
     receiptAllocationModel: modelOf(
       models,
-      C.customerReceiptAllocation,
+      "customer_receipt_allocation",
       "customerReceiptAllocation",
       ["filter", "create", "update", "delete"],
     ),

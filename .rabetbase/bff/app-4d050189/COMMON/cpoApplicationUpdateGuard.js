@@ -38,37 +38,37 @@ const PROTECTED_FIELDS = new Set([
 const BIZ_TYPE_TO_DATASET = {
   expense: {
     bizType: "expense",
-    modelKey: "dataset_7851365c96244a1896e834daec447ddb",
+    tableName: "expense_application",
     statusField: "status",
   },
   invoice: {
     bizType: "invoice",
-    modelKey: "dataset_fc11e2d760b94b2ca2ccf0485ed40ca8",
+    tableName: "invoice_record",
     statusField: "status",
   },
   invoice_application: {
     bizType: "invoice_application",
-    modelKey: "dataset_ae51202c44e140828ba87e4571094d1a",
+    tableName: "invoice_application",
     statusField: "status",
   },
   contract: {
     bizType: "contract",
-    modelKey: "dataset_53869993f80f45ae8ef6cdf051d8e355",
+    tableName: "contract_application",
     statusField: "status",
   },
   payment: {
     bizType: "payment",
-    modelKey: "dataset_7da208a5059b4b13896d7c7ae29c8492",
+    tableName: "payment_application",
     statusField: "status",
   },
   salary_payment: {
     bizType: "salary_payment",
-    modelKey: "dataset_235e11a9cb7945c8926b4d31fe64843f",
+    tableName: "salary_payment_application",
     statusField: "status",
   },
   travel: {
     bizType: "travel",
-    modelKey: "dataset_28494f18f334400c893576b6e168d3f6",
+    tableName: "travel_application",
     statusField: "status",
   },
 };
@@ -190,8 +190,8 @@ export default async function cpoApplicationUpdateGuard(params, context) {
   const meta = resolveMeta(bizType);
   const isAdmin = actorIsAdmin(actor, context);
 
-  const model = context.client.models[meta.modelKey];
-  if (!model) throw new Error(`MODEL_MISSING:${meta.modelKey}`);
+  const model = context.client.models.byTable(meta.tableName);
+  if (!model) throw new Error(`MODEL_MISSING:${meta.tableName}`);
 
   const existing = await model.getOne({ id });
   if (!existing?.id) {

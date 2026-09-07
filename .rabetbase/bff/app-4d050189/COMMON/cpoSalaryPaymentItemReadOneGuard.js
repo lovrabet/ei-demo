@@ -14,9 +14,8 @@ export default async function cpoSalaryPaymentItemReadOneGuard(
     throw new Error("CPO_RESOURCE_NOT_FOUND:salaryPaymentItem");
   }
 
-  const mainCode = "235e11a9cb7945c8926b4d31fe64843f";
-  const mainModel = context.client.models[`dataset_${mainCode}`];
-  if (!mainCode || !mainModel?.getOne) {
+  const mainModel = context.client.models.byTable("salary_payment_application");
+  if (!mainModel?.getOne) {
     throw new Error("MODEL_MISSING:salaryPaymentApplication");
   }
   const parent = await mainModel.getOne({ id: salaryPaymentId });

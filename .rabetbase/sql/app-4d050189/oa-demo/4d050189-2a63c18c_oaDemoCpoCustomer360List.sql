@@ -1,5 +1,5 @@
 -- @lovrabet.sqlCode: 4d050189-2a63c18c
--- @lovrabet.sqlName: cpoCustomer360List
+-- @lovrabet.sqlName: oaDemoCpoCustomer360List
 -- @lovrabet.dbId: 10384
 -- @lovrabet.dbName: oa-demo
 -- @lovrabet.mode: sql

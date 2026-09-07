@@ -13,13 +13,6 @@
  * @param {Object} context - 平台注入上下文。
  * @returns {Promise<Object>} { expenseId, checkedInvoiceCount, invoiceNos, hasDuplicates, duplicates }。
  */
-const DATASET_CODES = {
-  invoiceRecord: "fc11e2d760b94b2ca2ccf0485ed40ca8", // 数据集: 发票记录 | 数据表: invoice_record
-  bizInvoiceLink: "9dd0d102219145ddbb67d1c247a84fb9", // 数据集: 发票关联 | 数据表: biz_invoice_link
-  expenseItem: "d99c32ef07b749948cc24fd391f8fd2c", // 数据集: 报销明细 | 数据表: expense_item
-  expenseApplication: "7851365c96244a1896e834daec447ddb", // 数据集: 报销申请 | 数据表: expense_application
-};
-
 const NON_BLOCKING_EXPENSE_STATUSES = new Set(["cancelled"]);
 
 function rowsOf(response) {
@@ -82,10 +75,10 @@ export default async function cpoInvoiceDuplicateGuard(params, context) {
   }
 
   const models = context.client.models;
-  const invoiceModel = models[`dataset_${DATASET_CODES.invoiceRecord}`];
-  const linkModel = models[`dataset_${DATASET_CODES.bizInvoiceLink}`];
-  const itemModel = models[`dataset_${DATASET_CODES.expenseItem}`];
-  const expenseModel = models[`dataset_${DATASET_CODES.expenseApplication}`];
+  const invoiceModel = models.byTable("invoice_record");
+  const linkModel = models.byTable("biz_invoice_link");
+  const itemModel = models.byTable("expense_item");
+  const expenseModel = models.byTable("expense_application");
 
   let currentItems = [];
   let currentLinks = [];

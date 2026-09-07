@@ -17,36 +17,43 @@
 // 仅允许平台流程绑定的 7 个业务数据集
 const ALLOWED_DATASETS = {
   "7851365c96244a1896e834daec447ddb": {
+    tableName: "expense_application",
     title: "title",
     amount: "total_cny_amount",
     applicant: "applicant_name_snapshot",
   },
   "7da208a5059b4b13896d7c7ae29c8492": {
+    tableName: "payment_application",
     title: "title",
     amount: "amount",
     applicant: "applicant_name_snapshot",
   },
   "53869993f80f45ae8ef6cdf051d8e355": {
+    tableName: "contract_application",
     title: "contract_name",
     amount: "amount",
     applicant: "applicant_name_snapshot",
   },
   "28494f18f334400c893576b6e168d3f6": {
+    tableName: "travel_application",
     title: "title",
     amount: "estimated_amount",
     applicant: "applicant_name_snapshot",
   },
   "235e11a9cb7945c8926b4d31fe64843f": {
+    tableName: "salary_payment_application",
     title: "title",
     amount: "amount",
     applicant: "applicant_name_snapshot",
   },
   ae51202c44e140828ba87e4571094d1a: {
+    tableName: "invoice_application",
     title: "application_title",
     amount: "requested_total_amount",
     applicant: "applicant_name_snapshot",
   },
   "804e3a5ed3224074be329b9ed4799cc3": {
+    tableName: "crm_contract",
     title: "title",
     amount: "amount",
     applicant: "applicant_name_snapshot",
@@ -70,7 +77,7 @@ export default async function cpoBizSummaryBatch(params, context) {
       ];
       if (!fields || ids.length === 0) return;
 
-      const model = context.client.models[`dataset_${datasetCode}`];
+      const model = context.client.models.byTable(fields.tableName);
       if (!model?.filter) return;
 
       try {

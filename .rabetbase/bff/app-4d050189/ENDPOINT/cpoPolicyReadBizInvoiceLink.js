@@ -2,6 +2,6 @@
 export default async function cpoPolicyReadBizInvoiceLink(params, context) {
   return context.client.bff.execute({
     scriptName: "cpoPolicyRead",
-    params: { request: params || {}, config: {"mode":"invoice_link","resource":"bizInvoiceLink","datasetCode":"9dd0d102219145ddbb67d1c247a84fb9"} },
+    params: { request: params || {}, config: {"mode":"invoice_link","resource":"bizInvoiceLink","tableName":"biz_invoice_link"} },
   });
 }

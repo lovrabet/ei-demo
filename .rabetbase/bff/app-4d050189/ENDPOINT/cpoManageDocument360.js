@@ -131,8 +131,7 @@ async function updateContractLifecycle(params, context, map, actor) {
   if (!CONTRACT_LIFECYCLE_STATUSES.has(lifecycleStatus)) {
     throw new Error(`CONTRACT_LIFECYCLE_STATUS_INVALID:${lifecycleStatus}`);
   }
-  const model =
-    context.client.models[`dataset_${map.DATASET_CODES.contractApplication}`];
+  const model = context.client.models.byTable("contract_application");
   const record = await requireRecord(model, contractId, "contract");
   await model.update({
     id: contractId,
@@ -161,8 +160,7 @@ async function updateInvoiceClassification(params, context, map, actor) {
   if (!INVOICE_PURPOSES.has(invoicePurpose)) {
     throw new Error(`INVOICE_PURPOSE_INVALID:${invoicePurpose}`);
   }
-  const model =
-    context.client.models[`dataset_${map.DATASET_CODES.invoiceRecord}`];
+  const model = context.client.models.byTable("invoice_record");
   const record = await requireRecord(model, invoiceId, "invoice");
   await model.update({
     id: invoiceId,
@@ -190,12 +188,9 @@ async function allocateInvoice(params, context, map, actor) {
   const paymentId = positiveId(params?.bizId, "bizId");
   const invoiceId = positiveId(params?.invoiceId, "invoiceId");
   const amountUsed = money(params?.amountUsed, "amountUsed");
-  const paymentModel =
-    context.client.models[`dataset_${map.DATASET_CODES.paymentApplication}`];
-  const invoiceModel =
-    context.client.models[`dataset_${map.DATASET_CODES.invoiceRecord}`];
-  const linkModel =
-    context.client.models[`dataset_${map.DATASET_CODES.bizInvoiceLink}`];
+  const paymentModel = context.client.models.byTable("payment_application");
+  const invoiceModel = context.client.models.byTable("invoice_record");
+  const linkModel = context.client.models.byTable("biz_invoice_link");
   if (!linkModel?.filter || !linkModel?.create || !linkModel?.update) {
     throw new Error("MODEL_MISSING:bizInvoiceLink");
   }
@@ -319,8 +314,7 @@ async function allocateInvoice(params, context, map, actor) {
 
 async function removeInvoiceAllocation(params, context, map, actor) {
   const linkId = positiveId(params?.linkId, "linkId");
-  const linkModel =
-    context.client.models[`dataset_${map.DATASET_CODES.bizInvoiceLink}`];
+  const linkModel = context.client.models.byTable("biz_invoice_link");
   const link = await requireRecord(linkModel, linkId, "invoice_link");
   if (
     text(link.biz_type) !== "payment" ||
@@ -328,8 +322,7 @@ async function removeInvoiceAllocation(params, context, map, actor) {
   ) {
     throw new Error("INVOICE_LINK_TYPE_INVALID");
   }
-  const invoiceModel =
-    context.client.models[`dataset_${map.DATASET_CODES.invoiceRecord}`];
+  const invoiceModel = context.client.models.byTable("invoice_record");
   const invoice = await requireRecord(
     invoiceModel,
     positiveId(link.invoice_id, "invoiceId"),
@@ -369,12 +362,12 @@ async function setContractRelation(params, context, map, actor) {
       `CONTRACT_RELATION_INVALID:${relationType}:${targetBizType}`,
     );
   }
-  const contractModel =
-    context.client.models[`dataset_${map.DATASET_CODES.contractApplication}`];
+  const contractModel = context.client.models.byTable("contract_application");
   const targetMeta = map.BIZ_TYPE_TO_DATASET[targetBizType];
-  const targetModel = context.client.models[targetMeta?.modelKey];
-  const relationModel =
-    context.client.models[`dataset_${map.DATASET_CODES.bizRelation}`];
+  const targetModel = targetMeta?.tableName
+    ? context.client.models.byTable(targetMeta.tableName)
+    : null;
+  const relationModel = context.client.models.byTable("biz_relation");
   if (
     !relationModel?.filter ||
     !relationModel?.create ||
@@ -454,8 +447,7 @@ async function setContractRelation(params, context, map, actor) {
 
 async function removeContractRelation(params, context, map, actor) {
   const relationId = positiveId(params?.relationId, "relationId");
-  const relationModel =
-    context.client.models[`dataset_${map.DATASET_CODES.bizRelation}`];
+  const relationModel = context.client.models.byTable("biz_relation");
   const relation = await requireRecord(
     relationModel,
     relationId,

@@ -1,4 +1,4 @@
-/**
+/*
  * CPO 业务字典查询（COMMON）。
  *
  * [脚本描述] 从 cpo_dictionary 数据集读取启用状态的字典项，按 category 分组返回 code->label 映射。
@@ -11,10 +11,8 @@
  * @returns {Promise<Object>} { [category]: { code: label } }
  */
 
-const DICTIONARY_DATASET_CODE = "ecebe4f9726b46ccb19aaca00aa93dd0";
-
 async function loadAllDictionary(context) {
-  const model = context.client.models[`dataset_${DICTIONARY_DATASET_CODE}`];
+  const model = context.client.models.byTable("cpo_dictionary");
   if (!model || !model.filter) {
     throw new Error("DICTIONARY_MODEL_NOT_FOUND");
   }
@@ -37,6 +35,12 @@ async function loadAllDictionary(context) {
   return dict;
 }
 
+/**
+ * @param {Object} params 查询参数
+ * @param {string} [params.category] 字典分类；不传时返回全部分类
+ * @param {Object} context 平台注入上下文
+ * @returns {Promise<Object>} 按分类组织的 code 到 label 映射
+ */
 export default async function cpoDictionary(params, context) {
   const { category = "" } = params || {};
   const dict = await loadAllDictionary(context);

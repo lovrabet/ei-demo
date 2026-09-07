@@ -99,17 +99,9 @@ function assertIncomingInvoiceComplete(record) {
 export default async function cpoArchiveIncomingInvoice(params, context) {
   const invoiceId = positiveId(params?.invoiceId, "invoiceId");
   const bff = context.client.bff;
-  const [actor, map] = await Promise.all([
-    bff.execute({ scriptName: "cpoCurrentActor", params: {} }),
-    bff.execute({ scriptName: "cpoDatasetMap", params: {} }),
-  ]);
-  const invoiceCode = map.DATASET_CODES?.invoiceRecord;
-  const attachmentCode = map.DATASET_CODES?.attachment;
-  if (!invoiceCode) throw new Error("DATASET_CODE_MISSING:invoiceRecord");
-  if (!attachmentCode) throw new Error("DATASET_CODE_MISSING:attachment");
-
-  const invoiceModel = context.client.models[`dataset_${invoiceCode}`];
-  const attachmentModel = context.client.models[`dataset_${attachmentCode}`];
+  const actor = await bff.execute({ scriptName: "cpoCurrentActor", params: {} });
+  const invoiceModel = context.client.models.byTable("invoice_record");
+  const attachmentModel = context.client.models.byTable("attachment");
   if (!invoiceModel?.getOne || !invoiceModel?.update) {
     throw new Error("MODEL_MISSING:invoiceRecord");
   }

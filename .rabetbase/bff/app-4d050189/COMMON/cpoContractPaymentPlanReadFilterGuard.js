@@ -7,8 +7,6 @@ function rowsOf(response) {
   return Array.isArray(response?.tableData) ? response.tableData : [];
 }
 
-const CONTRACT_APPLICATION_CODE = "53869993f80f45ae8ef6cdf051d8e355";
-
 export default async function cpoContractPaymentPlanReadFilterGuard(
   params,
   context,
@@ -19,8 +17,7 @@ export default async function cpoContractPaymentPlanReadFilterGuard(
       : params && typeof params === "object"
         ? params
         : {};
-  const contractModel =
-    context.client.models[`dataset_${CONTRACT_APPLICATION_CODE}`];
+  const contractModel = context.client.models.byTable("contract_application");
   if (!contractModel?.filter) {
     throw new Error("MODEL_MISSING:contractApplication");
   }

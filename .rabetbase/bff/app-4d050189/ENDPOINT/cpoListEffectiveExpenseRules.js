@@ -109,13 +109,8 @@ function normalizeRule(row) {
 }
 
 export default async function cpoListEffectiveExpenseRules(params = {}, context) {
-  const bff = context.client.bff;
-  const datasetMap = await bff.execute({ scriptName: "cpoDatasetMap", params: {} });
-  const expenseRuleCode = datasetMap.DATASET_CODES?.expenseRule;
-  if (!expenseRuleCode) throw new Error("DATASET_CODE_MISSING:expenseRule");
-
-  const model = context.client.models[`dataset_${expenseRuleCode}`];
-  if (!model?.filter) throw new Error(`MODEL_MISSING:dataset_${expenseRuleCode}`);
+  const model = context.client.models.byTable("expense_rule");
+  if (!model?.filter) throw new Error("MODEL_MISSING:expense_rule");
 
   const effectiveDate = normalizeDateText(params.effectiveDate) || todayDateText();
   const expenseType = optionalText(params.expenseType || params.expense_type).toLowerCase();

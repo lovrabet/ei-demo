@@ -57,11 +57,9 @@ export default async function cpoGetBizRelations(params, context) {
     params: { bizType, result: record },
   });
 
-  const relationCode = datasetMap.DATASET_CODES?.bizRelation;
-  if (!relationCode) throw new Error("DATASET_CODE_MISSING:bizRelation");
-  const relationModel = context.client.models[`dataset_${relationCode}`];
+  const relationModel = context.client.models.byTable("biz_relation");
   if (!relationModel?.filter) {
-    throw new Error(`MODEL_MISSING:dataset_${relationCode}`);
+    throw new Error("MODEL_MISSING:biz_relation");
   }
 
   const where = {

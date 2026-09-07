@@ -19,10 +19,6 @@
  * @param {Object} context 平台注入上下文
  * @returns {Promise<Object>} { payments[], plans[], summary }
  */
-const PAYMENT_APPLICATION_CODE = "7da208a5059b4b13896d7c7ae29c8492";
-const CONTRACT_PAYMENT_PLAN_CODE = "08e17d8ba3a24e938fef89816c8f4ccb";
-const BIZ_INVOICE_LINK_CODE = "9dd0d102219145ddbb67d1c247a84fb9";
-
 const PAYMENT_COVERAGE_RELATION = "payment_coverage";
 // 作废与草稿不进入敞口口径：草稿尚未成为付款事实，取消与驳回不再需要发票。
 const INACTIVE_PAYMENT_STATUSES = new Set(["cancelled", "rejected"]);
@@ -69,9 +65,9 @@ export default async function cpoInvoiceCoverage(params, context) {
   }
 
   const models = context.client.models;
-  const paymentModel = models[`dataset_${PAYMENT_APPLICATION_CODE}`];
-  const planModel = models[`dataset_${CONTRACT_PAYMENT_PLAN_CODE}`];
-  const linkModel = models[`dataset_${BIZ_INVOICE_LINK_CODE}`];
+  const paymentModel = models.byTable("payment_application");
+  const planModel = models.byTable("contract_payment_plan");
+  const linkModel = models.byTable("biz_invoice_link");
   if (!paymentModel?.filter) throw new Error("MODEL_MISSING:paymentApplication");
   if (!planModel?.filter) throw new Error("MODEL_MISSING:contractPaymentPlan");
   if (!linkModel?.filter) throw new Error("MODEL_MISSING:bizInvoiceLink");

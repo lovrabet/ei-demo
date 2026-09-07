@@ -24,19 +24,9 @@ function rowsOf(response) {
 
 export default async function cpoGetContractPaymentContext(params, context) {
   const contractId = positiveId(params?.contractId, "contractId");
-  const map = await context.client.bff.execute({
-    scriptName: "cpoDatasetMap",
-    params: {},
-  });
-  const C = map.DATASET_CODES;
-  if (!C.contractPaymentPlan) {
-    throw new Error("DATASET_CODE_MISSING:contractPaymentPlan");
-  }
-
-  const contractModel =
-    context.client.models[`dataset_${C.contractApplication}`];
-  const planModel = context.client.models[`dataset_${C.contractPaymentPlan}`];
-  const paymentModel = context.client.models[`dataset_${C.paymentApplication}`];
+  const contractModel = context.client.models.byTable("contract_application");
+  const planModel = context.client.models.byTable("contract_payment_plan");
+  const paymentModel = context.client.models.byTable("payment_application");
   if (!contractModel?.getOne || !planModel?.filter || !paymentModel?.filter) {
     throw new Error("MODEL_MISSING:contract payment context");
   }

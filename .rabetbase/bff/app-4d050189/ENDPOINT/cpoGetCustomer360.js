@@ -1,7 +1,7 @@
 /**
  * 客户 360：为三栏工作台聚合客户、联系人、商机、跟进、收款合同和计划。
  *
- * 客户列表走 Custom SQL（cpoCustomer360List）：公司 LEFT JOIN 客户状态字典，
+ * 客户列表走 Custom SQL（oaDemoCpoCustomer360List）：公司 LEFT JOIN 客户状态字典，
  * 并内联统计商机数/合同数/合同总额，替代原先的 3 张全表扫描 + JS 内存聚合。
  * CRM 表迁入 yuntoo-cpo 后同库 JOIN 可用。
  *
@@ -42,20 +42,13 @@ function statusLabelOf(row) {
 }
 
 export default async function cpoGetCustomer360(params, context) {
-  const bff = context.client.bff;
-  const map = await bff.execute({
-    scriptName: "cpoDatasetMap",
-    params: {},
-  });
-  // cpoDal 需要 cpoDatasetMap 返回的映射；平台不允许 COMMON 互调，故由调用方传入 map
-  const dal = await bff.execute({
-    scriptName: "cpoDal",
-    params: { map },
-  });
+  const models = context.client.models;
   const normalizedKeyword = text(params?.keyword).toLocaleLowerCase();
   const [listResult, statusResponse] = await Promise.all([
-    dal.sql("customer360List", { keyword: normalizedKeyword || null }),
-    dal.model("crm_customer_status").filter({
+    context.client.sql.byName("oaDemoCpoCustomer360List").execute({
+      params: { keyword: normalizedKeyword || null },
+    }),
+    models.byTable("crm_customer_status").filter({
       currentPage: 1,
       pageSize: 200,
     }),
@@ -99,13 +92,13 @@ export default async function cpoGetCustomer360(params, context) {
 
   const selectedId = Number(selected.id);
   const [opportunityResponse, contractResponse] = await Promise.all([
-    dal.model("crm_opportunity").filter({
+    models.byTable("crm_opportunity").filter({
       where: { company_id: { $eq: selectedId } },
       currentPage: 1,
       pageSize: 2000,
       orderBy: [{ updated_at: "desc" }, { id: "desc" }],
     }),
-    dal.model("crm_contract").filter({
+    models.byTable("crm_contract").filter({
       where: { company_id: { $eq: selectedId } },
       currentPage: 1,
       pageSize: 2000,
@@ -118,14 +111,14 @@ export default async function cpoGetCustomer360(params, context) {
   const contractIds = idsOf(selectedContracts.map((row) => row.id));
   const [contactResponse, followUpResponse, planResponse, receiptResponse] =
     await Promise.all([
-      dal.model("crm_contact").filter({
+      models.byTable("crm_contact").filter({
         where: { company_id: { $eq: selectedId } },
         currentPage: 1,
         pageSize: 500,
         orderBy: [{ is_primary: "desc" }, { updated_at: "desc" }],
       }),
       opportunityIds.length
-        ? dal.model("crm_follow_up").filter({
+        ? models.byTable("crm_follow_up").filter({
             where: { opportunity_id: { $in: opportunityIds } },
             currentPage: 1,
             pageSize: 1000,
@@ -133,14 +126,14 @@ export default async function cpoGetCustomer360(params, context) {
           })
         : Promise.resolve({ tableData: [] }),
       contractIds.length
-        ? dal.model("crm_contract_receivable_plan").filter({
+        ? models.byTable("crm_contract_receivable_plan").filter({
             where: { contract_id: { $in: contractIds } },
             currentPage: 1,
             pageSize: 2000,
             orderBy: [{ planned_receipt_date: "asc" }, { phase_no: "asc" }],
           })
         : Promise.resolve({ tableData: [] }),
-      dal.model("customer_receipt").filter({
+      models.byTable("customer_receipt").filter({
         where: {
           crm_company_id: { $eq: selectedId },
           status: { $eq: "confirmed" },
@@ -166,7 +159,7 @@ export default async function cpoGetCustomer360(params, context) {
   const receiptIds = idsOf(rawReceipts.map((receipt) => receipt.id));
   const receiptAllocationResponse =
     receiptIds.length && contractIds.length
-      ? await dal.model("customer_receipt_allocation").filter({
+      ? await models.byTable("customer_receipt_allocation").filter({
           where: {
             receipt_id: { $in: receiptIds },
             target_biz_type: { $eq: "crm_contract" },

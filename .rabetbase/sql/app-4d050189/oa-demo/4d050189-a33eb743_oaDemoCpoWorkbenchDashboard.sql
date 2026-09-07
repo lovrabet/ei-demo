@@ -1,5 +1,5 @@
 -- @lovrabet.sqlCode: 4d050189-a33eb743
--- @lovrabet.sqlName: cpoWorkbenchDashboard
+-- @lovrabet.sqlName: oaDemoCpoWorkbenchDashboard
 -- @lovrabet.dbId: 10384
 -- @lovrabet.dbName: oa-demo
 -- @lovrabet.mode: sql

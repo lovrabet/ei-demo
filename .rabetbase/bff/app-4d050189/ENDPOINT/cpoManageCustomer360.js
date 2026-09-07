@@ -24,12 +24,11 @@ function createdId(response) {
 
 export default async function cpoManageCustomer360(params, context) {
   const action = text(params?.action);
-  const [map, actor] = await Promise.all([
-    context.client.bff.execute({ scriptName: "cpoDatasetMap", params: {} }),
-    context.client.bff.execute({ scriptName: "cpoCurrentActor", params: {} }),
-  ]);
+  const actor = await context.client.bff.execute({
+    scriptName: "cpoCurrentActor",
+    params: {},
+  });
   if (!text(actor?.userId)) throw new Error("CPO_ACTOR_MISSING");
-  const C = map.DATASET_CODES;
   const models = context.client.models;
 
   if (action === "create_company") {
@@ -37,7 +36,7 @@ export default async function cpoManageCustomer360(params, context) {
     const name = text(company.name);
     const uscc = text(company.uscc);
     if (!name || !uscc) throw new Error("CUSTOMER_NAME_AND_USCC_REQUIRED");
-    const model = models[`dataset_${C.crmCompany}`];
+    const model = models.byTable("crm_company");
     const duplicateResponse = await model.filter({
       where: { uscc: { $eq: uscc } },
       currentPage: 1,
@@ -62,7 +61,7 @@ export default async function cpoManageCustomer360(params, context) {
 
   if (action === "update_company") {
     const companyId = positiveId(params?.companyId, "companyId");
-    const model = models[`dataset_${C.crmCompany}`];
+    const model = models.byTable("crm_company");
     const current = await model.getOne({ id: companyId });
     if (!current?.id) throw new Error("CUSTOMER_NOT_FOUND");
     const company = params?.company || {};
@@ -88,7 +87,7 @@ export default async function cpoManageCustomer360(params, context) {
     const contactId = Number(contact.id) || 0;
     const name = text(contact.name);
     if (!name) throw new Error("CONTACT_NAME_REQUIRED");
-    const model = models[`dataset_${C.crmContact}`];
+    const model = models.byTable("crm_contact");
     const payload = {
       company_id: companyId,
       name,
@@ -122,7 +121,7 @@ export default async function cpoManageCustomer360(params, context) {
     const subject = text(followUp.subject);
     const content = text(followUp.content);
     if (!subject && !content) throw new Error("FOLLOW_UP_CONTENT_REQUIRED");
-    const model = models[`dataset_${C.crmFollowUp}`];
+    const model = models.byTable("crm_follow_up");
     const result = await model.create({
       opportunity_id: opportunityId,
       contact_id: Number(followUp.contactId) || null,

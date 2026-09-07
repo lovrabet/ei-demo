@@ -8,9 +8,6 @@
  * @param {Object} params { planIds?, contractId?, persist? }
  * @returns {Promise<Object>} { plans[], summary }
  */
-const PAYMENT_APPLICATION_CODE = "7da208a5059b4b13896d7c7ae29c8492";
-const CONTRACT_PAYMENT_PLAN_CODE = "08e17d8ba3a24e938fef89816c8f4ccb";
-
 const INACTIVE_PAYMENT_STATUSES = new Set(["cancelled", "rejected"]);
 const PAID_PAYMENT_STATUSES = new Set(["paid_confirmed"]);
 const MANUAL_PLAN_STATUSES = new Set(["not_required", "cancelled"]);
@@ -61,10 +58,8 @@ export default async function cpoPaymentPlanSummary(params, context) {
     throw new Error("INVALID_PARAMS:contractId or planIds is required");
   }
 
-  const planModel =
-    context.client.models[`dataset_${CONTRACT_PAYMENT_PLAN_CODE}`];
-  const paymentModel =
-    context.client.models[`dataset_${PAYMENT_APPLICATION_CODE}`];
+  const planModel = context.client.models.byTable("contract_payment_plan");
+  const paymentModel = context.client.models.byTable("payment_application");
   if (!planModel?.filter) throw new Error("MODEL_MISSING:contractPaymentPlan");
   if (!paymentModel?.filter) throw new Error("MODEL_MISSING:paymentApplication");
 

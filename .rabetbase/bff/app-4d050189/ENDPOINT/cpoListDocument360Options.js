@@ -8,19 +8,19 @@
 const RULES = {
   payment_invoice: {
     targetBizType: "invoice",
-    datasetKey: "invoiceRecord",
+    tableName: "invoice_record",
   },
   originates_from_quote: {
     targetBizType: "quote",
-    datasetKey: "quoteHeader",
+    tableName: "quote_header",
   },
   covered_by_nda: {
     targetBizType: "legal_agreement",
-    datasetKey: "legalAgreement",
+    tableName: "legal_agreement",
   },
   serves_customer: {
     targetBizType: "crm_customer",
-    datasetKey: "quoteCustomer",
+    tableName: "quote_customer",
   },
 };
 
@@ -98,13 +98,8 @@ export default async function cpoListDocument360Options(params, context) {
   }
   const keyword = text(params?.keyword).toLowerCase();
   const pageSize = Math.min(Math.max(Number(params?.pageSize) || 100, 1), 200);
-  const map = await context.client.bff.execute({
-    scriptName: "cpoDatasetMap",
-    params: {},
-  });
-  const datasetCode = map.DATASET_CODES?.[rule.datasetKey];
-  const model = context.client.models[`dataset_${datasetCode}`];
-  if (!model?.filter) throw new Error(`MODEL_MISSING:${rule.datasetKey}`);
+  const model = context.client.models.byTable(rule.tableName);
+  if (!model?.filter) throw new Error(`MODEL_MISSING:${rule.tableName}`);
 
   const response = await model.filter({
     where:
@@ -152,8 +147,7 @@ export default async function cpoListDocument360Options(params, context) {
 
   const allocatedByInvoice = new Map();
   if (rule.targetBizType === "invoice" && rows.length) {
-    const linkModel =
-      context.client.models[`dataset_${map.DATASET_CODES.bizInvoiceLink}`];
+    const linkModel = context.client.models.byTable("biz_invoice_link");
     if (!linkModel?.filter) throw new Error("MODEL_MISSING:bizInvoiceLink");
     const links = await linkModel.filter({
       where: {

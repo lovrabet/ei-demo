@@ -173,18 +173,13 @@ export default async function cpoSyncContractPaymentPlans(params, context) {
     throw new Error("PAYMENT_PLAN_PHASE_DUPLICATED");
   }
 
-  const [map, actor] = await Promise.all([
-    context.client.bff.execute({ scriptName: "cpoDatasetMap", params: {} }),
-    context.client.bff.execute({ scriptName: "cpoCurrentActor", params: {} }),
-  ]);
-  const C = map.DATASET_CODES;
-  if (!C.contractPaymentPlan) {
-    throw new Error("DATASET_CODE_MISSING:contractPaymentPlan");
-  }
-  const contractModel =
-    context.client.models[`dataset_${C.contractApplication}`];
-  const planModel = context.client.models[`dataset_${C.contractPaymentPlan}`];
-  const paymentModel = context.client.models[`dataset_${C.paymentApplication}`];
+  const actor = await context.client.bff.execute({
+    scriptName: "cpoCurrentActor",
+    params: {},
+  });
+  const contractModel = context.client.models.byTable("contract_application");
+  const planModel = context.client.models.byTable("contract_payment_plan");
+  const paymentModel = context.client.models.byTable("payment_application");
   if (
     !contractModel?.getOne ||
     !planModel?.filter ||

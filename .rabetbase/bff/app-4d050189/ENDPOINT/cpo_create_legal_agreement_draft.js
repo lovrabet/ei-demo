@@ -98,7 +98,7 @@ async function createAgreementDraft(context, request) {
     request.statusLog,
   );
 
-  await context.client.models[DATASETS.agreement].update({
+  await context.client.models.byTable(DATASETS.agreement).update({
     id: agreementId,
     current_document_id: documentId,
   });
@@ -115,7 +115,7 @@ async function createAgreementDraft(context, request) {
 
 async function updateAgreementDraft(context, request) {
   try {
-    await context.client.models[DATASETS.agreement].update({
+    await context.client.models.byTable(DATASETS.agreement).update({
       id: request.agreementId,
       ...removeUndefined(request.agreement),
     });
@@ -165,7 +165,7 @@ async function updateAgreementDraft(context, request) {
     });
   }
   try {
-    await context.client.models[DATASETS.agreement].update({
+    await context.client.models.byTable(DATASETS.agreement).update({
       id: request.agreementId,
       current_document_id: documentId,
     });
@@ -229,10 +229,10 @@ function annotateError(error, step, detail) {
 }
 
 const DATASETS = {
-  agreement: "dataset_afcc8ccb0815418397fcbb5b5682a0c2", // 数据集: 法务协议 | 数据表: legal_agreement
-  party: "dataset_417122aa7cee4ea78b9acce9c970181c", // 数据集: 协议签署方 | 数据表: legal_agreement_party
-  document: "dataset_defbf75aee5443768f84debff00a2aa3", // 数据集: 法务协议文档 | 数据表: legal_document
-  statusLog: "dataset_a2c634ae7c9542c38f0982404dd4b34d", // 数据集: 法务状态日志 | 数据表: legal_status_log
+  agreement: "legal_agreement",
+  party: "legal_agreement_party",
+  document: "legal_document",
+  statusLog: "legal_status_log",
 };
 
 const REQUIRED_AGREEMENT_FIELDS_CREATE = [
@@ -293,7 +293,7 @@ function normalizeRequest(params) {
 }
 
 async function createAgreement(context, payload) {
-  const agreementId = await context.client.models[DATASETS.agreement].create(
+  const agreementId = await context.client.models.byTable(DATASETS.agreement).create(
     removeUndefined(payload),
   );
   return requireCreatedId(agreementId, "协议主表");
@@ -302,7 +302,7 @@ async function createAgreement(context, payload) {
 async function createParties(context, agreementId, parties) {
   const partyIds = [];
   for (const party of parties) {
-    const partyId = await context.client.models[DATASETS.party].create(
+    const partyId = await context.client.models.byTable(DATASETS.party).create(
       removeUndefined(
         stripInternalFields({
           ...normalizePartyPayload(party),
@@ -325,7 +325,7 @@ async function upsertParties(context, agreementId, parties) {
       }),
     );
     if (party?.id !== undefined && party?.id !== null && party?.id !== "") {
-      await context.client.models[DATASETS.party].update({
+      await context.client.models.byTable(DATASETS.party).update({
         id: party.id,
         ...payload,
       });
@@ -333,14 +333,14 @@ async function upsertParties(context, agreementId, parties) {
       continue;
     }
 
-    const partyId = await context.client.models[DATASETS.party].create(payload);
+    const partyId = await context.client.models.byTable(DATASETS.party).create(payload);
     partyIds.push(requireCreatedId(partyId, "协议签署方"));
   }
   return partyIds;
 }
 
 async function createDocument(context, agreementId, document) {
-  const documentId = await context.client.models[DATASETS.document].create(
+  const documentId = await context.client.models.byTable(DATASETS.document).create(
     removeUndefined(
       stripInternalFields({
         ...document,
@@ -359,7 +359,7 @@ async function upsertDocument(context, agreementId, documentId, document) {
     }),
   );
   if (documentId !== undefined && documentId !== null && documentId !== "") {
-    await context.client.models[DATASETS.document].update({
+    await context.client.models.byTable(DATASETS.document).update({
       id: documentId,
       ...payload,
     });
@@ -369,7 +369,7 @@ async function upsertDocument(context, agreementId, documentId, document) {
 }
 
 async function createStatusLog(context, agreementId, statusLog) {
-  const statusLogId = await context.client.models[DATASETS.statusLog].create(
+  const statusLogId = await context.client.models.byTable(DATASETS.statusLog).create(
     removeUndefined({
       ...statusLog,
       agreement_id: agreementId,
@@ -489,7 +489,7 @@ function readTableData(response) {
 
 async function listAgreementNosByType(context, agreementType, year) {
   const prefix = `${AGREEMENT_NO_PREFIX}-${agreementType}-${year}-`;
-  const response = await context.client.models[DATASETS.agreement].filter({
+  const response = await context.client.models.byTable(DATASETS.agreement).filter({
     where: {
       agreement_type: { $eq: agreementType },
       agreement_no: { $startWith: prefix },

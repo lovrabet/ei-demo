@@ -73,16 +73,15 @@ async function requireContract(model, contractId) {
 
 async function assertCompanyAndOpportunity(
   models,
-  codes,
   companyId,
   opportunityId,
 ) {
-  const company = await models[`dataset_${codes.crmCompany}`].getOne({
+  const company = await models.byTable("crm_company").getOne({
     id: companyId,
   });
   if (!company?.id) throw new Error("RECEIVABLE_CONTRACT_COMPANY_NOT_FOUND");
   if (!opportunityId) return;
-  const opportunity = await models[`dataset_${codes.crmOpportunity}`].getOne({
+  const opportunity = await models.byTable("crm_opportunity").getOne({
     id: opportunityId,
   });
   if (!opportunity?.id || Number(opportunity.company_id) !== companyId) {
@@ -112,13 +111,9 @@ function assertManagedApplicant(contract, actor) {
 
 export default async function cpoManageReceivableContract(params, context) {
   const action = text(params?.action);
-  const [map, actor] = await Promise.all([
-    context.client.bff.execute({ scriptName: "cpoDatasetMap", params: {} }),
-    actorOf(context),
-  ]);
-  const C = map.DATASET_CODES;
-  const contractModel = context.client.models[`dataset_${C.crmContract}`];
-  const planModel = context.client.models[`dataset_${C.crmReceivablePlan}`];
+  const actor = await actorOf(context);
+  const contractModel = context.client.models.byTable("crm_contract");
+  const planModel = context.client.models.byTable("crm_contract_receivable_plan");
 
   if (action === "create_draft" || action === "create_application") {
     const submit = action === "create_application";
@@ -137,7 +132,6 @@ export default async function cpoManageReceivableContract(params, context) {
     await Promise.all([
       assertCompanyAndOpportunity(
         context.client.models,
-        C,
         companyId,
         opportunityId,
       ),
@@ -203,7 +197,6 @@ export default async function cpoManageReceivableContract(params, context) {
     await Promise.all([
       assertCompanyAndOpportunity(
         context.client.models,
-        C,
         nextCompanyId,
         nextOpportunityId,
       ),

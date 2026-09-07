@@ -9,7 +9,7 @@
  * @param {Object} params { items: [{ bizType, bizId }], financeUserIds?: string[], currentUserId?: string, currentRoleScope?: string }
  * @returns {Promise<{byBizKey:Object}>} 以 bizType:bizId 为内部连接键的角色化打印状态映射。
  */
-const BIZ_ACTION_RECORD_MODEL_KEY = "dataset_65619b5104e44f03b0dcea52b4d8c397"; // 数据集: 业务操作日志 | 数据表: biz_action_record
+const BIZ_ACTION_RECORD_TABLE = "biz_action_record";
 const FETCH_PAGE_SIZE = 500;
 const MAX_ITEMS = 1000;
 const MAX_ACTION_ROWS_PER_TYPE = 10000;
@@ -263,7 +263,7 @@ export default async function cpoApplicationPrintStatusService(
   );
   if (!items.length) return { byBizKey };
 
-  const actionModel = context.client.models[BIZ_ACTION_RECORD_MODEL_KEY];
+  const actionModel = context.client.models.byTable(BIZ_ACTION_RECORD_TABLE);
   if (!actionModel?.filter) {
     throw new Error("CPO_PRINT_ACTION_MODEL_UNAVAILABLE");
   }

@@ -110,7 +110,7 @@ function restrictList(values, context) {
 }
 
 async function readMain({ request, config, context }) {
-  const model = context.client.models[`dataset_${config.datasetCode}`];
+  const model = context.client.models.byTable(config.tableName);
   if (!model?.filter || !model?.getOne) {
     throw new Error(`MODEL_MISSING:${config.resource}`);
   }
@@ -123,8 +123,8 @@ async function readMain({ request, config, context }) {
 }
 
 async function readChild({ request, config, context }) {
-  const childModel = context.client.models[`dataset_${config.datasetCode}`];
-  const parentModel = context.client.models[`dataset_${config.parentDatasetCode}`];
+  const childModel = context.client.models.byTable(config.tableName);
+  const parentModel = context.client.models.byTable(config.parentTableName);
   if (!childModel?.filter || !childModel?.getOne || !parentModel?.filter || !parentModel?.getOne) {
     throw new Error(`MODEL_MISSING:${config.resource}`);
   }
@@ -162,28 +162,25 @@ async function readChild({ request, config, context }) {
 async function enrichInvoiceLinks(response, context) {
   const rows = rowsOf(response);
   if (!rows.length) return response;
-  const DATASET_CODES = {
-    expenseItem: "d99c32ef07b749948cc24fd391f8fd2c",
-  };
   const BIZ_TYPE_TO_DATASET = {
     expense: {
-      modelKey: "dataset_7851365c96244a1896e834daec447ddb",
+      tableName: "expense_application",
       titleField: "title",
     },
     travel: {
-      modelKey: "dataset_28494f18f334400c893576b6e168d3f6",
+      tableName: "travel_application",
       titleField: "title",
     },
     payment: {
-      modelKey: "dataset_7da208a5059b4b13896d7c7ae29c8492",
+      tableName: "payment_application",
       titleField: "title",
     },
     contract: {
-      modelKey: "dataset_53869993f80f45ae8ef6cdf051d8e355",
+      tableName: "contract_application",
       titleField: "contract_name",
     },
     invoice: {
-      modelKey: "dataset_fc11e2d760b94b2ca2ccf0485ed40ca8",
+      tableName: "invoice_record",
       titleField: "invoice_title",
     },
   };
@@ -196,7 +193,7 @@ async function enrichInvoiceLinks(response, context) {
     .filter(Boolean))];
   const expenseIdByItemId = new Map();
   if (expenseItemIds.length) {
-    const items = await models[`dataset_${DATASET_CODES.expenseItem}`].filter({
+    const items = await models.byTable("expense_item").filter({
       where: { id: { $in: expenseItemIds } },
       select: ["id", "expense_id"],
       currentPage: 1,
@@ -227,7 +224,7 @@ async function enrichInvoiceLinks(response, context) {
       currentPage: 1,
       pageSize: 1000,
     }, context);
-    const result = await models[meta.modelKey].filter(query);
+    const result = await models.byTable(meta.tableName).filter(query);
     for (const item of rowsOf(result)) {
       const key = `${bizType}:${String(item.id)}`;
       visibleTargets.add(key);
@@ -259,13 +256,13 @@ async function enrichInvoiceLinks(response, context) {
 export default async function cpoPolicyRead(params, context) {
   const config = params?.config;
   const request = params?.request && typeof params.request === "object" ? params.request : {};
-  if (!config?.datasetCode || !optionalText(config.resource)) {
+  if (!config?.tableName || !optionalText(config.resource)) {
     throw new Error("INVALID_PARAMS:policy read config is required");
   }
   if (config.mode === "main") return readMain({ request, config, context });
   if (config.mode === "child") return readChild({ request, config, context });
   if (config.mode === "invoice_link") {
-    const model = context.client.models[`dataset_${config.datasetCode}`];
+    const model = context.client.models.byTable(config.tableName);
     if (!model?.filter) throw new Error("MODEL_MISSING:bizInvoiceLink");
     return enrichInvoiceLinks(await model.filter(request), context);
   }

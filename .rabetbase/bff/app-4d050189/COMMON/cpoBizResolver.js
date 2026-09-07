@@ -16,11 +16,13 @@ export default async function cpoBizResolver(params, context) {
       ? (bizId.id ?? bizId.result?.id ?? bizId.data?.id ?? bizId.data?.result?.id)
       : bizId;
   const numericBizId = Number(candidate);
-  if (!bizType || !Number.isFinite(numericBizId) || !meta || !meta.modelKey) {
+  if (!bizType || !Number.isFinite(numericBizId) || !meta || !meta.tableName) {
     throw new Error(`INVALID_PARAMS:cpoBizResolver requires bizType,bizId,meta`);
   }
 
-  const record = await context.client.models[meta.modelKey].getOne({ id: numericBizId });
+  const record = await context.client.models
+    .byTable(meta.tableName)
+    .getOne({ id: numericBizId });
   if (!record?.id) {
     throw new Error(`BIZ_NOT_FOUND:${bizType}:${numericBizId}`);
   }

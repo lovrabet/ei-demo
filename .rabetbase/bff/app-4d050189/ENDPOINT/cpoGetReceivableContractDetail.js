@@ -96,13 +96,8 @@ function workflowState(status) {
 
 export default async function cpoGetReceivableContractDetail(params, context) {
   const contractId = positiveId(params?.contractId, "contractId");
-  const map = await context.client.bff.execute({
-    scriptName: "cpoDatasetMap",
-    params: {},
-  });
-  const C = map.DATASET_CODES;
   const models = context.client.models;
-  const contractModel = models[`dataset_${C.crmContract}`];
+  const contractModel = models.byTable("crm_contract");
   const contract = await contractModel.getOne({ id: contractId });
   if (!contract?.id) {
     throw new Error("RECEIVABLE_CONTRACT_NOT_FOUND");
@@ -118,25 +113,25 @@ export default async function cpoGetReceivableContractDetail(params, context) {
     workflowActionResponse,
     attachmentResponse,
   ] = await Promise.all([
-    models[`dataset_${C.crmCompany}`].getOne({ id: contract.company_id }),
+    models.byTable("crm_company").getOne({ id: contract.company_id }),
     contract.opportunity_id
-      ? models[`dataset_${C.crmOpportunity}`].getOne({
+      ? models.byTable("crm_opportunity").getOne({
           id: contract.opportunity_id,
         })
       : Promise.resolve(null),
-    models[`dataset_${C.crmContact}`].filter({
+    models.byTable("crm_contact").filter({
       where: { company_id: { $eq: Number(contract.company_id) } },
       currentPage: 1,
       pageSize: 500,
       orderBy: [{ is_primary: "desc" }, { updated_at: "desc" }],
     }),
-    models[`dataset_${C.crmReceivablePlan}`].filter({
+    models.byTable("crm_contract_receivable_plan").filter({
       where: { contract_id: { $eq: contractId } },
       currentPage: 1,
       pageSize: 500,
       orderBy: [{ phase_no: "asc" }, { id: "asc" }],
     }),
-    models[`dataset_${C.bizRelation}`].filter({
+    models.byTable("biz_relation").filter({
       where: {
         target_biz_type: { $eq: "crm_contract" },
         target_biz_id: { $eq: contractId },
@@ -147,7 +142,7 @@ export default async function cpoGetReceivableContractDetail(params, context) {
       currentPage: 1,
       pageSize: 500,
     }),
-    models[`dataset_${C.customerReceiptAllocation}`].filter({
+    models.byTable("customer_receipt_allocation").filter({
       where: {
         target_biz_type: { $eq: "crm_contract" },
         target_biz_id: { $eq: contractId },
@@ -156,7 +151,7 @@ export default async function cpoGetReceivableContractDetail(params, context) {
       currentPage: 1,
       pageSize: 500,
     }),
-    models[`dataset_${C.bizActionRecord}`].filter({
+    models.byTable("biz_action_record").filter({
       where: {
         biz_type: { $eq: "crm_contract" },
         biz_id: { $eq: contractId },
@@ -175,7 +170,7 @@ export default async function cpoGetReceivableContractDetail(params, context) {
       pageSize: 500,
       orderBy: [{ created_at: "asc" }, { id: "asc" }],
     }),
-    models[`dataset_${C.attachment}`].filter({
+    models.byTable("attachment").filter({
       where: {
         biz_type: { $eq: "crm_contract" },
         biz_id: { $eq: contractId },
@@ -200,9 +195,8 @@ export default async function cpoGetReceivableContractDetail(params, context) {
     .filter(Boolean);
   const [invoiceAllocationResponse, planReceiptAllocationResponse] =
     await Promise.all([
-      C.receivableInvoiceAllocation &&
-      models[`dataset_${C.receivableInvoiceAllocation}`]?.filter
-        ? models[`dataset_${C.receivableInvoiceAllocation}`].filter({
+      models.byTable("receivable_invoice_allocation")?.filter
+        ? models.byTable("receivable_invoice_allocation").filter({
             where: {
               crm_contract_id: { $eq: contractId },
               relation_status: { $eq: "active" },
@@ -219,7 +213,7 @@ export default async function cpoGetReceivableContractDetail(params, context) {
           })
         : Promise.resolve({ tableData: [] }),
       planIds.length
-        ? models[`dataset_${C.customerReceiptAllocation}`].filter({
+        ? models.byTable("customer_receipt_allocation").filter({
             where: {
               target_biz_type: { $eq: "crm_receivable_plan" },
               target_biz_id: { $in: planIds },
@@ -249,7 +243,7 @@ export default async function cpoGetReceivableContractDetail(params, context) {
     ),
   ].filter(Boolean);
   const invoiceResponse = invoiceIds.length
-    ? await models[`dataset_${C.invoiceRecord}`].filter({
+    ? await models.byTable("invoice_record").filter({
         where: { id: { $in: invoiceIds } },
         currentPage: 1,
         pageSize: Math.min(invoiceIds.length, 500),
@@ -270,7 +264,7 @@ export default async function cpoGetReceivableContractDetail(params, context) {
     ),
   ].filter(Boolean);
   const receiptResponse = receiptIds.length
-    ? await models[`dataset_${C.customerReceipt}`].filter({
+    ? await models.byTable("customer_receipt").filter({
         where: {
           id: { $in: receiptIds },
           status: { $eq: "confirmed" },

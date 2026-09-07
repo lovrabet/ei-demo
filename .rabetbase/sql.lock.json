@@ -2,39 +2,39 @@
   "apps": {
     "app-4d050189": {
       "sqlRoot": ".rabetbase/sql/app-4d050189",
-      "lastSync": "2026-09-07T05:35:29.113Z",
+      "lastSync": "2026-09-07T08:36:14.436Z",
       "sqls": {
         "4d050189-a33eb743": {
-          "path": "oa-demo/4d050189-a33eb743_cpoWorkbenchDashboard.sql",
-          "hash": "4c302fa1feb07ebe55dd817e8f5b4f45",
+          "path": "oa-demo/4d050189-a33eb743_oaDemoCpoWorkbenchDashboard.sql",
+          "hash": "bf067059b411f30453267bfb9d40abaf",
           "remoteId": 2643,
-          "version": 4,
+          "version": 5,
           "dbId": 10384,
           "dbName": "oa-demo",
-          "sqlName": "cpoWorkbenchDashboard",
-          "sqlConfig": "{\"version\": 4}",
+          "sqlName": "oaDemoCpoWorkbenchDashboard",
+          "sqlConfig": "{\"version\": 5}",
           "mode": "sql"
         },
         "4d050189-2a63c18c": {
-          "path": "oa-demo/4d050189-2a63c18c_cpoCustomer360List.sql",
-          "hash": "f504bf8cf7ab4447fdaabdb7741140e3",
+          "path": "oa-demo/4d050189-2a63c18c_oaDemoCpoCustomer360List.sql",
+          "hash": "faed1204fb7fc18098229f8c35fc98f3",
           "remoteId": 2644,
-          "version": 2,
+          "version": 3,
           "dbId": 10384,
           "dbName": "oa-demo",
-          "sqlName": "cpoCustomer360List",
-          "sqlConfig": "{\"version\": 2}",
+          "sqlName": "oaDemoCpoCustomer360List",
+          "sqlConfig": "{\"version\": 3}",
           "mode": "sql"
         },
         "4d050189-316a4851": {
-          "path": "oa-demo/4d050189-316a4851_cpoContractCenterCrmContracts.sql",
-          "hash": "18280c92365a1a95107ed704e4995a9f",
+          "path": "oa-demo/4d050189-316a4851_oaDemoCpoContractCenterCrmContracts.sql",
+          "hash": "6a9cfd48e719b6a99e8c61e55fca771a",
           "remoteId": 2645,
-          "version": 2,
+          "version": 3,
           "dbId": 10384,
           "dbName": "oa-demo",
-          "sqlName": "cpoContractCenterCrmContracts",
-          "sqlConfig": "{\"version\": 2}",
+          "sqlName": "oaDemoCpoContractCenterCrmContracts",
+          "sqlConfig": "{\"version\": 3}",
           "mode": "sql"
         }
       }

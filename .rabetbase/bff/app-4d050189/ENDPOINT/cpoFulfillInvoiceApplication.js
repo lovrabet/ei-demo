@@ -79,37 +79,30 @@ function createdId(result) {
   );
 }
 
-function modelOf(models, code, label, methods) {
-  const model = models[`dataset_${code}`];
-  if (!code || !model || methods.some((method) => !model[method])) {
+function modelOf(models, tableName, label, methods) {
+  const model = models.byTable(tableName);
+  if (!model || methods.some((method) => !model[method])) {
     throw new Error(`MODEL_MISSING:${label}`);
   }
   return model;
 }
 
 async function loadModels(context) {
-  const [map, actor] = await Promise.all([
-    context.client.bff.execute({
-      scriptName: "cpoDatasetMap",
-      params: {},
-    }),
-    context.client.bff.execute({
-      scriptName: "cpoCurrentActor",
-      params: {},
-    }),
-  ]);
-  const C = map.DATASET_CODES;
+  const actor = await context.client.bff.execute({
+    scriptName: "cpoCurrentActor",
+    params: {},
+  });
   const models = context.client.models;
   return {
     actor,
-    application: modelOf(models, C.invoiceApplication, "invoiceApplication", [
+    application: modelOf(models, "invoice_application", "invoiceApplication", [
       "getOne",
       "update",
     ]),
-    invoice: modelOf(models, C.invoiceRecord, "invoiceRecord", ["getOne"]),
+    invoice: modelOf(models, "invoice_record", "invoiceRecord", ["getOne"]),
     fulfillment: modelOf(
       models,
-      C.invoiceApplicationFulfillment,
+      "invoice_application_fulfillment",
       "invoiceApplicationFulfillment",
       ["filter", "create", "update"],
     ),

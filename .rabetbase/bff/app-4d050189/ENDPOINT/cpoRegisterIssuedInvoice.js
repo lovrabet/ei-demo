@@ -25,13 +25,9 @@ function positiveId(value, field) {
 export default async function cpoRegisterIssuedInvoice(params, context) {
   const invoiceId = positiveId(params?.invoiceId, "invoiceId");
   const bff = context.client.bff;
-  const [actor, map] = await Promise.all([
-    bff.execute({ scriptName: "cpoCurrentActor", params: {} }),
-    bff.execute({ scriptName: "cpoDatasetMap", params: {} }),
-  ]);
-  const C = map.DATASET_CODES;
-  const invoiceModel = context.client.models[`dataset_${C.invoiceRecord}`];
-  const attachmentModel = context.client.models[`dataset_${C.attachment}`];
+  const actor = await bff.execute({ scriptName: "cpoCurrentActor", params: {} });
+  const invoiceModel = context.client.models.byTable("invoice_record");
+  const attachmentModel = context.client.models.byTable("attachment");
   if (!invoiceModel?.getOne || !invoiceModel?.update) {
     throw new Error("MODEL_MISSING:invoiceRecord");
   }

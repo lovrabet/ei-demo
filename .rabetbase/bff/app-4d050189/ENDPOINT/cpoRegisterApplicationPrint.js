@@ -32,8 +32,8 @@ function positiveId(value, fieldName) {
 
 async function loadReadableRecord(context, map, bizType, bizId) {
   const meta = map?.BIZ_TYPE_TO_DATASET?.[bizType];
-  if (!meta?.modelKey) throw new Error(`INVALID_BIZ_TYPE:${bizType}`);
-  const record = await context.client.models[meta.modelKey].getOne({
+  if (!meta?.tableName) throw new Error(`INVALID_BIZ_TYPE:${bizType}`);
+  const record = await context.client.models.byTable(meta.tableName).getOne({
     id: bizId,
   });
   if (!record) throw new Error(`CPO_APPLICATION_NOT_FOUND:${bizType}`);

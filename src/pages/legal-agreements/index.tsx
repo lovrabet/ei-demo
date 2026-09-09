@@ -75,16 +75,20 @@ import {
   getLegalAgreementLoadErrorDescription,
   legalAgreementMatchesKeyword,
 } from "@/features/legal-agreements/view";
-import {
-  formatDateText,
-  formatDateTimeText,
-} from "@/utils/format";
+import { formatDateText, formatDateTimeText } from "@/utils/format";
 import { $i18n } from "@/i18n";
 import styles from "./index.module.css";
 
 const { Text } = Typography;
 
-const t = (key: string, fallbackText: string) => $i18n.t(key, fallbackText);
+const t = (
+  key: string,
+  fallbackText: string,
+  options?: Record<string, string | number>,
+) =>
+  options
+    ? $i18n.t({ id: key, dm: fallbackText }, options)
+    : $i18n.t(key, fallbackText);
 
 const PARTY_ROLE_LABEL: Record<string, string> = {
   OUR_SIDE: t("legalAgreements.partyRole.ourSide", "我方"),
@@ -193,7 +197,10 @@ function isUsableContractHtml(value: unknown): value is string {
 function printHtmlDocument(html: string, title: string) {
   if (!printLegalAgreementHtml(html, title)) {
     message.error(
-      t("legalAgreements.popupBlocked", "浏览器阻止了打印窗口，请允许弹窗后重试"),
+      t(
+        "legalAgreements.popupBlocked",
+        "浏览器阻止了打印窗口，请允许弹窗后重试",
+      ),
     );
   }
 }
@@ -208,7 +215,9 @@ async function exportWordDocument(
       html,
       fileName: agreementNo || title,
     });
-    message.success(t("legalAgreements.wordExportStarted", "Word 文档已开始下载"));
+    message.success(
+      t("legalAgreements.wordExportStarted", "Word 文档已开始下载"),
+    );
   } catch (error) {
     console.error(error);
     message.error(
@@ -372,9 +381,13 @@ export default function LegalAgreementsPage() {
             <span>
               {[
                 customer.contactName
-                  ? t("legalAgreements.contact.contactPrefix", "联系人：{name}", {
-                      name: customer.contactName,
-                    })
+                  ? t(
+                      "legalAgreements.contact.contactPrefix",
+                      "联系人：{name}",
+                      {
+                        name: customer.contactName,
+                      },
+                    )
                   : "",
                 customer.contactPhone
                   ? t("legalAgreements.contact.phonePrefix", "手机：{phone}", {
@@ -388,7 +401,8 @@ export default function LegalAgreementsPage() {
                   : "",
               ]
                 .filter(Boolean)
-                .join(" · ") || t("legalAgreements.contact.fallback", "客户档案")}
+                .join(" · ") ||
+                t("legalAgreements.contact.fallback", "客户档案")}
             </span>
           </div>
         ),
@@ -436,7 +450,9 @@ export default function LegalAgreementsPage() {
 
   const openEditDrawer = (detail: LegalAgreementDetail) => {
     if (detail.agreement.status !== "DRAFT") {
-      message.warning(t("legalAgreements.onlyDraftEditable", "只有草稿协议可以修改"));
+      message.warning(
+        t("legalAgreements.onlyDraftEditable", "只有草稿协议可以修改"),
+      );
       return;
     }
     const draft = detailToLegalAgreementDraft(detail);
@@ -1001,13 +1017,19 @@ export default function LegalAgreementsPage() {
               >
                 <Select
                   options={[
-                    { label: t("legalAgreements.type.nda", "保密协议"), value: "NDA" },
+                    {
+                      label: t("legalAgreements.type.nda", "保密协议"),
+                      value: "NDA",
+                    },
                     {
                       label: t("legalAgreements.type.dpa", "数据处理协议"),
                       value: "DPA",
                     },
                     {
-                      label: t("legalAgreements.type.serviceAgreement", "服务协议"),
+                      label: t(
+                        "legalAgreements.type.serviceAgreement",
+                        "服务协议",
+                      ),
                       value: "SERVICE_AGREEMENT",
                     },
                     {
@@ -1051,13 +1073,19 @@ export default function LegalAgreementsPage() {
               </Form.Item>
               <Form.Item
                 name="confidentialityYears"
-                label={t("legalAgreements.field.confidentialityYears", "保密年限")}
+                label={t(
+                  "legalAgreements.field.confidentialityYears",
+                  "保密年限",
+                )}
               >
                 <InputNumber min={1} max={50} className={styles.fullInput} />
               </Form.Item>
               <Form.Item
                 name="returnDestroyDays"
-                label={t("legalAgreements.field.returnDestroyDays", "返还销毁天数")}
+                label={t(
+                  "legalAgreements.field.returnDestroyDays",
+                  "返还销毁天数",
+                )}
               >
                 <InputNumber min={1} max={365} className={styles.fullInput} />
               </Form.Item>
@@ -1081,11 +1109,17 @@ export default function LegalAgreementsPage() {
                   }}
                   options={[
                     {
-                      label: t("legalAgreements.breachPenalty.actualLoss", "按实际损失"),
+                      label: t(
+                        "legalAgreements.breachPenalty.actualLoss",
+                        "按实际损失",
+                      ),
                       value: "ACTUAL_LOSS",
                     },
                     {
-                      label: t("legalAgreements.breachPenalty.fixedAmount", "固定金额"),
+                      label: t(
+                        "legalAgreements.breachPenalty.fixedAmount",
+                        "固定金额",
+                      ),
                       value: "FIXED_AMOUNT",
                     },
                     {
@@ -1300,12 +1334,18 @@ export default function LegalAgreementsPage() {
                     className={styles.detailDescriptions}
                   >
                     <Descriptions.Item
-                      label={t("legalAgreements.detail.agreementNo", "协议编号")}
+                      label={t(
+                        "legalAgreements.detail.agreementNo",
+                        "协议编号",
+                      )}
                     >
                       {detailAgreement.agreement_no}
                     </Descriptions.Item>
                     <Descriptions.Item
-                      label={t("legalAgreements.detail.agreementType", "协议类型")}
+                      label={t(
+                        "legalAgreements.detail.agreementType",
+                        "协议类型",
+                      )}
                     >
                       {formatLegalAgreementType(detailAgreement.agreement_type)}
                     </Descriptions.Item>
@@ -1315,18 +1355,27 @@ export default function LegalAgreementsPage() {
                       {detailAgreement.primary_party_name_snapshot || "-"}
                     </Descriptions.Item>
                     <Descriptions.Item
-                      label={t("legalAgreements.detail.projectName", "项目名称")}
+                      label={t(
+                        "legalAgreements.detail.projectName",
+                        "项目名称",
+                      )}
                     >
                       {detailAgreement.project_name || "-"}
                     </Descriptions.Item>
                     <Descriptions.Item
-                      label={t("legalAgreements.detail.cooperationMatter", "合作事项")}
+                      label={t(
+                        "legalAgreements.detail.cooperationMatter",
+                        "合作事项",
+                      )}
                       span={2}
                     >
                       {detailAgreement.cooperation_matter || "-"}
                     </Descriptions.Item>
                     <Descriptions.Item
-                      label={t("legalAgreements.detail.agreementDate", "协议日期")}
+                      label={t(
+                        "legalAgreements.detail.agreementDate",
+                        "协议日期",
+                      )}
                     >
                       {formatDateText(detailAgreement.agreement_date)}
                     </Descriptions.Item>
@@ -1336,7 +1385,10 @@ export default function LegalAgreementsPage() {
                       {formatDateText(detailAgreement.signed_date)}
                     </Descriptions.Item>
                     <Descriptions.Item
-                      label={t("legalAgreements.detail.confidentialityYears", "保密年限")}
+                      label={t(
+                        "legalAgreements.detail.confidentialityYears",
+                        "保密年限",
+                      )}
                     >
                       {detailAgreement.confidentiality_years
                         ? t("legalAgreements.yearUnit", "{count} 年", {
@@ -1345,7 +1397,10 @@ export default function LegalAgreementsPage() {
                         : "-"}
                     </Descriptions.Item>
                     <Descriptions.Item
-                      label={t("legalAgreements.detail.returnDestroy", "返还销毁")}
+                      label={t(
+                        "legalAgreements.detail.returnDestroy",
+                        "返还销毁",
+                      )}
                     >
                       {detailAgreement.return_destroy_days
                         ? t("legalAgreements.dayUnit", "{count} 天", {
@@ -1354,7 +1409,10 @@ export default function LegalAgreementsPage() {
                         : "-"}
                     </Descriptions.Item>
                     <Descriptions.Item
-                      label={t("legalAgreements.detail.disputeResolution", "争议解决")}
+                      label={t(
+                        "legalAgreements.detail.disputeResolution",
+                        "争议解决",
+                      )}
                       span={2}
                     >
                       {[
@@ -1369,7 +1427,10 @@ export default function LegalAgreementsPage() {
                         .join(" · ") || "-"}
                     </Descriptions.Item>
                     <Descriptions.Item
-                      label={t("legalAgreements.detail.internalNote", "内部备注")}
+                      label={t(
+                        "legalAgreements.detail.internalNote",
+                        "内部备注",
+                      )}
                       span={2}
                     >
                       {detailAgreement.internal_note || "-"}

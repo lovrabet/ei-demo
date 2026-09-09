@@ -94,6 +94,22 @@
       "backendFunction": "cpoPolicyReadBizInvoiceLink"
     },
     {
+      "name": "route-attachment-read",
+      "description": "附件读取继承所属业务主单的行级权限",
+      "datasets": [{ "datasetCode": "ab17964f0efd46f78cecb4969140f257" }],
+      "apis": ["filter", "getOne", "getOneOrigin"],
+      "action": "route",
+      "backendFunction": "cpoPolicyReadAttachment"
+    },
+    {
+      "name": "route-biz-action-record-read",
+      "description": "业务操作流水读取继承所属业务主单的行级权限",
+      "datasets": [{ "datasetCode": "65619b5104e44f03b0dcea52b4d8c397" }],
+      "apis": ["filter", "getOne", "getOneOrigin"],
+      "action": "route",
+      "backendFunction": "cpoPolicyReadBizActionRecord"
+    },
+    {
       "name": "deny-sensitive-generic-list-apis",
       "description": "敏感业务数据只开放受控 filter/detail；通用列表、下拉、导出与聚合默认拒绝",
       "datasets": [
@@ -106,7 +122,9 @@
         { "datasetCode": "28494f18f334400c893576b6e168d3f6" },
         { "datasetCode": "d99c32ef07b749948cc24fd391f8fd2c" },
         { "datasetCode": "08e17d8ba3a24e938fef89816c8f4ccb" },
-        { "datasetCode": "19ef166f3d2242a19911ccb8a5685bb8" }
+        { "datasetCode": "19ef166f3d2242a19911ccb8a5685bb8" },
+        { "datasetCode": "ab17964f0efd46f78cecb4969140f257" },
+        { "datasetCode": "65619b5104e44f03b0dcea52b4d8c397" }
       ],
       "apis": ["getList", "getSelectOptions", "excelExport", "aggregate"],
       "action": "deny"

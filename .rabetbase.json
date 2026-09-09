@@ -3,10 +3,16 @@
   "version": "2.3.15",
   "env": "production",
   "apps": {
-    "app-4d050189": {
+    "oa-cn": {
       "appcode": "app-4d050189",
+      "region": "cn",
+      "env": "production"
+    },
+    "oa-id": {
+      "appcode": "app-4d050189",
+      "region": "id",
       "env": "production"
     }
   },
-  "defaultApp": "app-4d050189"
+  "defaultApp": "oa-cn"
 }

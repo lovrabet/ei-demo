@@ -33,24 +33,7 @@ function unique(values) {
 }
 
 function actorIsAdmin(actor) {
-  if (actor?.isAdmin === true) return true;
-  const roles = Array.isArray(actor?.roles) ? actor.roles : [actor?.roles];
-  return roles.some((role) => {
-    const value = text(
-      typeof role === "string"
-        ? role
-        : role?.code || role?.name || role?.value || role?.roleCode,
-    ).toLowerCase();
-    return [
-      "admin",
-      "administrator",
-      "super_admin",
-      "owner",
-      "cpo_admin",
-      "管理员",
-      "应用owner",
-    ].includes(value);
-  });
+  return actor?.isAdmin === true;
 }
 
 function assertReader(actor) {

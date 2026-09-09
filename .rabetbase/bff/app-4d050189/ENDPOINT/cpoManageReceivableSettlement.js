@@ -44,31 +44,11 @@ function text(value) {
 }
 
 function actorIsAdmin(actor) {
-  if (actor?.isAdmin === true || actor?.raw?.isAdmin === true) return true;
-  const roles = Array.isArray(actor?.roles) ? actor.roles : [actor?.roles];
-  return roles.some((role) =>
-    ["admin", "administrator", "super_admin", "cpo_admin"].includes(
-      text(
-        typeof role === "string"
-          ? role
-          : role?.code || role?.name || role?.value || role?.roleCode,
-      ).toLowerCase(),
-    ),
-  );
+  return actor?.isAdmin === true;
 }
 
 function actorIsFinanceAdvisor(actor) {
-  if (actor?.isFinanceAdvisor === true) return true;
-  const roles = Array.isArray(actor?.roles) ? actor.roles : [actor?.roles];
-  return roles.some((role) =>
-    ["finance_advisor", "财务顾问"].includes(
-      text(
-        typeof role === "string"
-          ? role
-          : role?.code || role?.name || role?.value || role?.roleCode,
-      ).toLowerCase(),
-    ),
-  );
+  return actor?.isFinanceAdvisor === true;
 }
 
 function assertManagerAccess(contract, models) {

@@ -11,13 +11,6 @@
  * @returns {Promise<Object>} 清洗后的 update 参数。
  */
 const EDITABLE_STATUSES = new Set(["draft", "rejected"]);
-const ADMIN_ROLES = new Set([
-  "admin",
-  "administrator",
-  "super_admin",
-  "cpo_admin",
-  "workflow_admin",
-]);
 const PROTECTED_FIELDS = new Set([
   "status",
   "bank_status",
@@ -78,43 +71,9 @@ function optionalText(value) {
   return String(value).trim();
 }
 
-function normalizeRole(value) {
-  return optionalText(value).toLowerCase();
-}
-
-function normalizeRoles(roleLike) {
-  if (Array.isArray(roleLike)) {
-    return roleLike
-      .map((item) =>
-        typeof item === "string"
-          ? item
-          : item?.code || item?.name || item?.value || item?.roleCode,
-      )
-      .map(normalizeRole)
-      .filter(Boolean);
-  }
-  const role = normalizeRole(roleLike);
-  return role ? [role] : [];
-}
-
 function actorIsAdmin(actor, context) {
   const userInfo = context?.userInfo || {};
-  if (
-    actor?.isAdmin === true ||
-    userInfo.isAdmin === true ||
-    userInfo.admin === true ||
-    userInfo.is_super_admin === true
-  ) {
-    return true;
-  }
-  const roles = [
-    ...normalizeRoles(actor?.roles),
-    ...normalizeRoles(userInfo.roles),
-    ...normalizeRoles(userInfo.roleList),
-    ...normalizeRoles(userInfo.roleCodes),
-    ...normalizeRoles(userInfo.role),
-  ];
-  return roles.some((role) => ADMIN_ROLES.has(role));
+  return actor?.isAdmin === true || userInfo.isAdmin === true;
 }
 
 function pickFirstText(...values) {
@@ -134,13 +93,7 @@ function currentActorFromContext(context) {
       userInfo.openId,
       userInfo.open_id,
     ),
-    roles: normalizeRoles(
-      userInfo.roles ||
-        userInfo.roleList ||
-        userInfo.roleCodes ||
-        userInfo.role,
-    ),
-    isAdmin: userInfo.isAdmin === true || userInfo.admin === true,
+    isAdmin: userInfo.isAdmin === true,
   };
 }
 

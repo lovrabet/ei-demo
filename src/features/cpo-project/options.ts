@@ -23,7 +23,7 @@ async function listProjectOptionsFromDataset(): Promise<ProjectOption[]> {
     },
     orderBy: [{ sort_order: "asc" }, { id: "asc" }],
     currentPage: 1,
-    pageSize: 200,
+    pageSize: 100,
   });
   const rows = response?.tableData || [];
   return rows.map((row: any) => ({

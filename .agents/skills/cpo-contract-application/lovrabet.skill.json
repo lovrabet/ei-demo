@@ -2,25 +2,25 @@
   "schemaVersion": 2,
   "appCode": "app-4d050189",
   "skillCode": "cpo-contract-application",
-  "skillName": "合同申请助手",
-  "description": "在启智云图企业智能系统中创建、保存草稿、提交和查询合同申请。用户提供合同或审批材料时必须主动上传、逐项关联申请单并清点数量；不得绕过受控 Backend Function 直接修改流程状态。",
+  "skillName": "Contract Application Assistant",
+  "description": "Create, save drafts, submit, and query contract applications in the Qizhi Yuntu Enterprise Intelligence System. When the user supplies a contract or approval materials, proactively upload every file, link each one to the application, and reconcile counts. Never bypass controlled Backend Functions to modify workflow status directly.",
   "scope": "company",
   "readonly": true,
-  "version": "20260817.165231",
+  "version": "20260909.165422",
   "tags": [],
-  "contentHash": "a8007a9cc9c12a2e9938bfd82d4fd4487a5cedcbf1b93251fce3dc9fe0ac6bb8",
+  "contentHash": "14098bfbd99a9465651453454c8ed329866093f1c0546f559cfcebe73bf18db8",
   "fileHashes": {
-    "SKILL.md": "a8007a9cc9c12a2e9938bfd82d4fd4487a5cedcbf1b93251fce3dc9fe0ac6bb8"
+    "SKILL.md": "14098bfbd99a9465651453454c8ed329866093f1c0546f559cfcebe73bf18db8"
   },
-  "treeHash": "5884b1e36b3a435ef92dc8b4020c0d9b20cb95430712babd14a8206917044dda",
-  "zipSha256": "95a7135379d566a9b143a310d3c6c95d469fece03632711d83dae766021de8c4",
-  "zipSize": 9866,
+  "treeHash": "56d42437f32f7ba5e436156245e894a82904cdb361849fae26d4eb83aee726ae",
+  "zipSha256": "ae6a72295626e745310ead5fe07bddc15b1d007ea921d1a883d316dd4f04fa72",
+  "zipSize": 10600,
   "files": [
     {
       "path": "SKILL.md",
-      "hash": "a8007a9cc9c12a2e9938bfd82d4fd4487a5cedcbf1b93251fce3dc9fe0ac6bb8",
-      "size": 9752
+      "hash": "14098bfbd99a9465651453454c8ed329866093f1c0546f559cfcebe73bf18db8",
+      "size": 10486
     }
   ],
-  "pulledAt": "2026-08-17T08:52:31.787Z"
+  "pulledAt": "2026-09-09T08:54:23.161Z"
 }

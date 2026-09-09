@@ -43,14 +43,6 @@
  */
 
 const EDITABLE_STATUSES = new Set(["draft", "rejected"]);
-const ADMIN_ROLES = new Set([
-  "admin",
-  "administrator",
-  "super_admin",
-  "cpo_admin",
-  "workflow_admin",
-]);
-
 const BIZ_FIELD_WHITELIST = {
   expense: [
     "expense_type",
@@ -97,6 +89,7 @@ const BIZ_FIELD_WHITELIST = {
     "remark",
   ],
   invoice_application: [
+    "application_no",
     "application_title",
     "request_type",
     "crm_company_id",
@@ -197,7 +190,7 @@ const CREATE_DEFAULTS = {
     invoice_region: "mainland_china",
     invoice_type: "vat_normal",
     invoice_medium: "electronic",
-    tax_rate: 0,
+    tax_rate: 0.01,
     is_mainland_compliant: 1,
     status: "draft",
   },
@@ -207,7 +200,7 @@ const CREATE_DEFAULTS = {
     requested_tax_amount: 0,
     requested_total_amount: 0,
     currency: "CNY",
-    tax_rate: 0,
+    tax_rate: 0.01,
     invoice_type: "vat_normal",
     invoice_medium: "electronic",
     status: "draft",
@@ -911,39 +904,8 @@ function optionalText(value) {
   return String(value).trim();
 }
 
-function normalizeRoles(roleLike) {
-  if (Array.isArray(roleLike)) {
-    return roleLike
-      .map((item) =>
-        typeof item === "string"
-          ? item
-          : item?.code || item?.name || item?.value || item?.roleCode,
-      )
-      .map((role) => optionalText(role).toLowerCase())
-      .filter(Boolean);
-  }
-  const role = optionalText(roleLike).toLowerCase();
-  return role ? [role] : [];
-}
-
-function actorIsAdmin(actor, context) {
-  const userInfo = context?.userInfo || {};
-  if (
-    actor?.isAdmin === true ||
-    userInfo.isAdmin === true ||
-    userInfo.admin === true ||
-    userInfo.is_super_admin === true
-  ) {
-    return true;
-  }
-  const roles = [
-    ...normalizeRoles(actor?.roles),
-    ...normalizeRoles(userInfo.roles),
-    ...normalizeRoles(userInfo.roleList),
-    ...normalizeRoles(userInfo.roleCodes),
-    ...normalizeRoles(userInfo.role),
-  ];
-  return roles.some((role) => ADMIN_ROLES.has(role));
+function actorIsAdmin(actor) {
+  return actor?.isAdmin === true;
 }
 
 function readRows(response) {
@@ -1003,13 +965,13 @@ async function resolvePaymentPlan({ values, paymentId, datasetMap, context }) {
       },
       select: ["id"],
       currentPage: 1,
-      pageSize: 200,
+      pageSize: 100,
     }),
     paymentModel.filter({
       where: { payment_plan_id: { $eq: planId } },
       select: ["id", "amount", "status", "bank_status"],
       currentPage: 1,
-      pageSize: 1000,
+      pageSize: 100,
     }),
   ]);
   const otherApplicationAmount = readRows(paymentResponse)
@@ -1544,7 +1506,7 @@ async function syncExpenseItems({ bizId, items, datasetMap, context }) {
     where: { expense_id: { $eq: Number(bizId) } },
     select: ["id", "invoice_id", "offset_invoice_id"],
     currentPage: 1,
-    pageSize: 200,
+    pageSize: 100,
   });
   const existingRows = readRows(existingResponse);
   const existingById = new Map(
@@ -1666,7 +1628,7 @@ async function syncExpenseInvoiceLinks({
       biz_id: { $in: itemIds },
     },
     currentPage: 1,
-    pageSize: 500,
+    pageSize: 100,
     orderBy: [{ id: "desc" }],
   });
   const existingRows = readRows(existingResponse);
@@ -1782,7 +1744,7 @@ async function syncInvoicePaymentAllocations({
               invoice_id: { $eq: invoiceId },
             },
             currentPage: 1,
-            pageSize: 500,
+            pageSize: 100,
             orderBy: [{ id: "desc" }],
           })
         : Promise.resolve({ tableData: [] }),
@@ -1793,7 +1755,7 @@ async function syncInvoicePaymentAllocations({
               biz_id: { $in: paymentIds },
             },
             currentPage: 1,
-            pageSize: 1000,
+            pageSize: 100,
           })
         : Promise.resolve({ tableData: [] }),
     ]);
@@ -2005,10 +1967,9 @@ export default async function cpoSaveDraft(params, context) {
     Object.assign(businessFields, salaryPaymentSummary);
   }
   const relationPayload = normalizeRelations(params.relations);
-  const applicationAttachments =
-    ["expense", "salary_payment"].includes(bizType)
-      ? normalizeApplicationAttachments(params.attachments, bizType)
-      : undefined;
+  const applicationAttachments = ["expense", "salary_payment"].includes(bizType)
+    ? normalizeApplicationAttachments(params.attachments, bizType)
+    : undefined;
   if (
     params.attachments !== undefined &&
     !["expense", "salary_payment"].includes(bizType)

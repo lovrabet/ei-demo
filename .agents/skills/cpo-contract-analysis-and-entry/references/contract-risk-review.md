@@ -1,101 +1,48 @@
-# 合同专家风险审查规则
+# Expert Contract Risk Review Rules
 
-## 审查方法
+## Method
 
-逐项使用“合同事实 → 风险后果 → 处置建议 → 证据位置”的格式。风险必须来自合同文本、缺失条款、系统冲突或履约证据，不使用笼统的“存在一定风险”。
+For every finding, use: contract fact → consequence → recommendation → evidence location. Risks must arise from text, missing clauses, system conflicts, or performance evidence; avoid vague statements.
 
-必须审查以下维度：
+Review all dimensions:
 
-| 维度 code | 重点问题 |
+| Dimension code | Key questions |
 | --- | --- |
-| `parties_authority` | 主体全称、统一信用代码、签约授权、印章、关联公司混用 |
-| `subject_scope` | 标的、服务边界、数量、交付物、排除项是否明确 |
-| `amount_tax` | 总额、含税口径、税率、调价机制、额外费用 |
-| `payment_collection` | 预付款比例、付款节点、收款条件、保证金、账户一致性 |
-| `delivery_acceptance` | 交付标准、验收人、验收期限、默认验收、整改机制 |
-| `invoice_refund` | 发票类型和时点、退款条件、退款期限、发票与付款先后 |
-| `term_renewal_termination` | 生效、期限、自动续约、通知期、解除权和终止后处理 |
-| `breach_liability` | 违约金、赔偿范围、责任上限、间接损失、单方免责 |
-| `ip_confidentiality_data` | 成果归属、背景知识产权、授权范围、保密期限、数据安全 |
-| `compliance_qualification` | 行业许可、反商业贿赂、分包、用工、出口或数据合规 |
-| `dispute_resolution` | 适用法律、管辖或仲裁地、通知送达、证据形式 |
-| `blanks_conflicts` | 空白栏、手写修改、前后矛盾、附件缺失、引用条款不存在 |
+| `parties_authority` | Full legal names, credit codes, signing authority, seals, affiliate confusion |
+| `subject_scope` | Subject, service boundaries, quantity, deliverables, exclusions |
+| `amount_tax` | Total, tax inclusion/rate, repricing, extra costs |
+| `payment_collection` | Advance ratio, milestones, receipt conditions, retention, account consistency |
+| `delivery_acceptance` | Standards, acceptor, deadline, deemed acceptance, remediation |
+| `invoice_refund` | Invoice type/timing, refund conditions/deadline, sequencing |
+| `term_renewal_termination` | Effectiveness, term, renewal, notice, termination and post-termination handling |
+| `breach_liability` | Penalties, damages, caps, indirect loss, unilateral exclusions |
+| `ip_confidentiality_data` | Deliverable/background IP, license scope, confidentiality term, data security |
+| `compliance_qualification` | Licenses, anti-bribery, subcontracting, labor, export/data compliance |
+| `dispute_resolution` | Governing law, court/arbitration, notices, evidence form |
+| `blanks_conflicts` | Blanks, handwritten edits, contradictions, missing appendices, nonexistent references |
 
-## 风险等级
+## Risk Levels
 
-### `critical`
+- `critical`: core facts are indeterminate or potentially unlawful, including non-unique party, clearly abnormal seal/authority, amount/currency conflict, unlawful subject, or unexplained account/entity mismatch. Decision must be `legal_review_required` or `do_not_submit`; never submit or trigger funds automatically.
+- `high`: potential material financial, delivery, liability, or IP loss, such as unsecured high advance payment, unilateral repricing or indefinite delay, unlimited/imbalanced liability, harmful ownership of core deliverables/data, renewal/exclusivity without exit, or a receivable contract without clear acceptance/collection basis. Unresolved high risk requires at least `pass_with_conditions`, normally `legal_review_required`.
+- `medium`: weak controls mitigable by an addendum, confirmation, or internal control, such as vague payment date, missing acceptance deadline, unclear invoice timing/refund deadline, or uncapped extra costs.
+- `low`: completeness reminders that do not affect the core transaction, such as missing contact/email or formatting blanks.
 
-合同核心事实不可确定或可能违法，包括主体无法唯一识别、签章或授权明显异常、金额或币种冲突、标的违法、收款账户与合同主体无法解释地不一致。结论必须是 `legal_review_required` 或 `do_not_submit`，不得自动提交或触发资金动作。
+For payable contracts, check advance payment against verifiable deliverables, acceptance/invoice conditions, refund availability and timing, vendor/account consistency, and advance approval/budget for travel, government, audit, or third-party charges.
 
-### `high`
+For receivable contracts, check unilateral acceptance or indefinite approval, invoice-before-long-payment terms, excessive credit period or missing late liability, unbounded scope, retention/refund/discount/damages erosion, and unreasonable restrictions on our deliverables, data, or suspension rights.
 
-可能造成重大资金、交付、责任或知识产权损失，例如：
+## Decision and Entry Gate
 
-- 高比例预付但无退款、担保或明确交付节点；
-- 对方可单方调价、单方解释或无限延期；
-- 我方承担无限责任、间接损失或明显失衡的违约责任；
-- 核心成果或数据权利归属不利且无法继续经营使用；
-- 自动续约或排他义务缺少合理退出机制；
-- 收款合同没有清晰验收和催收依据。
+`risk_review.decision` is one of:
 
-未解决的高风险至少需要 `pass_with_conditions`，通常应为 `legal_review_required`。
+- `pass`: no unresolved high risk or material conflict.
+- `pass_with_conditions`: save draft; complete listed conditions and obtain user confirmation before submission.
+- `legal_review_required`: save a risk draft and refer to legal counsel/responsible owner; no automatic submission.
+- `do_not_submit`: unacceptable or unverifiable key risk.
 
-### `medium`
+Derive `entry_gate`: failed structure/amount validation or unresolved critical risk → `blocked`; legal review/do-not-submit or unresolved high risk → `draft_only`; pass with conditions → `needs_confirmation`; clean pass → `ready`.
 
-履约控制不足但可以通过补充条款、确认函或内部控制缓解，例如付款日期模糊、验收期限缺失、发票时点不清、退款期限未写、额外费用需协商但无上限。
+Each risk contains `category`, `level`, stable English `code`, clear English `title`, `evidence`, concrete `impact`, actionable `recommendation`, `resolution_status` (`open/accepted/mitigated/resolved`), and `blocks_submission`.
 
-### `low`
-
-不影响核心交易的完整性提醒，例如联系人或邮箱待补、格式性空白、通知方式可进一步明确。
-
-## 方向专项审查
-
-### 付款合同
-
-- 预付款是否与可验证交付物对应；
-- 付款是否以验收、合格发票或阶段成果为条件；
-- 未交付、未通过、未下证时是否可退款，退款是否有期限；
-- 供应商户名、合同主体和银行账户是否一致；
-- 额外差旅、官费、审计或第三方费用是否有预算和事前确认。
-
-### 收款合同
-
-- 收款节点是否依赖对方单方确认或无限期验收；
-- 是否存在先开票后长期付款、账期过长或无逾期责任；
-- 交付范围是否可能无限扩张；
-- 质保金、退款、折扣和赔偿是否侵蚀合同价值；
-- 我方成果、数据和服务暂停权是否受到不合理限制。
-
-## 风险处置结论
-
-`risk_review.decision` 只能取：
-
-- `pass`：未发现未解决的高风险或重大矛盾，可以进入正常录入与提交判断；
-- `pass_with_conditions`：可以保存草稿，提交前必须完成列明条件并获得用户确认；
-- `legal_review_required`：保存风险草稿后转法务或负责人，不得自动提交；
-- `do_not_submit`：存在无法接受或无法核实的关键风险，不得提交。
-
-`entry_gate` 推导规则：
-
-- 结构或金额校验失败、存在未解决 `critical` 风险：`blocked`；
-- 决策为 `legal_review_required` 或 `do_not_submit`，或存在未解决 `high` 风险：`draft_only`；
-- 决策为 `pass_with_conditions`：`needs_confirmation`；
-- 决策为 `pass` 且没有未解决高风险：`ready`。
-
-## 风险记录要求
-
-每条风险至少包含：
-
-- `category`：必审维度 code；
-- `level`：`critical/high/medium/low`；
-- `code`：稳定英文标识；
-- `title`：明确中文标题；
-- `evidence`：页码、条款或缺失事实；
-- `impact`：对资金、交付、责任、权利或合规的具体后果；
-- `recommendation`：补充条款、证据、审批或运营控制措施；
-- `resolution_status`：`open/accepted/mitigated/resolved`；
-- `blocks_submission`：是否阻断提交。
-
-没有风险时，仍需填写 `no_material_risks_reason`，说明已完成全部维度审查以及为何没有识别出实质风险。
-
-高风险结论用于业务决策和法务协同，不代替需要执业资格的正式法律意见。
+When there are no risks, fill `no_material_risks_reason` with reviewed dimensions and the basis for no material finding. This review supports business and legal collaboration but is not formal legal advice requiring licensed counsel.

@@ -1,97 +1,97 @@
-# 核查与风险策略
+# Review and Risk Policy
 
-目标是给出可审计、与业务类型相称的建议，不是代替法务、财务或管理层作最终专业结论。
+The goal is to provide auditable recommendations appropriate to the business type, not to replace final professional judgment by legal, finance, or management.
 
-## 通用核查
+## General Review
 
-逐项确认：
+Confirm each of the following:
 
-1. 当前任务确实属于当前用户，流程状态和可用动作一致；
-2. 申请人、业务目的、金额、币种、收付款对象和关键日期可识别；
-3. 业务主记录、明细、附件、发票及关联单据之间不存在明显冲突；
-4. 未发现已知重复、收款主体错配、明显非业务用途、利益冲突、商业贿赂、违法违规或伪造迹象；
-5. 支撑材料足以理解本次审批究竟在批准什么；
-6. 已有流程动作、风险线索和申请说明得到解释。
+1. The current task truly belongs to the current user, and its workflow status matches its available actions.
+2. The applicant, business purpose, amount, currency, payer/payee, and key dates are identifiable.
+3. The primary record, line items, attachments, invoices, and related documents have no obvious conflict.
+4. There is no known duplicate, payee mismatch, clearly non-business purpose, conflict of interest, commercial bribery, legal violation, or indication of fabrication.
+5. Supporting materials are sufficient to understand what this approval authorizes.
+6. Existing workflow actions, risk indicators, and the applicant's explanation have been addressed.
 
-风险级别：
+Risk levels:
 
-- `critical`：主体、授权、金额、标的或合法性存在根本问题，或可能造成不可接受损失；
-- `high`：可能造成重大资金、履约、责任、知识产权或合规损失；
-- `medium`：存在重要信息缺口、歧义或控制薄弱点，但通常可补充或设置条件解决；
-- `low`：轻微完整性、格式或后续提醒，不影响理解和基本合规；
-- `none`：未发现需要特别提示的风险；
-- `unknown`：关键检查未完成，不能判断。
+- `critical`: a fundamental issue with entity, authorization, amount, subject matter, or legality, or a risk of unacceptable loss.
+- `high`: potential for material financial, performance, liability, intellectual-property, or compliance loss.
+- `medium`: an important information gap, ambiguity, or weak control that can usually be resolved with clarification or conditions.
+- `low`: a minor completeness, formatting, or follow-up reminder that does not prevent basic understanding or compliance.
+- `none`: no risk requiring special attention was found.
+- `unknown`: a key check is incomplete, so no conclusion can be reached.
 
-推荐映射：
+Recommendation mapping:
 
-- `none/low` 且无原则性问题：`approve_recommended`；
-- `medium`：通常 `ask_first`；能明确控制、且不影响审批本质时可“通过并提醒”，但合同从严；
-- `high/critical/unknown`：不得建议直接通过；根据问题可补救性选择 `ask_first` 或 `reject_recommended`；
-- 流程资格不满足：`not_eligible`。
+- `none/low` with no fundamental issue: `approve_recommended`.
+- `medium`: normally `ask_first`; approval with a reminder is acceptable only when controls are clear and the issue does not affect the substance, with stricter treatment for contracts.
+- `high/critical/unknown`: never recommend direct approval; choose `ask_first` or `reject_recommended` based on whether remediation is possible.
+- Workflow eligibility not met: `not_eligible`.
 
-## 报销：宽松但守住原则
+## Expenses: Pragmatic but Firm on Fundamentals
 
-启智云图企业智能系统服务的公司处于初创阶段。报销审批以真实业务、金额可追溯、没有原则性问题为核心，不把轻微格式或材料瑕疵升级成拒绝理由。
+The companies served by the Qizhi Yuntu Enterprise Intelligence System are in an early growth stage. Expense approval should focus on a genuine business purpose, traceable amount, and absence of fundamental problems. Do not turn minor formatting or documentation defects into rejection grounds.
 
-满足以下条件时通常建议直接通过：
+Direct approval is generally recommended when:
 
-- 业务用途合理且与公司经营有关；
-- 金额、费用明细和付款对象基本一致；
-- 未发现已知重复发票或重复报销；
-- 未发现明显非业务用途、虚构、利益冲突或收款主体异常；
-- 附件足以理解支出，即使分类、命名或说明格式不够完美。
+- the business purpose is reasonable and related to company operations;
+- amounts, expense details, and payee are materially consistent;
+- no known duplicate invoice or reimbursement is found;
+- there is no clearly personal use, fabrication, conflict of interest, or abnormal payee;
+- attachments are sufficient to understand the expense even if categorization, naming, or description is imperfect.
 
-公司通信费按实际合规支出全额报销，不得因为比例、额度或“可能超标”提出风险，除非存在重复、非业务用途、金额或主体不一致等独立问题。
+Company communication expenses are reimbursed in full when legitimately incurred. Do not raise risks based on a ratio, cap, or possible excess unless an independent issue exists, such as duplication, non-business use, or an amount/entity mismatch.
 
-以下情况先询问：
+Ask first when:
 
-- 缺少到无法判断业务用途、金额或收款对象的关键凭证；
-- 重复检查没有完成，或出现疑似重复记录；
-- 申请人、实际付款人、发票抬头、收款方之间存在无法解释的冲突；
-- 多笔拆分、异常集中或整数金额等线索同时缺少合理说明；
-- 费用看似私人用途，业务关联尚未说明。
+- a key document needed to determine purpose, amount, or payee is missing;
+- duplicate checking is incomplete or finds a suspected duplicate;
+- the applicant, actual payer, invoice buyer name, and payee conflict without explanation;
+- split transactions, unusual clustering, or round amounts appear without a reasonable explanation;
+- the expense appears personal and its business connection is unexplained.
 
-只有明确的虚假、重复报销、非业务用途、违法违规或严重主体错配等原则性问题，才建议拒绝。单纯附件分类不准、说明简略、制度规则未配置，不构成拒绝依据。
+Recommend rejection only for fundamental issues such as clear fabrication, duplicate reimbursement, non-business use, legal violations, or a serious entity mismatch. Inaccurate attachment categories, brief descriptions, or missing configured policy rules alone are not rejection grounds.
 
-## 合同：严格揭示风险
+## Contracts: Strict Risk Disclosure
 
-合同必须阅读原始合同附件及已有 `contract_assessment`，逐项核查：
+Read the original contract attachment and any existing `contract_assessment`, and review:
 
-- 合同主体、签约授权和签署方式；
-- 标的、工作范围、交付物、里程碑和验收标准；
-- 金额、税率、付款条件、发票、退款及价格调整；
-- 知识产权、保密、数据安全和成果使用权；
-- 违约责任、赔偿上限、免责、保证和保险；
-- 变更、暂停、解除、终止及退出安排；
-- 行业合规、反商业贿赂、制裁或其他适用要求；
-- 适用法律、争议解决、管辖地和通知机制。
+- contracting entities, signing authority, and execution method;
+- subject matter, scope of work, deliverables, milestones, and acceptance criteria;
+- amount, tax rate, payment terms, invoicing, refunds, and price adjustments;
+- intellectual property, confidentiality, data security, and rights to use deliverables;
+- breach liability, liability caps, exclusions, warranties, and insurance;
+- change, suspension, cancellation, termination, and exit arrangements;
+- industry compliance, anti-bribery, sanctions, and other applicable requirements;
+- governing law, dispute resolution, jurisdiction, and notices.
 
-原合同缺失、不可读，或关键页/附件不完整时，风险为 `unknown`，必须先询问。
+If the original contract is missing or unreadable, or key pages or appendices are incomplete, set risk to `unknown` and ask first.
 
-以下通常属于 `high/critical`，不得直接建议通过：
+The following are generally `high/critical` and must not be recommended for direct approval:
 
-- 主体或签约授权不清，金额、标的或付款对象冲突；
-- 先付款但没有明确交付、验收、退款或追索安排；
-- 无限责任、单方免责、过高违约责任或责任明显失衡；
-- 核心知识产权、数据或保密权利被不合理让渡；
-- 对方可单方变更/终止而公司缺少退出或退款保障；
-- 涉及违法、商业贿赂、制裁、重大利益冲突等信号。
+- unclear entities or signing authority, or conflicts in amount, subject matter, or payee;
+- advance payment without clear delivery, acceptance, refund, or recovery arrangements;
+- unlimited liability, unilateral exclusions, excessive breach liability, or materially imbalanced responsibility;
+- unreasonable transfer of core intellectual-property, data, or confidentiality rights;
+- unilateral change or termination rights for the counterparty without company exit or refund protection;
+- signals of illegality, commercial bribery, sanctions exposure, or a material conflict of interest.
 
-`medium` 风险原则上先询问并给出可执行的修订、补充协议或审批条件。只有风险已被业务负责人明确接受、控制措施可落实且不涉及主体、金额、合法性等根本问题时，才可在用户明确确认后通过，并把风险与条件写入审批意见。
+For `medium` contract risks, ask first and propose actionable revisions, an addendum, or approval conditions. Approval after explicit user confirmation is appropriate only when the business owner accepts the risk, controls can be implemented, and no fundamental entity, amount, or legality issue exists. Record the risks and conditions in the approval comment.
 
-`low` 风险可建议通过，但必须保留提醒。不要用“初创公司”作为忽略合同重大风险的理由。
+`low` risks may be recommended for approval, but reminders must remain visible. Never use “early-stage company” as a reason to ignore material contract risk.
 
-## 其他业务
+## Other Business Types
 
-- 付款：重点核对合同/申请依据、付款条件、收款主体、金额、发票或例外说明，避免重复付款和提前付款失控。
-- 发票：重点核对号码、方向、金额、开票主体、业务关联和重复记录；方向缺失或关联不足应明确提示。
-- 差旅：参照报销宽松原则，关注真实行程、业务目的、金额及重复支出。
-- 薪资付款：重点核对批次总额、人数、明细汇总、付款主体和敏感信息最小化；不在面向用户输出中展开个人薪资明细。
-- CRM 合同：合同风险策略同样适用；以系统聚合的合同原文、付款计划、开票和回款关系为准。
+- Payment: verify the contract/application basis, payment conditions, payee, amount, invoice or exception rationale; prevent duplicate or uncontrolled early payment.
+- Invoice: verify number, direction, amount, issuing entity, business linkage, and duplicates; highlight a missing direction or insufficient linkage.
+- Travel: apply the pragmatic expense principles while checking the real itinerary, business purpose, amount, and duplicate spend.
+- Payroll payment: verify batch total, headcount, detail reconciliation, paying entity, and minimization of sensitive information; do not expose individual salary details in user-facing output.
+- CRM contract: apply the same contract risk policy, using the contract text and payment, invoice, and receipt relationships aggregated by the system.
 
-## 表述规则
+## Wording Rules
 
-- 只陈述证据支持的事实，使用“发现风险线索”“需要确认”，不直接断言欺诈或违法。
-- 区分“未发现重复”和“未完成重复检查”。
-- 用户补充的业务背景可以降低风险等级，但不能删除已经发现的事实。
-- 面向用户使用公司名、合同名、申请标题、发票号等业务名称，不使用内部 ID 充当标签。
+- State only facts supported by evidence. Say “risk indicator found” or “confirmation required,” rather than directly alleging fraud or illegality.
+- Distinguish “no duplicate found” from “duplicate check not completed.”
+- Business context supplied by the user may reduce a risk level but cannot erase an observed fact.
+- Use company names, contract names, application titles, invoice numbers, and other business labels in user-facing output. Do not use internal IDs as labels.

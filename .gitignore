@@ -24,3 +24,4 @@ bff-trash/
 
 # Generated DDL export (structure snapshot of the source DB)
 db/yuntoo-cpo-ddl.sql
+.understand-anything

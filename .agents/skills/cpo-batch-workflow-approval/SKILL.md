@@ -1,124 +1,124 @@
 ---
 name: cpo-batch-workflow-approval
-displayName: 批量审批核查助手
-description: "在启智云图企业智能系统中批量核验当前用户本人待办的审批步骤，识别合规与业务风险，给出直接审批或补充询问建议，并在用户确认后安全办理；适用于报销、合同、付款、发票、差旅、薪资等业务审批，不用于签署、付款、制单、归档等操作步骤。"
-example: "核验我的全部审批待办，列出风险和可直接通过项，确认后批量审批"
+displayName: Batch Approval Review Assistant
+description: "Batch-review the current user's own approval tasks in the Qizhi Yuntu Enterprise Intelligence System, identify compliance and business risks, recommend approving directly or asking follow-up questions, and process them safely after user confirmation. Applies to expense, contract, payment, invoice, travel, payroll, and similar business approvals; not for signing, payment execution, voucher preparation, or archiving steps."
+example: "Review all my pending approvals, list risks and items that can be approved directly, then process them in a batch after I confirm"
 metadata:
   type: write
 ---
 
-# 批量审批核查助手
+# Batch Approval Review Assistant
 
-先核查、后确认、再办理。不得把“帮我看看待办”解释为同意审批，不得把风险建议解释为用户授权。
+Review first, obtain confirmation second, and process last. Never interpret “take a look at my pending tasks” as approval authorization, and never treat a risk recommendation as user authorization.
 
-开始前完整读取：
+Read these files in full before starting:
 
-- [运行时契约](references/runtime-contract.md)
-- [核查与风险策略](references/review-policy.md)
-- [输出契约](references/output-contract.md)
+- [Runtime Contract](references/runtime-contract.md)
+- [Review and Risk Policy](references/review-policy.md)
+- [Output Contract](references/output-contract.md)
 
-## 处理流程
+## Workflow
 
 ```mermaid
 flowchart TD
-  Start([用户要求核验待办]) --> P1[Lovrabet 平台 my-todo 获取本人待办, 每批 ≤20 条]
-  P1 --> P2[逐条 cpoGetBizTimeline 取完整业务上下文]
-  P2 --> P3{逐条形成结论}
-  P3 -- approve_recommended --> C1[建议直接通过]
-  P3 -- ask_first --> C2[建议先询问]
-  P3 -- reject_recommended --> C3[建议拒绝]
-  P3 -- not_eligible --> C4[当前不可办理]
-  C1 --> P4[展示审批计划并请求确认]
+  Start([User requests a pending-task review]) --> P1[Get the user's tasks from Lovrabet /my-todo, up to 20 per batch]
+  P1 --> P2[Call cpoGetBizTimeline for full business context on each item]
+  P2 --> P3{Determine each recommendation}
+  P3 -- approve_recommended --> C1[Recommend direct approval]
+  P3 -- ask_first --> C2[Recommend asking first]
+  P3 -- reject_recommended --> C3[Recommend rejection]
+  P3 -- not_eligible --> C4[Currently ineligible]
+  C1 --> P4[Show approval plan and request confirmation]
   C2 --> P4
   C3 --> P4
   C4 --> P4
-  P4 --> P5{用户明确确认?}
-  P5 -- 否 --> E1([结束: 不办理])
-  P5 -- 是 --> P6[逐条重新校验 任务仍属本人 / 仍可执行 / 关键信息未变]
-  P6 --> P7{校验通过?}
-  P7 -- 否 --> P8[改判 not_eligible / ask_first 停止办理该条]
-  P7 -- 是 --> P9[在 Lovrabet 平台 Flow 待办中逐项通过或拒绝]
-  P9 --> P10[每条写后复核 cpoGetBizTimeline + 刷新待办]
-  P10 --> P11{单条失败?}
-  P11 -- 是 --> Stop([停止本批次剩余写操作 报告成功/失败/未执行])
-  P11 -- 否 --> E2([本批完成: 输出三组结果])
+  P4 --> P5{User explicitly confirms?}
+  P5 -- No --> E1([End without processing])
+  P5 -- Yes --> P6[Revalidate ownership, eligibility, and unchanged key facts item by item]
+  P6 --> P7{Validation passes?}
+  P7 -- No --> P8[Reclassify as not_eligible or ask_first and stop that item]
+  P7 -- Yes --> P9[Approve or reject each item through the Lovrabet Flow task]
+  P9 --> P10[Verify with cpoGetBizTimeline and refresh pending tasks after each write]
+  P10 --> P11{Any item failed?}
+  P11 -- Yes --> Stop([Stop remaining writes and report succeeded, failed, and unprocessed items])
+  P11 -- No --> E2([Batch complete: output all three result groups])
 ```
 
-## 适用边界
+## Scope
 
-只处理同时满足以下条件的任务：
+Process only tasks that meet all of these conditions:
 
-1. 来自 Lovrabet 平台 `/my-todo`，仍为当前用户本人的待办；
-2. 平台任务类型为审批；
-3. 平台 Flow 面板仍显示当前用户可办理；
-4. 平台待办提供本次准备执行的通过或拒绝动作。
+1. The task comes from Lovrabet `/my-todo` and is still assigned to the current user.
+2. The platform task type is approval.
+3. The platform Flow panel still shows that the current user can process it.
+4. The pending task exposes the approve or reject action to be performed.
 
-签署、付款、付款确认、制单、归档等操作步骤不属于本 Skill。即使它们出现在“我的待办”中，也只能列为不适用，不能代替用户办理。
+Signing, payment execution, payment confirmation, voucher preparation, archiving, and similar operation steps are outside this Skill. Even when they appear in “My Pending Tasks,” list them as ineligible and do not process them for the user.
 
-一次最多核查和办理 20 条。超过 20 条时按稳定顺序分批，先完成当前批次的核查与确认，不得静默截断。
+Review and process no more than 20 tasks at a time. For more than 20 tasks, use stable ordering and batches. Finish reviewing and confirming the current batch without silently truncating the list.
 
-## 第一阶段：只读核查
+## Phase 1: Read-only Review
 
-### 1. 获取本人待办
+### 1. Get the Current User's Pending Tasks
 
-通过应用 `/my-todo` 完整读取平台待办。若用户指定业务类型、范围或关键词，只在本人待办中进一步收窄，不能扩大到他人任务。
+Read all platform tasks from the application `/my-todo` page. If the user specifies a business type, range, or keyword, narrow the current user's tasks only; never expand the scope to another user's tasks.
 
-同一批次内使用任务原始顺序。内部保留 `taskId`、`bizType`、`bizId` 用于调用和关联，但面向用户只显示业务标题、申请人、金额、业务类型等明确业务信息，不显示数据库主键或内部 ID。
+Preserve the source order within the batch. Keep `taskId`, `bizType`, and `bizId` internally for calls and correlation. In user-facing output, show clear business information such as the title, applicant, amount, and business type; do not expose database primary keys or internal IDs.
 
-### 2. 获取完整业务上下文
+### 2. Get Complete Business Context
 
-对每条候选任务调用 `cpoGetBizTimeline` 补充业务上下文，并以平台 Flow 面板核对当前任务与可用动作。核对业务主记录、申请人、金额、附件、发票关联、明细和相关业务对象。
+Call `cpoGetBizTimeline` for each candidate and use the platform Flow panel to confirm the current task and available actions. Check the primary business record, applicant, amount, attachments, invoice links, line items, and related business objects.
 
-不得仅凭待办摘要审批。合同必须核查原合同附件和已有 `contract_assessment`；报销必须核查费用明细、附件、发票及有效规则。在需要时按[运行时契约](references/runtime-contract.md)调用报销规则和发票重复检查 BFF。
+Never approve from the pending-task summary alone. For contracts, inspect the original contract attachment and any existing `contract_assessment`. For expenses, inspect expense lines, attachments, invoices, and effective rules. When necessary, call the expense-rule and invoice-duplicate-check BFFs described in the [Runtime Contract](references/runtime-contract.md).
 
-### 3. 形成逐项结论
+### 3. Determine Each Recommendation
 
-按照[核查与风险策略](references/review-policy.md)为每条任务给出：
+Following the [Review and Risk Policy](references/review-policy.md), assign every task one of:
 
-- `approve_recommended`：建议直接通过；
-- `ask_first`：缺少关键事实，或风险需要申请人/业务负责人确认；
-- `reject_recommended`：存在原则性、重大或不可接受问题，建议拒绝；
-- `not_eligible`：已失效、已转交、不是 review 步骤或当前不可操作。
+- `approve_recommended`: direct approval is recommended.
+- `ask_first`: key facts are missing, or a risk requires confirmation from the applicant or business owner.
+- `reject_recommended`: a fundamental, material, or unacceptable issue warrants rejection.
+- `not_eligible`: the task is stale, reassigned, not a review step, or currently unavailable.
 
-每条结论必须包含事实依据、风险级别、仍需询问的问题和拟写入审批记录的简短意见。信息不足时写 `unknown`，不能臆测。
+Every recommendation must include supporting facts, risk level, open questions, and a concise comment proposed for the approval record. Use `unknown` when information is insufficient; do not speculate.
 
-### 4. 展示审批计划并请求确认
+### 4. Show the Approval Plan and Request Confirmation
 
-先按[输出契约](references/output-contract.md)输出只读核查结果，明确区分：
+First output the read-only review using the [Output Contract](references/output-contract.md), clearly separating:
 
-- 建议直接通过；
-- 建议先询问；
-- 建议拒绝；
-- 当前不可办理。
+- recommended for direct approval;
+- recommended for follow-up questions;
+- recommended for rejection;
+- currently ineligible.
 
-默认只把 `approve_recommended` 放入拟通过清单。询问项、拒绝项和不可办理项不得混入。
+By default, include only `approve_recommended` items in the proposed approval list. Do not mix in question, rejection, or ineligible items.
 
-用户必须明确确认本次要办理的业务条目。诸如“通过上述建议直接通过项”“除了某合同外都通过”可视为授权；模糊回复应先澄清。批量拒绝必须由用户逐项明确确认并提供理由，不能根据模型建议自动拒绝。
+The user must explicitly confirm which business items to process. Responses such as “approve the items recommended for direct approval above” or “approve all except that contract” count as authorization. Clarify ambiguous responses first. Batch rejection requires explicit item-by-item confirmation and a reason from the user; never reject automatically from the model's recommendation.
 
-执行前可用 `scripts/validate_batch_plan.py` 校验计划；校验失败时不得调用写操作。
+Before execution, `scripts/validate_batch_plan.py` may validate the plan. Do not perform writes if validation fails.
 
-## 第二阶段：确认后办理
+## Phase 2: Process After Confirmation
 
-### 1. 逐条重新校验
+### 1. Revalidate Each Item
 
-串行处理，不并发。每次写入前重新读取平台本人待办和 `cpoGetBizTimeline`，确认任务仍属于当前用户、仍可执行，且关键金额、标题、风险信息未发生实质变化。
+Process serially, never concurrently. Before each write, reread the current user's platform tasks and `cpoGetBizTimeline`. Confirm the task is still assigned to the current user, remains actionable, and has no material change in key amount, title, or risk information.
 
-若发生变化，将该条改为 `not_eligible` 或 `ask_first`，停止对它办理并告知用户。不得沿用过期快照。
+If anything changed, reclassify the item as `not_eligible` or `ask_first`, stop processing that item, and tell the user. Never rely on a stale snapshot.
 
-### 2. 只通过 Lovrabet 平台 Flow 办理
+### 2. Process Only Through Lovrabet Flow
 
-在 `/my-todo` 的平台审批面板中逐项办理。通过时填写事实明确、简短且可审计的审批意见；拒绝时仅在用户逐项明确授权后写入其确认的具体理由。不得调用旧工作流 Backend Function。
+Process each item in the platform approval panel under `/my-todo`. For approvals, write a concise, factual, auditable comment. For rejections, write the specific reason confirmed by the user only after item-level authorization. Do not call legacy workflow Backend Functions.
 
-禁止直接更新业务状态、任务状态、动作记录或 `is_deleted`。禁止自行调用数据集新增、修改、删除来模拟流程推进。
+Never update business status, task status, action records, or `is_deleted` directly. Never simulate workflow progression by creating, updating, or deleting Dataset records.
 
-### 3. 每条写后复核
+### 3. Verify After Every Write
 
-每次办理后立即刷新平台待办，并重新读取 `cpoGetBizTimeline`，确认原任务不再待办且业务状态已由平台回调同步。
+Immediately refresh platform tasks and reread `cpoGetBizTimeline` after each item. Confirm the original task is no longer pending and the platform callback has synchronized the business status.
 
-单条失败后停止本批次剩余写操作，输出已成功、失败、未执行三组结果。重新读取状态并获得用户确认前，不自动重试。
+If one item fails, stop all remaining writes in the batch and report succeeded, failed, and unprocessed items separately. Do not retry automatically until the status has been reread and the user confirms again.
 
-## 审批意见要求
+## Approval Comment Requirements
 
-审批意见只写已核实的事实、主要风险和通过/拒绝依据，不写内部 ID，不包含数据库字段转储，不泄露无关个人敏感信息。
+Approval comments must contain only verified facts, primary risks, and the approval or rejection basis. Do not include internal IDs, database field dumps, or unrelated sensitive personal information.
 
-建议通过并不等于“无风险”。合同审批意见应保留关键风险和后续控制条件；报销的轻微材料或格式提醒可以随通过意见记录，但不得把提醒虚构成制度违规。
+A recommendation to approve does not mean “risk-free.” Contract comments must retain key risks and follow-up control conditions. Minor expense-document or formatting reminders may be recorded in an approval comment, but do not invent policy violations.

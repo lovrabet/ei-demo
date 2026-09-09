@@ -49,8 +49,14 @@ import { normalizeInvoiceDate } from "./date";
 import styles from "./index.module.css";
 import { $i18n } from "@/i18n";
 
-const t = (key: string, fallbackText: string, options?: Record<string, unknown>) =>
-  $i18n.t(key, fallbackText, options);
+const t = (
+  key: string,
+  fallbackText: string,
+  options?: Record<string, string | number>,
+) =>
+  options
+    ? $i18n.t({ id: key, dm: fallbackText }, options)
+    : $i18n.t(key, fallbackText);
 
 const ATTACHMENTS_FIELD = "_attachments";
 const RELATED_TRAVEL_FIELD = "_related_travel_id";
@@ -505,7 +511,10 @@ const ExpenseForm: React.FC = () => {
           !options.some((option) => Number(option.value) === selected)
         ) {
           setTravelOptions([
-            { value: selected, label: t("expenseForm.travel.missingTitle", "关联差旅标题缺失") },
+            {
+              value: selected,
+              label: t("expenseForm.travel.missingTitle", "关联差旅标题缺失"),
+            },
             ...options,
           ]);
           return;
@@ -551,10 +560,7 @@ const ExpenseForm: React.FC = () => {
       .map(normalizeExpenseItemForSave);
     if (thenSubmit && normalizedItems.length === 0) {
       message.error(
-        t(
-          "expenseForm.itemsRequired",
-          "提交报销前请至少填写一条报销明细",
-        ),
+        t("expenseForm.itemsRequired", "提交报销前请至少填写一条报销明细"),
       );
       return;
     }
@@ -674,10 +680,7 @@ const ExpenseForm: React.FC = () => {
             rules={[
               {
                 required: true,
-                message: t(
-                  "expenseForm.field.titleRequired",
-                  "请输入报销标题",
-                ),
+                message: t("expenseForm.field.titleRequired", "请输入报销标题"),
               },
             ]}
           >
@@ -715,10 +718,7 @@ const ExpenseForm: React.FC = () => {
               status={projectNameOptionsError ? "error" : undefined}
               notFoundContent={
                 projectNameOptionsError
-                  ? t(
-                      "expenseForm.field.projectLoadFailed",
-                      "项目字典加载失败",
-                    )
+                  ? t("expenseForm.field.projectLoadFailed", "项目字典加载失败")
                   : undefined
               }
               options={projectNameOptions}
@@ -869,9 +869,14 @@ const ExpenseForm: React.FC = () => {
                           gridTemplateColumns: EXPENSE_ITEM_TABLE_COLUMNS,
                         }}
                       >
-                        <div>{t("expenseForm.itemsTable.name", "报销名称")}</div>
                         <div>
-                          {t("expenseForm.itemsTable.invoiceAmount", "发票金额")}
+                          {t("expenseForm.itemsTable.name", "报销名称")}
+                        </div>
+                        <div>
+                          {t(
+                            "expenseForm.itemsTable.invoiceAmount",
+                            "发票金额",
+                          )}
                         </div>
                         <div>
                           {t(
@@ -1340,10 +1345,7 @@ const ExpenseForm: React.FC = () => {
                       onClick={() => add({ ...EMPTY_EXPENSE_ITEM })}
                       block
                     >
-                      {t(
-                        "expenseForm.action.addItem",
-                        "新增明细",
-                      )}
+                      {t("expenseForm.action.addItem", "新增明细")}
                     </Button>
                   ) : null}
                 </Space>

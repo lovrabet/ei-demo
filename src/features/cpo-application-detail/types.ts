@@ -11,6 +11,12 @@ export const CPO_APPLICATION_BIZ_TYPES = [
 
 export type CpoApplicationBizType = (typeof CPO_APPLICATION_BIZ_TYPES)[number];
 
+/** 有单据 360 配置的类型；crm_contract 使用专属应收合同详情页。 */
+export type ApplicationDetailConfigBizType = Exclude<
+  CpoApplicationBizType,
+  "crm_contract"
+>;
+
 export type DetailParamResult =
   | { ok: true; bizType: CpoApplicationBizType; bizId: number }
   | { ok: false; message: string };
@@ -328,6 +334,7 @@ export type Document360Management = {
     | "payment_bank_execution"
     | "payment_invoice_allocation"
     | "invoice_classification"
+    | "invoice_application_completion"
   >;
 };
 

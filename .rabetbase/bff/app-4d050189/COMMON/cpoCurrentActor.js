@@ -15,19 +15,12 @@ function optionalText(value) {
   return String(value).trim();
 }
 
-function normalizeRoles(roleLike) {
-  const values = Array.isArray(roleLike) ? roleLike : [roleLike];
-  return values
-    .map((item) =>
-      typeof item === "string"
-        ? item
-        : item?.code ||
-          item?.name ||
-          item?.value ||
-          item?.roleCode ||
-          item?.roleName,
+function extractPlatformRoleCodes(roles) {
+  if (!Array.isArray(roles)) return [];
+  return roles
+    .map((role) =>
+      role && typeof role === "object" ? optionalText(role.roleCode) : "",
     )
-    .map(optionalText)
     .filter(Boolean);
 }
 
@@ -35,20 +28,11 @@ function unique(values) {
   return Array.from(new Set(values));
 }
 
-const ADMIN_ROLES = new Set([
-  "admin",
-  "administrator",
-  "super_admin",
-  "owner",
-  "cpo_admin",
-  "管理员",
-  "应用owner",
-]);
-const FINANCE_ADVISOR_ROLES = new Set(["finance_advisor", "财务顾问"]);
-const WORKFLOW_ADMIN_ROLES = new Set(["workflow_admin", "流程管理员"]);
+const FINANCE_ADVISOR_ROLE_CODE = "oa_demo_finance_advisor";
+const WORKFLOW_ADMIN_ROLE_CODE = "oa_demo_workflow_admin";
 
-function hasRole(roles, expected) {
-  return roles.some((role) => expected.has(optionalText(role).toLowerCase()));
+function hasRoleCode(roleCodes, expectedRoleCode) {
+  return roleCodes.includes(expectedRoleCode);
 }
 
 export default async function cpoCurrentActor(params, context) {
@@ -56,27 +40,24 @@ export default async function cpoCurrentActor(params, context) {
   const userId = optionalText(userInfo.userId || userInfo.id);
   const nickname = optionalText(userInfo.nickname);
   const displayName = nickname || optionalText(userInfo.username) || userId;
-  const roles = unique([
-    ...normalizeRoles(userInfo.roles),
-    ...normalizeRoles(userInfo.roleList),
-    ...normalizeRoles(userInfo.roleCodes),
-    ...normalizeRoles(userInfo.role),
-  ]);
+  const roleCodes = unique(extractPlatformRoleCodes(userInfo.roles));
 
-  const isAdmin =
-    userInfo.isAdmin === true ||
-    userInfo.admin === true ||
-    userInfo.is_super_admin === true ||
-    hasRole(roles, ADMIN_ROLES);
-  const isFinanceAdvisor = hasRole(roles, FINANCE_ADVISOR_ROLES);
-  const isWorkflowAdmin = hasRole(roles, WORKFLOW_ADMIN_ROLES);
+  const isAdmin = userInfo.isAdmin === true;
+  const isFinanceAdvisor = hasRoleCode(
+    roleCodes,
+    FINANCE_ADVISOR_ROLE_CODE,
+  );
+  const isWorkflowAdmin = hasRoleCode(
+    roleCodes,
+    WORKFLOW_ADMIN_ROLE_CODE,
+  );
 
   return {
     userId,
     userName: displayName,
     nickname,
     displayName,
-    roles,
+    roles: roleCodes,
     isAdmin,
     isFinanceAdvisor,
     isWorkflowAdmin,

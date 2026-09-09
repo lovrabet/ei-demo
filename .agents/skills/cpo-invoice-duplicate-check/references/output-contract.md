@@ -1,39 +1,39 @@
 # Output Contract
 
-最终回复包含：
+The final response contains:
 
 - `status`: `success | no_op | blocked | failed | needs_manual_check`
-- `mode`: 固定为 `read_only`
-- `summary`: 一句话说明是否发现重复
-- `scope`: 报销单 ID 或发票号码
-- `duplicates`: 重复发票列表；每项包含发票号码、原因、冲突报销单
-- `warnings`: 无号码票据、台账缺失、权限不足等限制
-- `nextActions`: 复核冲突单据、取消错误关联或联系财务处理；不得自动清理
+- `mode`: always `read_only`
+- `summary`: one sentence stating whether duplicates were found
+- `scope`: expense application ID or invoice numbers
+- `duplicates`: duplicate invoices; each item includes the invoice number, reason, and conflicting expense applications
+- `warnings`: limitations such as invoices without a number, missing ledger records, or insufficient authorization
+- `nextActions`: review conflicting records, remove an incorrect relationship, or contact Finance; never clean up automatically
 
-映射规则：
+Mapping rules:
 
-- 已完成检查且发现重复：`success`
-- 已完成检查且未发现重复：`no_op`
-- 缺少输入或无权限：`blocked`
-- BFF 调用失败：`failed`
-- 返回不完整、无号码票据无法确认：`needs_manual_check`
+- Check completed and duplicates found: `success`
+- Check completed and no duplicates found: `no_op`
+- Missing input or insufficient authorization: `blocked`
+- Backend Function call failed: `failed`
+- Incomplete response or an invoice without a number cannot be confirmed: `needs_manual_check`
 
-示例：
+Example:
 
 ```yaml
 status: success
 mode: read_only
-summary: 发现 1 张重复发票
-scope: 报销单 #14
+summary: 1 duplicate invoice found
+scope: Expense application #14
 duplicates:
   - invoiceNo: "26337000000590589880"
     reasons: [used_by_other_expense]
     conflictingExpenses:
       - expenseId: 11
-        title: 7 月通讯费报销
+        title: July communication expense reimbursement
         status: submitted
 warnings: []
 nextActions:
-  - 打开报销单 #11 核对原始附件和发票关联
-  - 确认错误关联后由有权限人员处理
+  - Open expense application #11 and verify the original attachment and invoice relationship
+  - After confirming an incorrect relationship, ask an authorized person to resolve it
 ```

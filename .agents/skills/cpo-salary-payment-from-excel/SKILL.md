@@ -1,124 +1,113 @@
 ---
 name: cpo-salary-payment-from-excel
-displayName: 工资付款 Excel 自动录入
-description: 在启智云图企业智能系统中，从一份或多份启智云图、梅柚流码及启智云图上海分公司的工资、人员成本 Excel 安全提取付款金额和人数，完成月份校验、公式与合计对账，并默认拆分为启智云图工资、梅柚流码工资、启智云图向上海分公司支付工资及个税往来款三类工资付款草稿，分别保留相关原始附件。用于用户要求分析工资表、规划工资申请拆单、录入工资付款申请或核对工资附件时。
-example: 请分析这些工资 Excel，默认拆成三张工资付款草稿
+displayName: Payroll Payment Import from Excel
+description: "Safely extract payment totals and headcounts from one or more Qizhi Yuntu, Meiyou Liuma, and Qizhi Yuntu Shanghai Branch payroll or personnel-cost workbooks. Validate months, formulas, and totals, then prepare three separate draft payment purposes by default: Qizhi Yuntu payroll, Meiyou Liuma payroll, and payments from Qizhi Yuntu to its Shanghai Branch for payroll and individual income tax, each retaining the relevant source files."
+example: "Analyze these payroll workbooks and create three payroll payment drafts by default"
 metadata:
   type: write
 ---
 
-# 从工资 Excel 录入付款申请
+# Create Payroll Payment Applications from Excel
 
-先只读分析和对账，再创建草稿。不得输出员工姓名或逐人薪资，不得在没有明确授权时提交审批。
+Perform read-only analysis and reconciliation before creating drafts. Never output employee names or individual compensation, and never submit without explicit authorization.
 
-## 处理流程
+## Workflow
 
 ```mermaid
 flowchart TD
-  Start([用户提供工资 Excel]) --> L1[脚本只读分析 analyze_salary_workbook.py]
-  L1 --> L2[确认拆单计划 QZYT / MYLM / QZYT_SH]
-  L2 --> L3{合规边界通过?}
-  L3 -- 用户要求与边界冲突 --> Stop1([停止: 不得擅自合并])
-  L3 -- 通过 --> L4{可自动录入? cell_errors 空 / 对账 PASS / 月份一致}
-  L4 -- 否 --> Stop2([停止: 修正后重试])
-  L4 -- 是 --> L5[展示确认摘要 不展示个人信息]
-  L5 --> L6{用户意图}
-  L6 -- 仅分析 --> E1([结束: 不创建记录])
-  L6 -- 录入/创建 --> L7[逐张 cpoSaveDraft 创建草稿 一张失败即停止后续]
-  L7 --> L8[逐张写后复核 金额/明细数/附件/路径门禁]
-  L8 --> L9{用户明确提交审批?}
-  L9 -- 否 --> E2([返回各草稿链接])
-  L9 -- 是 --> L10[逐张提交审批]
-  L10 --> E3([返回各单状态与链接])
+  Start([User supplies payroll workbooks]) --> L1[Read-only analysis with analyze_salary_workbook.py]
+  L1 --> L2[Confirm QZYT, MYLM, and QZYT_SH application plan]
+  L2 --> L3{Compliance boundaries pass?}
+  L3 -- User request conflicts --> Stop1([Stop; never merge without authorization])
+  L3 -- Pass --> L4{Eligible for automatic entry? No cell errors, reconciliation PASS, months match}
+  L4 -- No --> Stop2([Stop and retry after correction])
+  L4 -- Yes --> L5[Show confirmation summary without personal details]
+  L5 --> L6{User intent}
+  L6 -- Analysis only --> E1([End without creating records])
+  L6 -- Enter or create --> L7[Create drafts sequentially with cpoSaveDraft; stop after first failure]
+  L7 --> L8[Verify totals, line count, attachments, and paths for each draft]
+  L8 --> L9{User explicitly requests approval submission?}
+  L9 -- No --> E2([Return all draft links])
+  L9 -- Yes --> L10[Submit each authorized application]
+  L10 --> E3([Return status and link for each application])
 ```
 
-## 1. 分析 Excel
+## 1. Analyze Excel
 
-确认所有文件存在且扩展名为 `.xlsx`。可以传入一份或多份文件：
+Confirm all files exist and use `.xlsx`. One or more files are allowed:
 
 ```bash
 python3 <skill-dir>/scripts/analyze_salary_workbook.py \
-  "<启智云图及上海分公司工资表绝对路径>" \
-  "<梅柚流码工资表绝对路径>" \
-  --output "<仅当前用户可读的临时 JSON>"
+  "<absolute-path-to-QZYT-and-Shanghai-payroll>" \
+  "<absolute-path-to-MYLM-payroll>" \
+  --output "<temporary-JSON-readable-only-by-current-user>"
 ```
 
-脚本直接读取 XLSX 的 OOXML，默认只输出主体级汇总、控制行、对账结果和多申请单计划，不输出员工明细。
+The script reads OOXML directly and outputs only entity-level aggregates, control rows, reconciliation, and application plans by default—never employee details. Follow [Workbook Rules](references/workbook-rules.md) for amount precedence, entity mapping, and reconciliation.
 
-读取 [workbook-rules.md](references/workbook-rules.md) 执行金额优先级、主体映射和对账规则。
-
-用户明确要求指定拆单顺序时，增加 `--application-groups`。分号分隔申请单；上海分公司的工资及个税往来款必须保持独立：
+For an explicitly requested application order, add `--application-groups`. Separate applications with semicolons; Shanghai Branch payroll and tax intercompany payment must remain separate:
 
 ```bash
 python3 <skill-dir>/scripts/analyze_salary_workbook.py \
-  "<工资表1>" "<工资表2>" \
+  "<payroll-1>" "<payroll-2>" \
   --application-groups "QZYT;MYLM;QZYT_SH" \
-  --output "<仅当前用户可读的临时 JSON>"
+  --output "<temporary-JSON-readable-only-by-current-user>"
 ```
 
-## 2. 确认拆单计划
+## 2. Confirm the Application Plan
 
-先读取 `application_plan` 和 `application_drafts`：
+Read `application_plan` and `application_drafts` first:
 
-- 默认按业务用途拆成三张：`QZYT`、`MYLM`、`QZYT_SH`；
-- `QZYT` 是启智云图本部员工工资申请，`MYLM` 是梅柚流码员工工资申请；
-- `QZYT_SH` 是启智云图向上海分公司支付往来款，用于发放上海分公司员工工资及个税，必须单独成单；
-- 禁止把启智云图审批主体与梅柚流码合并到一张申请；
-- 禁止把上海分公司工资及个税往来款并入启智云图本部工资申请；
-- 每张申请只携带覆盖其付款项目的原始附件；同一源文件覆盖多张申请时可分别留档。
+- Default to three business purposes: `QZYT`, `MYLM`, and `QZYT_SH`.
+- `QZYT` covers Qizhi Yuntu headquarters payroll; `MYLM` covers Meiyou Liuma payroll.
+- `QZYT_SH` is an intercompany payment from Qizhi Yuntu to its Shanghai Branch for employee payroll and individual income tax, and must remain separate.
+- Never merge Qizhi Yuntu and Meiyou Liuma approval entities.
+- Never merge the Shanghai Branch payroll/tax intercompany payment into headquarters payroll.
+- Each application retains only source files covering its payment items. The same source file may be retained separately by multiple applications.
 
-向用户展示申请单数量、每张标题、审批主体、付款项目和附件。用户要求与合规边界冲突时停止，不得擅自合并。
+Show application count, title, approval entity, payment items, and attachments. Stop if the user's requested grouping conflicts with these boundaries.
 
-## 3. 判断是否可自动录入
+## 3. Determine Automatic-entry Eligibility
 
-检查 JSON：
+Require:
 
-- `analysis.cell_errors` 必须为空；
-- 每张工资表的 `reconciliations` 必须全部为 `PASS`；
-- 每条金额必须大于 0；
-- 主体必须能在实时主体主数据中按编码和全称匹配；
-- 所有文件的工资月份必须一致；
-- 所有原始 Excel 必须可作为附件上传。
+- `analysis.cell_errors` is empty.
+- Every workbook `reconciliations` entry is `PASS`.
+- Every amount is greater than zero.
+- Every entity matches live master data by code and full legal name.
+- All files use the same payroll month.
+- Every original workbook can be uploaded as an attachment.
 
-`checks.status = REVIEW` 不一定阻断。整批文件仍缺少某个已知主体时，只提醒用户本月附件没有该主体，不得生成 0 元明细。
+`checks.status = REVIEW` is not always blocking. If a known entity is absent from the whole batch, warn that this month's attachments omit it; never generate a zero-amount item.
 
-## 4. 展示确认摘要
+## 4. Show the Confirmation Summary
 
-创建草稿前按 `application_drafts` 逐张展示：
+For each `application_drafts` entry, show sequence, title, approval entity, payroll month, default payment date, company/amount/headcount/basis for each item, total amount/headcount/item count, required source filenames, and warnings.
 
-- 申请序号、标题和审批主体；
-- 工资月份和默认付款日期；
-- 该申请内每个付款项目的公司、金额、人数及金额依据；
-- 该申请合计金额、人数和项目数；
-- 该申请需留档的原始附件文件名；
-- 所有提醒。
+Never show employee names, individual salary amounts, ID numbers, bank-account numbers, or other personal information. If the user asked only to analyze or inspect, stop here without creating records.
 
-不得展示员工姓名、逐人工资、证件号、银行卡号或其他个人信息。
+## 5. Create Payroll Payment Drafts
 
-若用户只要求“分析”“看看”，到这里结束，不创建记录。
+When the user asks to enter data or create applications, follow [Application Contract](references/application-contract.md).
 
-## 5. 创建工资付款草稿
+1. Query live internal legal entities and replace script ID hints.
+2. Inventory the whole batch by filename, size, and available hash. Process `application_drafts` in order and proactively upload or reuse every source file in each draft's `attachments`.
+3. Pass complete `values/items` and upload results to `cpoSaveDraft`. One source upload may be reused, but every application needs its own attachment relationship.
+4. Save drafts sequentially by default. On failure, stop remaining creation and report created drafts by business title and detail link, never internal ID.
+5. Reread every draft and verify primary total, item count, each amount, attachment count, and previewability. Across the batch, reconcile unique input and upload counts; per application, reconcile expected relationships, saved relationships, and readback matches.
 
-用户要求“录入”“创建申请”时，读取 [application-contract.md](references/application-contract.md)。
+If no authenticated upload capability is available, stop at the confirmation summary and never create drafts without attachments.
 
-1. 查询实时我方主体并覆盖脚本中的 ID 提示。
-2. 先按文件名、大小及可用哈希建立整批输入附件清单，再按 `application_drafts` 顺序处理；每张申请必须主动上传或复用其 `attachments` 中的全部原始文件，不等待用户追加上传指令。
-3. 将当前草稿的 `values/items` 与附件上传结果完整传给 `cpoSaveDraft`；同一源文件覆盖多张申请时可只上传一次，但每张申请都必须建立自己的附件关系。
-4. 默认逐张保存为草稿；一张失败时停止后续创建，并用业务标题和详情链接报告已创建的草稿，不向用户展示内部 ID。
-5. 逐张重新读取详情，核对主表合计、子表条数、每条金额、附件数量和可预览性；整批核对唯一输入文件数与唯一上传成功数，每张申请分别核对预期附件关系数、保存返回数和写后读取匹配数。
+## 6. Submit for Approval
 
-如果没有可用的已登录浏览器或上传凭证，停止在确认摘要，不得创建无附件草稿。
+Only when the user explicitly requests approval submission, call complete `cpoSaveDraft` with `submit=true` for each authorized application. Show the final summary first and recheck batch- and application-level attachment counts and path sets. Never create a draft and then call a legacy submit interface; never submit other applications when the user authorized only one.
 
-## 6. 提交审批
+## 7. Success Result and Detail Links
 
-只有用户明确说“提交审批”时，才逐张以完整 `cpoSaveDraft` 参数并设置 `submit=true` 一次创建和提交。提交前再次展示全部申请的最终摘要，并确认整批及每张申请的附件数量与路径集合完全一致；不得先创建草稿再调用旧提交接口，也不得因用户只确认其中一张而自动提交其他申请。
-
-## 7. 成功结果与详情链接
-
-每次 `cpoSaveDraft` 成功后，使用该次响应中的真实 `bizId` 构造工资付款详情地址，并调用 `cpoGetBizTimeline` 重读标题、合计金额、明细数、附件数和状态：
+After each successful `cpoSaveDraft`, use its real `bizId` to build the payroll-payment detail URL. Call `cpoGetBizTimeline` to reread title, total, item count, attachment count, and status:
 
 ```markdown
-[查看“杭州启智云图科技有限公司发放2026年7月员工工资”工资付款申请](https://app-4d050189.app.lovrabet.com/application-detail/salary_payment/123)
+[View “Hangzhou Qizhi Yuntu Technology Co., Ltd. July 2026 Employee Payroll”](https://app-4d050189.app.lovrabet.com/application-detail/salary_payment/123)
 ```
 
-多张申请必须逐张给链接，链接文字使用各自业务标题，不显示内部 ID。保存和提交分开表述；某张写后复核失败时仍保留按成功响应构造的链接，并在该张下提示未复核项。
+Return one link per application, using each business title and no internal ID. Distinguish save from submission. If readback fails for one application, retain its link from the successful response and list the unverified facts under that application.

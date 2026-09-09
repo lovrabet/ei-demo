@@ -2,49 +2,49 @@
   "schemaVersion": 2,
   "appCode": "app-4d050189",
   "skillCode": "cpo-salary-payment-from-excel",
-  "skillName": "工资付款 Excel 自动录入",
-  "description": "在启智云图企业智能系统中，从一份或多份启智云图、梅柚流码及启智云图上海分公司的工资、人员成本 Excel 安全提取付款金额和人数，完成月份校验、公式与合计对账，并默认拆分为启智云图工资、梅柚流码工资、启智云图向上海分公司支付工资及个税往来款三类工资付款草稿，分别保留相关原始附件。用于用户要求分析工资表、规划工资申请拆单、录入工资付款申请或核对工资附件时。",
+  "skillName": "Payroll Payment Import from Excel",
+  "description": "Safely extract payment totals and headcounts from one or more Qizhi Yuntu, Meiyou Liuma, and Qizhi Yuntu Shanghai Branch payroll or personnel-cost workbooks. Validate months, formulas, and totals, then prepare three separate draft payment purposes by default: Qizhi Yuntu payroll, Meiyou Liuma payroll, and payments from Qizhi Yuntu to its Shanghai Branch for payroll and individual income tax, each retaining the relevant source files.",
   "scope": "company",
   "readonly": true,
-  "version": "20260817.165127",
+  "version": "20260909.165535",
   "tags": [],
-  "contentHash": "4928b6bdcd9540ea6cadaac91548ad0141f5d36956220ec60cfc7e2f48cdd79b",
+  "contentHash": "0d36231a87b252cf2abf3dda901f001dee4cf4719d7123a8ef9bc3ef4f036154",
   "fileHashes": {
-    "SKILL.md": "4928b6bdcd9540ea6cadaac91548ad0141f5d36956220ec60cfc7e2f48cdd79b",
-    "agents/openai.yaml": "d9196d2848a49b6cd119b789e439b18028c77edc21f9dcab2b9dd8a523f7078f",
-    "references/application-contract.md": "18c31069503149cd4aeed0b90a18c327998cf6db46745ce3a35bde8d5f9b0cb5",
-    "references/workbook-rules.md": "b70cf5e3a3b1a95418fd45687b6a666d2563e51497cff5298ceb21e78afdfc28",
-    "scripts/analyze_salary_workbook.py": "466afff5b8e8c17bb9ec5fe31688625215408c27e3f5a1893445c96c08275fc1"
+    "SKILL.md": "0d36231a87b252cf2abf3dda901f001dee4cf4719d7123a8ef9bc3ef4f036154",
+    "agents/openai.yaml": "e3b990598f84c88991a6f1b68b90db9f69e25b9dda2206ab19a1222c7729d4d9",
+    "references/application-contract.md": "b7186ab080d6d0ab82b72f0964a06e1af8ce8a6b88d632c5e9d91b9f1e77af2b",
+    "references/workbook-rules.md": "fb4c607e8d562dccc2840948f94c6fd96f40c268a20196a6e7ff65a4b83a23c0",
+    "scripts/analyze_salary_workbook.py": "da397ee53030cb6319b8fc3a190febeb73013a55be8347302a4bd431c31beda4"
   },
-  "treeHash": "b80db24646514ec2f3a83cd877cb03494a61bbcf2b370022f6423cf2e033fc78",
-  "zipSha256": "b935ef43ada2575816a39b6f40afbe19e13c14834929b537acc4027307d6f53b",
-  "zipSize": 50749,
+  "treeHash": "7b50c433df316bdc8420cfa728694ec7a8a551fb9735f37036ccb9434c936180",
+  "zipSha256": "f3a2ee7a1809208aebcc4c2477b608ba859b581659d13705a012ef78f247178d",
+  "zipSize": 51278,
   "files": [
     {
       "path": "SKILL.md",
-      "hash": "4928b6bdcd9540ea6cadaac91548ad0141f5d36956220ec60cfc7e2f48cdd79b",
-      "size": 6840
+      "hash": "0d36231a87b252cf2abf3dda901f001dee4cf4719d7123a8ef9bc3ef4f036154",
+      "size": 6972
     },
     {
       "path": "agents/openai.yaml",
-      "hash": "d9196d2848a49b6cd119b789e439b18028c77edc21f9dcab2b9dd8a523f7078f",
-      "size": 312
+      "hash": "e3b990598f84c88991a6f1b68b90db9f69e25b9dda2206ab19a1222c7729d4d9",
+      "size": 372
     },
     {
       "path": "references/application-contract.md",
-      "hash": "18c31069503149cd4aeed0b90a18c327998cf6db46745ce3a35bde8d5f9b0cb5",
-      "size": 6762
+      "hash": "b7186ab080d6d0ab82b72f0964a06e1af8ce8a6b88d632c5e9d91b9f1e77af2b",
+      "size": 6377
     },
     {
       "path": "references/workbook-rules.md",
-      "hash": "b70cf5e3a3b1a95418fd45687b6a666d2563e51497cff5298ceb21e78afdfc28",
-      "size": 4343
+      "hash": "fb4c607e8d562dccc2840948f94c6fd96f40c268a20196a6e7ff65a4b83a23c0",
+      "size": 4322
     },
     {
       "path": "scripts/analyze_salary_workbook.py",
-      "hash": "466afff5b8e8c17bb9ec5fe31688625215408c27e3f5a1893445c96c08275fc1",
-      "size": 31846
+      "hash": "da397ee53030cb6319b8fc3a190febeb73013a55be8347302a4bd431c31beda4",
+      "size": 32589
     }
   ],
-  "pulledAt": "2026-08-17T08:51:27.665Z"
+  "pulledAt": "2026-09-09T08:55:35.961Z"
 }

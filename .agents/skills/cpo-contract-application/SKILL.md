@@ -1,94 +1,94 @@
 ---
 name: cpo-contract-application
-displayName: 合同申请助手
-description: "在启智云图企业智能系统中创建、保存草稿、提交和查询合同申请。用户提供合同或审批材料时必须主动上传、逐项关联申请单并清点数量；不得绕过受控 Backend Function 直接修改流程状态。"
-example: "帮我新建一份合同申请草稿"
+displayName: Contract Application Assistant
+description: "Create, save drafts, submit, and query contract applications in the Qizhi Yuntu Enterprise Intelligence System. When the user supplies a contract or approval materials, proactively upload every file, link each one to the application, and reconcile counts. Never bypass controlled Backend Functions to modify workflow status directly."
+example: "Create a new contract application draft for me"
 metadata:
   type: write
 ---
 
-# CPO合同申请助手
+# CPO Contract Application Assistant
 
-## 处理流程
+## Workflow
 
 ```mermaid
 flowchart TD
-  Start([用户要求新建/保存/提交合同]) --> P1[建立输入附件清单 合同正文/协议/签章页/审批材料]
-  P1 --> P2[选合同类型/我方角色/付款要求 contract_type / our_role]
+  Start([User requests contract creation, save, or submission]) --> P1[Inventory contract text, agreements, signature pages, and approval materials]
+  P1 --> P2[Select contract type, our role, and payment requirement]
   P2 --> P3{payment_requirement}
-  P3 -- unknown --> DraftOnly[仅允许保存草稿]
-  P3 -- required --> P4a[需付款: 至少一条有效付款计划]
-  P3 -- not_required --> P4b[无需付款: 计划必须为空]
+  P3 -- unknown --> DraftOnly[Draft save only]
+  P3 -- required --> P4a[Payment required: at least one valid payment plan]
+  P3 -- not_required --> P4b[No payment required: plan list must be empty]
   DraftOnly --> L1
   P4a --> L1
-  P4b --> L1[选对外接口人 员工数据集 deleted=0 on_job=1]
-  L1 --> L2[cpoSaveDraft 保存合同草稿 取真实 bizId]
-  L2 --> L3[为每个文件建立附件关系 attachment_type=contract_file]
-  L3 --> L4{需要付款?}
-  L4 -- 是 --> P5[cpoSyncContractPaymentPlans 同步 1~N 条付款计划]
-  L4 -- 否 --> P6
-  P5 --> P6[cpoGetBizTimeline 写后复核 数量/路径门禁]
-  P6 --> L5{门禁一致?}
-  L5 -- 否 --> Stop1([停止: 报告缺失/重复文件])
-  L5 -- 是 --> L6{用户明确提交?}
-  L6 -- 否 --> E1([返回草稿链接])
-  L6 -- 是 --> L7{cpoSaveDraft submit=true 一次创建并提交}
-  L7 -- 缺合同附件 --> Stop2([SUBMIT_REQUIRED_MISSING contract_file])
-  L7 -- 成功 --> E2([返回已提交链接])
+  P4b --> L1[Select external liaison from employees where deleted=0 and on_job=1]
+  L1 --> L2[Save contract draft with cpoSaveDraft and obtain real bizId]
+  L2 --> L3[Create one attachment link per file with attachment_type=contract_file]
+  L3 --> L4{Payment required?}
+  L4 -- Yes --> P5[Sync 1 to N payment plans with cpoSyncContractPaymentPlans]
+  L4 -- No --> P6
+  P5 --> P6[Verify counts and paths with cpoGetBizTimeline]
+  P6 --> L5{Gate reconciles?}
+  L5 -- No --> Stop1([Stop and report missing or duplicate files])
+  L5 -- Yes --> L6{User explicitly requests submission?}
+  L6 -- No --> E1([Return draft link])
+  L6 -- Yes --> L7{Create and submit once with cpoSaveDraft submit=true}
+  L7 -- Contract attachment missing --> Stop2([SUBMIT_REQUIRED_MISSING contract_file])
+  L7 -- Success --> E2([Return submitted application link])
 ```
 
-## 适用场景
+## When to Use
 
-当用户要新建、保存草稿、提交、查询 CPO 合同申请时使用本 Skill。对应前端页面是 `/contract-form`，标准列表页提交后跳转到 `/4cf8289fc0df45a4a13818fce6bfcc59`。
+Use this Skill when the user wants to create, save a draft, submit, or query a CPO contract application. The corresponding form is `/contract-form`; after submission, the standard list page redirects to `/4cf8289fc0df45a4a13818fce6bfcc59`.
 
-## 后端边界
+## Backend Boundaries
 
-- AppCode：`app-4d050189`
-- 主数据集：合同申请 `53869993f80f45ae8ef6cdf051d8e355`，表 `contract_application`
-- 商业伙伴数据集：`68c70907e27c481cbefb96dd3906936e`，表 `business_partner`
-- 员工来源应用：`app-64e32817`
-- 员工数据集：`a3da7e90ec95415f94f955e9c4906648`
-- 附件数据集：`ab17964f0efd46f78cecb4969140f257`
-- 创建/更新草稿只能调用 `cpoSaveDraft`
-- 合同付款计划只能调用 `cpoSyncContractPaymentPlans` 同步；付款事实汇总由 `cpoPaymentPlanSummary` 维护
-- 提交审批只能在最终确认后的完整 `cpoSaveDraft` 请求中传 `submit=true`
-- 不要直接 update 合同主表的 `status`、签署时间、申请人等系统字段
-- `is_deleted` 是 Lovrabet 平台系统字段，Skill、BF、Hook 和脚本不得读取、筛选、赋默认值或更新；删除业务记录时调用 Lovrabet `delete` 或受控 BF
+- AppCode: `app-4d050189`
+- Primary Dataset: contract application `53869993f80f45ae8ef6cdf051d8e355`, table `contract_application`
+- Business partner Dataset: `68c70907e27c481cbefb96dd3906936e`, table `business_partner`
+- Employee source application: `app-64e32817`
+- Employee Dataset: `a3da7e90ec95415f94f955e9c4906648`
+- Attachment Dataset: `ab17964f0efd46f78cecb4969140f257`
+- Create or update a draft only through `cpoSaveDraft`.
+- Synchronize contract payment plans only through `cpoSyncContractPaymentPlans`; `cpoPaymentPlanSummary` maintains payment-fact aggregates.
+- Submit for approval only by passing `submit=true` in the final confirmed, complete `cpoSaveDraft` request.
+- Never directly update system-managed fields such as the contract primary record's `status`, signing time, or applicant.
+- `is_deleted` is a Lovrabet system field. Skills, Backend Functions, Hooks, and scripts must not read, filter, default, or update it. Delete business records through Lovrabet `delete` or a controlled Backend Function.
 
-## 允许写入字段
+## Writable Fields
 
-调用 `cpoSaveDraft` 时，`values` 只使用这些字段：
+In `cpoSaveDraft`, use only these fields under `values`:
 
-- `contract_name`：合同名称，必填
-- `direction`：本页面付款合同传 `payable`
-- `contract_type`：合同类型，值为 `sales`、`procurement`、`service`、`rent`、`hr`、`certification`、`other`
-- `payment_requirement`：`required`（需要付款）、`not_required`（无需付款）、`unknown`（待确认）；提交时不能为 `unknown`
-- `our_role`：我方角色，`party_a` 或 `party_b`
-- `partner_id`：商业伙伴 id，必填
-- `amount`：合同金额，单位元
-- `currency`：默认 `CNY`
-- `start_date`：开始日期，格式 `YYYY-MM-DD`
-- `end_date`：结束日期，格式 `YYYY-MM-DD`
-- `liaison_user_id`：对外接口人的 Lovrabet member id 或员工 userId
-- `liaison_name_snapshot`：对外接口人姓名快照
-- `remark`：备注说明，可选
+- `contract_name`: required contract name.
+- `direction`: pass `payable` for a payment contract on this page.
+- `contract_type`: one of `sales`, `procurement`, `service`, `rent`, `hr`, `certification`, or `other`.
+- `payment_requirement`: `required`, `not_required`, or `unknown`; submission cannot use `unknown`.
+- `our_role`: `party_a` or `party_b`.
+- `partner_id`: required business partner ID.
+- `amount`: contract amount in yuan.
+- `currency`: defaults to `CNY`.
+- `start_date`: `YYYY-MM-DD`.
+- `end_date`: `YYYY-MM-DD`.
+- `liaison_user_id`: Lovrabet member ID or employee userId for the external liaison.
+- `liaison_name_snapshot`: snapshot of the external liaison's name.
+- `remark`: optional notes.
 
-## 对外接口人选择
+## Selecting the External Liaison
 
-合同对外接口人不是手填姓名和 id，而是从员工数据集中选择。查员工时优先搜索 `username`、`full_name`、`nickname`、`work_no`、`mobile`、`yuntoo_email`，只取 `deleted=0` 且 `on_job=1`。
+Select the contract's external liaison from the employee Dataset; do not manually enter a name and ID. Search `username`, `full_name`, `nickname`, `work_no`, `mobile`, and `yuntoo_email`, and keep only records with `deleted=0` and `on_job=1`.
 
-返回后使用：
+Use the result as follows:
 
-- `liaison_user_id` = `lovrabet_member_id`，如果为空再用 `work_no` 或记录 id
-- `liaison_name_snapshot` = `full_name`，如果为空再用 `username`、`nickname`、`work_no`
+- `liaison_user_id` = `lovrabet_member_id`; fall back to `work_no` or the record ID when empty.
+- `liaison_name_snapshot` = `full_name`; fall back to `username`, `nickname`, or `work_no` when empty.
 
-## 创建草稿
+## Create a Draft
 
 ```bash
 lovrabet bff exec --appcode app-4d050189 --name cpoSaveDraft --params '{
   "bizType": "contract",
   "values": {
-    "contract_name": "某某服务合同",
+    "contract_name": "Example Service Contract",
     "direction": "payable",
     "contract_type": "service",
     "payment_requirement": "required",
@@ -98,75 +98,75 @@ lovrabet bff exec --appcode app-4d050189 --name cpoSaveDraft --params '{
     "currency": "CNY",
     "start_date": "2026-06-18",
     "end_date": "2027-06-17",
-    "liaison_user_id": "<员工userId>",
-    "liaison_name_snapshot": "<员工姓名>",
-    "remark": "客户要求先走合同审核后补盖章"
+    "liaison_user_id": "<employee-userId>",
+    "liaison_name_snapshot": "<employee-name>",
+    "remark": "The customer requested contract review before the seal is applied"
   }
 }'
 ```
 
-更新已有草稿或驳回单据时增加 `bizId`。
+Add `bizId` when updating an existing draft or rejected application.
 
-## 付款要求与计划
+## Payment Requirements and Plans
 
-- `payment_requirement=required`：提交前至少有一条有效付款计划；一个合同可有 0～N 个计划，一个计划可对应 0～N 笔付款申请。
-- `payment_requirement=not_required`：计划列表必须为空，也不会进入待付款合同；已经发生实际付款的合同不能改成无需付款。
-- `payment_requirement=unknown`：只允许保存草稿，不允许提交。
-- 不得用一条 `not_required` 付款计划代替合同级“无需付款”。
-- 已有实际付款的计划不能修改或删除；是否已有付款以 `payment_application.payment_plan_id` 的实际明细为准，不能仅依赖兼容字段 `linked_payment_application_id`。
+- `payment_requirement=required`: at least one valid payment plan is required before submission. A contract may have 0–N plans, and a plan may correspond to 0–N payment applications.
+- `payment_requirement=not_required`: the plan list must be empty and the contract does not enter the pending-payment list. A contract with an actual payment cannot be changed to no payment required.
+- `payment_requirement=unknown`: draft save only; submission is forbidden.
+- Never use a `not_required` payment-plan row to represent contract-level “no payment required.”
+- A plan with actual payment cannot be modified or deleted. Determine actual payment from `payment_application.payment_plan_id`, not only from compatibility field `linked_payment_application_id`.
 
-需要付款时，在保存合同草稿后调用 `cpoSyncContractPaymentPlans` 写入 1～N 条付款计划。计划金额不强制等于合同总额；如有预付款、尾款、质保款等，应分别记录业务期次和触发条件。
+When payment is required, save the contract draft and call `cpoSyncContractPaymentPlans` to write 1–N plans. Plan amounts do not have to equal the contract total. Record advance, final, retention, and similar installments separately with their business sequence and trigger conditions.
 
-## 审批状态与履约状态
+## Approval Status and Performance Status
 
-合同有两条相关但不能混用的状态轴：
+Contracts have two related but distinct status axes:
 
-- `status` 是申请/审批状态，例如草稿、审批中、已审核、已签署或已取消。
-- `lifecycle_status` 是合同履约状态：`pending_signature`（待签署）、`signed`（已签署）、`in_progress`（进行中）、`completed`（已完成）、`terminated`（已终止）。
+- `status` is the application/approval status, such as draft, under approval, approved, signed, or cancelled.
+- `lifecycle_status` is contract performance status: `pending_signature`, `signed`, `in_progress`, `completed`, or `terminated`.
 
-审批通过只表示合同申请已审核，不等于合同已经签署，更不等于履约完成。签署版本与履约状态只能通过 `cpoManageDocument360`、`cpoSignContractVersion` 等受控合同能力维护；不得为了让列表显示“完成”直接修改状态字段。
+Approval means only that the contract application was approved; it does not mean the contract was signed or performed. Signed versions and performance status may be maintained only through controlled contract capabilities such as `cpoManageDocument360` and `cpoSignContractVersion`. Never modify status fields directly merely to make a list show “completed.”
 
-## 保存并提交
+## Save and Submit
 
-用户明确提交时，在完整 `cpoSaveDraft` 参数根级增加 `"submit":true`，由主 Dataset CREATE 触发 Lovrabet 平台 Flow。提交前必须确认至少有一条 `attachment_type=contract_file` 且 `file_path` 非空的合同附件，并且付款要求明确：需要付款时至少有一条有效计划，无需付款时不能残留有效计划。附件数量或路径复核不一致时不得提交。审批后的签署和归档由平台 Flow 节点及受控合同能力完成，不调用旧工作流接口。
+When the user explicitly requests submission, add `"submit":true` at the root of the complete `cpoSaveDraft` parameters. The primary Dataset CREATE triggers Lovrabet Flow. Before submission, confirm at least one contract attachment has `attachment_type=contract_file` and a non-empty `file_path`. Also confirm a definite payment requirement: required contracts need at least one valid plan, while not-required contracts must have no remaining valid plans. Do not submit when attachment counts or paths fail reconciliation. Platform Flow nodes and controlled contract capabilities handle post-approval signing and archiving; do not call legacy workflow interfaces.
 
-## 成功结果与详情链接
+## Successful Result and Detail Link
 
-`cpoSaveDraft` 成功后，必须使用该次响应中的真实 `bizType` 和 `bizId` 构造详情地址，不得复用猜测值。随后调用 `cpoGetBizTimeline` 重读标题和状态，并在最终答复中返回可点击链接：
+After `cpoSaveDraft` succeeds, construct the detail URL from the real `bizType` and `bizId` in that response; never reuse a guessed value. Then call `cpoGetBizTimeline` to reread title and status, and return a clickable link:
 
 ```markdown
-[查看“某某服务合同”合同申请](https://app-4d050189.app.lovrabet.com/application-detail/contract/123)
+[View the “Example Service Contract” contract application](https://app-4d050189.app.lovrabet.com/application-detail/contract/123)
 ```
 
-链接文字使用合同名称，不显示内部 ID。保存草稿时明确写“已保存草稿”，提交时明确写“已提交审批”；即使写后重读失败，也保留按成功响应构造的链接，并单独提示详情状态尚未复核。
+Use the contract name as link text, never an internal ID. Say “Draft saved” for a draft and “Submitted for approval” for a submission. If the reread fails, retain the link built from the successful response and separately state that detail status has not yet been verified.
 
-## 附件
+## Attachments
 
-用户只要在创建、更新或提交合同申请的上下文中提供合同正文、补充协议、签章页或审批材料，就视为要求随申请留档。Skill 必须立即建立输入附件清单并逐个调用 `lovrabet file upload`，不需要用户再次输入“请上传附件”。只使用上传响应中的真实 `fileName/filePath/fileType/sourceDir`，不得虚构路径或把文件名写进备注代替附件。
+When the user provides contract text, an addendum, a signature page, or approval materials while creating, updating, or submitting a contract application, treat those files as intended application records. Immediately inventory them and call `lovrabet file upload` for each file; do not ask the user to say “upload attachments” again. Use only real `fileName/filePath/fileType/sourceDir` values returned by the upload. Never invent a path or put a filename in `remark` as a substitute for an attachment.
 
-先保存合同草稿取得真实 `bizId`，再为每个上传成功的文件在附件数据集中创建一条申请关系。合同文件附件类型是 `contract_file`：
+First save the contract draft to obtain its real `bizId`, then create one application relationship in the attachment Dataset for every successfully uploaded file. Contract files use `attachment_type=contract_file`:
 
 ```json
 {
   "biz_type": "contract",
   "biz_id": 123,
   "attachment_type": "contract_file",
-  "file_name": "合同.pdf",
-  "file_path": "20260618/xxx-合同.pdf",
-  "uploaded_by": "申请人姓名"
+  "file_name": "contract.pdf",
+  "file_path": "20260618/xxx-contract.pdf",
+  "uploaded_by": "Applicant Name"
 }
 ```
 
-附件落单后调用 `cpoGetBizTimeline` 重读并按 `biz_type=contract`、真实 `biz_id`、`attachment_type=contract_file` 复核。必须满足：
+After writing attachment relationships, call `cpoGetBizTimeline` and verify by `biz_type=contract`, real `biz_id`, and `attachment_type=contract_file`. All gates must pass:
 
-- 用户提供并属于该合同申请的唯一文件数 = 取得非空 `filePath` 的上传成功数
-- 预期附件关系数 = 实际创建的附件关系数 = 写后读取匹配本次 `filePath` 集合的数量
-- 每个输入文件的文件名和路径恰好关联一次；没有遗漏、额外附件或重复关系
-- 同一文件可复用既有持久 `filePath`，但仍必须为当前合同申请建立且核实一条业务附件关系
+- Number of unique user-provided files belonging to this application = number of successful uploads with a non-empty `filePath`.
+- Expected attachment relationships = relationships actually created = post-write relationships matching this set of `filePath` values.
+- Each input filename and path is linked exactly once, with no missing, extra, or duplicate relationship.
+- An existing persistent `filePath` may be reused for the same file, but a verified business attachment relationship must still be created for this application.
 
-任一数量或路径集合不一致时，停止提交并报告预期数、实际数及缺失或重复的文件名。文件上传成功但没有与合同申请关联不算完成。
+If any count or path set differs, stop submission and report expected and actual counts plus missing or duplicate filenames. An uploaded file that is not linked to the contract application is not complete.
 
-## 查询
+## Query
 
 ```bash
 lovrabet data getOne --appcode app-4d050189 --code 53869993f80f45ae8ef6cdf051d8e355 --params '{"id":123}'

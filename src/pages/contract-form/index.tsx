@@ -56,7 +56,14 @@ import {
 } from "@/features/employees/api";
 import { $i18n } from "@/i18n";
 
-const t = (key: string, fallbackText: string) => $i18n.t(key, fallbackText);
+const t = (
+  key: string,
+  fallbackText: string,
+  options?: Record<string, string | number>,
+) =>
+  options
+    ? $i18n.t({ id: key, dm: fallbackText }, options)
+    : $i18n.t(key, fallbackText);
 
 const CONTRACT_CODE = "53869993f80f45ae8ef6cdf051d8e355";
 const ATTACHMENTS_FIELD = "_attachments";
@@ -80,17 +87,26 @@ const PAYMENT_PLAN_STATUS_META: Record<
   NonNullable<ContractPaymentPlanFormValue["status"]>,
   { color: string; label: string }
 > = {
-  pending: { color: "blue", label: t("contractForm.planStatus.pending", "待支付") },
+  pending: {
+    color: "blue",
+    label: t("contractForm.planStatus.pending", "待支付"),
+  },
   processing: {
     color: "processing",
     label: t("contractForm.planStatus.processing", "支付处理中"),
   },
-  paid: { color: "success", label: t("contractForm.planStatus.paid", "已支付") },
+  paid: {
+    color: "success",
+    label: t("contractForm.planStatus.paid", "已支付"),
+  },
   not_required: {
     color: "default",
     label: t("contractForm.planStatus.notRequired", "无需支付"),
   },
-  cancelled: { color: "error", label: t("contractForm.planStatus.cancelled", "已取消") },
+  cancelled: {
+    color: "error",
+    label: t("contractForm.planStatus.cancelled", "已取消"),
+  },
 };
 
 type ContractPaymentPlanFormValue = {
@@ -289,7 +305,10 @@ const ContractForm: React.FC = () => {
     });
   };
 
-  const persist = async (values: FormValues): Promise<number> => {
+  const persist = async (
+    values: FormValues,
+    thenSubmit: boolean,
+  ): Promise<number> => {
     const payload: any = {
       contract_name: values.contract_name ?? "",
       direction: values.direction,
@@ -363,7 +382,7 @@ const ContractForm: React.FC = () => {
     }
     setSaving(true);
     try {
-      const id = await persist(values);
+      const id = await persist(values, thenSubmit);
       const attachments = await syncAttachmentRecords({
         bizType: "contract",
         bizId: id,
@@ -473,7 +492,10 @@ const ContractForm: React.FC = () => {
             rules={[
               {
                 required: true,
-                message: t("contractForm.field.directionRequired", "请选择资金方向"),
+                message: t(
+                  "contractForm.field.directionRequired",
+                  "请选择资金方向",
+                ),
               },
             ]}
           >
@@ -516,13 +538,19 @@ const ContractForm: React.FC = () => {
                 },
                 {
                   value: "procurement",
-                  label: t("contractForm.contractType.procurement", "商品 / 物资采购"),
+                  label: t(
+                    "contractForm.contractType.procurement",
+                    "商品 / 物资采购",
+                  ),
                 },
                 {
                   value: "rent",
                   label: t("contractForm.contractType.rent", "租赁"),
                 },
-                { value: "hr", label: t("contractForm.contractType.hr", "人力") },
+                {
+                  value: "hr",
+                  label: t("contractForm.contractType.hr", "人力"),
+                },
                 {
                   value: "certification",
                   label: t("contractForm.contractType.certification", "认证"),
@@ -546,8 +574,14 @@ const ContractForm: React.FC = () => {
             >
               <Select
                 options={[
-                  { value: "party_a", label: t("contractForm.role.partyA", "甲方") },
-                  { value: "party_b", label: t("contractForm.role.partyB", "乙方") },
+                  {
+                    value: "party_a",
+                    label: t("contractForm.role.partyA", "甲方"),
+                  },
+                  {
+                    value: "party_b",
+                    label: t("contractForm.role.partyB", "乙方"),
+                  },
                 ]}
               />
             </Form.Item>
@@ -578,7 +612,10 @@ const ContractForm: React.FC = () => {
                 {
                   type: "number",
                   min: 0,
-                  message: t("contractForm.field.amountNonNegative", "金额不能为负"),
+                  message: t(
+                    "contractForm.field.amountNonNegative",
+                    "金额不能为负",
+                  ),
                 },
               ]}
             >
@@ -594,7 +631,10 @@ const ContractForm: React.FC = () => {
               name="start_date"
             >
               <DatePicker
-                placeholder={t("contractForm.field.startDatePlaceholder", "开始日期")}
+                placeholder={t(
+                  "contractForm.field.startDatePlaceholder",
+                  "开始日期",
+                )}
               />
             </Form.Item>
             <Form.Item
@@ -602,7 +642,10 @@ const ContractForm: React.FC = () => {
               name="end_date"
             >
               <DatePicker
-                placeholder={t("contractForm.field.endDatePlaceholder", "结束日期")}
+                placeholder={t(
+                  "contractForm.field.endDatePlaceholder",
+                  "结束日期",
+                )}
               />
             </Form.Item>
           </FormRow>
@@ -640,7 +683,10 @@ const ContractForm: React.FC = () => {
                 options={[
                   {
                     value: "required",
-                    label: t("contractForm.paymentRequirement.required", "需要付款"),
+                    label: t(
+                      "contractForm.paymentRequirement.required",
+                      "需要付款",
+                    ),
                   },
                   {
                     value: "not_required",
@@ -651,7 +697,10 @@ const ContractForm: React.FC = () => {
                   },
                   {
                     value: "unknown",
-                    label: t("contractForm.paymentRequirement.unknown", "待确认"),
+                    label: t(
+                      "contractForm.paymentRequirement.unknown",
+                      "待确认",
+                    ),
                   },
                 ]}
                 onChange={(value) => {
@@ -720,9 +769,13 @@ const ContractForm: React.FC = () => {
                         {t("contractForm.paymentPlans", "付款计划")}
                       </Typography.Text>
                       <Typography.Text type="secondary">
-                        {t("contractForm.paymentPlansCount", "已设置 {count} 个", {
-                          count: watchedPaymentPlans.length,
-                        })}
+                        {t(
+                          "contractForm.paymentPlansCount",
+                          "已设置 {count} 个",
+                          {
+                            count: watchedPaymentPlans.length,
+                          },
+                        )}
                       </Typography.Text>
                     </Space>
                   ),
@@ -826,7 +879,10 @@ const ContractForm: React.FC = () => {
                                           icon={<DeleteOutlined />}
                                           onClick={() => remove(name)}
                                         >
-                                          {t("contractForm.action.delete", "删除")}
+                                          {t(
+                                            "contractForm.action.delete",
+                                            "删除",
+                                          )}
                                         </Button>
                                       )}
                                     </div>
@@ -857,7 +913,10 @@ const ContractForm: React.FC = () => {
                                     <FormRow template="120px minmax(0, 1fr) 160px">
                                       <Form.Item
                                         {...restField}
-                                        label={t("contractForm.field.phaseNo", "期次")}
+                                        label={t(
+                                          "contractForm.field.phaseNo",
+                                          "期次",
+                                        )}
                                         name={[name, "phase_no"]}
                                         rules={[
                                           {
@@ -878,7 +937,10 @@ const ContractForm: React.FC = () => {
                                       </Form.Item>
                                       <Form.Item
                                         {...restField}
-                                        label={t("contractForm.field.phaseName", "期次名称")}
+                                        label={t(
+                                          "contractForm.field.phaseName",
+                                          "期次名称",
+                                        )}
                                         name={[name, "phase_name"]}
                                       >
                                         <Input
@@ -990,7 +1052,10 @@ const ContractForm: React.FC = () => {
                                       </Form.Item>
                                       <Form.Item
                                         {...restField}
-                                        label={t("contractForm.field.currency", "币种")}
+                                        label={t(
+                                          "contractForm.field.currency",
+                                          "币种",
+                                        )}
                                         name={[name, "currency"]}
                                         initialValue="CNY"
                                       >
@@ -1036,7 +1101,10 @@ const ContractForm: React.FC = () => {
                                     </Form.Item>
                                     <Form.Item
                                       {...restField}
-                                      label={t("contractForm.field.planRemark", "计划备注")}
+                                      label={t(
+                                        "contractForm.field.planRemark",
+                                        "计划备注",
+                                      )}
                                       name={[name, "remark"]}
                                     >
                                       <Input.TextArea
@@ -1064,7 +1132,10 @@ const ContractForm: React.FC = () => {
                                   })
                                 }
                               >
-                                {t("contractForm.addPaymentPlan", "新增付款计划")}
+                                {t(
+                                  "contractForm.addPaymentPlan",
+                                  "新增付款计划",
+                                )}
                               </Button>
                             )}
                           </div>
@@ -1165,7 +1236,10 @@ const ContractForm: React.FC = () => {
                 t("contractForm.assessment.notes", "## 注意事项"),
                 "",
                 "- " +
-                  t("contractForm.assessment.invoiceNote", "付款前需取得对应发票"),
+                  t(
+                    "contractForm.assessment.invoiceNote",
+                    "付款前需取得对应发票",
+                  ),
                 "- " +
                   t(
                     "contractForm.assessment.archiveNote",

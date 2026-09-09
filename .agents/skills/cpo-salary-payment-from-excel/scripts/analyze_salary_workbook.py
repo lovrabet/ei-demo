@@ -32,33 +32,33 @@ OFFICE_REL_NS = (
 NS = {"x": MAIN_NS, "r": OFFICE_REL_NS}
 
 ENTITY_ALIASES = {
-    "杭州启智云图科技有限公司": {
+    "\u676d\u5dde\u542f\u667a\u4e91\u56fe\u79d1\u6280\u6709\u9650\u516c\u53f8": {
         "entity_code": "QZYT",
         "entity_id": 1,
-        "short_name": "启智云图",
+        "short_name": "Qizhi Yuntu",
         "approval_subject_code": "QZYT",
     },
-    "杭州梅柚流码科技有限公司": {
+    "\u676d\u5dde\u6885\u67da\u6d41\u7801\u79d1\u6280\u6709\u9650\u516c\u53f8": {
         "entity_code": "MYLM",
         "entity_id": 2,
-        "short_name": "梅柚流码",
+        "short_name": "Meiyou Liuma",
         "approval_subject_code": "MYLM",
     },
-    "杭州启智云图科技有限公司上海分公司": {
+    "\u676d\u5dde\u542f\u667a\u4e91\u56fe\u79d1\u6280\u6709\u9650\u516c\u53f8\u4e0a\u6d77\u5206\u516c\u53f8": {
         "entity_code": "QZYT_SH",
         "entity_id": 3,
-        "short_name": "启智云图上海分公司",
+        "short_name": "Qizhi Yuntu Shanghai Branch",
         "approval_subject_code": "QZYT",
     },
 }
 
 APPROVAL_SUBJECTS = {
     "QZYT": {
-        "name": "启智云图",
+        "name": "Qizhi Yuntu",
         "entity_codes": ("QZYT", "QZYT_SH"),
     },
     "MYLM": {
-        "name": "梅柚流码",
+        "name": "Meiyou Liuma",
         "entity_codes": ("MYLM",),
     },
 }
@@ -66,11 +66,11 @@ APPROVAL_SUBJECTS = {
 DEFAULT_APPLICATION_ORDER = ("QZYT", "MYLM", "QZYT_SH")
 
 SALARY_HEADER_ALIASES = {
-    "name": {"姓名"},
-    "entity": {"发薪单位", "公司"},
-    "gross": {"应付工资", "应发工资"},
-    "net": {"实发工资", "实发金额"},
-    "tax": {"个税", "个人所得税"},
+    "name": {"\u59d3\u540d"},
+    "entity": {"\u53d1\u85aa\u5355\u4f4d", "\u516c\u53f8"},
+    "gross": {"\u5e94\u4ed8\u5de5\u8d44", "\u5e94\u53d1\u5de5\u8d44"},
+    "net": {"\u5b9e\u53d1\u5de5\u8d44", "\u5b9e\u53d1\u91d1\u989d"},
+    "tax": {"\u4e2a\u7a0e", "\u4e2a\u4eba\u6240\u5f97\u7a0e"},
 }
 
 
@@ -197,7 +197,7 @@ def row_text(row: dict[int, Cell]) -> str:
 def find_header(sheet: Sheet) -> tuple[int, dict[str, int]] | None:
     for row_index, _row in enumerate(sheet.rows[:12]):
         # Salary workbooks use vertically merged two-level headers. The anchor
-        # row contains 姓名/发薪单位/实发工资, while 个税 and other deductions
+        # A row contains the Chinese headers for name/entity/net pay, while tax and other deductions
         # commonly appear two rows below.
         header_values_by_col: dict[int, set[str]] = {}
         for candidate in sheet.rows[row_index : row_index + 4]:
@@ -212,7 +212,7 @@ def find_header(sheet: Sheet) -> tuple[int, dict[str, int]] | None:
                     mapping[field] = col
                     break
         for col, header_values in header_values_by_col.items():
-            if any("申请" in value and "金额" in value for value in header_values):
+            if any("\u7533\u8bf7" in value and "\u91d1\u989d" in value for value in header_values):
                 mapping["request_amount"] = col
                 break
         if {"name", "entity", "net"}.issubset(mapping):
@@ -224,15 +224,15 @@ def infer_month(file_name: str, sheets: list[Sheet]) -> tuple[str | None, list[s
     candidates = [file_name, *(sheet.name for sheet in sheets)]
     found: set[tuple[int, int]] = set()
     for text in candidates:
-        match = re.search(r"(20\d{2})年\s*(1[0-2]|0?[1-9])月", text)
+        match = re.search("(20\\d{2})\u5e74\\s*(1[0-2]|0?[1-9])\u6708", text)
         if match:
             found.add((int(match.group(1)), int(match.group(2))))
     if len(found) == 1:
         year, month = found.pop()
         return f"{year:04d}-{month:02d}-01", []
     if not found:
-        return None, ["未能从文件名或工作表名识别工资月份"]
-    return None, [f"检测到多个工资月份：{sorted(found)}"]
+        return None, ["Could not identify the payroll month from the filename or worksheet name"]
+    return None, [f"Multiple payroll months detected: {sorted(found)}"]
 
 
 def select_entity_name(
@@ -243,13 +243,13 @@ def select_entity_name(
     if known:
         entity_name, count = Counter(known).most_common(1)[0]
         if len(set(known)) > 1:
-            warnings.append(f"同一工资表出现多个发薪单位：{sorted(set(known))}")
+            warnings.append(f"Multiple payroll entities appear in one payroll sheet: {sorted(set(known))}")
         return entity_name, warnings
     for label in total_labels:
-        cleaned = re.sub(r"[-－—]?合计.*$", "", label).strip()
+        cleaned = re.sub("[-\uff0d\u2014]?\u5408\u8ba1.*$", "", label).strip()
         if cleaned in ENTITY_ALIASES:
             return cleaned, warnings
-    return None, ["未识别到主体全称"]
+    return None, ["No full legal-entity name was identified"]
 
 
 def analyze_salary_sheet(sheet: Sheet, payroll_month: str | None) -> dict[str, Any]:
@@ -258,7 +258,7 @@ def analyze_salary_sheet(sheet: Sheet, payroll_month: str | None) -> dict[str, A
         return {
             "sheet": sheet.name,
             "recognized": False,
-            "warnings": ["未找到工资表标准表头（姓名、发薪单位、实发工资）"],
+            "warnings": ["Standard payroll headers were not found (name, payroll entity, net pay)"],
         }
     header_index, columns = header
     data_rows = sheet.rows[header_index + 1 :]
@@ -269,7 +269,7 @@ def analyze_salary_sheet(sheet: Sheet, payroll_month: str | None) -> dict[str, A
 
     for row in data_rows:
         text = row_text(row)
-        if "合计" in text or "总计" in text:
+        if "\u5408\u8ba1" in text or "\u603b\u8ba1" in text:
             total_rows.append(row)
             continue
         name = normalize_text(row.get(columns["name"], Cell("", None, None)).value)
@@ -286,8 +286,8 @@ def analyze_salary_sheet(sheet: Sheet, payroll_month: str | None) -> dict[str, A
     entity_name, warnings = select_entity_name(entity_values, total_labels)
     if missing_cached_formula_count:
         warnings.append(
-            f"{missing_cached_formula_count} 行实发工资公式没有缓存结果，"
-            "请先用 Excel/WPS 重新计算并保存"
+            f"{missing_cached_formula_count} net-pay formula rows have no cached result; "
+            "recalculate and save the workbook in Excel/WPS first"
         )
 
     def sum_employee_column(field: str) -> float:
@@ -307,11 +307,11 @@ def analyze_salary_sheet(sheet: Sheet, payroll_month: str | None) -> dict[str, A
     tax_amount = sum_employee_column("tax")
     request_amount = sum_employee_column("request_amount")
     if net_amount <= 0:
-        warnings.append("实发工资汇总不大于 0")
+        warnings.append("The net-pay total is not greater than zero")
     if request_amount > 0 and request_amount < net_amount:
-        warnings.append("Excel 明确申请金额小于实发工资，请财务复核")
+        warnings.append("The explicit application amount is below net pay; finance review is required")
     if request_amount > 0 and abs(request_amount - net_amount - tax_amount) > 0.01:
-        warnings.append("申请金额与“实发工资+个税”不一致，请财务复核")
+        warnings.append("Application amount does not equal net pay plus individual income tax; finance review is required")
 
     reconciliations: list[dict[str, Any]] = []
     if total_rows:
@@ -341,13 +341,13 @@ def analyze_salary_sheet(sheet: Sheet, payroll_month: str | None) -> dict[str, A
                 }
             )
             if abs(delta) > 0.01:
-                warnings.append(f"{field}逐人汇总与合计行相差 {delta:.2f}")
+                warnings.append(f"Employee-level {field} sum differs from the control total by {delta:.2f}")
 
     alias = ENTITY_ALIASES.get(entity_name or "", {})
     month_label = ""
     if payroll_month:
         year, month, _ = payroll_month.split("-")
-        month_label = f"{int(year)}年{int(month)}月"
+        month_label = f"{int(year)}-{int(month):02d}"
     return {
         "sheet": sheet.name,
         "recognized": True,
@@ -360,15 +360,15 @@ def analyze_salary_sheet(sheet: Sheet, payroll_month: str | None) -> dict[str, A
         "individual_income_tax": tax_amount,
         "explicit_request_amount": request_amount or None,
         "payment_project": (
-            f"{alias.get('short_name')}{month_label}工资"
+            f"{alias.get('short_name')} {month_label} Payroll"
             if alias.get("short_name") and month_label
-            else f"{entity_name or sheet.name}工资"
+            else f"{entity_name or sheet.name} Payroll"
         ),
         "payment_amount_candidate": request_amount if request_amount > 0 else net_amount,
         "payment_amount_basis": (
-            "Excel 明确标注的申请金额逐人汇总"
+            "Employee-level sum of the explicit application amount in Excel"
             if request_amount > 0
-            else "实发工资逐人汇总"
+            else "Employee-level net-pay sum"
         ),
         "reconciliations": reconciliations,
         "warnings": warnings,
@@ -377,7 +377,7 @@ def analyze_salary_sheet(sheet: Sheet, payroll_month: str | None) -> dict[str, A
 
 def extract_control_rows(sheets: list[Sheet]) -> list[dict[str, Any]]:
     controls: list[dict[str, Any]] = []
-    keywords = ("申请", "合计", "总计", "总发工资")
+    keywords = ("\u7533\u8bf7", "\u5408\u8ba1", "\u603b\u8ba1", "\u603b\u53d1\u5de5\u8d44")
     for sheet in sheets:
         for row in sheet.rows:
             text_cells = [
@@ -464,11 +464,11 @@ def plan_application_groups(
     if unknown:
         raise ValueError(
             "application groups contain entities not found in the workbooks: "
-            + "、".join(unknown)
+            + ", ".join(unknown)
         )
     if missing:
         raise ValueError(
-            "application groups omit detected entities: " + "、".join(missing)
+            "application groups omit detected entities: " + ", ".join(missing)
         )
 
     alias_by_code = {
@@ -486,7 +486,7 @@ def plan_application_groups(
         if len(approval_subject_codes) != 1:
             raise ValueError(
                 "different approval subjects cannot be merged into one application: "
-                + "、".join(group)
+                + ", ".join(group)
             )
     return requested_groups
 
@@ -521,7 +521,7 @@ def build_result(
         salary_sheets = [
             sheet
             for sheet in sheets
-            if "工资表" in sheet.name and "人员成本" not in sheet.name
+            if "\u5de5\u8d44\u8868" in sheet.name and "\u4eba\u5458\u6210\u672c" not in sheet.name
         ]
         for sheet in salary_sheets:
             analysis = analyze_salary_sheet(sheet, source_month)
@@ -537,7 +537,7 @@ def build_result(
     payroll_month = next(iter(detected_months)) if len(detected_months) == 1 else None
     if len(detected_months) > 1:
         month_warnings.append(
-            "多份附件工资月份不一致：" + "、".join(sorted(detected_months))
+            "Payroll months differ across attachments: " + ", ".join(sorted(detected_months))
         )
     recognized = [item for item in analyses if item.get("recognized")]
     item_candidates = [
@@ -593,9 +593,9 @@ def build_result(
         net = item.pop("_net")
         tax = item.pop("_tax")
         item["remark"] = (
-            f"金额依据：{'、'.join(bases)}；应付工资 {gross:.2f}；"
-            f"个税 {tax:.2f}；来源附件：{'、'.join(source_files_for_item)}；"
-            f"来源工作表：{'、'.join(sheets_for_item)}"
+            f"Amount basis: {', '.join(bases)}; gross payroll {gross:.2f}; "
+            f"individual income tax {tax:.2f}; source files: {', '.join(source_files_for_item)}; "
+            f"source worksheets: {', '.join(sheets_for_item)}"
         )
         item_source_files_by_entity_id[
             int(item["internal_legal_entity_id"])
@@ -606,7 +606,7 @@ def build_result(
     items.sort(key=lambda item: int(item["internal_legal_entity_id"]))
     warnings = list(month_warnings)
     if cell_errors:
-        warnings.append(f"检测到 {len(cell_errors)} 个单元格公式错误")
+        warnings.append(f"Detected {len(cell_errors)} spreadsheet formula errors")
     for analysis in analyses:
         warnings.extend(
             f"{analysis['sheet']}：{warning}" for warning in analysis.get("warnings", [])
@@ -621,7 +621,7 @@ def build_result(
     ]
     if missing_entity_names:
         warnings.append(
-            "本批附件未生成付款明细的已知主体：" + "、".join(missing_entity_names)
+            "Known entities without a payment item in this attachment batch: " + ", ".join(missing_entity_names)
         )
 
     total_amount = round(sum(item["amount"] for item in items), 2)
@@ -630,7 +630,7 @@ def build_result(
     expected_pay_date = None
     if payroll_month:
         year, month, _ = payroll_month.split("-")
-        month_title = f"{int(year)}年{int(month)}月"
+        month_title = f"{int(year)}-{int(month):02d}"
         last_day = calendar.monthrange(int(year), int(month))[1]
         expected_pay_date = f"{int(year):04d}-{int(month):02d}-{last_day:02d}"
 
@@ -667,33 +667,33 @@ def build_result(
             shanghai_net = item_net_amount_by_entity_id[shanghai_item_id]
             shanghai_tax = item_tax_amount_by_entity_id[shanghai_item_id]
             group_items[0]["payment_project"] = (
-                f"{month_title}上海分公司工资及个税往来款"
+                f"{month_title} Shanghai Branch Payroll and Individual Income Tax Intercompany Payment"
                 if month_title
-                else "上海分公司工资及个税往来款"
+                else "Shanghai Branch Payroll and Individual Income Tax Intercompany Payment"
             )
             application_title = (
-                f"转启智云图科技上海分公司往来款，发放{month_title}员工工资"
-                f"{shanghai_net:.2f}加上个税{shanghai_tax:.2f}"
+                f"Intercompany Transfer to Qizhi Yuntu Shanghai Branch for {month_title} Employee Payroll "
+                f"{shanghai_net:.2f} Plus Individual Income Tax {shanghai_tax:.2f}"
                 if month_title and shanghai_tax > 0
-                else f"转启智云图科技上海分公司往来款，发放{month_title}员工工资"
+                else f"Intercompany Transfer to Qizhi Yuntu Shanghai Branch for {month_title} Employee Payroll"
                 f"{shanghai_net:.2f}"
                 if month_title
-                else "启智云图向上海分公司支付工资及个税往来款"
+                else "Qizhi Yuntu Payment to Shanghai Branch for Payroll and Individual Income Tax"
             )
             application_remark = (
-                "本单为启智云图向上海分公司支付往来款，用于发放上海分公司"
-                f"员工工资及个税；实发工资 {shanghai_net:.2f} 元，"
-                f"个税 {shanghai_tax:.2f} 元。提交前须由财务复核。"
+                "This is an intercompany payment from Qizhi Yuntu to its Shanghai Branch for employee "
+                f"payroll and individual income tax; net payroll {shanghai_net:.2f} yuan, "
+                f"tax {shanghai_tax:.2f} yuan. Finance must review before submission."
             )
         else:
             application_title = (
-                f"{primary_entity_name}发放{month_title}员工工资"
+                f"{primary_entity_name} {month_title} Employee Payroll"
                 if month_title
-                else f"{primary_entity_name}工资付款申请"
+                else f"{primary_entity_name} Payroll Payment Application"
             )
             application_remark = (
-                "付款金额优先采用工资附件明确标注的申请金额，"
-                "未标注时采用实发工资逐人汇总；提交前须由财务复核。"
+                "Use the explicit application amount in the payroll attachment when present; otherwise use "
+                "the employee-level net-pay sum. Finance must review before submission."
             )
         related_file_names = list(
             dict.fromkeys(
@@ -779,12 +779,12 @@ def build_result(
             "status": "PASS" if not warnings else "REVIEW",
             "warnings": warnings,
             "blocking": [
-                "付款日期默认工资月份最后一天，创建草稿前必须由用户确认。",
-                "不得自动提交审批；必须先展示汇总并取得用户确认。",
-                "默认按启智云图、梅柚流码、上海分公司工资及个税往来款拆为三张申请。",
-                "上海分公司工资及个税往来款不得并入启智云图本部工资申请。",
-                "启智云图与梅柚流码不得合并为同一申请单。",
-                "每张申请必须上传覆盖其付款项目的原始 Excel 并随申请留档。",
+                "The payment date defaults to the final day of the payroll month and requires user confirmation before draft creation.",
+                "Never submit automatically; show the summary and obtain user confirmation first.",
+                "Default to three applications: Qizhi Yuntu, Meiyou Liuma, and Shanghai Branch payroll/tax intercompany payment.",
+                "Never merge the Shanghai Branch payroll/tax intercompany payment into Qizhi Yuntu headquarters payroll.",
+                "Never merge Qizhi Yuntu and Meiyou Liuma into one application.",
+                "Each application must retain every original Excel file covering its payment items.",
             ],
         },
     }

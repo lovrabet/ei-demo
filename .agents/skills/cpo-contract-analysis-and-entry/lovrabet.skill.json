@@ -2,61 +2,61 @@
   "schemaVersion": 2,
   "appCode": "app-4d050189",
   "skillCode": "cpo-contract-analysis-and-entry",
-  "skillName": "合同风险分析与分期入库",
-  "description": "启智云图企业智能系统中的合同专家审查与安全录入能力。用于逐页核验 PDF、扫描件或 Word 合同，提取签约主体、服务范围、金额、期限及付款或收款分期，按主体授权、价税资金、交付验收、发票退款、知识产权、违约解除、合规和争议解决等维度识别合同风险并给出处置建议，核对供应商或客户资料，再通过 Lovrabet BFF 安全录入、修正和复核；也适用于提交合同前风险把关及排查历史合同、资金单据、附件和合作方关联错误。",
+  "skillName": "Contract Risk Analysis and Installment Entry",
+  "description": "Expert contract review and safe entry for the Qizhi Yuntu Enterprise Intelligence System. Verify PDF, scanned, or Word contracts page by page; extract parties, scope, amount, term, and payment/receipt installments; review authority, tax and funds, delivery and acceptance, invoicing and refunds, IP, breach and termination, compliance, and dispute risks; verify counterparties; then safely enter, correct, and validate records through Lovrabet Backend Functions.",
   "scope": "company",
   "readonly": true,
-  "version": "20260817.165207",
+  "version": "20260909.165406",
   "tags": [],
-  "contentHash": "8c383c0153891d21ef655fe7f69b5735604664301bf47499d5a1fa08816a956d",
+  "contentHash": "568065910ddbf3479ea0334c4132229a84e85fd5d503b107e42df3f7ab442b0b",
   "fileHashes": {
-    "SKILL.md": "8c383c0153891d21ef655fe7f69b5735604664301bf47499d5a1fa08816a956d",
-    "agents/openai.yaml": "2ac443cbcea1d795f52aacd61d9339611408d6a425313d6ff1e20a5794d4460a",
-    "references/contract-review-rules.md": "66e934682204c6249c763b026ba38a68811bbe4f211de6c636b20210ce29c7c0",
-    "references/contract-risk-review.md": "511fa098e4b57a59de7217de9e304e763c827a67b911b70e21b08563f0fa349f",
-    "references/output-contract.md": "da42d6ef7aa7211bd60be2a47450a844b477afef5a36f3013c0fb69a89c2fb92",
-    "references/system-entry.md": "a5408d0ecee207173f5672ddfdf6edbe07836438af7330938c13271c7dc86177",
-    "scripts/validate_contract_analysis.py": "df5ebfddcb9a46769bac579a086e72ce9eb9bd1bec418b7d326fbf99a444c0d2"
+    "SKILL.md": "568065910ddbf3479ea0334c4132229a84e85fd5d503b107e42df3f7ab442b0b",
+    "agents/openai.yaml": "6c4f3ac474911faf523abcbf5572b08d851611b9962827328bd1f9d8991c21ce",
+    "references/contract-review-rules.md": "e79aa4c37c2831e1a9271be19b16b43e180db074b2402322e436f815f439d01e",
+    "references/contract-risk-review.md": "26e4e4460969fb45900acc6f48513f3ff9ff91bbd71bd76d2fd6f9f00a3220ab",
+    "references/output-contract.md": "f6e9d03b868e307ffe7eb6d24a523bd3fb55e921e6f9a65771c810fa70b6c850",
+    "references/system-entry.md": "40ea274cb14dda2d28ec38d161372f9937b46cbd705261f74a935d9dc858b655",
+    "scripts/validate_contract_analysis.py": "fdbcea3045914b772a76f8455c513e19ff5f697971fbecd54250f540d54c7e82"
   },
-  "treeHash": "3aa0c3bb79a1722a1a9b321c3a1ce27162cc2fbd6bd2c271ad7eb7b838d7da57",
-  "zipSha256": "dfe0b66ec45dab1750f6022fc8df698da35d485b805575dbbb364ab88e9bac40",
-  "zipSize": 53931,
+  "treeHash": "84759633a5014aa8ab2cc46b5d03afb1d6b7ba7feecc08ea107ace9878ec9baa",
+  "zipSha256": "d6c39073f72fc8eb76c68a46894e13fd117819c4f66c538ff43c164dc36f5b10",
+  "zipSize": 51652,
   "files": [
     {
       "path": "SKILL.md",
-      "hash": "8c383c0153891d21ef655fe7f69b5735604664301bf47499d5a1fa08816a956d",
-      "size": 9928
+      "hash": "568065910ddbf3479ea0334c4132229a84e85fd5d503b107e42df3f7ab442b0b",
+      "size": 9469
     },
     {
       "path": "agents/openai.yaml",
-      "hash": "2ac443cbcea1d795f52aacd61d9339611408d6a425313d6ff1e20a5794d4460a",
-      "size": 337
+      "hash": "6c4f3ac474911faf523abcbf5572b08d851611b9962827328bd1f9d8991c21ce",
+      "size": 389
     },
     {
       "path": "references/contract-review-rules.md",
-      "hash": "66e934682204c6249c763b026ba38a68811bbe4f211de6c636b20210ce29c7c0",
-      "size": 4386
+      "hash": "e79aa4c37c2831e1a9271be19b16b43e180db074b2402322e436f815f439d01e",
+      "size": 4394
     },
     {
       "path": "references/contract-risk-review.md",
-      "hash": "511fa098e4b57a59de7217de9e304e763c827a67b911b70e21b08563f0fa349f",
-      "size": 5066
+      "hash": "26e4e4460969fb45900acc6f48513f3ff9ff91bbd71bd76d2fd6f9f00a3220ab",
+      "size": 4246
     },
     {
       "path": "references/output-contract.md",
-      "hash": "da42d6ef7aa7211bd60be2a47450a844b477afef5a36f3013c0fb69a89c2fb92",
-      "size": 6925
+      "hash": "f6e9d03b868e307ffe7eb6d24a523bd3fb55e921e6f9a65771c810fa70b6c850",
+      "size": 6688
     },
     {
       "path": "references/system-entry.md",
-      "hash": "a5408d0ecee207173f5672ddfdf6edbe07836438af7330938c13271c7dc86177",
-      "size": 7396
+      "hash": "40ea274cb14dda2d28ec38d161372f9937b46cbd705261f74a935d9dc858b655",
+      "size": 6131
     },
     {
       "path": "scripts/validate_contract_analysis.py",
-      "hash": "df5ebfddcb9a46769bac579a086e72ce9eb9bd1bec418b7d326fbf99a444c0d2",
-      "size": 18965
+      "hash": "fdbcea3045914b772a76f8455c513e19ff5f697971fbecd54250f540d54c7e82",
+      "size": 19407
     }
   ],
-  "pulledAt": "2026-08-17T08:52:08.154Z"
+  "pulledAt": "2026-09-09T08:54:07.314Z"
 }

@@ -30,51 +30,13 @@ const ALL_PLAN_STATUSES = new Set([
   "processing",
   "cancelled",
 ]);
-const ADMIN_ROLES = new Set([
-  "admin",
-  "administrator",
-  "super_admin",
-  "cpo_admin",
-  "workflow_admin",
-]);
-
 function optionalText(value) {
   return value === undefined || value === null ? "" : String(value).trim();
 }
 
-function normalizeRoles(roleLike) {
-  if (Array.isArray(roleLike)) {
-    return roleLike
-      .map((item) =>
-        typeof item === "string"
-          ? item
-          : item?.code || item?.name || item?.value || item?.roleCode,
-      )
-      .map((role) => optionalText(role).toLowerCase())
-      .filter(Boolean);
-  }
-  const role = optionalText(roleLike).toLowerCase();
-  return role ? [role] : [];
-}
-
 function actorIsAdmin(actor, context) {
   const userInfo = context?.userInfo || {};
-  if (
-    actor?.isAdmin === true ||
-    userInfo.isAdmin === true ||
-    userInfo.admin === true ||
-    userInfo.is_super_admin === true
-  ) {
-    return true;
-  }
-  const roles = [
-    ...normalizeRoles(actor?.roles),
-    ...normalizeRoles(userInfo.roles),
-    ...normalizeRoles(userInfo.roleList),
-    ...normalizeRoles(userInfo.roleCodes),
-    ...normalizeRoles(userInfo.role),
-  ];
-  return roles.some((role) => ADMIN_ROLES.has(role));
+  return actor?.isAdmin === true || userInfo.isAdmin === true;
 }
 
 function positiveId(value, fieldName) {

@@ -12,13 +12,6 @@
  * { "bizType": "invoice", "bizId": 123, "status": "reviewed" }
  */
 
-const ADMIN_ROLES = new Set([
-  "admin",
-  "administrator",
-  "super_admin",
-  "cpo_admin",
-  "workflow_admin",
-]);
 const ARCHIVABLE_STATUSES = new Set(["draft", "rejected"]);
 
 function optionalText(value) {
@@ -37,28 +30,8 @@ function rowsOf(response) {
   return Array.isArray(response?.tableData) ? response.tableData : [];
 }
 
-function normalizeRoles(roleLike) {
-  const values = Array.isArray(roleLike) ? roleLike : [roleLike];
-  return values
-    .map((item) =>
-      typeof item === "string"
-        ? item
-        : item?.code || item?.name || item?.value || item?.roleCode,
-    )
-    .map((item) => optionalText(item).toLowerCase())
-    .filter(Boolean);
-}
-
 function actorIsAdmin(actor) {
-  const raw = actor?.raw || {};
-  if (
-    raw.isAdmin === true ||
-    raw.admin === true ||
-    raw.is_super_admin === true
-  ) {
-    return true;
-  }
-  return normalizeRoles(actor?.roles).some((role) => ADMIN_ROLES.has(role));
+  return actor?.isAdmin === true;
 }
 
 function assertRecordOwner(record, actor) {

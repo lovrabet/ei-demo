@@ -7,7 +7,7 @@
  *
  * 平台原生审批流说明：审批人在业务表 node_process_user（JSON）中，无法在
  * dataset WHERE 上按 JSON 匹配，因此非管理角色的平台审批人在列表页需要
- * finance_advisor（财务顾问）等读全量角色才能看到待审批单据
+ * oa_demo_finance_advisor 角色才能看到待审批单据
  * （详情页 cpoApplicationReadOneGuard 已按 node_process_user 精确放行）。
  */
 const VALID_BIZ_TYPES = new Set([
@@ -20,29 +20,19 @@ const VALID_BIZ_TYPES = new Set([
   "salary_payment",
   "travel",
 ]);
+const FINANCE_ADVISOR_ROLE_CODE = "oa_demo_finance_advisor";
 
 function optionalText(value) {
   if (value === undefined || value === null) return "";
   return String(value).trim();
 }
 
-function normalizeRole(value) {
-  return optionalText(value).toLowerCase();
-}
-
-function normalizeRoles(roleLike) {
-  const values = Array.isArray(roleLike) ? roleLike : [roleLike];
-  return values
-    .map((item) =>
-      typeof item === "string"
-        ? item
-        : item?.code ||
-          item?.name ||
-          item?.value ||
-          item?.roleCode ||
-          item?.roleName,
+function extractPlatformRoleCodes(roles) {
+  if (!Array.isArray(roles)) return [];
+  return roles
+    .map((role) =>
+      role && typeof role === "object" ? optionalText(role.roleCode) : "",
     )
-    .map(normalizeRole)
     .filter(Boolean);
 }
 
@@ -64,31 +54,12 @@ function currentActorFromContext(context) {
 function actorHasReadAllRole(actor, context) {
   const userInfo = context?.userInfo || {};
   if (
-    userInfo.isAdmin === true ||
-    userInfo.admin === true ||
-    userInfo.is_super_admin === true
+    userInfo.isAdmin === true
   ) {
     return true;
   }
-  const roles = [
-    ...normalizeRoles(userInfo.roles),
-    ...normalizeRoles(userInfo.roleList),
-    ...normalizeRoles(userInfo.roleCodes),
-    ...normalizeRoles(userInfo.role),
-  ];
-  return roles.some((role) =>
-    [
-      "admin",
-      "administrator",
-      "super_admin",
-      "owner",
-      "cpo_admin",
-      "管理员",
-      "应用owner",
-      "finance_advisor",
-      "财务顾问",
-    ].includes(role),
-  );
+  const roleCodes = extractPlatformRoleCodes(userInfo.roles);
+  return roleCodes.includes(FINANCE_ADVISOR_ROLE_CODE);
 }
 
 function actorCanReadAll(actor, context) {

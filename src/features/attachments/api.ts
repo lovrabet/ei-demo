@@ -2,6 +2,7 @@ import { LOVRABET_APP_CODE } from "@/api/api";
 import { lovrabetClient } from "@/api/client";
 
 const RUNTIME_API_HOST = "https://runtime.lovrabet.com";
+const PLATFORM_API_HOST = "https://api.lovrabet.com";
 
 export type AttachmentBizType =
   | "expense"
@@ -12,10 +13,12 @@ export type AttachmentBizType =
   | "partner"
   | "travel"
   | "invoice"
+  | "invoice_application"
   | "credential";
 
 export type AttachmentType =
   | "invoice"
+  | "invoice_application_material"
   | "contract_file"
   | "credential"
   | "bank_receipt"
@@ -31,6 +34,7 @@ export type AttachmentFileValue = {
   fileType?: string;
   sourceDir?: string;
   uploadedBy?: string;
+  attachmentType?: string;
 };
 
 export type AttachmentRecord = {
@@ -40,6 +44,7 @@ export type AttachmentRecord = {
   file_type?: string | null;
   source_dir?: string | null;
   uploaded_by?: string | null;
+  attachment_type?: string | null;
 };
 
 type UploadRuntimeResponse = {
@@ -52,6 +57,12 @@ type UploadRuntimeResponse = {
   };
   errorMsg?: string;
   msg?: string;
+};
+
+export type InvoiceOcrResult = {
+  kvData: Record<string, string>;
+  text?: string;
+  requestId?: string;
 };
 
 type UploadLikeFile = {
@@ -99,14 +110,11 @@ export async function uploadRuntimeFile(
   formData.append("file", file);
   formData.append("appCode", getRuntimeAppCode());
 
-  const result = (await fetch(
-    `${getRuntimeApiHost()}/api/common/uploadFile`,
-    {
-      method: "POST",
-      credentials: "include",
-      body: formData,
-    },
-  ).then((res) => res.json())) as UploadRuntimeResponse;
+  const result = (await fetch(`${getRuntimeApiHost()}/api/common/uploadFile`, {
+    method: "POST",
+    credentials: "include",
+    body: formData,
+  }).then((res) => res.json())) as UploadRuntimeResponse;
 
   if (!result?.success) {
     throw new Error(result?.errorMsg || result?.msg || "文件上传失败");
@@ -129,20 +137,40 @@ export async function uploadRuntimeFile(
 export async function queryRuntimeFileUrl(filePath: string): Promise<string> {
   if (!filePath) throw new Error("未获取到文件路径");
 
-  const result = await fetch(
-    `${getRuntimeApiHost()}/api/common/queryFileUrl`,
-    {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ filePath }),
-    },
-  ).then((res) => res.json());
+  const result = await fetch(`${getRuntimeApiHost()}/api/common/queryFileUrl`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ filePath }),
+  }).then((res) => res.json());
 
   const fileUrl = result?.data?.fileUrl;
   if (!fileUrl)
     throw new Error(result?.errorMsg || result?.msg || "未获取到文件地址");
   return fileUrl;
+}
+
+export async function recognizeInvoiceFile(
+  filePath: string,
+): Promise<InvoiceOcrResult> {
+  const fileUrl = await queryRuntimeFileUrl(filePath);
+  const query = new URLSearchParams({
+    appCode: getRuntimeAppCode(),
+    type: "Invoice",
+    url: fileUrl,
+  });
+  const result = await fetch(
+    `${PLATFORM_API_HOST}/smartapi/ocr/recognize-text?${query.toString()}`,
+    { credentials: "include" },
+  ).then((res) => res.json());
+  if (result?.success === false) {
+    throw new Error(result?.errorMsg || result?.message || "发票识别失败");
+  }
+  const data = result?.data || result;
+  if (!data?.kvData || typeof data.kvData !== "object") {
+    throw new Error("发票识别结果不完整");
+  }
+  return data as InvoiceOcrResult;
 }
 
 export function normalizeAttachmentUploadFile(
@@ -175,6 +203,9 @@ export function attachmentRecordToValue(
     ...(record.file_type ? { fileType: record.file_type } : {}),
     ...(record.source_dir ? { sourceDir: record.source_dir } : {}),
     ...(record.uploaded_by ? { uploadedBy: record.uploaded_by } : {}),
+    ...(record.attachment_type
+      ? { attachmentType: record.attachment_type }
+      : {}),
   };
 }
 
@@ -261,10 +292,11 @@ export async function listAttachmentRecords(params: {
       "file_type",
       "source_dir",
       "uploaded_by",
+      "attachment_type",
     ],
     orderBy: [{ id: "asc" }],
     currentPage: 1,
-    pageSize: 200,
+    pageSize: 100,
   });
 
   return (result.tableData || []) as AttachmentRecord[];

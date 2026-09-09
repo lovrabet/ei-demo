@@ -14,29 +14,19 @@ const VALID_BIZ_TYPES = new Set([
   "salary_payment",
   "travel",
 ]);
+const FINANCE_ADVISOR_ROLE_CODE = "oa_demo_finance_advisor";
 
 function optionalText(value) {
   if (value === undefined || value === null) return "";
   return String(value).trim();
 }
 
-function normalizeRole(value) {
-  return optionalText(value).toLowerCase();
-}
-
-function normalizeRoles(roleLike) {
-  const values = Array.isArray(roleLike) ? roleLike : [roleLike];
-  return values
-    .map((item) =>
-      typeof item === "string"
-        ? item
-        : item?.code ||
-          item?.name ||
-          item?.value ||
-          item?.roleCode ||
-          item?.roleName,
+function extractPlatformRoleCodes(roles) {
+  if (!Array.isArray(roles)) return [];
+  return roles
+    .map((role) =>
+      role && typeof role === "object" ? optionalText(role.roleCode) : "",
     )
-    .map(normalizeRole)
     .filter(Boolean);
 }
 
@@ -58,31 +48,12 @@ function currentActorFromContext(context) {
 function actorHasReadAllRole(actor, context) {
   const userInfo = context?.userInfo || {};
   if (
-    userInfo.isAdmin === true ||
-    userInfo.admin === true ||
-    userInfo.is_super_admin === true
+    userInfo.isAdmin === true
   ) {
     return true;
   }
-  const roles = [
-    ...normalizeRoles(userInfo.roles),
-    ...normalizeRoles(userInfo.roleList),
-    ...normalizeRoles(userInfo.roleCodes),
-    ...normalizeRoles(userInfo.role),
-  ];
-  return roles.some((role) =>
-    [
-      "admin",
-      "administrator",
-      "super_admin",
-      "owner",
-      "cpo_admin",
-      "管理员",
-      "应用owner",
-      "finance_advisor",
-      "财务顾问",
-    ].includes(role),
-  );
+  const roleCodes = extractPlatformRoleCodes(userInfo.roles);
+  return roleCodes.includes(FINANCE_ADVISOR_ROLE_CODE);
 }
 
 function actorCanReadAll(actor, context) {
@@ -110,8 +81,8 @@ function normalizeResult(params) {
  * { assignees: [userId], candidateUsers, tasks: [{ assignee, ... }] }）。
  * legacy 的 biz_task 已废弃清空，审批人本人（含候选/抄送用户）应可读该单据。
  */
-function parseNodeProcessUserIds(raw) {
-  if (!raw) return [];
+function parseNodeProcessActors(raw) {
+  if (!raw) return { userIds: [], roleTokens: [] };
   try {
     const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
     const topLevel = [
@@ -128,11 +99,17 @@ function parseNodeProcessUserIds(raw) {
               : [assignee];
         })
       : [];
-    return Array.from(new Set([...topLevel, ...taskLevel]))
-      .map(optionalText)
-      .filter(Boolean);
+    return {
+      userIds: Array.from(new Set([...topLevel, ...taskLevel]))
+        .map(optionalText)
+        .filter(Boolean),
+      roleTokens: (Array.isArray(parsed?.candidateGroups)
+        ? parsed.candidateGroups
+        : []
+      ).flatMap((group) => extractPlatformRoleCodes([group])),
+    };
   } catch {
-    return [];
+    return { userIds: [], roleTokens: [] };
   }
 }
 
@@ -155,7 +132,12 @@ export default async function cpoApplicationReadOneGuard(params, context) {
   }
 
   // 平台审批人（node_process_user 中的人）可读该单据，不依赖 legacy biz_task。
-  if (parseNodeProcessUserIds(result.node_process_user).includes(actorUserId)) {
+  const processActors = parseNodeProcessActors(result.node_process_user);
+  const actorRoleCodes = extractPlatformRoleCodes(context?.userInfo?.roles);
+  if (
+    processActors.userIds.includes(actorUserId) ||
+    processActors.roleTokens.some((role) => actorRoleCodes.includes(role))
+  ) {
     return result;
   }
 

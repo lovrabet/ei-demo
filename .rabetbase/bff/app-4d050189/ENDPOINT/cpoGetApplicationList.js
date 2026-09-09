@@ -1,7 +1,7 @@
 /**
- * 申请单汇总：流程管理员和财务顾问组成员跨 CPO 主单查询流程。
+ * 申请单汇总：管理员、应用 owner 和财务顾问跨业务主单查询流程。
  *
- * [脚本描述] 允许流程管理员和财务顾问组成员按进行中、已完成、驳回/废弃查看单据，支持业务类型、申请人、状态和关键词筛选。
+ * [脚本描述] 允许管理员、应用 owner 和财务顾问按进行中、已完成、驳回/废弃查看单据，支持业务类型、申请人、状态和关键词筛选。
  *            平台流绑定的主单以平台回写的 flow_status/instance_status/running_node/node_process_user 分类与展示，
  *            不再读取 legacy biz_task（自研状态机已废弃）。
  * [接口路径] POST /api/endpoint/app-4d050189/cpoGetApplicationList
@@ -14,7 +14,7 @@
  * { scope: "application_reader", paging: { currentPage, pageSize, totalCount }, tableData: [ { bizType, bizId, title, status, flowStatus, instanceStatus, processInstanceId, runningNode, approverUserIds, amount, currency, applicantName, submittedAt, updatedAt, detailPath } ] }
  */
 
-const FETCH_PAGE_SIZE = 200;
+const FETCH_PAGE_SIZE = 100;
 const MAX_ROWS_PER_TYPE = 1000;
 const DISCONTINUED_STATUSES = ["rejected", "cancelled", "invalid"];
 // 平台流（FORM_FLOW）绑定的主单：流程状态以平台回写列为准
@@ -48,16 +48,6 @@ const COMPLETED_STATUSES_BY_TYPE = {
   salary_payment: ["paid_confirmed", "completed"],
   travel: ["reviewed", "completed"],
 };
-const APPLICATION_LIST_ROLES = new Set([
-  "admin",
-  "administrator",
-  "super_admin",
-  "owner",
-  "workflow_admin",
-  "流程管理员",
-  "finance_advisor",
-  "财务顾问",
-]);
 const DETAIL_PATH = {
   expense: (id) =>
     `/application-detail/expense/${encodeURIComponent(String(id))}`,
@@ -116,27 +106,8 @@ function comparableTime(value) {
   return Number.isFinite(time) ? time : 0;
 }
 
-function normalizeRoles(roleLike) {
-  const values = Array.isArray(roleLike) ? roleLike : [roleLike];
-  return values
-    .map((item) =>
-      typeof item === "string"
-        ? item
-        : item?.code ||
-          item?.name ||
-          item?.value ||
-          item?.roleCode ||
-          item?.roleName,
-    )
-    .map((role) => optionalText(role).toLowerCase())
-    .filter(Boolean);
-}
-
 function actorHasApplicationListRole(actor) {
-  if (actor?.isAdmin === true) return true;
-  return normalizeRoles(actor?.roles).some((role) =>
-    APPLICATION_LIST_ROLES.has(role),
-  );
+  return actor?.isAdmin === true || actor?.isFinanceAdvisor === true;
 }
 
 function assertApplicationListReader(actor) {
@@ -171,7 +142,9 @@ function parseApproverUserIds(raw) {
   if (!text) return [];
   try {
     const payload = JSON.parse(text);
-    const assignees = Array.isArray(payload?.assignees) ? payload.assignees : [];
+    const assignees = Array.isArray(payload?.assignees)
+      ? payload.assignees
+      : [];
     const candidates = Array.isArray(payload?.candidateUsers)
       ? payload.candidateUsers
       : [];
@@ -186,7 +159,8 @@ function platformMatchesScope(flowStatus, instanceStatus, scope) {
   if (!flowStatus) return false;
   if (scope === "voided") {
     return (
-      PLATFORM_FLOW_VOIDED.includes(flowStatus) || instanceStatus === "CANCELLED"
+      PLATFORM_FLOW_VOIDED.includes(flowStatus) ||
+      instanceStatus === "CANCELLED"
     );
   }
   if (scope === "completed") return flowStatus === "COMPLETED";

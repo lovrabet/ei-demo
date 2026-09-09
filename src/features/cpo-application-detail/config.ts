@@ -1,6 +1,6 @@
 import type {
   ApplicationDetailConfig,
-  CpoApplicationBizType,
+  ApplicationDetailConfigBizType,
   Document360ModuleDefinition,
 } from "./types";
 import { $i18n } from "@/i18n";
@@ -65,7 +65,10 @@ export const ROLE_LABELS: Record<string, string> = {
   applicant: fallback("workflow.roleLabels.applicant", "申请人"),
   reviewer: fallback("workflow.roleLabels.reviewer", "审核员"),
   cc: fallback("workflow.roleLabels.cc", "抄送人"),
-  voucher_creator: fallback("workflow.roleLabels.voucher_creator", "凭证创建员"),
+  voucher_creator: fallback(
+    "workflow.roleLabels.voucher_creator",
+    "凭证创建员",
+  ),
   payer: fallback("workflow.roleLabels.payer", "付款员"),
   confirmer: fallback("workflow.roleLabels.confirmer", "确认人"),
   admin: fallback("workflow.roleLabels.admin", "管理员"),
@@ -81,7 +84,10 @@ export const ACTION_LABELS: Record<string, string> = {
     "workflow.actionLabels.prepare_bank_order",
     "完成网银制单",
   ),
-  submit_to_bank: fallback("workflow.actionLabels.submit_to_bank", "网银复核并提交"),
+  submit_to_bank: fallback(
+    "workflow.actionLabels.submit_to_bank",
+    "网银复核并提交",
+  ),
   confirm_paid: fallback("workflow.actionLabels.confirm_paid", "确认付款"),
   confirm_legacy_paid: fallback(
     "workflow.actionLabels.confirm_legacy_paid",
@@ -216,7 +222,7 @@ const workflowModule: Document360ModuleDefinition = {
 };
 
 export const APPLICATION_DETAIL_CONFIG: Record<
-  CpoApplicationBizType,
+  ApplicationDetailConfigBizType,
   ApplicationDetailConfig
 > = {
   expense: {
@@ -402,16 +408,16 @@ export const APPLICATION_DETAIL_CONFIG: Record<
       documentModule,
       {
         key: "expenseItems",
-        label: fallback(
-          "applicationDetail.modules.expenseItems",
-          "报销明细",
-        ),
+        label: fallback("applicationDetail.modules.expenseItems", "报销明细"),
         area: "main",
         showWhenEmpty: true,
       },
       {
         key: "invoiceLinks",
-        label: fallback("applicationDetail.expense.moduleInvoiceLinks", "关联发票"),
+        label: fallback(
+          "applicationDetail.expense.moduleInvoiceLinks",
+          "关联发票",
+        ),
         area: "main",
         showWhenEmpty: true,
       },
@@ -636,18 +642,12 @@ export const APPLICATION_DETAIL_CONFIG: Record<
           },
           {
             name: "tax_rate",
-            label: fallback(
-              "applicationDetail.invoice.fieldTaxRate",
-              "税率",
-            ),
+            label: fallback("applicationDetail.invoice.fieldTaxRate", "税率"),
             format: "percent",
           },
           {
             name: "tax_amount",
-            label: fallback(
-              "applicationDetail.invoice.fieldTaxAmount",
-              "税额",
-            ),
+            label: fallback("applicationDetail.invoice.fieldTaxAmount", "税额"),
             format: "money",
             currencyField: "currency",
           },
@@ -662,10 +662,7 @@ export const APPLICATION_DETAIL_CONFIG: Record<
           },
           {
             name: "currency",
-            label: fallback(
-              "applicationDetail.invoice.fieldCurrency",
-              "币种",
-            ),
+            label: fallback("applicationDetail.invoice.fieldCurrency", "币种"),
           },
           {
             name: "invoice_content",
@@ -1193,10 +1190,7 @@ export const APPLICATION_DETAIL_CONFIG: Record<
           },
           {
             name: "currency",
-            label: fallback(
-              "applicationDetail.contract.fieldCurrency",
-              "币种",
-            ),
+            label: fallback("applicationDetail.contract.fieldCurrency", "币种"),
           },
           {
             name: "start_date",
@@ -1280,10 +1274,7 @@ export const APPLICATION_DETAIL_CONFIG: Record<
       },
       {
         key: "invoiceLinks",
-        label: fallback(
-          "applicationDetail.modules.invoiceLinks",
-          "关联发票",
-        ),
+        label: fallback("applicationDetail.modules.invoiceLinks", "关联发票"),
         area: "main",
       },
       relatedDocumentsModule,
@@ -1307,10 +1298,7 @@ export const APPLICATION_DETAIL_CONFIG: Record<
         fields: [
           {
             name: "title",
-            label: fallback(
-              "applicationDetail.payment.fieldTitle",
-              "付款标题",
-            ),
+            label: fallback("applicationDetail.payment.fieldTitle", "付款标题"),
           },
           {
             name: "project_name",
@@ -1334,10 +1322,7 @@ export const APPLICATION_DETAIL_CONFIG: Record<
           },
           {
             name: "partner_id",
-            label: fallback(
-              "applicationDetail.payment.fieldPartner",
-              "合作方",
-            ),
+            label: fallback("applicationDetail.payment.fieldPartner", "合作方"),
           },
           {
             name: "contract_id",
@@ -1383,10 +1368,7 @@ export const APPLICATION_DETAIL_CONFIG: Record<
           },
           {
             name: "liaison_name_snapshot",
-            label: fallback(
-              "applicationDetail.payment.fieldLiaison",
-              "联络人",
-            ),
+            label: fallback("applicationDetail.payment.fieldLiaison", "联络人"),
           },
         ],
       },
@@ -1699,10 +1681,7 @@ export const APPLICATION_DETAIL_CONFIG: Record<
       documentModule,
       {
         key: "salaryItems",
-        label: fallback(
-          "applicationDetail.modules.salaryItems",
-          "付款明细",
-        ),
+        label: fallback("applicationDetail.modules.salaryItems", "付款明细"),
         area: "main",
         showWhenEmpty: true,
       },
@@ -1718,17 +1697,11 @@ export const APPLICATION_DETAIL_CONFIG: Record<
     currencyField: "currency",
     sections: [
       {
-        title: fallback(
-          "applicationDetail.travel.sectionTripInfo",
-          "行程信息",
-        ),
+        title: fallback("applicationDetail.travel.sectionTripInfo", "行程信息"),
         fields: [
           {
             name: "title",
-            label: fallback(
-              "applicationDetail.travel.fieldTitle",
-              "差旅标题",
-            ),
+            label: fallback("applicationDetail.travel.fieldTitle", "差旅标题"),
           },
           {
             name: "travel_type",
@@ -1832,18 +1805,12 @@ export const APPLICATION_DETAIL_CONFIG: Record<
           },
           {
             name: "partner_id",
-            label: fallback(
-              "applicationDetail.travel.fieldPartner",
-              "合作方",
-            ),
+            label: fallback("applicationDetail.travel.fieldPartner", "合作方"),
           },
         ],
       },
       {
-        title: fallback(
-          "applicationDetail.travel.sectionBudget",
-          "预算与安排",
-        ),
+        title: fallback("applicationDetail.travel.sectionBudget", "预算与安排"),
         fields: [
           {
             name: "estimated_amount",

@@ -2,25 +2,25 @@
   "schemaVersion": 2,
   "appCode": "app-4d050189",
   "skillCode": "cpo-expense-application",
-  "skillName": "报销申请助手",
-  "description": "在启智云图企业智能系统中根据用户上传的发票文件创建、保存草稿、提交或查询报销申请。创建和提交报销时必须先上传真实发票文件，并把同一文件保存到报销附件池和发票台账；不得绕过受控 Backend Function 直接写业务表。",
+  "skillName": "Expense Application Assistant",
+  "description": "Create, save drafts, submit, or query expense applications from invoice files uploaded by the user in the Qizhi Yuntu Enterprise Intelligence System. Before creation or submission, upload the real invoice files and store each same file in both the expense attachment pool and invoice ledger. Never bypass controlled Backend Functions to write business tables directly.",
   "scope": "company",
   "readonly": true,
-  "version": "20260817.165016",
+  "version": "20260909.165439",
   "tags": [],
-  "contentHash": "901e505e195867e28a9b37323fc1923d1777f0863bb131f6cc79d6c50b85f861",
+  "contentHash": "beb1e119b0ca7c788ec2e95313bf9fbaedcf1cb3cdf6b3bbaa2e3fe8316a8bf2",
   "fileHashes": {
-    "SKILL.md": "901e505e195867e28a9b37323fc1923d1777f0863bb131f6cc79d6c50b85f861"
+    "SKILL.md": "beb1e119b0ca7c788ec2e95313bf9fbaedcf1cb3cdf6b3bbaa2e3fe8316a8bf2"
   },
-  "treeHash": "3b42548012ff9807d6351b519387b0ed2f4bdfcd1a7bddc2145341cf04478120",
-  "zipSha256": "dbe3c54849e1ac685d488a408b05338ad9f0574f7b570214464edb1dbb6d81a2",
-  "zipSize": 17155,
+  "treeHash": "9a87650b023ef6537d6f8209b176b53b92c0a66a24af60c40f6d5d1cebe1eefe",
+  "zipSha256": "3997e3309e9b526efe9765b55a9e416eb488ef03c6d23e5dab31cb3622938e79",
+  "zipSize": 15115,
   "files": [
     {
       "path": "SKILL.md",
-      "hash": "901e505e195867e28a9b37323fc1923d1777f0863bb131f6cc79d6c50b85f861",
-      "size": 17041
+      "hash": "beb1e119b0ca7c788ec2e95313bf9fbaedcf1cb3cdf6b3bbaa2e3fe8316a8bf2",
+      "size": 15001
     }
   ],
-  "pulledAt": "2026-08-17T08:50:16.335Z"
+  "pulledAt": "2026-09-09T08:54:39.377Z"
 }

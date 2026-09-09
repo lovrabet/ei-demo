@@ -27,31 +27,10 @@ function text(value) {
   return value === undefined || value === null ? "" : String(value).trim();
 }
 
-function actorIsAdmin(actor) {
-  if (actor?.isAdmin === true || actor?.raw?.isAdmin === true) return true;
-  const roles = Array.isArray(actor?.roles) ? actor.roles : [actor?.roles];
-  return roles.some((role) =>
-    ["admin", "administrator", "super_admin", "cpo_admin"].includes(
-      text(
-        typeof role === "string"
-          ? role
-          : role?.code || role?.name || role?.value || role?.roleCode,
-      ).toLowerCase(),
-    ),
-  );
-}
-
-function assertOperator(application, invoice, actor) {
+function assertOperator(actor) {
   const actorUserId = text(actor?.userId);
   if (!actorUserId) throw new Error("CPO_ACTOR_MISSING");
-  if (actorIsAdmin(actor)) return;
-  if (
-    [application?.applicant_user_id, invoice?.applicant_user_id]
-      .map(text)
-      .includes(actorUserId)
-  ) {
-    return;
-  }
+  if (actor?.isAdmin === true || actor?.isFinanceAdvisor === true) return;
   throw new Error("INVOICE_FULFILLMENT_FORBIDDEN");
 }
 
@@ -87,6 +66,17 @@ function modelOf(models, tableName, label, methods) {
   return model;
 }
 
+async function filterAll(model, query) {
+  const result = [];
+  for (let currentPage = 1; ; currentPage += 1) {
+    const page = rowsOf(
+      await model.filter({ ...query, currentPage, pageSize: 100 }),
+    );
+    result.push(...page);
+    if (page.length < 100) return result;
+  }
+}
+
 async function loadModels(context) {
   const actor = await context.client.bff.execute({
     scriptName: "cpoCurrentActor",
@@ -110,16 +100,14 @@ async function loadModels(context) {
 }
 
 async function refreshApplication(application, models) {
-  const response = await models.fulfillment.filter({
+  const rows = await filterAll(models.fulfillment, {
     where: {
       invoice_application_id: { $eq: Number(application.id) },
       relation_status: { $eq: "active" },
     },
     select: ["fulfilled_amount"],
-    currentPage: 1,
-    pageSize: 5000,
   });
-  const fulfilledAmount = rowsOf(response).reduce(
+  const fulfilledAmount = rows.reduce(
     (sum, row) => sum + Number(row.fulfilled_amount || 0),
     0,
   );
@@ -131,10 +119,7 @@ async function refreshApplication(application, models) {
   await models.application.update({
     id: Number(application.id),
     status,
-    completed_at:
-      status === "completed"
-        ? mysqlNow()
-        : null,
+    completed_at: status === "completed" ? mysqlNow() : null,
   });
   return {
     fulfilledAmount,
@@ -161,7 +146,7 @@ async function fulfill(params, models) {
     throw new Error(`INVOICE_APPLICATION_STATUS_LOCKED:${application.status}`);
   }
   if (!invoice?.id) throw new Error("OUTGOING_INVOICE_NOT_FOUND");
-  assertOperator(application, invoice, models.actor);
+  assertOperator(models.actor);
   if (text(invoice.invoice_direction).toLowerCase() !== "outgoing") {
     throw new Error("INVOICE_DIRECTION_MISMATCH:outgoing");
   }
@@ -178,27 +163,23 @@ async function fulfill(params, models) {
   });
   const existing = rowsOf(existingResponse)[0];
   const [applicationRelations, invoiceRelations] = await Promise.all([
-    models.fulfillment.filter({
+    filterAll(models.fulfillment, {
       where: {
         invoice_application_id: { $eq: applicationId },
         relation_status: { $eq: "active" },
       },
       select: ["id", "fulfilled_amount"],
-      currentPage: 1,
-      pageSize: 5000,
     }),
-    models.fulfillment.filter({
+    filterAll(models.fulfillment, {
       where: {
         invoice_id: { $eq: invoiceId },
         relation_status: { $eq: "active" },
       },
       select: ["id", "fulfilled_amount"],
-      currentPage: 1,
-      pageSize: 5000,
     }),
   ]);
   const sumExcluding = (rows) =>
-    rowsOf(rows)
+    rows
       .filter((row) => Number(row.id) !== Number(existing?.id))
       .reduce((sum, row) => sum + Number(row.fulfilled_amount || 0), 0);
   if (
@@ -250,7 +231,7 @@ async function cancel(params, models) {
   const invoice = await models.invoice.getOne({
     id: Number(relation.invoice_id),
   });
-  assertOperator(application, invoice, models.actor);
+  assertOperator(models.actor);
   await models.fulfillment.update({
     id: fulfillmentId,
     relation_status: "cancelled",

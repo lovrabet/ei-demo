@@ -32,6 +32,7 @@ import {
   EditOutlined,
   PrinterOutlined,
   ReloadOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import PageScaffold from "@/components/page-scaffold/PageScaffold";
@@ -43,6 +44,7 @@ import { getApplicationDetail } from "@/features/cpo-application-detail/api";
 import { APPLICATION_DETAIL_CONFIG } from "@/features/cpo-application-detail/config";
 import { formatDateValue } from "@/features/cpo-application-detail/format";
 import { lovrabetClient } from "@/api/client";
+import IssuedInvoiceUploadDrawer from "@/features/invoice-application/IssuedInvoiceUploadDrawer";
 import {
   parseApplicationDetailParams,
   type ApplicationDetailResponse,
@@ -73,6 +75,7 @@ const ApplicationDetailPage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [printMode, setPrintMode] =
     useState<ApplicationDetailPrintMode>("summary");
+  const [invoiceUploadOpen, setInvoiceUploadOpen] = useState(false);
   const printDocumentRef = useRef<HTMLDivElement>(null);
 
   const loadDetail = useCallback(async () => {
@@ -120,6 +123,14 @@ const ApplicationDetailPage: React.FC = () => {
           config.label,
         )
       : t("applicationDetail.defaultTitle", "单据详情"));
+  const canUploadIssuedInvoice = Boolean(
+    parsed.ok &&
+    parsed.bizType === "invoice_application" &&
+    status === "reviewed" &&
+    detail?.management?.capabilities?.includes(
+      "invoice_application_completion",
+    ),
+  );
 
   const registerPrintEvent = useCallback(
     async (event: "request" | "confirm", mode: ApplicationDetailPrintMode) => {
@@ -139,7 +150,10 @@ const ApplicationDetailPage: React.FC = () => {
 
   const confirmPhysicalPrint = (mode: ApplicationDetailPrintMode) => {
     Modal.confirm({
-      title: t("applicationDetail.printConfirmTitle", "纸质文件是否已实际打印？"),
+      title: t(
+        "applicationDetail.printConfirmTitle",
+        "纸质文件是否已实际打印？",
+      ),
       content: t(
         "applicationDetail.printConfirmContent",
         "本次操作将记录在系统操作日志中。浏览器无法判断打印机是否成功出纸，请核对纸质文件后再确认。",
@@ -148,7 +162,9 @@ const ApplicationDetailPage: React.FC = () => {
       cancelText: t("applicationList.printConfirmCancel", "暂不确认"),
       onOk: async () => {
         await registerPrintEvent("confirm", mode);
-        message.success(t("applicationDetail.printConfirmed", "打印记录已确认"));
+        message.success(
+          t("applicationDetail.printConfirmed", "打印记录已确认"),
+        );
       },
     });
   };
@@ -175,7 +191,10 @@ const ApplicationDetailPage: React.FC = () => {
     if (!sourceElement) {
       targetWindow.close();
       message.error(
-        t("applicationDetail.printNotReady", "打印内容尚未准备完成，请稍后重试"),
+        t(
+          "applicationDetail.printNotReady",
+          "打印内容尚未准备完成，请稍后重试",
+        ),
       );
       return;
     }
@@ -207,7 +226,10 @@ const ApplicationDetailPage: React.FC = () => {
 
   const printMenu: MenuProps = {
     items: [
-      { key: "full", label: t("applicationDetail.printFull", "打印完整归档件") },
+      {
+        key: "full",
+        label: t("applicationDetail.printFull", "打印完整归档件"),
+      },
     ],
     onClick: ({ key }) => {
       printDetail(key as ApplicationDetailPrintMode);
@@ -259,6 +281,15 @@ const ApplicationDetailPage: React.FC = () => {
                   {t("common.edit", "编辑")}
                 </Button>
               ) : null}
+              {canUploadIssuedInvoice ? (
+                <Button
+                  type="primary"
+                  icon={<UploadOutlined />}
+                  onClick={() => setInvoiceUploadOpen(true)}
+                >
+                  上传已开具发票
+                </Button>
+              ) : null}
               {parsed.ok ? (
                 <Button
                   icon={<ReloadOutlined />}
@@ -272,7 +303,11 @@ const ApplicationDetailPage: React.FC = () => {
           }
         >
           {!parsed.ok ? (
-            <Alert type="warning" showIcon message={parsed.message} />
+            <Alert
+              type="warning"
+              showIcon
+              message={"message" in parsed ? parsed.message : ""}
+            />
           ) : null}
 
           {parsed.ok && errorMessage ? (
@@ -305,6 +340,14 @@ const ApplicationDetailPage: React.FC = () => {
             </Spin>
           ) : null}
         </PageScaffold>
+        {detail && parsed.ok && parsed.bizType === "invoice_application" ? (
+          <IssuedInvoiceUploadDrawer
+            open={invoiceUploadOpen}
+            detail={detail}
+            onClose={() => setInvoiceUploadOpen(false)}
+            onCompleted={loadDetail}
+          />
+        ) : null}
       </div>
       {detail && parsed.ok ? (
         <ApplicationDetailPrintView

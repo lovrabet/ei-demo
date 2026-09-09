@@ -148,47 +148,16 @@ function buildWorkflowPlan(steps, tasks, actions, participants) {
   });
 }
 
-const ADMIN_ROLES = new Set([
-  "admin",
-  "administrator",
-  "super_admin",
-  "cpo_admin",
-  "owner",
-  "管理员",
-  "应用owner",
-]);
-const WORKFLOW_ADMIN_ROLES = new Set(["workflow_admin", "流程管理员"]);
-
-function normalizeRoles(value) {
-  const values = Array.isArray(value) ? value : [value];
-  return values
-    .map((item) =>
-      typeof item === "string"
-        ? item
-        : item?.code || item?.name || item?.value || item?.roleCode,
-    )
-    .map((item) => optionalText(item).toLowerCase())
-    .filter(Boolean);
-}
-
 function actorIsAdmin(actor) {
-  const raw = actor?.raw || {};
-  if (
-    raw.isAdmin === true ||
-    raw.admin === true ||
-    raw.is_super_admin === true
-  ) {
-    return true;
-  }
-  return normalizeRoles(actor?.roles).some((role) => ADMIN_ROLES.has(role));
+  return actor?.isAdmin === true;
 }
 
 function actorCanOverrideAssignment(actor) {
-  return (
-    actorIsAdmin(actor) ||
-    actor?.isWorkflowAdmin === true ||
-    normalizeRoles(actor?.roles).some((role) => WORKFLOW_ADMIN_ROLES.has(role))
-  );
+  return actorIsAdmin(actor) || actor?.isWorkflowAdmin === true;
+}
+
+function actorCanCompleteInvoiceApplication(actor) {
+  return actorIsAdmin(actor) || actor?.isFinanceAdvisor === true;
 }
 
 function availableActionsFor(
@@ -428,19 +397,19 @@ async function buildCounterpartyPortfolio({ models, partner }) {
     models.byTable("contract_application").filter({
       where: { partner_id: { $eq: partnerId } },
       currentPage: 1,
-      pageSize: 500,
+      pageSize: 100,
       orderBy: [{ updated_at: "desc" }, { id: "desc" }],
     }),
     models.byTable("payment_application").filter({
       where: { partner_id: { $eq: partnerId } },
       currentPage: 1,
-      pageSize: 500,
+      pageSize: 100,
       orderBy: [{ updated_at: "desc" }, { id: "desc" }],
     }),
     models.byTable("invoice_record").filter({
       where: { partner_id: { $eq: partnerId } },
       currentPage: 1,
-      pageSize: 500,
+      pageSize: 100,
       orderBy: [{ invoice_date: "desc" }, { id: "desc" }],
     }),
     models.byTable("quote_customer").filter({
@@ -463,7 +432,7 @@ async function buildCounterpartyPortfolio({ models, partner }) {
           relation_status: { $eq: "active" },
         },
         currentPage: 1,
-        pageSize: 500,
+        pageSize: 100,
       })
     : { tableData: [] };
   const relationRows = rowsOf(relationResponse);
@@ -498,7 +467,7 @@ async function buildCounterpartyPortfolio({ models, partner }) {
             ? quoteBranches[0]
             : { $or: quoteBranches },
         currentPage: 1,
-        pageSize: 500,
+        pageSize: 100,
         orderBy: [{ quote_date: "desc" }, { id: "desc" }],
       })
     : { tableData: [] };
@@ -512,7 +481,7 @@ async function buildCounterpartyPortfolio({ models, partner }) {
           invoice_id: { $in: invoiceIds },
         },
         currentPage: 1,
-        pageSize: 1000,
+        pageSize: 100,
       })
     : { tableData: [] };
   const allocatedByInvoiceId = new Map();
@@ -772,7 +741,7 @@ export default async function cpoGetBizTimeline(params, context) {
       ? models.byTable("expense_item").filter({
           where: { expense_id: { $eq: numericBizId } },
           currentPage: 1,
-          pageSize: 200,
+          pageSize: 100,
           orderBy: [{ occurred_date: "asc" }, { id: "asc" }],
         })
       : Promise.resolve({ tableData: [] });
@@ -822,7 +791,7 @@ export default async function cpoGetBizTimeline(params, context) {
           contract_id: { $eq: contextContractId },
         },
         currentPage: 1,
-        pageSize: 200,
+        pageSize: 100,
         orderBy: [{ created_at: "desc" }, { id: "desc" }],
       })
     : Promise.resolve({ tableData: [] });
@@ -832,7 +801,7 @@ export default async function cpoGetBizTimeline(params, context) {
           contract_id: { $eq: contextContractId },
         },
         currentPage: 1,
-        pageSize: 200,
+        pageSize: 100,
         orderBy: [{ invoice_date: "desc" }, { id: "desc" }],
       })
     : Promise.resolve({ tableData: [] });
@@ -873,7 +842,7 @@ export default async function cpoGetBizTimeline(params, context) {
             relation_status: { $eq: "active" },
           },
           currentPage: 1,
-          pageSize: 500,
+          pageSize: 100,
           orderBy: [{ created_at: "asc" }, { id: "asc" }],
         })
       : Promise.resolve({ tableData: [] });
@@ -1047,7 +1016,7 @@ export default async function cpoGetBizTimeline(params, context) {
           biz_id: { $in: [...new Set(paymentIds)] },
         },
         currentPage: 1,
-        pageSize: 500,
+        pageSize: 100,
         orderBy: [{ created_at: "desc" }, { id: "desc" }],
       });
       contractInvoiceAllocationRows = rowsOf(allocationResponse);
@@ -1089,7 +1058,7 @@ export default async function cpoGetBizTimeline(params, context) {
           biz_id: { $in: itemIds },
         },
         currentPage: 1,
-        pageSize: 500,
+        pageSize: 100,
         orderBy: [{ created_at: "desc" }, { id: "desc" }],
       });
       invoiceLinkRows = rowsOf(linkResponse);
@@ -1842,9 +1811,13 @@ export default async function cpoGetBizTimeline(params, context) {
       ...(counterpartyPortfolio ? { counterpartyPortfolio } : {}),
     },
     management: {
-      canManage: canOverrideAssignment,
-      capabilities: canOverrideAssignment
-        ? [
+      canManage:
+        canOverrideAssignment ||
+        (bizType === "invoice_application" &&
+          actorCanCompleteInvoiceApplication(actor)),
+      capabilities: [
+        ...(canOverrideAssignment
+          ? [
             ...(bizType === "contract"
               ? ["contract_lifecycle", "contract_relations"]
               : []),
@@ -1853,8 +1826,13 @@ export default async function cpoGetBizTimeline(params, context) {
               : []),
             ...(bizType === "payment" ? ["payment_invoice_allocation"] : []),
             ...(bizType === "invoice" ? ["invoice_classification"] : []),
-          ]
-        : [],
+            ]
+          : []),
+        ...(bizType === "invoice_application" &&
+        actorCanCompleteInvoiceApplication(actor)
+          ? ["invoice_application_completion"]
+          : []),
+      ],
     },
     related: {
       ...(partner ? { partner } : {}),

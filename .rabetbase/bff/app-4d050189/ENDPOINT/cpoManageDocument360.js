@@ -5,14 +5,6 @@
  * [脚本类型] ENDPOINT
  * [接口路径] POST /api/endpoint/app-4d050189/cpoManageDocument360
  */
-const ADMIN_ROLES = new Set([
-  "admin",
-  "administrator",
-  "super_admin",
-  "cpo_admin",
-  "workflow_admin",
-]);
-
 const CONTRACT_LIFECYCLE_STATUSES = new Set([
   "pending_signature",
   "signed",
@@ -67,28 +59,8 @@ function money(value, field) {
   return Math.round((result + Number.EPSILON) * 100) / 100;
 }
 
-function normalizeRoles(value) {
-  const values = Array.isArray(value) ? value : [value];
-  return values
-    .map((item) =>
-      typeof item === "string"
-        ? item
-        : item?.code || item?.name || item?.value || item?.roleCode,
-    )
-    .map((item) => text(item).toLowerCase())
-    .filter(Boolean);
-}
-
 function actorIsAdmin(actor) {
-  const raw = actor?.raw || {};
-  if (
-    raw.isAdmin === true ||
-    raw.admin === true ||
-    raw.is_super_admin === true
-  ) {
-    return true;
-  }
-  return normalizeRoles(actor?.roles).some((role) => ADMIN_ROLES.has(role));
+  return actor?.isAdmin === true;
 }
 
 async function requireRecord(model, id, name) {

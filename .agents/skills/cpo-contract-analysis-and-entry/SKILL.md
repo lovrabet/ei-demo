@@ -1,86 +1,77 @@
 ---
 name: cpo-contract-analysis-and-entry
-displayName: 合同风险分析与分期入库
-description: 启智云图企业智能系统中的合同专家审查与安全录入能力。用于逐页核验 PDF、扫描件或 Word 合同，提取签约主体、服务范围、金额、期限及付款或收款分期，按主体授权、价税资金、交付验收、发票退款、知识产权、违约解除、合规和争议解决等维度识别合同风险并给出处置建议，核对供应商或客户资料，再通过 Lovrabet BFF 安全录入、修正和复核；也适用于提交合同前风险把关及排查历史合同、资金单据、附件和合作方关联错误。
-example: 请作为合同专家分析这份合同的风险和付款分期，核对合作方后录入系统
+displayName: Contract Risk Analysis and Installment Entry
+description: "Expert contract review and safe entry for the Qizhi Yuntu Enterprise Intelligence System. Verify PDF, scanned, or Word contracts page by page; extract parties, scope, amount, term, and payment/receipt installments; review authority, tax and funds, delivery and acceptance, invoicing and refunds, IP, breach and termination, compliance, and dispute risks; verify counterparties; then safely enter, correct, and validate records through Lovrabet Backend Functions."
+example: "Review this contract as a contract expert, identify risks and payment installments, verify the counterparty, and enter it into the system"
 metadata:
   type: write
 ---
 
-# 合同风险分析与分期入库
+# Contract Risk Analysis and Installment Entry
 
-先建立证据链，再结构化条款和审查风险；先对账，再写入。不得把推测日期、近似主体或审批完成状态当作合同事实、正确法律主体或银行到账事实。
+Build the evidence chain before structuring clauses and reviewing risks; reconcile before writing. Never treat an inferred date, approximate party, completed approval, or workflow status as a contract fact, correct legal entity, or bank-payment fact.
 
-## 处理流程
+## Workflow
 
 ```mermaid
 flowchart TD
-  Start([用户要求分析/录入合同]) --> L1{确认意图与权限}
-  L1 -- 只读分析 --> L2[逐页核验合同 PDF 渲染 / OCR 辅助 / 回看原页]
-  L1 -- 录入/创建 --> L2
-  L1 -- 提交审批 --> L2
-  L2 --> L3[形成结构化分析 主体/金额/期限/分期/条款]
-  L3 --> L4[合同专家风险审查 critical / high / medium / low]
-  L4 --> L5{风险等级}
-  L5 -- critical --> R1([只保留分析: 不得自动提交])
-  L5 -- legal_review_required / do_not_submit --> R2([最多保存带风险摘要的草稿])
-  L5 -- 其他 --> L6[validate_contract_analysis.py 校验 金额/期次/证据/维度全覆盖]
-  L6 --> L7{校验通过?}
-  L7 -- 否 --> Stop1([修正分析后重试: 不得写入])
-  L7 -- 是 --> L8{判断收付方向}
-  L8 -- payable --> P1[付款合同: cpoSaveDraft + cpoSyncContractPaymentPlans]
-  L8 -- receivable --> P2[客户收款合同: 应收计划模型]
-  P1 --> L9[对账现有系统 附件关联 + contract_assessment]
+  Start([User requests contract analysis or entry]) --> L1{Confirm intent and authorization}
+  L1 -- Read-only analysis --> L2[Verify every PDF page; use OCR only as assistance and return to source pages]
+  L1 -- Record or create --> L2
+  L1 -- Submit for approval --> L2
+  L2 --> L3[Structure parties, amount, term, installments, and clauses]
+  L3 --> L4[Expert risk review: critical, high, medium, low]
+  L4 --> L5{Risk outcome}
+  L5 -- critical --> R1([Keep analysis only; never submit automatically])
+  L5 -- legal_review_required or do_not_submit --> R2([At most save a draft with risk summary])
+  L5 -- Otherwise --> L6[Validate amount, installments, evidence, and full dimension coverage]
+  L6 --> L7{Validation passes?}
+  L7 -- No --> Stop1([Correct analysis and retry without writing])
+  L7 -- Yes --> L8{Determine cash-flow direction}
+  L8 -- payable --> P1[Payment contract: cpoSaveDraft and cpoSyncContractPaymentPlans]
+  L8 -- receivable --> P2[Customer receipt contract: receivable-plan model]
+  P1 --> L9[Reconcile current system, attachment links, and contract_assessment]
   P2 --> L9
   L9 --> L10{entry_gate}
-  L10 -- needs_confirmation / draft_only / blocked --> E1([仅保存: 不得自动提交])
-  L10 -- ready --> L11{用户授权提交?}
-  L11 -- 是 --> L12[提交审批]
-  L11 -- 否 --> E2([返回草稿与风险摘要])
-  L12 --> E3([返回: 摘要/风险/分期/链接])
+  L10 -- needs_confirmation, draft_only, or blocked --> E1([Save only; never submit automatically])
+  L10 -- ready --> L11{User authorizes submission?}
+  L11 -- Yes --> L12[Submit for approval]
+  L11 -- No --> E2([Return draft and risk summary])
+  L12 --> E3([Return summary, risks, installments, and link])
 ```
 
-## 1. 确认意图与权限
+## 1. Confirm Intent and Authorization
 
-- 用户只说“分析、看看、检查”时，只读分析，不创建或修改记录。
-- 用户明确说“录入、创建、修正、补齐”时，可以保存草稿或执行获准的数据修正。
-- 只有用户明确说“提交审批”时才调用提交流程；录入不等于提交。
-- 写入前读取 [system-entry.md](references/system-entry.md)；所有任务均读取 [contract-review-rules.md](references/contract-review-rules.md)、[contract-risk-review.md](references/contract-risk-review.md) 和 [output-contract.md](references/output-contract.md)。
+- “Analyze,” “inspect,” or “check” means read-only analysis with no record changes.
+- “Enter,” “create,” “correct,” or “complete” authorizes a draft or the requested data correction.
+- Only “submit for approval” authorizes submission; entry is not submission.
+- Before writing, read [System Entry](references/system-entry.md). For every task, read [Contract Verification Rules](references/contract-review-rules.md), [Contract Risk Review](references/contract-risk-review.md), and [Output Contract](references/output-contract.md).
 
-## 2. 核验原始合同
+## 2. Verify Source Contracts
 
-1. 确认所有用户提供的文件存在、类型、页数和哈希，建立不遗漏的输入附件清单；查找系统中相同哈希或同名附件。
-2. PDF 或扫描件必须逐页渲染并目视检查；OCR 只作辅助，印章、手写日期、账号和表格金额必须回看原页。
-3. 同时检查正文、附件、补充协议、签章页及审批材料。按参考文档中的证据优先级处理冲突。
-4. 记录页码或条款号，不完整内容标记为 `unknown`，不得补造。
+1. Confirm file existence, type, page count, and hash for every user file. Build a complete inventory and search for identical hashes or names in system attachments.
+2. Render every page of PDFs/scans and visually inspect it. OCR is only an aid; verify seals, handwritten dates, account numbers, and tabular amounts against source images.
+3. Inspect body, appendices, addenda, signature pages, and approval materials. Resolve conflicts by the reference evidence hierarchy.
+4. Record page/clause references. Mark incomplete facts `unknown`; never fabricate them.
 
-## 3. 形成结构化分析
+## 3. Build Structured Analysis
 
-至少提取：
+Extract at least contract name, paper/system numbers, direction, type, our role; full legal names, signature dates, effective and termination rules; deliverables, quantities, tax-inclusive amount and currency; every payment/receipt installment's amount, date, trigger, status, and evidence; invoice, refund, breach, renewal, extra-cost, confidentiality, and dispute clauses; counterparty contacts, addresses, credit code, bank and account plus missing facts; matches to current contracts, plans, payments, invoices, and attachments; and a standalone Markdown `contract_assessment` with separate objective assessment and action reminders.
 
-- 合同名称、纸面编号、系统归档号、收付方向、合同类型、我方角色；
-- 双方完整法定名称、签章日期、生效和终止规则；
-- 服务或交付项目、数量、含税金额、币种；
-- 每个付款或收款节点的金额、日期、触发条件、状态和证据；
-- 开票、退款、违约、自动续期、额外费用、保密和争议解决条款；
-- 合作方联系人、地址、统一社会信用代码、开户行、账号及缺失项；
-- 现有系统合同、计划、付款、发票和附件的匹配情况。
-- 可直接写入合同主档的 Markdown 版“合同评价与注意事项”，客观评价与执行提醒必须分节表达。
+## 4. Perform Expert Risk Review
 
-## 4. 执行合同专家风险审查
+Review every required dimension in [Contract Risk Review](references/contract-risk-review.md). Every risk states contract fact, consequence, recommendation, page/clause, severity, and whether it blocks submission.
 
-按 [contract-risk-review.md](references/contract-risk-review.md) 检查全部必审维度。每项风险必须写清“合同事实、可能后果、处置建议、页码或条款”，并标记等级和是否阻断提交。
+- `critical`: fundamental entity, authority, amount, subject-matter, or legality problem; analysis only, with no automatic submission or payment action.
+- `high`: material financial, delivery, liability, or IP loss; a risk draft may be saved on request, but legal counsel or the responsible owner must confirm.
+- `medium`: ambiguous clause or weak performance control; specify addendum, evidence, or operational controls.
+- `low`: minor completeness or execution reminder.
 
-- `critical`：主体、授权、金额、标的或合法性存在根本问题；只允许保留分析，不得自动提交或触发付款。
-- `high`：可能造成重大资金、交付、责任或知识产权损失；可以按用户要求保存风险草稿，但必须转法务或负责人确认。
-- `medium`：条款不清或履约控制不足；列出补充条款、证据或运营控制措施。
-- `low`：轻微完整性或执行提醒。
+Even when no material risk is found, list every reviewed dimension and the basis for that result. For `legal_review_required` or `do_not_submit`, save at most a draft containing the risk summary.
 
-没有发现实质风险时也必须列出已检查维度和“无重大风险”的依据，不得省略风险审查。风险结论为 `legal_review_required` 或 `do_not_submit` 时，Skill 最多保存带风险摘要的草稿，不得提交审批。
+Generate `contract.contract_assessment` in Markdown with at least `## Objective Assessment` and `## Action Items`, adding `## Risks and Treatment` when risks exist. It must stand alone, state facts, overall risk, unresolved treatment, and performance reminders, and contain no internal primary keys.
 
-同时生成 `contract.contract_assessment`，使用 Markdown 且至少包含 `## 客观评价`、`## 注意事项` 两节；存在风险时增加 `## 风险与处置`。内容应能脱离本次对话独立阅读，写明合同事实、总体风险、未完成处置和履约提醒，不写内部数据主键。
-
-将分析结果整理为 [output-contract.md](references/output-contract.md) 定义的 JSON。运行确定性校验：
+Save analysis using the [Output Contract](references/output-contract.md) and validate deterministically:
 
 ```bash
 python3 <skill-dir>/scripts/validate_contract_analysis.py \
@@ -88,42 +79,35 @@ python3 <skill-dir>/scripts/validate_contract_analysis.py \
   --output "<validation.json>"
 ```
 
-必须满足合同金额、服务项合计、分期合计一致，期次唯一，已付款状态有对应证据，并完成全部风险维度审查。校验失败时先修正分析，不得写入。
+Contract total, service-item total, and installment total must reconcile; installment numbers must be unique; paid status requires evidence; all risk dimensions must be reviewed. Correct failures before any write.
 
-## 5. 判断收付方向与台账归属
+## 5. Determine Direction and Ledger
 
-- 对方为我方提供商品或服务、我方需要付款：`payable`，进入付款合同与供应商域。
-- 我方向客户提供商品或服务、客户需要付款：`receivable`，进入客户合同与应收计划域。
-- 不能根据合同在谁的模板上、谁先盖章或合同名称中的“甲乙方”猜资金方向；以资金义务和服务交付方向判断。
-- 同一品牌下不同公司是不同法律主体。名称或银行账户不一致时停止自动关联。
+- Counterparty provides goods/services and our company pays: `payable` in the vendor/payment-contract domain.
+- Our company provides goods/services and the customer pays: `receivable` in the customer-contract/receivable-plan domain.
+- Never infer direction from template ownership, first seal, or party labels; use payment obligations and delivery direction.
+- Different companies under one brand are different legal entities. Stop automatic linking on name or bank-account mismatch.
 
-## 6. 对账现有系统
+## 6. Reconcile the Existing System
 
-写入前只读查询并确认唯一性：
+Before writing, read and confirm uniqueness: duplicate contract; exact counterparty and bank match; existing installment payment/receipt/invoice/attachment facts; historical records linked to a similar but wrong company, missing contract/plan, or wrong account snapshot; and reusable uploaded file paths.
 
-1. 合同是否已存在或重复；
-2. 合作方是否精确匹配，银行信息是否与签章合同一致；
-3. 各期是否已存在付款、回款、发票或附件；
-4. 历史单据是否错连相似公司、缺合同、缺期次或使用错误账户快照；
-5. 原始文件是否已上传，可否复用同一文件路径建立新的业务附件关系。
+Display conflicts by business title, contract number, or invoice number, never internal ID.
 
-发现冲突时按业务标题、合同号、发票号等展示，不得用内部 ID 作为用户标签。
+## 7. Write and Verify
 
-## 7. 写入与复核
+- For a new payable contract, save a draft through `cpoSaveDraft`, synchronize plans with `cpoSyncContractPaymentPlans`, then proactively upload and link every inventoried contract, addendum, signature page, and approval material.
+- For customer receipt contracts, use current-application customer-contract Backend Functions and the receivable-plan model.
+- Store objective assessment, overall risk, key treatment, and performance reminders in Markdown `contract_assessment`; use `remark` only for application context or special terms. Keep complete risk JSON in the structured result.
+- Submit only when `entry_gate=ready` and the user authorizes it. Never auto-submit `needs_confirmation`, `draft_only`, or `blocked`.
+- Use controlled Backend Functions or Instant API for editable records. For locked history, cross-table cleanup, or transactional correction, return `needs_developer_migration` with business keys, expected rows, field changes, and post-write checks; do not execute database migration in this runtime Skill.
+- Never use `is_deleted` as a business field in analysis, query, correction, or migration scripts. Runtime deletion uses Lovrabet model `delete` or a controlled Backend Function.
+- Preserve date precision. A trigger-only installment has `NULL` date and an explicit trigger condition.
+- After writing, reread contract, counterparty, installments, financial documents, invoices, and attachments. Reconcile counts, totals, states, titles, and attachment availability. Input files, successful uploads, expected links, actual links, and readback matches must agree exactly; stop submission on any mismatch.
+- Dry-run any user-visible field-metadata change, then update and reread Dataset details.
 
-- 新付款合同优先通过 `cpoSaveDraft` 保存合同草稿，再用 `cpoSyncContractPaymentPlans` 同步计划，最后把输入附件清单中的合同正文、补充协议、签章页和审批材料逐个主动上传并关联到该合同申请；不等待用户追加“请上传”的指令。
-- 客户收款合同使用当前应用内的客户合同 BFF 与应收计划模型，不把 CRM 当外部系统展示。
-- 将用户可见的客观评价、总体风险、关键处置和履约提醒写入合同主档 `contract_assessment`，保留 Markdown 原文；`remark` 只用于申请背景、特殊约定或其他补充说明，不再承载合同专家结论。
-- 完整风险 JSON 仍保留在本次结构化结果中；`contract_assessment` 是便于审批和后续履约阅读的摘要，不能替代逐项风险证据。
-- `entry_gate=ready` 才可按用户授权继续提交；`needs_confirmation`、`draft_only` 或 `blocked` 均不得自动提交。
-- 普通草稿和允许编辑的记录使用 Lovrabet BFF 或 Instant API；锁定历史单据、跨表清洗或需要事务的数据修正，返回 `needs_developer_migration` 并生成业务键、预期行数、变更字段和写后校验清单，不在运行时 Skill 中直接执行数据库迁移。
-- `is_deleted` 属于 Lovrabet 平台系统字段。分析、录入、修正、查询和迁移脚本都不得把它当业务字段读取、筛选、补默认值或更新；运行时删除必须调用 Lovrabet 模型 `delete` 或受控 BFF。
-- 有日期但仅精确到月或仅来自口述时保留精度说明；触发型节点没有日期时写 `NULL` 和明确触发条件。
-- 写入后分别读取合同、合作方、分期、资金单据、发票和附件；复核条数、金额合计、状态、业务标题和附件可用性。对附件还必须逐项核对输入文件数、唯一上传成功数、预期业务关系数、实际关系数和写后读取匹配数；任何不相等或路径集合不一致都停止提交并报告缺失文件。
-- 如修改用户可见字段元数据，先 dry-run，再更新并重新读取数据集详情。
+## 8. Return Results
 
-## 8. 返回结果
+Follow the [Output Contract](references/output-contract.md): contract summary, risk decision, installment table, corrections, missing evidence, and execution status. Put risks before installments and entry results. Clearly distinguish recordable, risk-draft-only, legal-review-required, prohibited submission, and failed execution.
 
-按 [output-contract.md](references/output-contract.md) 返回：合同摘要、风险结论、分期表、已修正内容、待补证据和执行状态。风险结论置于分期和录入结果之前，明确区分“可录入”“仅可保存风险草稿”“需法务确认”“不得提交”和“执行失败”。
-
-付款合同草稿保存或提交成功后，使用 BFF 实际返回的 `bizType/bizId` 构造 `/application-detail/contract/<bizId>`；客户收款合同成功后使用 `/application-detail/crm_contract/<bizId>`。先重读详情，再用合同名称作为可点击链接文字。不得只返回内部 ID，也不得用内部 ID 作为合同名称的兜底。
+For a successful payable draft/submission, build `/application-detail/contract/<bizId>` from actual returned `bizType/bizId`; for a customer receipt contract use `/application-detail/crm_contract/<bizId>`. Reread details and use the contract name as clickable link text. Never return only an internal ID or use it as a fallback name.

@@ -12,7 +12,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["ESNext", "DOM"],
-    "jsx": "react",
+    "jsx": "react-jsx",
     "declaration": true,
     "downlevelIteration": true,
     "resolveJsonModule": true,

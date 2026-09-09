@@ -1,89 +1,75 @@
-# 工资 Excel 识别规则
+# Payroll Workbook Recognition Rules
 
-## 工作表分类
+## Worksheet Classification
 
-- 名称包含“工资表”且不包含“人员成本”：生成工资付款明细。
-- 名称包含“人员成本”：只用于人员成本复核，不直接生成付款金额。
-- 名称包含“社保公积金”：只用于工资扣款、人员成本交叉检查，不生成工资付款明细。
+- A name containing “Payroll” but not “Personnel Cost” produces payroll payment items.
+- A name containing “Personnel Cost” is only for cost review and does not directly produce a payment amount.
+- A name containing “Social Insurance and Housing Fund” is only for payroll deduction and cost cross-checking and does not produce a payment item.
 
-同一主体出现多张工资表时，按主体合并金额和人数，最终只能生成一条付款明细。
+When one entity has multiple payroll sheets, combine amount and headcount by entity and produce exactly one payment item.
 
-多份 Excel 一起输入时，先逐文件解析并按发薪单位编码合并付款明细，再按业务用途规划申请单。禁止重复传入同一个文件，避免金额重复计算。
+For multiple workbooks, parse each file, merge payment items by payroll entity code, then plan applications by business purpose. Reject duplicate input files to avoid double counting.
 
-## 主体映射
+## Entity Mapping
 
-| Excel 发薪单位 | 发薪单位编码 | 审批主体 | 当前生产 ID | 简称 |
+| Excel Payroll Entity | Code | Approval Entity | Current ID Hint | Short Name |
 | --- | --- | --- | ---: | --- |
-| 杭州启智云图科技有限公司 | QZYT | 启智云图 | 1 | 启智云图 |
-| 杭州梅柚流码科技有限公司 | MYLM | 梅柚流码 | 2 | 梅柚流码 |
-| 杭州启智云图科技有限公司上海分公司 | QZYT_SH | 启智云图 | 3 | 启智云图上海分公司 |
+| Hangzhou Qizhi Yuntu Technology Co., Ltd. | QZYT | Qizhi Yuntu | 1 | Qizhi Yuntu |
+| Hangzhou Meiyou Liuma Technology Co., Ltd. | MYLM | Meiyou Liuma | 2 | Meiyou Liuma |
+| Shanghai Branch of Hangzhou Qizhi Yuntu Technology Co., Ltd. | QZYT_SH | Qizhi Yuntu | 3 | Qizhi Yuntu Shanghai Branch |
 
-生产 ID 只是提示。创建草稿前必须按 `entity_code + entity_name + ACTIVE` 查询我方主体数据集，并采用实时 ID。
+The ID is only a hint. Before creating drafts, query the internal legal-entity Dataset using `entity_code + entity_name + ACTIVE` and use the live ID.
 
-## 审批主体与拆单
+## Approval Entities and Application Splitting
 
-- 启智云图和启智云图上海分公司虽然属于同一审批主体，但对应不同付款用途，不得合并成一张工资付款申请。
-- 梅柚流码属于独立审批主体，必须单独创建申请。
-- 默认拆为三张，顺序为 `QZYT`、`MYLM`、`QZYT_SH`。
-- `QZYT`：启智云图本部员工工资申请。
-- `MYLM`：梅柚流码员工工资申请。
-- `QZYT_SH`：启智云图向上海分公司支付往来款，用于发放上海分公司员工工资及个税；金额应为上海分公司实发工资与个税之和，并单独成单。
-- 用户不得要求跨审批主体合并；收到 `QZYT,MYLM` 等组合时停止并说明合规冲突。
-- 用户不得要求把 `QZYT_SH` 与 `QZYT` 或其他主体合并；收到 `QZYT,QZYT_SH` 等组合时停止并说明业务用途冲突。
-- 每个已识别且金额大于 0 的发薪单位必须且只能出现在一张申请计划中，不得遗漏或重复。
+- Qizhi Yuntu headquarters and its Shanghai Branch share an approval entity but serve different payment purposes and must remain separate applications.
+- Meiyou Liuma is an independent approval entity and requires a separate application.
+- Default order is `QZYT`, `MYLM`, `QZYT_SH`.
+- `QZYT`: headquarters employee payroll.
+- `MYLM`: Meiyou Liuma employee payroll.
+- `QZYT_SH`: intercompany payment from Qizhi Yuntu to the Shanghai Branch for branch payroll plus individual income tax; use net payroll plus tax and keep it separate.
+- Reject cross-approval-entity groups such as `QZYT,MYLM` as a compliance conflict.
+- Reject grouping `QZYT_SH` with `QZYT` or another entity as a business-purpose conflict.
+- Every recognized payroll entity with an amount above zero must appear in exactly one application plan.
 
-## 金额优先级
+## Amount Precedence
 
-每个主体按以下优先级确定申请金额：
+For each entity:
 
-1. 工资表有包含“申请”和“金额”的明确列时，采用该列逐人汇总。
-2. 否则采用“实发工资”逐人汇总。
-3. 不得采用“人员成本”“应付工资”“企业承担社保公积金”替代工资付款金额。
+1. If the payroll sheet has an explicit column containing both “Application” and “Amount,” sum it by employee.
+2. Otherwise sum “Net Payroll.”
+3. Never substitute “Personnel Cost,” “Gross Payroll,” or employer-paid social insurance/housing fund for the payment amount.
 
-如果明确列写明“实发+个税”，必须校验：
+If an explicit column says “Net Payroll + Individual Income Tax,” verify:
 
-`申请金额 = 实发工资 + 个税`
+`application amount = net payroll + individual income tax`
 
-允许误差为 0.01 元。超过误差时停止自动录入并要求财务确认。
+Tolerance is 0.01 yuan. Stop automatic entry and request finance confirmation beyond that tolerance.
 
-## 人数
+## Headcount
 
-- 仅统计同时具有姓名、发薪单位和数值型实发工资的员工行。
-- 合计、总计、申请金额说明、空行不得计入。
-- 不输出员工姓名或逐人金额。
+- Count only employee rows with a name, payroll entity, and numeric net payroll.
+- Exclude total rows, application-amount notes, and blank rows.
+- Never output employee names or individual amounts.
 
-## 月份与付款日期
+## Month and Payment Date
 
-- 工资月份从文件名和工作表名提取，单个文件内必须一致。
-- 多份 Excel 的工资月份必须完全一致，否则停止自动录入。
-- 付款日期默认工资月份最后一个自然日。
-- 创建草稿前必须把默认付款日期展示给用户确认。
+- Extract payroll month from filenames and sheet names; it must be consistent within each file.
+- All workbooks must have the same month or automatic entry stops.
+- Default payment date is the final calendar day of that month.
+- Show the default date for confirmation before draft creation.
 
-## 对账
+## Reconciliation
 
-逐人汇总必须与工资表合计行核对：
+Employee-level sums must match control totals for gross payroll, net payroll, individual income tax, and explicit application amount when present. Stop when any difference exceeds 0.01 yuan.
 
-- 应付工资；
-- 实发工资；
-- 个税；
-- 明确申请金额（如存在）。
+Also stop for spreadsheet errors such as `#REF!`, `#VALUE!`, or `#DIV/0!`; uncached key formulas requiring recalculation in Excel/WPS; unmapped or inactive entities; non-positive payment amounts; multiple sheets for one entity that cannot be combined reliably; or conflicting payroll months.
 
-任一差异超过 0.01 元时停止自动录入。
+Warn only when a known entity is missing from the complete batch. Never fabricate a zero-amount item.
 
-出现以下情况也必须停止：
+## Multiple Attachments
 
-- 单元格存在 `#REF!`、`#VALUE!`、`#DIV/0!` 等错误；
-- 关键公式没有缓存结果，需要 Excel/WPS 重新计算保存；
-- 主体无法映射或主体状态不是 `ACTIVE`；
-- 付款金额小于等于 0；
-- 同一主体的多张工资表无法可靠合并；
-- 工资月份冲突。
-
-只有在整批输入文件中仍缺少某个已知主体时才产生提醒，不得凭空生成 0 元付款明细。
-
-## 多附件
-
-- 每张申请必须上传覆盖其付款项目的全部原始工资 Excel，附件类型为 `payroll_sheet`。
-- 同一份 Excel 同时覆盖被拆开的多个申请时，应在每张相关申请中分别留档。
-- 不得把与当前申请无关的工资文件混入附件，也不得用汇总 JSON 替代原始文件。
-- 默认保留各财务原始文件，不重新拼接或改写工作簿；只有用户明确要求时才另行制作合并副本。
+- Attach every original workbook covering an application's items as `payroll_sheet`.
+- When one workbook covers multiple split applications, retain it separately in each relevant application.
+- Do not attach unrelated payroll files or replace originals with summary JSON.
+- Preserve the finance source files without merging or rewriting them unless the user explicitly requests a separate consolidated copy.

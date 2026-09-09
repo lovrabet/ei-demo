@@ -2,25 +2,25 @@
   "schemaVersion": 2,
   "appCode": "app-4d050189",
   "skillCode": "cpo-invoice-application",
-  "skillName": "发票与开票申请助手",
-  "description": "在启智云图企业智能系统中创建和提交销项开票申请、登记真实进销项发票，并按金额维护开票申请履约及应收期次开票分摊。用户提供开票材料或发票文件时必须主动上传、逐项关联业务单并清点数量。",
+  "skillName": "Invoice and Invoice-request Assistant",
+  "description": "Create and submit outgoing invoice requests, register real incoming and outgoing invoices, and maintain amount-based fulfillment and receivable-installment allocations in the Qizhi Yuntu Enterprise Intelligence System. Proactively upload, link, and reconcile every invoice or request file supplied by the user.",
   "scope": "company",
   "readonly": true,
-  "version": "20260817.165034",
+  "version": "20260909.165453",
   "tags": [],
-  "contentHash": "bd0e7f92f2ea9bb76264b630338add9ef797de22189af740f8baf72b62f43255",
+  "contentHash": "72f3453ab2cb2516420d82674a7a6ec4920d1e86f3468303d9a4f2419e64641f",
   "fileHashes": {
-    "SKILL.md": "bd0e7f92f2ea9bb76264b630338add9ef797de22189af740f8baf72b62f43255"
+    "SKILL.md": "72f3453ab2cb2516420d82674a7a6ec4920d1e86f3468303d9a4f2419e64641f"
   },
-  "treeHash": "304a08b5c63c596ca5baf8b2c9675be965210a3683d99d63d6f31c9b4f374948",
-  "zipSha256": "fd0b63b46e9b35f48095754fc93489f90fbdd13aac0d85fc00920d92c9eec46e",
-  "zipSize": 14524,
+  "treeHash": "248b56862842901b9c84ca4bb2ff987f7dbfc7eead43cffb2ad165276bdb5495",
+  "zipSha256": "e6e0e6a0081364ea223b5d2257fd9f8b0172057a2194abb8e220798a93c5c0a3",
+  "zipSize": 13750,
   "files": [
     {
       "path": "SKILL.md",
-      "hash": "bd0e7f92f2ea9bb76264b630338add9ef797de22189af740f8baf72b62f43255",
-      "size": 14410
+      "hash": "72f3453ab2cb2516420d82674a7a6ec4920d1e86f3468303d9a4f2419e64641f",
+      "size": 13636
     }
   ],
-  "pulledAt": "2026-08-17T08:50:34.201Z"
+  "pulledAt": "2026-09-09T08:54:53.658Z"
 }

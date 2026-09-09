@@ -63,8 +63,9 @@ function normalizeComparableText(value: unknown) {
 }
 
 function normalizeComparableDate(value: unknown) {
-  return value && dayjs(value).isValid()
-    ? dayjs(value).format("YYYY-MM-DD")
+  const candidate = value as string | number | Date | dayjs.Dayjs | undefined;
+  return candidate && dayjs(candidate).isValid()
+    ? dayjs(candidate).format("YYYY-MM-DD")
     : "";
 }
 
@@ -416,7 +417,7 @@ const PaymentForm: React.FC = () => {
           },
         },
         currentPage: 1,
-        pageSize: 200,
+        pageSize: 100,
       })
       .then((r: any) => {
         const nextContracts = (r.tableData || []).map((c: any) => ({
@@ -703,7 +704,10 @@ const PaymentForm: React.FC = () => {
                 rules={[
                   {
                     required: true,
-                    message: t("paymentForm.field.contractRequired", "请选择合同"),
+                    message: t(
+                      "paymentForm.field.contractRequired",
+                      "请选择合同",
+                    ),
                   },
                 ]}
               >
@@ -734,7 +738,10 @@ const PaymentForm: React.FC = () => {
               type="secondary"
               style={{ margin: "-4px 0 16px" }}
             >
-              {t("paymentForm.withoutContractHintPrefix", "此模式不会关联合同。若属于合同付款，请先")}
+              {t(
+                "paymentForm.withoutContractHintPrefix",
+                "此模式不会关联合同。若属于合同付款，请先",
+              )}
               <Button
                 type="link"
                 size="small"
@@ -793,10 +800,7 @@ const PaymentForm: React.FC = () => {
                   options={[
                     {
                       value: "contract_payment",
-                      label: t(
-                        "paymentForm.type.contractPayment",
-                        "合同付款",
-                      ),
+                      label: t("paymentForm.type.contractPayment", "合同付款"),
                     },
                     {
                       value: "reimbursement",
@@ -808,10 +812,7 @@ const PaymentForm: React.FC = () => {
                     },
                     {
                       value: "certification",
-                      label: t(
-                        "paymentForm.type.certification",
-                        "认证付款",
-                      ),
+                      label: t("paymentForm.type.certification", "认证付款"),
                     },
                     {
                       value: "cloud",
@@ -908,10 +909,7 @@ const PaymentForm: React.FC = () => {
                           ? t(
                               "paymentForm.paymentSummary",
                               " · {count} 笔付款",
-                            ).replace(
-                              "{count}",
-                              String(plan.payment_count),
-                            )
+                            ).replace("{count}", String(plan.payment_count))
                           : "";
                         return {
                           value: Number(plan.id),
@@ -999,14 +997,8 @@ const PaymentForm: React.FC = () => {
                     <Tooltip
                       title={
                         planFieldsEditing
-                          ? t(
-                              "paymentForm.planUnlockedHint",
-                              "期次数据已解锁",
-                            )
-                          : t(
-                              "paymentForm.editPlanData",
-                              "修改期次数据",
-                            )
+                          ? t("paymentForm.planUnlockedHint", "期次数据已解锁")
+                          : t("paymentForm.editPlanData", "修改期次数据")
                       }
                     >
                       <Button
@@ -1032,7 +1024,10 @@ const PaymentForm: React.FC = () => {
                 >
                   <InputNumber
                     min={1}
-                    placeholder={t("paymentForm.field.phaseNoPlaceholder", "期次")}
+                    placeholder={t(
+                      "paymentForm.field.phaseNoPlaceholder",
+                      "期次",
+                    )}
                     disabled={planFieldsReadonly}
                   />
                 </Form.Item>
@@ -1054,7 +1049,10 @@ const PaymentForm: React.FC = () => {
                 >
                   <InputNumber
                     min={1}
-                    placeholder={t("paymentForm.field.totalPhasePlaceholder", "总期")}
+                    placeholder={t(
+                      "paymentForm.field.totalPhasePlaceholder",
+                      "总期",
+                    )}
                     disabled={planFieldsReadonly}
                   />
                 </Form.Item>
@@ -1239,10 +1237,10 @@ const PaymentForm: React.FC = () => {
                     render: (_, row) =>
                       row.payment_phase_name ||
                       (row.payment_phase_no
-                        ? t(
-                            "paymentForm.phasePrefix",
-                            "第 {n} 期",
-                          ).replace("{n}", String(row.payment_phase_no))
+                        ? t("paymentForm.phasePrefix", "第 {n} 期").replace(
+                            "{n}",
+                            String(row.payment_phase_no),
+                          )
                         : "-"),
                   },
                   {

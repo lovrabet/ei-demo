@@ -2,25 +2,25 @@
   "schemaVersion": 2,
   "appCode": "app-4d050189",
   "skillCode": "cpo-payment-application",
-  "skillName": "付款申请助手",
-  "description": "在启智云图企业智能系统中创建、保存草稿、提交和查询商务付款申请。用户提供付款材料时必须主动上传、逐项关联申请单并清点数量；不得绕过受控 Backend Function 直接修改付款及银行状态。",
+  "skillName": "Payment Application Assistant",
+  "description": "Create, save drafts, submit, and query business payment applications in the Qizhi Yuntu Enterprise Intelligence System. When the user supplies payment materials, proactively upload every file, link each one to the application, and reconcile counts. Never bypass controlled Backend Functions to modify payment or bank status directly.",
   "scope": "company",
   "readonly": true,
-  "version": "20260817.165109",
+  "version": "20260909.165521",
   "tags": [],
-  "contentHash": "531b2964fa6249b6a15bc775cb73b87b5ad596747c0875e6e8ed7d84fe2a5f5e",
+  "contentHash": "db37ad27a42f1f65e85966da3e4dc6fc63add2763eb2de4e716c561b2e5aded4",
   "fileHashes": {
-    "SKILL.md": "531b2964fa6249b6a15bc775cb73b87b5ad596747c0875e6e8ed7d84fe2a5f5e"
+    "SKILL.md": "db37ad27a42f1f65e85966da3e4dc6fc63add2763eb2de4e716c561b2e5aded4"
   },
-  "treeHash": "5eb7f03cf3171a8bb3e9729fb6a25ad137a6e14c45eca9afaac19e77576d8c8b",
-  "zipSha256": "815e7d6141bb60189a4d7189508db7b623ec092d617fad1b5132ed57ef28aaaf",
-  "zipSize": 11778,
+  "treeHash": "24e2471c68039e4d27473120cfc4aa35b1ea81d8bd53f659844c1f34caa3a6a8",
+  "zipSha256": "7689a60e3bb4b4300b04dbe550def991065234f32990f5ec3e37b4fb4d5b8909",
+  "zipSize": 12606,
   "files": [
     {
       "path": "SKILL.md",
-      "hash": "531b2964fa6249b6a15bc775cb73b87b5ad596747c0875e6e8ed7d84fe2a5f5e",
-      "size": 11664
+      "hash": "db37ad27a42f1f65e85966da3e4dc6fc63add2763eb2de4e716c561b2e5aded4",
+      "size": 12492
     }
   ],
-  "pulledAt": "2026-08-17T08:51:09.273Z"
+  "pulledAt": "2026-09-09T08:55:22.068Z"
 }

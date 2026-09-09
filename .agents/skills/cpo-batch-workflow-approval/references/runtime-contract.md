@@ -1,22 +1,22 @@
-# 运行时契约
+# Runtime Contract
 
-本 Skill 面向启智云图企业智能系统应用 `app-4d050189`。身份、权限、当前处理人和流程状态均以 Lovrabet 平台 Flow 的实时校验为准。
+This Skill targets Qizhi Yuntu Enterprise Intelligence System application `app-4d050189`. Identity, permission, current assignee, and workflow status are governed by live validation from Lovrabet Flow.
 
-## 核心关系
+## Core Relationships
 
-- 待办、已办和审批动作均来自 Lovrabet 平台 Flow API；不读取或写入 `biz_task`。
-- `biz_action_record` 只保留业务审计用途，不作为工作流状态机。
-- `biz_relation` 连接合同、付款、发票、报销等业务对象。
-- 附件、发票关联、费用明细、薪资明细、合同付款计划等由业务时间线聚合读取。
-- 内部 ID 只用于 API 参数、数据关联和幂等校验，不能作为面向用户的名称。
+- Pending tasks, completed tasks, and approval actions come from the Lovrabet Flow API; do not read or write `biz_task`.
+- `biz_action_record` is retained only for business auditing and is not a workflow state machine.
+- `biz_relation` connects contracts, payments, invoices, expenses, and other business objects.
+- Attachments, invoice links, expense lines, salary lines, and contract payment plans are read through the aggregated business timeline.
+- Internal IDs are only for API parameters, data relationships, and idempotency checks; never use them as user-facing names.
 
-不得绕过这些关系猜测数据，也不得用业务标题反查后直接修改底表。
+Do not bypass these relationships to infer data, and do not reverse-lookup a business record by title and then modify its underlying table.
 
-## 读取本人待办
+## Read the Current User's Pending Tasks
 
-打开应用 `/my-todo` 页面读取平台 Flow 待办；页面调用平台 `/api/approve/todo`，并按 Dataset 与业务 ID 批量补充业务摘要。不得调用旧的自建待办 Backend Function，也不得用业务表状态推断当前处理人。
+Open application page `/my-todo` to read Lovrabet Flow tasks. The page calls platform `/api/approve/todo` and enriches summaries in batches by Dataset and business ID. Do not call a legacy custom pending-task Backend Function, and do not infer the current assignee from business-table status.
 
-## 读取业务时间线
+## Read the Business Timeline
 
 ```bash
 lovrabet bff exec cpoGetBizTimeline \
@@ -25,20 +25,20 @@ lovrabet bff exec cpoGetBizTimeline \
   --format json
 ```
 
-重点响应字段：
+Important response fields:
 
-- `biz`、`summary`：业务主记录和摘要；
-- 平台 Flow 面板：流程节点和动作历史；
-- `attachments`、`invoiceLinks`：附件和发票关联；
-- `expenseItems`、`salaryItems`、`contractPaymentPlans`：业务明细；
-- `businessContext.metrics`、`businessContext.risks`、`relatedDocuments`：聚合指标、已有风险线索和关联单据；
-- `related`：伙伴、合同、付款计划、银行回单等关联对象。
+- `biz`, `summary`: primary business record and summary.
+- Platform Flow panel: workflow nodes and action history.
+- `attachments`, `invoiceLinks`: attachments and invoice links.
+- `expenseItems`, `salaryItems`, `contractPaymentPlans`: business details.
+- `businessContext.metrics`, `businessContext.risks`, `relatedDocuments`: aggregated metrics, existing risk indicators, and related documents.
+- `related`: partners, contracts, payment plans, bank receipts, and other related objects.
 
-只有平台待办页当前仍显示为本人可办理的任务才可操作。任务、金额、申请人、附件或风险状态发生变化时，必须重新形成建议。
+Only a task that the platform pending-task page still shows as actionable by the current user may be processed. If the task, amount, applicant, attachments, or risk status changes, form a new recommendation.
 
-## 报销专项读取
+## Expense-specific Reads
 
-需要核对适用报销规则时：
+To check applicable expense rules:
 
 ```bash
 lovrabet bff exec cpoListEffectiveExpenseRules \
@@ -47,7 +47,7 @@ lovrabet bff exec cpoListEffectiveExpenseRules \
   --format json
 ```
 
-需要核查发票重复时，优先按报销申请读取：
+To check invoice duplicates, prefer the expense application selector:
 
 ```bash
 lovrabet bff exec cpoCheckInvoiceDuplicates \
@@ -56,17 +56,17 @@ lovrabet bff exec cpoCheckInvoiceDuplicates \
   --format json
 ```
 
-也可在只有发票号时传 `invoiceNos`。重复检查不可用或台账覆盖不足时，结论只能是“未完成重复核验”，不能写“已确认无重复”。
+When only invoice numbers are available, pass `invoiceNos`. If duplicate checking is unavailable or ledger coverage is incomplete, report “duplicate verification not completed,” never “confirmed no duplicates.”
 
-## 推进工作流
+## Advance Workflow
 
-审批只能在 Lovrabet 平台 `/my-todo` 页面调用平台 `/api/flow/approve` 完成。通过和拒绝都必须逐项获得用户明确确认；平台会校验当前任务、当前处理人和流程状态。出现任务已被办理、处理人变化或状态冲突时，停止本批次剩余操作并重新读取待办。
+Approval may only be completed through platform `/api/flow/approve` on the Lovrabet `/my-todo` page. Both approval and rejection require explicit item-level confirmation from the user. The platform validates the current task, assignee, and workflow status. If the task has already been processed, the assignee changed, or status conflicts, stop the remaining batch and reread pending tasks.
 
-## 安全与恢复
+## Safety and Recovery
 
-- 单批最多 20 条，严格串行执行。
-- 每条写前重新读取，每条写后立即验证。
-- 不对写操作盲目重试；先确认服务端是否已经成功推进。
-- 不直接更新业务主表、平台流程数据、审计表或系统字段。
-- `is_deleted` 是 Lovrabet 自动维护的系统字段；Instant API 的删除走平台 delete。只有明确绕过 Instant API 的底层 SQL 才可按数据库语义读取该字段，本 Skill 不使用 SQL 修改它。
-- 命令或脚本不得持久化口令、令牌、完整 DSN 或临时客户端配置。
+- Process at most 20 items per batch, strictly serially.
+- Reread before and verify immediately after every write.
+- Never retry a write blindly; first determine whether the server already advanced the task.
+- Never directly update primary business tables, platform workflow data, audit tables, or system fields.
+- `is_deleted` is a system field maintained by Lovrabet. Instant API deletion uses platform delete. Reading this field with database semantics is permitted only for explicit low-level SQL that bypasses Instant API; this Skill never modifies it through SQL.
+- Commands and scripts must never persist passwords, tokens, complete DSNs, or temporary client configuration.

@@ -1,5 +1,6 @@
 import { lovrabetClient } from "@/api/client";
 import { buildWhere } from "@/utils/queries";
+import { $i18n } from "@/i18n";
 import type { LegalAgreementPartyDraft } from "@/features/legal-agreements/types";
 
 type UnknownRecord = Record<string, any>;
@@ -128,7 +129,7 @@ export function internalLegalEntityToLegalAgreementParty(
   entity: InternalLegalEntityOption,
 ): LegalAgreementPartyDraft {
   return {
-    partyTitle: "乙方",
+    partyTitle: $i18n.t("contractForm.role.partyB", "乙方"),
     partyRole: "OUR_SIDE",
     sourceType: "INTERNAL_COMPANY",
     companyName: entity.entityName,
@@ -203,7 +204,12 @@ function getInternalLegalEntityModel(): LovrabetModel {
   const model =
     models.internalLegalEntity || models[INTERNAL_LEGAL_ENTITY_MODEL_KEY];
   if (!model) {
-    throw new Error("Lovrabet 模型未注册：我方主体");
+    throw new Error(
+      $i18n.t(
+        "internalLegalEntity.error.modelNotRegistered",
+        "Lovrabet 模型未注册：我方主体",
+      ),
+    );
   }
   return model;
 }

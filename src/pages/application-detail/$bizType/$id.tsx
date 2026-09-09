@@ -47,13 +47,18 @@ import {
   parseApplicationDetailParams,
   type ApplicationDetailResponse,
 } from "@/features/cpo-application-detail/types";
+import { $i18n } from "@/i18n";
 import styles from "@/features/cpo-application-detail/ApplicationDetailView.module.css";
+
+const t = (key: string, fallbackText: string) => $i18n.t(key, fallbackText);
 
 function detailErrorMessage(error: unknown) {
   const message = error instanceof Error ? error.message : String(error || "");
-  if (message.includes("CPO_READ_FORBIDDEN")) return "无权查看该单据";
-  if (message.includes("BIZ_NOT_FOUND")) return "未找到该单据";
-  return message || "加载单据详情失败";
+  if (message.includes("CPO_READ_FORBIDDEN"))
+    return t("applicationDetail.errorForbidden", "无权查看该单据");
+  if (message.includes("BIZ_NOT_FOUND"))
+    return t("applicationDetail.errorNotFound", "未找到该单据");
+  return message || t("applicationDetail.errorLoadFailed", "加载单据详情失败");
 }
 
 const ApplicationDetailPage: React.FC = () => {
@@ -108,7 +113,13 @@ const ApplicationDetailPage: React.FC = () => {
         ? config.editPath(parsed.bizId)
         : "";
   const title =
-    detail?.summary.title || (config ? `${config.label}详情` : "单据详情");
+    detail?.summary.title ||
+    (config
+      ? t("applicationDetail.configTitle", `${config.label}详情`).replace(
+          "{label}",
+          config.label,
+        )
+      : t("applicationDetail.defaultTitle", "单据详情"));
 
   const registerPrintEvent = useCallback(
     async (event: "request" | "confirm", mode: ApplicationDetailPrintMode) => {
@@ -128,14 +139,16 @@ const ApplicationDetailPage: React.FC = () => {
 
   const confirmPhysicalPrint = (mode: ApplicationDetailPrintMode) => {
     Modal.confirm({
-      title: "纸质文件是否已实际打印？",
-      content:
+      title: t("applicationDetail.printConfirmTitle", "纸质文件是否已实际打印？"),
+      content: t(
+        "applicationDetail.printConfirmContent",
         "本次操作将记录在系统操作日志中。浏览器无法判断打印机是否成功出纸，请核对纸质文件后再确认。",
-      okText: "确认已打印",
-      cancelText: "暂不确认",
+      ),
+      okText: t("applicationDetail.printConfirmOk", "确认已打印"),
+      cancelText: t("applicationList.printConfirmCancel", "暂不确认"),
       onOk: async () => {
         await registerPrintEvent("confirm", mode);
-        message.success("打印记录已确认");
+        message.success(t("applicationDetail.printConfirmed", "打印记录已确认"));
       },
     });
   };
@@ -147,7 +160,12 @@ const ApplicationDetailPage: React.FC = () => {
       "popup=yes,width=1000,height=900",
     );
     if (!targetWindow) {
-      message.warning("浏览器阻止了打印窗口，请允许本站打开新窗口后重试");
+      message.warning(
+        t(
+          "applicationDetail.popupBlocked",
+          "浏览器阻止了打印窗口，请允许本站打开新窗口后重试",
+        ),
+      );
       return;
     }
     flushSync(() => setPrintMode(mode));
@@ -156,13 +174,19 @@ const ApplicationDetailPage: React.FC = () => {
     );
     if (!sourceElement) {
       targetWindow.close();
-      message.error("打印内容尚未准备完成，请稍后重试");
+      message.error(
+        t("applicationDetail.printNotReady", "打印内容尚未准备完成，请稍后重试"),
+      );
       return;
     }
     void printInStandaloneWindow({
       targetWindow,
       sourceElement,
-      title: `${title} - ${mode === "summary" ? "财务审批摘要" : "完整归档件"}`,
+      title: `${title} - ${
+        mode === "summary"
+          ? t("applicationDetail.printModeSummary", "财务审批摘要")
+          : t("applicationDetail.printModeFull", "完整归档件")
+      }`,
       beforePrint: async () => {
         await registerPrintEvent("request", mode);
       },
@@ -170,13 +194,21 @@ const ApplicationDetailPage: React.FC = () => {
     }).catch((error) => {
       targetWindow.close();
       message.error(
-        `打印窗口加载失败：${error instanceof Error ? error.message : String(error)}`,
+        t(
+          "applicationDetail.printLoadFailed",
+          `打印窗口加载失败：${error instanceof Error ? error.message : String(error)}`,
+        ).replace(
+          "{reason}",
+          error instanceof Error ? error.message : String(error),
+        ),
       );
     });
   };
 
   const printMenu: MenuProps = {
-    items: [{ key: "full", label: "打印完整归档件" }],
+    items: [
+      { key: "full", label: t("applicationDetail.printFull", "打印完整归档件") },
+    ],
     onClick: ({ key }) => {
       printDetail(key as ApplicationDetailPrintMode);
     },
@@ -197,8 +229,14 @@ const ApplicationDetailPage: React.FC = () => {
           description={
             parsed.ok
               ? detail?.summary.updatedAt
-                ? `最近更新 ${formatDateValue(detail.summary.updatedAt, true)}`
-                : "单据详情"
+                ? t(
+                    "applicationDetail.lastUpdated",
+                    `最近更新 ${formatDateValue(detail.summary.updatedAt, true)}`,
+                  ).replace(
+                    "{time}",
+                    formatDateValue(detail.summary.updatedAt, true),
+                  )
+                : t("applicationDetail.defaultTitle", "单据详情")
               : undefined
           }
           variant="detail"
@@ -211,14 +249,14 @@ const ApplicationDetailPage: React.FC = () => {
                 onClick={() => printDetail("summary")}
               >
                 <PrinterOutlined />
-                打印一页摘要
+                {t("applicationDetail.printSummary", "打印一页摘要")}
               </Dropdown.Button>
               {canEdit && editPath ? (
                 <Button
                   icon={<EditOutlined />}
                   onClick={() => navigate(editPath)}
                 >
-                  编辑
+                  {t("common.edit", "编辑")}
                 </Button>
               ) : null}
               {parsed.ok ? (
@@ -227,7 +265,7 @@ const ApplicationDetailPage: React.FC = () => {
                   loading={loading}
                   onClick={loadDetail}
                 >
-                  刷新
+                  {t("common.refresh", "刷新")}
                 </Button>
               ) : null}
             </Space>
@@ -244,7 +282,7 @@ const ApplicationDetailPage: React.FC = () => {
               message={errorMessage}
               action={
                 <Button size="small" loading={loading} onClick={loadDetail}>
-                  重试
+                  {t("applicationDetail.retry", "重试")}
                 </Button>
               }
             />
@@ -253,7 +291,9 @@ const ApplicationDetailPage: React.FC = () => {
           {parsed.ok ? (
             <Spin spinning={loading}>
               {!detail && !loading && !errorMessage ? (
-                <Empty description="未找到单据详情" />
+                <Empty
+                  description={t("applicationDetail.empty", "未找到单据详情")}
+                />
               ) : null}
               {detail ? (
                 <ApplicationDetailView

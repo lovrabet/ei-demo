@@ -1,0 +1,380 @@
+[
+  {
+    "key": "myTodo.approvalCommentPlaceholder",
+    "zh": "审批意见（可选）",
+    "en": "Approval comment (optional)",
+    "id": "Komentar persetujuan (opsional)"
+  },
+  {
+    "key": "myTodo.columns.node",
+    "zh": "当前节点",
+    "en": "Current Node",
+    "id": "Node Saat Ini"
+  },
+  {
+    "key": "myTodo.resultApproved",
+    "zh": "已通过",
+    "en": "Approved",
+    "id": "Disetujui"
+  },
+  {
+    "key": "myTodo.resultRejected",
+    "zh": "已驳回",
+    "en": "Rejected",
+    "id": "Ditolak"
+  },
+  {
+    "key": "myTodo.statusProcessing",
+    "zh": "审批中",
+    "en": "In Approval",
+    "id": "Dalam Persetujuan"
+  },
+  {
+    "key": "myDone.columns.node",
+    "zh": "已完成节点",
+    "en": "Completed Node",
+    "id": "Node Selesai"
+  },
+  {
+    "key": "myDone.loadFailed",
+    "zh": "加载失败：{reason}",
+    "en": "Load failed: {reason}",
+    "id": "Gagal memuat: {reason}"
+  },
+  {
+    "key": "mySubmitted.actions.revoke",
+    "zh": "撤销",
+    "en": "Revoke",
+    "id": "Batalkan"
+  },
+  {
+    "key": "mySubmitted.actions.revokeComment",
+    "zh": "申请人撤销",
+    "en": "Revoked by applicant",
+    "id": "Dibatalkan oleh pemohon"
+  },
+  {
+    "key": "mySubmitted.actions.revokeFail",
+    "zh": "撤销失败：{reason}",
+    "en": "Revoke failed: {reason}",
+    "id": "Gagal membatalkan: {reason}"
+  },
+  {
+    "key": "mySubmitted.actions.revokeSuccess",
+    "zh": "已撤销",
+    "en": "Revoked",
+    "id": "Dibatalkan"
+  },
+  {
+    "key": "mySubmitted.columns.currentNode",
+    "zh": "当前节点 / 处理人",
+    "en": "Current Node / Handler",
+    "id": "Node / Penangan Saat Ini"
+  },
+  {
+    "key": "mySubmitted.columns.submittedAt",
+    "zh": "提交时间",
+    "en": "Submitted At",
+    "id": "Waktu Pengajuan"
+  },
+  {
+    "key": "mySubmitted.confirmRevokeContent",
+    "zh": "撤销后流程终止，当前审批人的待办会被取消。",
+    "en": "Once revoked, the process ends and the approvers' pending tasks will be cancelled.",
+    "id": "Setelah dibatalkan, proses berhenti dan tugas pending approver akan dibatalkan."
+  },
+  {
+    "key": "mySubmitted.confirmRevokeTitle",
+    "zh": "确认撤销该流程？",
+    "en": "Revoke this process?",
+    "id": "Batalkan proses ini?"
+  },
+  {
+    "key": "mySubmitted.loadFailed",
+    "zh": "加载失败：{reason}",
+    "en": "Load failed: {reason}",
+    "id": "Gagal memuat: {reason}"
+  },
+  {
+    "key": "mySubmitted.statusApproved",
+    "zh": "已通过",
+    "en": "Approved",
+    "id": "Disetujui"
+  },
+  {
+    "key": "mySubmitted.statusCancelled",
+    "zh": "已撤销",
+    "en": "Revoked",
+    "id": "Dibatalkan"
+  },
+  {
+    "key": "mySubmitted.statusProcessing",
+    "zh": "审批中",
+    "en": "In Approval",
+    "id": "Dalam Persetujuan"
+  },
+  {
+    "key": "mySubmitted.statusRejected",
+    "zh": "已驳回",
+    "en": "Rejected",
+    "id": "Ditolak"
+  },
+  {
+    "key": "mySubmitted.tabs.activeEmpty",
+    "zh": "暂无进行中的流程",
+    "en": "No in-progress processes",
+    "id": "Tidak ada proses yang berlangsung"
+  },
+  {
+    "key": "mySubmitted.tabs.completedEmpty",
+    "zh": "暂无已完成流程",
+    "en": "No completed processes",
+    "id": "Tidak ada proses yang selesai"
+  },
+  {
+    "key": "mySubmitted.tabs.voidedEmpty",
+    "zh": "暂无驳回或废弃的流程",
+    "en": "No rejected or voided processes",
+    "id": "Tidak ada proses yang ditolak atau dibatalkan"
+  },
+  {
+    "key": "applicationDetail.configTitle",
+    "zh": "{label}详情",
+    "en": "{label} Details",
+    "id": "Detail {label}"
+  },
+  {
+    "key": "applicationDetail.defaultTitle",
+    "zh": "单据详情",
+    "en": "Document Details",
+    "id": "Detail Dokumen"
+  },
+  {
+    "key": "applicationDetail.empty",
+    "zh": "未找到单据详情",
+    "en": "Document details not found",
+    "id": "Detail dokumen tidak ditemukan"
+  },
+  {
+    "key": "applicationDetail.errorForbidden",
+    "zh": "无权查看该单据",
+    "en": "You are not authorized to view this document",
+    "id": "Anda tidak memiliki akses ke dokumen ini"
+  },
+  {
+    "key": "applicationDetail.errorLoadFailed",
+    "zh": "加载单据详情失败",
+    "en": "Failed to load document details",
+    "id": "Gagal memuat detail dokumen"
+  },
+  {
+    "key": "applicationDetail.errorNotFound",
+    "zh": "未找到该单据",
+    "en": "Document not found",
+    "id": "Dokumen tidak ditemukan"
+  },
+  {
+    "key": "applicationDetail.lastUpdated",
+    "zh": "最近更新 {time}",
+    "en": "Last updated {time}",
+    "id": "Terakhir diperbarui {time}"
+  },
+  {
+    "key": "applicationDetail.popupBlocked",
+    "zh": "浏览器阻止了打印窗口，请允许本站打开新窗口后重试",
+    "en": "The browser blocked the print window. Please allow pop-ups for this site and try again.",
+    "id": "Browser memblokir jendela cetak. Izinkan pop-up untuk situs ini dan coba lagi."
+  },
+  {
+    "key": "applicationDetail.printConfirmContent",
+    "zh": "本次操作将记录在系统操作日志中。浏览器无法判断打印机是否成功出纸，请核对纸质文件后再确认。",
+    "en": "This action will be recorded in the system log. The browser cannot verify whether the printer actually printed; please check the physical document before confirming.",
+    "id": "Tindakan ini akan dicatat dalam log sistem. Browser tidak dapat memastikan printer berhasil mencetak; periksa dokumen fisik sebelum mengonfirmasi."
+  },
+  {
+    "key": "applicationDetail.printConfirmOk",
+    "zh": "确认已打印",
+    "en": "Confirm Printed",
+    "id": "Konfirmasi Tercetak"
+  },
+  {
+    "key": "applicationDetail.printConfirmTitle",
+    "zh": "纸质文件是否已实际打印？",
+    "en": "Has the physical document been printed?",
+    "id": "Apakah dokumen fisik sudah dicetak?"
+  },
+  {
+    "key": "applicationDetail.printConfirmed",
+    "zh": "打印记录已确认",
+    "en": "Print record confirmed",
+    "id": "Catatan cetak dikonfirmasi"
+  },
+  {
+    "key": "applicationDetail.printFull",
+    "zh": "打印完整归档件",
+    "en": "Print Full Archive",
+    "id": "Cetak Arsip Lengkap"
+  },
+  {
+    "key": "applicationDetail.printLoadFailed",
+    "zh": "打印窗口加载失败：{reason}",
+    "en": "Failed to load print window: {reason}",
+    "id": "Gagal memuat jendela cetak: {reason}"
+  },
+  {
+    "key": "applicationDetail.printModeFull",
+    "zh": "完整归档件",
+    "en": "Full Archive",
+    "id": "Arsip Lengkap"
+  },
+  {
+    "key": "applicationDetail.printModeSummary",
+    "zh": "财务审批摘要",
+    "en": "Financial Approval Summary",
+    "id": "Ringkasan Persetujuan Keuangan"
+  },
+  {
+    "key": "applicationDetail.printNotReady",
+    "zh": "打印内容尚未准备完成，请稍后重试",
+    "en": "Print content is not ready yet. Please try again later.",
+    "id": "Konten cetak belum siap. Coba lagi nanti."
+  },
+  {
+    "key": "applicationDetail.printSummary",
+    "zh": "打印一页摘要",
+    "en": "Print One-Page Summary",
+    "id": "Cetak Ringkasan Satu Halaman"
+  },
+  {
+    "key": "applicationDetail.retry",
+    "zh": "重试",
+    "en": "Retry",
+    "id": "Coba Lagi"
+  },
+  {
+    "key": "customer360.dataNeedsCompletion",
+    "zh": "资料待补",
+    "en": "Info Incomplete",
+    "id": "Data Belum Lengkap"
+  },
+  {
+    "key": "customer360.emptyContracts",
+    "zh": "暂无收款合同",
+    "en": "No receivable contracts",
+    "id": "Belum ada kontrak piutang"
+  },
+  {
+    "key": "customer360.emptyOpportunities",
+    "zh": "暂无商机",
+    "en": "No opportunities",
+    "id": "Belum ada peluang"
+  },
+  {
+    "key": "customer360.emptyPlans",
+    "zh": "暂无收款计划",
+    "en": "No payment plans",
+    "id": "Belum ada rencana pembayaran"
+  },
+  {
+    "key": "customer360.emptyReceipts",
+    "zh": "暂无回款记录",
+    "en": "No payment records",
+    "id": "Belum ada catatan pembayaran"
+  },
+  {
+    "key": "customer360.relatedTitleMissing",
+    "zh": "关联对象标题缺失",
+    "en": "Related record title missing",
+    "id": "Judul data terkait tidak ada"
+  },
+  {
+    "key": "expenseRules.field.calculationRequired",
+    "zh": "请选择计算方式",
+    "en": "Please select a calculation method",
+    "id": "Pilih metode perhitungan"
+  },
+  {
+    "key": "expenseRules.field.conditionPlaceholder",
+    "zh": "写给 Agent 和审批人看的规则条件，例如：机票舱位为商务舱、头等舱或等价高等级舱位。",
+    "en": "Rule conditions for the Agent and approvers, e.g.: flight cabin is business class, first class or an equivalent premium cabin.",
+    "id": "Kondisi aturan untuk Agent dan approver, misalnya: kabin penerbangan kelas bisnis, kelas satu, atau kabin premium setara."
+  },
+  {
+    "key": "expenseRules.field.conditionRequired",
+    "zh": "请输入适用条件",
+    "en": "Please enter the applicable conditions",
+    "id": "Masukkan kondisi yang berlaku"
+  },
+  {
+    "key": "expenseRules.field.limitAmountAddon",
+    "zh": "元",
+    "en": "yuan",
+    "id": "yuan"
+  },
+  {
+    "key": "expenseRules.field.limitAmountRequired",
+    "zh": "请输入封顶金额",
+    "en": "Please enter the cap amount",
+    "id": "Masukkan jumlah batas"
+  },
+  {
+    "key": "expenseRules.field.reimburseRatioAddon",
+    "zh": "比例",
+    "en": "ratio",
+    "id": "rasio"
+  },
+  {
+    "key": "expenseRules.field.reimburseRatioRequired",
+    "zh": "请输入报销比例",
+    "en": "Please enter the reimbursement ratio",
+    "id": "Masukkan rasio reimbursement"
+  },
+  {
+    "key": "expenseRules.field.requirementPlaceholder",
+    "zh": "例如：需提供电子普通发票、行程单；海外票据需在备注中说明对应关系。",
+    "en": "e.g.: electronic general invoice and itinerary required; overseas receipts must be explained in the remarks.",
+    "id": "misalnya: wajib menyertakan faktur elektronik dan itinerary; bukti luar negeri harus dijelaskan di catatan."
+  },
+  {
+    "key": "expenseRules.field.ruleCodePlaceholder",
+    "zh": "如：flight_premium_half",
+    "en": "e.g.: flight_premium_half",
+    "id": "mis.: flight_premium_half"
+  },
+  {
+    "key": "expenseRules.field.ruleCodeRequired",
+    "zh": "请输入规则编码",
+    "en": "Please enter the rule code",
+    "id": "Masukkan kode aturan"
+  },
+  {
+    "key": "expenseRules.field.ruleNamePlaceholder",
+    "zh": "如：商务舱和头等舱机票按 50% 报销",
+    "en": "e.g.: Business and first-class flights reimbursed at 50%",
+    "id": "mis.: Tiket kelas bisnis dan utama direimburse 50%"
+  },
+  {
+    "key": "expenseRules.field.ruleNameRequired",
+    "zh": "请输入规则名称",
+    "en": "Please enter the rule name",
+    "id": "Masukkan nama aturan"
+  },
+  {
+    "key": "expenseRules.switch.active",
+    "zh": "生效",
+    "en": "Active",
+    "id": "Aktif"
+  },
+  {
+    "key": "expenseRules.switch.inactive",
+    "zh": "停用",
+    "en": "Inactive",
+    "id": "Nonaktif"
+  },
+  {
+    "key": "expenseRules.unit.yuan",
+    "zh": "元",
+    "en": "yuan",
+    "id": "yuan"
+  }
+]

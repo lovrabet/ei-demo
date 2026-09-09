@@ -31,6 +31,9 @@ import {
   syncAttachmentRecords,
 } from "@/features/attachments/api";
 import { manageReceivableContract } from "@/features/crm-domain/api";
+import { $i18n } from "@/i18n";
+
+const t = (key: string, fallbackText: string) => $i18n.t(key, fallbackText);
 
 type Opportunity = {
   id: number;
@@ -78,7 +81,9 @@ export default function SalesContractFormPage() {
             (error) =>
               !cancelled &&
               message.error(
-                error instanceof Error ? error.message : "加载客户失败",
+                error instanceof Error
+                  ? error.message
+                  : t("salesContractForm.error.customersLoad", "加载客户失败"),
               ),
           );
       },
@@ -123,7 +128,9 @@ export default function SalesContractFormPage() {
     ])
       .then(([record, attachments]) => {
         if (!record?.id) {
-          throw new Error("未找到该销售合同");
+          throw new Error(
+            t("salesContractForm.error.contractNotFound", "未找到该销售合同"),
+          );
         }
         const status = String(record.sign_status || "").toLowerCase();
         setRecordStatus(status);
@@ -143,7 +150,11 @@ export default function SalesContractFormPage() {
         });
       })
       .catch((error) =>
-        message.error(error instanceof Error ? error.message : "加载合同失败"),
+        message.error(
+          error instanceof Error
+            ? error.message
+            : t("salesContractForm.error.load", "加载合同失败"),
+        ),
       )
       .finally(() => setLoading(false));
   }, [editId, form]);
@@ -153,7 +164,9 @@ export default function SalesContractFormPage() {
       customers.map((customer) => ({
         value: Number(customer.id),
         label: customer.uscc
-          ? `${customer.name}（${customer.uscc}）`
+          ? t("salesContractForm.customer.labelWithUscc", "{name}（{uscc}）")
+              .replace("{name}", customer.name)
+              .replace("{uscc}", customer.uscc)
           : customer.name,
       })),
     [customers],
@@ -193,7 +206,12 @@ export default function SalesContractFormPage() {
       return;
     }
     if (submit && !(values.attachments || []).length) {
-      message.warning("提交审批前请上传待审核的合同文件");
+      message.warning(
+        t(
+          "salesContractForm.warning.uploadBeforeSubmit",
+          "提交审批前请上传待审核的合同文件",
+        ),
+      );
       return;
     }
     setSaving(true);
@@ -207,19 +225,33 @@ export default function SalesContractFormPage() {
       });
       form.setFieldValue("attachments", attachments);
       if (submit) {
-        message.success("销售合同已提交审批");
+        message.success(
+          t("salesContractForm.success.submitted", "销售合同已提交审批"),
+        );
         navigate(`/receivable-contract-detail/${contractId}`);
         return;
       }
-      message.success(editId ? "草稿已更新" : "草稿已保存");
+      message.success(
+        editId
+          ? t("salesContractForm.success.draftUpdated", "草稿已更新")
+          : t("salesContractForm.success.draftSaved", "草稿已保存"),
+      );
       if (!editId) {
         navigate(`/sales-contract-form?id=${contractId}`, { replace: true });
       }
     } catch (error) {
       message.error(
-        `${submit ? "提交" : "保存"}失败：${
-          error instanceof Error ? error.message : String(error)
-        }`,
+        t("salesContractForm.error.saveFailed", "{action}失败：{reason}")
+          .replace(
+            "{action}",
+            submit
+              ? t("salesContractForm.action.submit", "提交")
+              : t("salesContractForm.action.save", "保存"),
+          )
+          .replace(
+            "{reason}",
+            error instanceof Error ? error.message : String(error),
+          ),
       );
     } finally {
       setSaving(false);
@@ -245,31 +277,43 @@ export default function SalesContractFormPage() {
             onClick={() => navigate(-1)}
           />
           {readOnly
-            ? "查看对外销售合同"
+            ? t("salesContractForm.title.view", "查看对外销售合同")
             : editId
-              ? "编辑对外销售合同"
-              : "新建对外销售合同"}
+              ? t("salesContractForm.title.edit", "编辑对外销售合同")
+              : t("salesContractForm.title.create", "新建对外销售合同")}
         </Space>
       }
     >
       {readOnly ? null : (
         <AgentFormGuide
           skillCode="cpo-contract-analysis-and-entry"
-          skillName="合同风险分析与分期入库"
-          prompt="请分析我上传的客户合同风险，提取收款分期并录入系统"
-          description="上传客户合同后，Agent 可审查风险，提取金额、期限和收款分期并完成录入。"
+          skillName={t(
+            "salesContractForm.agentGuide.skillName",
+            "合同风险分析与分期入库",
+          )}
+          prompt={t(
+            "salesContractForm.agentGuide.prompt",
+            "请分析我上传的客户合同风险，提取收款分期并录入系统",
+          )}
+          description={t(
+            "salesContractForm.agentGuide.description",
+            "上传客户合同后，Agent 可审查风险，提取金额、期限和收款分期并完成录入。",
+          )}
         />
       )}
       {readOnly ? (
         <Alert
           type="info"
           showIcon
-          message="合同已进入流程，当前页面只读"
+          message={t(
+            "salesContractForm.readonlyNotice",
+            "合同已进入流程，当前页面只读",
+          )}
           action={
             <Button
               onClick={() => navigate(`/receivable-contract-detail/${editId}`)}
             >
-              查看流程
+              {t("salesContractForm.action.viewProcess", "查看流程")}
             </Button>
           }
           style={{ marginBottom: 16 }}
@@ -283,28 +327,61 @@ export default function SalesContractFormPage() {
       >
         <FormLayout>
           <Form.Item
-            label="合同名称"
+            label={t("salesContractForm.field.title", "合同名称")}
             name="title"
-            rules={[{ required: true, message: "请输入合同名称" }]}
+            rules={[
+              {
+                required: true,
+                message: t(
+                  "salesContractForm.field.titleRequired",
+                  "请输入合同名称",
+                ),
+              },
+            ]}
           >
             <Input
               maxLength={200}
               showCount
-              placeholder="例如：2026 年度技术服务合同"
+              placeholder={t(
+                "salesContractForm.field.titlePlaceholder",
+                "例如：2026 年度技术服务合同",
+              )}
             />
           </Form.Item>
           <FormRow columns={2}>
             <Form.Item
-              label="合同编号"
+              label={t("salesContractForm.field.contractNo", "合同编号")}
               name="contract_no"
-              rules={[{ required: true, message: "请输入合同编号" }]}
+              rules={[
+                {
+                  required: true,
+                  message: t(
+                    "salesContractForm.field.contractNoRequired",
+                    "请输入合同编号",
+                  ),
+                },
+              ]}
             >
-              <Input maxLength={100} placeholder="请输入双方确认的合同编号" />
+              <Input
+                maxLength={100}
+                placeholder={t(
+                  "salesContractForm.field.contractNoPlaceholder",
+                  "请输入双方确认的合同编号",
+                )}
+              />
             </Form.Item>
             <Form.Item
-              label="客户"
+              label={t("salesContractForm.field.customer", "客户")}
               name="company_id"
-              rules={[{ required: true, message: "请选择客户" }]}
+              rules={[
+                {
+                  required: true,
+                  message: t(
+                    "salesContractForm.field.customerRequired",
+                    "请选择客户",
+                  ),
+                },
+              ]}
             >
               <Select
                 showSearch
@@ -312,13 +389,19 @@ export default function SalesContractFormPage() {
                 searchValue={customerKeyword}
                 onSearch={setCustomerKeyword}
                 options={customerOptions}
-                placeholder="按名称或统一信用代码搜索客户"
+                placeholder={t(
+                  "salesContractForm.field.customerPlaceholder",
+                  "按名称或统一信用代码搜索客户",
+                )}
                 onChange={() => form.setFieldValue("opportunity_id", undefined)}
               />
             </Form.Item>
           </FormRow>
           <FormRow columns={2}>
-            <Form.Item label="来源商机" name="opportunity_id">
+            <Form.Item
+              label={t("salesContractForm.field.opportunity", "来源商机")}
+              name="opportunity_id"
+            >
               <Select
                 allowClear
                 disabled={!companyId || saving || readOnly}
@@ -326,22 +409,48 @@ export default function SalesContractFormPage() {
                   value: Number(opportunity.id),
                   label: opportunity.name,
                 }))}
-                placeholder={companyId ? "可选：关联销售机会" : "请先选择客户"}
+                placeholder={
+                  companyId
+                    ? t(
+                        "salesContractForm.field.opportunityPlaceholderOptional",
+                        "可选：关联销售机会",
+                      )
+                    : t(
+                        "salesContractForm.field.opportunityPlaceholderNoCustomer",
+                        "请先选择客户",
+                      )
+                }
               />
             </Form.Item>
             <Form.Item
-              label="合同金额"
+              label={t("salesContractForm.field.amount", "合同金额")}
               name="amount"
               rules={[
-                { required: true, message: "请输入合同金额" },
-                { type: "number", min: 0.01, message: "合同金额必须大于 0" },
+                {
+                  required: true,
+                  message: t(
+                    "salesContractForm.field.amountRequired",
+                    "请输入合同金额",
+                  ),
+                },
+                {
+                  type: "number",
+                  min: 0.01,
+                  message: t(
+                    "salesContractForm.field.amountMin",
+                    "合同金额必须大于 0",
+                  ),
+                },
               ]}
             >
               <MoneyInput min={0.01} />
             </Form.Item>
           </FormRow>
           <FormRow columns={3}>
-            <Form.Item label="币种" name="currency">
+            <Form.Item
+              label={t("salesContractForm.field.currency", "币种")}
+              name="currency"
+            >
               <Select
                 options={["CNY", "USD", "HKD"].map((value) => ({
                   value,
@@ -349,20 +458,32 @@ export default function SalesContractFormPage() {
                 }))}
               />
             </Form.Item>
-            <Form.Item label="开始日期" name="start_date">
+            <Form.Item
+              label={t("salesContractForm.field.startDate", "开始日期")}
+              name="start_date"
+            >
               <DatePicker style={{ width: "100%" }} />
             </Form.Item>
-            <Form.Item label="结束日期" name="end_date">
+            <Form.Item
+              label={t("salesContractForm.field.endDate", "结束日期")}
+              name="end_date"
+            >
               <DatePicker style={{ width: "100%" }} />
             </Form.Item>
           </FormRow>
-          <Form.Item label="备注" name="remark">
+          <Form.Item
+            label={t("salesContractForm.field.remark", "备注")}
+            name="remark"
+          >
             <Input.TextArea rows={3} maxLength={1000} showCount />
           </Form.Item>
           <Form.Item
-            label="待审核合同文件"
+            label={t("salesContractForm.field.attachments", "待审核合同文件")}
             name="attachments"
-            extra="草稿可暂不上传；提交审批时至少需要一份合同文件。"
+            extra={t(
+              "salesContractForm.field.attachmentsExtra",
+              "草稿可暂不上传；提交审批时至少需要一份合同文件。",
+            )}
           >
             <AttachmentUpload
               maxCount={10}
@@ -372,8 +493,14 @@ export default function SalesContractFormPage() {
           <Alert
             type="info"
             showIcon
-            message="收款计划在合同详情中维护"
-            description="审批前可先保存草稿并配置多期收款计划；合同签署完成后，草稿期次会自动转为待收款。"
+            message={t(
+              "salesContractForm.alert.planTitle",
+              "收款计划在合同详情中维护",
+            )}
+            description={t(
+              "salesContractForm.alert.planDescription",
+              "审批前可先保存草稿并配置多期收款计划；合同签署完成后，草稿期次会自动转为待收款。",
+            )}
           />
         </FormLayout>
       </Form>
@@ -382,7 +509,10 @@ export default function SalesContractFormPage() {
           saving={saving}
           onCancel={() => navigate("/contracts")}
           onSaveAndSubmit={() => void save(true)}
-          hint="提交后进入销售合同审核，审批通过后由签署节点确认合同签署完成。"
+          hint={t(
+            "salesContractForm.footer.hint",
+            "提交后进入销售合同审核，审批通过后由签署节点确认合同签署完成。",
+          )}
         />
       ) : null}
     </Card>

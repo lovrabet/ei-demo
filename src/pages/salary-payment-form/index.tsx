@@ -25,6 +25,7 @@ import {
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { lovrabetClient } from "@/api/client";
+import { $i18n } from "@/i18n";
 import AgentFormGuide from "@/components/agent-form-guide";
 import AttachmentUpload from "@/components/attachment-upload";
 import FormFooter from "@/components/form-footer";
@@ -48,6 +49,8 @@ import {
 } from "@/features/internal-legal-entities/api";
 import { parseSalaryPaymentDate } from "@/features/salary-payment/date";
 import { createSalaryPaymentItemDefaults } from "@/features/salary-payment/form";
+
+const t = (key: string, fallbackText: string) => $i18n.t(key, fallbackText);
 
 const ATTACHMENTS_FIELD = "_attachments";
 
@@ -155,7 +158,7 @@ const SalaryPaymentForm: React.FC = () => {
           params: { bizType: "salary_payment", bizId: Number(editId) },
         });
         const record = detail.biz;
-        if (!record?.id) throw new Error("未找到该工资付款申请");
+        if (!record?.id) throw new Error(t("salaryPaymentForm.error.notFound", "未找到该工资付款申请"));
         form.setFieldsValue({
           ...(record as unknown as SalaryPaymentFormValues),
           payroll_month: parseSalaryPaymentDate(
@@ -184,7 +187,12 @@ const SalaryPaymentForm: React.FC = () => {
         setRecordStatus(String(record.status || ""));
       })
       .catch((error: any) =>
-        message.error(`加载失败：${error?.message || error}`),
+        message.error(
+          t("salaryPaymentForm.error.load", "加载失败：{reason}").replace(
+            "{reason}",
+            error?.message || String(error),
+          ),
+        ),
       )
       .finally(() => {
         if (active) setLoading(false);
@@ -203,14 +211,19 @@ const SalaryPaymentForm: React.FC = () => {
     if (!form.getFieldValue(["items", rowIndex, "payment_project"])) {
       form.setFieldValue(
         ["items", rowIndex, "payment_project"],
-        entity ? `${entity.shortName || entity.entityName}工资` : "",
+        entity
+          ? t("salaryPaymentForm.defaultProject", "{name}工资").replace(
+              "{name}",
+              entity.shortName || entity.entityName,
+            )
+          : "",
       );
     }
   };
 
   const onSave = async (thenSubmit: boolean) => {
     if (readOnly) {
-      message.warning("当前单据不可编辑");
+      message.warning(t("salaryPaymentForm.error.readonly", "当前单据不可编辑"));
       return;
     }
     let values: SalaryPaymentFormValues;
@@ -261,19 +274,23 @@ const SalaryPaymentForm: React.FC = () => {
       }
 
       if (thenSubmit) {
-        message.success("已提交，进入工资付款审批");
+        message.success(t("salaryPaymentForm.success.submitted", "已提交，进入工资付款审批"));
         navigate(getCpoDetailPath("salary_payment", id));
         return;
       }
 
-      message.success(isEdit ? "草稿已更新" : "草稿已创建");
+      message.success(
+        isEdit
+          ? t("salaryPaymentForm.success.draftUpdated", "草稿已更新")
+          : t("salaryPaymentForm.success.draftCreated", "草稿已创建"),
+      );
       navigate(CPO_FORM_CANCEL_PATH);
     } catch (error: any) {
       const reason = String(error?.message || error);
       message.error(
         reason.includes("payroll_sheet")
-          ? "请先上传工资发放表"
-          : `保存失败：${reason}`,
+          ? t("salaryPaymentForm.error.uploadRequired", "请先上传工资发放表")
+          : t("salaryPaymentForm.error.saveFailed", "保存失败：{reason}").replace("{reason}", reason),
       );
     } finally {
       setSaving(false);
@@ -293,27 +310,33 @@ const SalaryPaymentForm: React.FC = () => {
             onClick={() => navigate(-1)}
           />
           {readOnly
-            ? "查看工资付款"
+            ? t("salaryPaymentForm.title.view", "查看工资付款")
             : isEdit
-              ? "编辑工资付款"
-              : "工资付款申请"}
+              ? t("salaryPaymentForm.title.edit", "编辑工资付款")
+              : t("salaryPaymentForm.title.create", "工资付款申请")}
         </Space>
       }
     >
       {readOnly ? null : (
         <AgentFormGuide
           skillCode="cpo-salary-payment-from-excel"
-          skillName="工资付款 Excel 自动录入"
-          prompt="请根据我上传的工资 Excel 核对并创建工资付款申请"
-          description="上传工资 Excel 后，Agent 可校验月份和合计、按主体拆分并完成工资付款申请。"
+          skillName={t("salaryPaymentForm.agent.skillName", "工资付款 Excel 自动录入")}
+          prompt={t(
+            "salaryPaymentForm.agent.prompt",
+            "请根据我上传的工资 Excel 核对并创建工资付款申请",
+          )}
+          description={t(
+            "salaryPaymentForm.agent.description",
+            "上传工资 Excel 后，Agent 可校验月份和合计、按主体拆分并完成工资付款申请。",
+          )}
         />
       )}
       <Alert
         type="info"
         showIcon
         style={{ marginBottom: 20 }}
-        message="按合规审批主体分别创建工资付款申请"
-        description="同一审批主体下可追加多个付款项目；不同审批主体必须分别创建申请单。"
+        message={t("salaryPaymentForm.alert.title", "按合规审批主体分别创建工资付款申请")}
+        description={t("salaryPaymentForm.alert.description", "同一审批主体下可追加多个付款项目；不同审批主体必须分别创建申请单。")}
       />
       <Form
         form={form}
@@ -323,12 +346,23 @@ const SalaryPaymentForm: React.FC = () => {
       >
         <FormLayout>
           <Form.Item
-            label="付款事由"
+            label={t("salaryPaymentForm.field.title", "付款事由")}
             name="title"
-            rules={[{ required: true, message: "请输入付款事由" }]}
+            rules={[
+              {
+                required: true,
+                message: t(
+                  "salaryPaymentForm.field.titleRequired",
+                  "请输入付款事由",
+                ),
+              },
+            ]}
           >
             <Input
-              placeholder="如：2026年7月启智云图及上海分公司工资付款"
+              placeholder={t(
+                "salaryPaymentForm.field.titlePlaceholder",
+                "如：2026年7月启智云图及上海分公司工资付款",
+              )}
               maxLength={255}
               showCount
             />
@@ -336,35 +370,63 @@ const SalaryPaymentForm: React.FC = () => {
 
           <FormRow columns={2}>
             <Form.Item
-              label="工资月份"
+              label={t("salaryPaymentForm.field.payrollMonth", "工资月份")}
               name="payroll_month"
-              rules={[{ required: true, message: "请选择工资月份" }]}
+              rules={[
+                {
+                  required: true,
+                  message: t(
+                    "salaryPaymentForm.field.payrollMonthRequired",
+                    "请选择工资月份",
+                  ),
+                },
+              ]}
             >
               <DatePicker picker="month" style={{ width: "100%" }} />
             </Form.Item>
             <Form.Item
-              label="付款日期"
+              label={t("salaryPaymentForm.field.payDate", "付款日期")}
               name="expected_pay_date"
-              rules={[{ required: true, message: "请选择付款日期" }]}
+              rules={[
+                {
+                  required: true,
+                  message: t(
+                    "salaryPaymentForm.field.payDateRequired",
+                    "请选择付款日期",
+                  ),
+                },
+              ]}
             >
               <DatePicker style={{ width: "100%" }} />
             </Form.Item>
           </FormRow>
 
-          <Divider orientation="left">付款明细</Divider>
+          <Divider orientation="left">
+            {t("salaryPaymentForm.divider.items", "付款明细")}
+          </Divider>
           <Form.List
             name="items"
             rules={[
               {
                 validator: async (_, items: SalaryPaymentItemFormValue[]) => {
                   if (!items?.length) {
-                    throw new Error("至少需要一条付款明细");
+                    throw new Error(
+                      t(
+                        "salaryPaymentForm.error.itemsRequired",
+                        "至少需要一条付款明细",
+                      ),
+                    );
                   }
                   const entityIds = items
                     .map((item) => Number(item?.internal_legal_entity_id))
                     .filter(Boolean);
                   if (new Set(entityIds).size !== entityIds.length) {
-                    throw new Error("同一付款公司不能重复添加");
+                    throw new Error(
+                      t(
+                        "salaryPaymentForm.error.entityDuplicate",
+                        "同一付款公司不能重复添加",
+                      ),
+                    );
                   }
                 },
               },
@@ -376,7 +438,10 @@ const SalaryPaymentForm: React.FC = () => {
                   <Card
                     key={key}
                     size="small"
-                    title={`付款项目 ${index + 1}`}
+                    title={t(
+                      "salaryPaymentForm.item.title",
+                      "付款项目 {index}",
+                    ).replace("{index}", String(index + 1))}
                     extra={
                       readOnly ? null : (
                         <Button
@@ -386,7 +451,7 @@ const SalaryPaymentForm: React.FC = () => {
                           disabled={fields.length <= 1}
                           onClick={() => remove(name)}
                         >
-                          删除
+                          {t("salaryPaymentForm.action.delete", "删除")}
                         </Button>
                       )
                     }
@@ -407,16 +472,28 @@ const SalaryPaymentForm: React.FC = () => {
                     <FormRow columns={2}>
                       <Form.Item
                         {...restField}
-                        label="付款公司"
+                        label={t(
+                          "salaryPaymentForm.field.entity",
+                          "付款公司",
+                        )}
                         name={[name, "internal_legal_entity_id"]}
                         rules={[
-                          { required: true, message: "请选择付款公司" },
+                          {
+                            required: true,
+                            message: t(
+                              "salaryPaymentForm.field.entityRequired",
+                              "请选择付款公司",
+                            ),
+                          },
                         ]}
                       >
                         <Select
                           showSearch
                           optionFilterProp="label"
-                          placeholder="选择我方付款主体"
+                          placeholder={t(
+                            "salaryPaymentForm.field.entityPlaceholder",
+                            "选择我方付款主体",
+                          )}
                           onChange={(value) =>
                             handleEntityChange(name, Number(value))
                           }
@@ -428,14 +505,26 @@ const SalaryPaymentForm: React.FC = () => {
                       </Form.Item>
                       <Form.Item
                         {...restField}
-                        label="支付项目"
+                        label={t(
+                          "salaryPaymentForm.field.project",
+                          "支付项目",
+                        )}
                         name={[name, "payment_project"]}
                         rules={[
-                          { required: true, message: "请输入支付项目" },
+                          {
+                            required: true,
+                            message: t(
+                              "salaryPaymentForm.field.projectRequired",
+                              "请输入支付项目",
+                            ),
+                          },
                         ]}
                       >
                         <Input
-                          placeholder="如：启智云图7月工资"
+                          placeholder={t(
+                            "salaryPaymentForm.field.projectPlaceholder",
+                            "如：启智云图7月工资",
+                          )}
                           maxLength={255}
                         />
                       </Form.Item>
@@ -443,16 +532,30 @@ const SalaryPaymentForm: React.FC = () => {
                     <FormRow template="minmax(220px, 1fr) 140px 180px">
                       <Form.Item
                         {...restField}
-                        label="付款金额"
+                        label={t(
+                          "salaryPaymentForm.field.amount",
+                          "付款金额",
+                        )}
                         name={[name, "amount"]}
                         rules={[
-                          { required: true, message: "请输入付款金额" },
+                          {
+                            required: true,
+                            message: t(
+                              "salaryPaymentForm.field.amountRequired",
+                              "请输入付款金额",
+                            ),
+                          },
                           {
                             validator: (_, value) =>
                               Number(value) > 0
                                 ? Promise.resolve()
                                 : Promise.reject(
-                                    new Error("付款金额必须大于 0"),
+                                    new Error(
+                                      t(
+                                        "salaryPaymentForm.field.amountMin",
+                                        "付款金额必须大于 0",
+                                      ),
+                                    ),
                                   ),
                           },
                         ]}
@@ -461,30 +564,60 @@ const SalaryPaymentForm: React.FC = () => {
                       </Form.Item>
                       <Form.Item
                         {...restField}
-                        label="币种"
+                        label={t("salaryPaymentForm.field.currency", "币种")}
                         name={[name, "currency"]}
                         initialValue="CNY"
                       >
                         <Select
                           options={[
-                            { value: "CNY", label: "人民币 CNY" },
+                            {
+                              value: "CNY",
+                              label: t(
+                                "salaryPaymentForm.currency.cny",
+                                "人民币 CNY",
+                              ),
+                            },
                           ]}
                         />
                       </Form.Item>
                       <Form.Item
                         {...restField}
-                        label="付款方式"
+                        label={t("salaryPaymentForm.field.method", "付款方式")}
                         name={[name, "payment_method"]}
                         initialValue="bank_transfer"
                         rules={[
-                          { required: true, message: "请选择付款方式" },
+                          {
+                            required: true,
+                            message: t(
+                              "salaryPaymentForm.field.methodRequired",
+                              "请选择付款方式",
+                            ),
+                          },
                         ]}
                       >
                         <Select
                           options={[
-                            { value: "bank_card", label: "银行卡" },
-                            { value: "bank_transfer", label: "银行转账" },
-                            { value: "other", label: "其他" },
+                            {
+                              value: "bank_card",
+                              label: t(
+                                "salaryPaymentForm.method.bankCard",
+                                "银行卡",
+                              ),
+                            },
+                            {
+                              value: "bank_transfer",
+                              label: t(
+                                "salaryPaymentForm.method.bankTransfer",
+                                "银行转账",
+                              ),
+                            },
+                            {
+                              value: "other",
+                              label: t(
+                                "salaryPaymentForm.method.other",
+                                "其他",
+                              ),
+                            },
                           ]}
                         />
                       </Form.Item>
@@ -492,22 +625,37 @@ const SalaryPaymentForm: React.FC = () => {
                     <FormRow columns={2}>
                       <Form.Item
                         {...restField}
-                        label="发薪人数"
+                        label={t(
+                          "salaryPaymentForm.field.employeeCount",
+                          "发薪人数",
+                        )}
                         name={[name, "employee_count"]}
                       >
                         <InputNumber
                           min={1}
                           precision={0}
                           style={{ width: "100%" }}
-                          placeholder="可选"
+                          placeholder={t(
+                            "salaryPaymentForm.field.optional",
+                            "可选",
+                          )}
                         />
                       </Form.Item>
                       <Form.Item
                         {...restField}
-                        label="明细备注"
+                        label={t(
+                          "salaryPaymentForm.field.itemRemark",
+                          "明细备注",
+                        )}
                         name={[name, "remark"]}
                       >
-                        <Input maxLength={1000} placeholder="可选" />
+                        <Input
+                          maxLength={1000}
+                          placeholder={t(
+                            "salaryPaymentForm.field.optional",
+                            "可选",
+                          )}
+                        />
                       </Form.Item>
                     </FormRow>
                   </Card>
@@ -525,7 +673,10 @@ const SalaryPaymentForm: React.FC = () => {
                       })
                     }
                   >
-                    新增付款项目
+                    {t(
+                      "salaryPaymentForm.action.addItem",
+                      "新增付款项目",
+                    )}
                   </Button>
                 )}
               </Space>
@@ -538,23 +689,43 @@ const SalaryPaymentForm: React.FC = () => {
             message={
               <Space size={24} wrap>
                 <Typography.Text strong>
-                  合计金额：¥ {totalAmount.toFixed(2)}
+                  {t(
+                    "salaryPaymentForm.summary.totalAmount",
+                    "合计金额：¥ {amount}",
+                  ).replace("{amount}", totalAmount.toFixed(2))}
                 </Typography.Text>
-                <Typography.Text>合计人数：{totalEmployees}</Typography.Text>
-                <Typography.Text>付款项目：{watchedItems.length}</Typography.Text>
+                <Typography.Text>
+                  {t(
+                    "salaryPaymentForm.summary.totalEmployees",
+                    "合计人数：{count}",
+                  ).replace("{count}", String(totalEmployees))}
+                </Typography.Text>
+                <Typography.Text>
+                  {t(
+                    "salaryPaymentForm.summary.itemCount",
+                    "付款项目：{count}",
+                  ).replace("{count}", String(watchedItems.length))}
+                </Typography.Text>
               </Space>
             }
           />
 
           <Form.Item
-            label="工资发放表（必传）"
+            label={t("salaryPaymentForm.field.sheet", "工资发放表（必传）")}
             name={ATTACHMENTS_FIELD}
             rules={[
               {
                 validator: (_, value) =>
                   Array.isArray(value) && value.length > 0
                     ? Promise.resolve()
-                    : Promise.reject(new Error("请上传工资发放表")),
+                    : Promise.reject(
+                        new Error(
+                          t(
+                            "salaryPaymentForm.error.sheetRequired",
+                            "请上传工资发放表",
+                          ),
+                        ),
+                      ),
               },
             ]}
           >
@@ -565,16 +736,22 @@ const SalaryPaymentForm: React.FC = () => {
             />
           </Form.Item>
 
-          <Form.Item label="备注说明" name="remark">
+          <Form.Item label={t("salaryPaymentForm.field.remark", "备注说明")} name="remark">
             <Input.TextArea
               rows={3}
-              placeholder="填写工资发放背景、特殊安排或其他补充说明"
+              placeholder={t(
+                "salaryPaymentForm.field.remarkPlaceholder",
+                "填写工资发放背景、特殊安排或其他补充说明",
+              )}
               maxLength={2000}
               showCount
             />
           </Form.Item>
 
-          <Form.Item label="申请人" name="applicant_name_snapshot">
+          <Form.Item
+            label={t("salaryPaymentForm.field.applicant", "申请人")}
+            name="applicant_name_snapshot"
+          >
             <Input disabled />
           </Form.Item>
           <Form.Item name="applicant_user_id" hidden>

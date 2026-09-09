@@ -12,6 +12,7 @@ import {
   queryRuntimeFileUrl,
   uploadRuntimeFile,
 } from "@/features/attachments/api";
+import { $i18n } from "@/i18n";
 import styles from "./index.module.css";
 
 type Props = {
@@ -53,7 +54,7 @@ const AttachmentUpload: React.FC<Props> = ({
   maxCount = 5,
   accept,
   compact = false,
-  uploadLabel = "上传附件",
+  uploadLabel = $i18n.t("attachment.upload", "上传附件"),
   actionMode = false,
 }) => {
   const attachmentValue = value || EMPTY_VALUE;
@@ -126,7 +127,11 @@ const AttachmentUpload: React.FC<Props> = ({
       const url = await queryRuntimeFileUrl(normalized.filePath);
       window.open(url, "_blank", "noopener,noreferrer");
     } catch (error: any) {
-      message.error(`打开附件失败：${error?.message || error}`);
+      message.error(
+        $i18n.t("attachment.openFailed", {
+          reason: error?.message || String(error),
+        }),
+      );
     }
   };
 
@@ -143,7 +148,9 @@ const AttachmentUpload: React.FC<Props> = ({
 
   if (actionMode) {
     const currentFile = fileList.find((file) => file.status === "done");
-    const actionLabel = currentFile ? "更换附件" : uploadLabel;
+    const actionLabel = currentFile
+      ? $i18n.t("attachment.replace", "更换附件")
+      : uploadLabel;
 
     return (
       <div className={styles.actionUpload}>
@@ -179,7 +186,9 @@ const AttachmentUpload: React.FC<Props> = ({
   if (compact) {
     const hasFiles = fileList.length > 0;
     const triggerLabel =
-      hasFiles && maxCount === 1 ? "更换发票附件" : uploadLabel;
+      hasFiles && maxCount === 1
+        ? $i18n.t("attachment.replaceInvoice", "更换发票附件")
+        : uploadLabel;
 
     return (
       <div className={styles.compactUpload}>
@@ -202,16 +211,16 @@ const AttachmentUpload: React.FC<Props> = ({
                 icon={<UpOutlined />}
                 onClick={() => setExpanded(false)}
               >
-                收起
+                {$i18n.t("attachment.collapse", "收起")}
               </Button>
             </div>
             <Upload.Dragger {...uploadProps} className={styles.compactDragger}>
               <InboxOutlined className={styles.compactIcon} />
               <span className={styles.compactHint}>
-                点击选择或拖拽文件到这里
+                {$i18n.t("attachment.dropHint", "点击选择或拖拽文件到这里")}
               </span>
               <span className={styles.compactMeta}>
-                最多 {maxCount} 个文件，上传后随单据保存
+                {$i18n.t("attachment.maxFiles", { count: maxCount })}
               </span>
             </Upload.Dragger>
           </div>
@@ -234,9 +243,11 @@ const AttachmentUpload: React.FC<Props> = ({
   return (
     <Upload.Dragger {...uploadProps}>
       <InboxOutlined style={{ fontSize: 26, color: "#8c8c8c" }} />
-      <div style={{ marginTop: 8, color: "#262626" }}>点击或拖拽上传附件</div>
+      <div style={{ marginTop: 8, color: "#262626" }}>
+        {$i18n.t("attachment.dropHint", "点击选择或拖拽文件到这里")}
+      </div>
       <div style={{ marginTop: 4, color: "#8c8c8c", fontSize: 12 }}>
-        最多 {maxCount} 个文件，上传后随单据保存
+        {$i18n.t("attachment.maxFiles", { count: maxCount })}
       </div>
     </Upload.Dragger>
   );

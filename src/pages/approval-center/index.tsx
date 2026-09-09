@@ -14,9 +14,12 @@ import { Card, Space, Statistic } from "antd";
 import ProjectTabs from "@/components/project-tabs";
 import { ApprovalTodoList } from "../my-todo";
 import { ApprovalDoneList } from "../my-done";
+import { $i18n } from "@/i18n";
 import styles from "./index.module.css";
 
 type ApprovalTab = "todo" | "done";
+
+const t = (key: string, fallbackText: string) => $i18n.t(key, fallbackText);
 
 function normalizeTab(value: string | null): ApprovalTab {
   return value === "done" ? "done" : "todo";
@@ -37,13 +40,13 @@ const ApprovalCenter: React.FC = () => {
       {
         key: "todo",
         forceRender: true,
-        label: "待我审批",
+        label: t("approvalCenter.tabs.todo", "待我审批"),
         children: <ApprovalTodoList embedded onTotalChange={setTodoTotal} />,
       },
       {
         key: "done",
         forceRender: true,
-        label: "我已审批",
+        label: t("approvalCenter.tabs.done", "我已审批"),
         children: <ApprovalDoneList embedded onTotalChange={setDoneTotal} />,
       },
     ],
@@ -61,26 +64,41 @@ const ApprovalCenter: React.FC = () => {
         <div className={styles.titleBlock}>
           <Space size={10}>
             <AuditOutlined className={styles.titleIcon} />
-            <span>审批中心</span>
+            <span>{t("approvalCenter.title", "审批中心")}</span>
           </Space>
           <span className={styles.subtitle}>
-            集中处理待办任务，并查看已完成的审批记录
+            {t(
+              "approvalCenter.subtitle",
+              "集中处理待办任务，并查看已完成的审批记录",
+            )}
           </span>
         </div>
       }
     >
-      <div className={styles.statistics} aria-label="审批统计">
+      <div
+        className={styles.statistics}
+        aria-label={t("approvalCenter.statsAriaLabel", "审批统计")}
+      >
         <div className={styles.statisticCard}>
           <FileDoneOutlined className={styles.totalIcon} />
-          <Statistic title="审批总量" value={approvalTotal ?? "--"} />
+          <Statistic
+            title={t("approvalCenter.stats.total", "审批总量")}
+            value={approvalTotal ?? "--"}
+          />
         </div>
         <div className={styles.statisticCard}>
           <ClockCircleOutlined className={styles.todoIcon} />
-          <Statistic title="待我审批" value={todoTotal ?? "--"} />
+          <Statistic
+            title={t("approvalCenter.stats.todo", "待我审批")}
+            value={todoTotal ?? "--"}
+          />
         </div>
         <div className={styles.statisticCard}>
           <CheckCircleOutlined className={styles.doneIcon} />
-          <Statistic title="我已审批" value={doneTotal ?? "--"} />
+          <Statistic
+            title={t("approvalCenter.stats.done", "我已审批")}
+            value={doneTotal ?? "--"}
+          />
         </div>
       </div>
       <ProjectTabs

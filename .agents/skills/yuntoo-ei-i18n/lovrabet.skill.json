@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 2,
+  "appCode": "app-4d050189",
+  "skillCode": "yuntoo-ei-i18n",
+  "skillName": "企业智能系统多语言开发",
+  "description": "在启智云图企业智能系统中维护 zh-CN / en-US / id-ID 三语资源；使用 @lovrabet/i18n 单一实例，统一从 @/i18n 导入；不翻译路由、状态码、字段名、BFF 参数等运行时协议值。",
+  "scope": "company",
+  "readonly": true,
+  "version": "20260908.231500",
+  "tags": [],
+  "contentHash": "72f30b9fd22ff130e8bce8d0a04f73caf9afeb0a5c4c7c69cef3bac70b1c3b50",
+  "fileHashes": {
+    "SKILL.md": "72f30b9fd22ff130e8bce8d0a04f73caf9afeb0a5c4c7c69cef3bac70b1c3b50"
+  },
+  "treeHash": "72f30b9fd22ff130e8bce8d0a04f73caf9afeb0a5c4c7c69cef3bac70b1c3b50",
+  "zipSha256": "72f30b9fd22ff130e8bce8d0a04f73caf9afeb0a5c4c7c69cef3bac70b1c3b50",
+  "zipSize": 3235,
+  "files": [
+    {
+      "path": "SKILL.md",
+      "hash": "72f30b9fd22ff130e8bce8d0a04f73caf9afeb0a5c4c7c69cef3bac70b1c3b50",
+      "size": 3235
+    }
+  ],
+  "pulledAt": "2026-09-08T15:15:00.000Z"
+}

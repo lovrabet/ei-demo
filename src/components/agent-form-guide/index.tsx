@@ -2,6 +2,7 @@ import React from "react";
 import { Alert, Button } from "antd";
 import { ArrowRightOutlined, RobotOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { $i18n } from "@/i18n";
 import styles from "./index.module.css";
 
 type Props = {
@@ -36,10 +37,19 @@ export default function AgentFormGuide({
       type="info"
       showIcon
       icon={<RobotOutlined />}
-      message="当前页面是传统的人工录入方式"
+      message={$i18n.t(
+        "agentFormGuide.manualEntryNotice",
+        "当前页面是传统的人工录入方式",
+      )}
       description={
         <span>
-          推荐使用 Agent 数字员工的「{skillName}」。{description}
+          {$i18n
+            .t(
+              "agentFormGuide.recommendSkill",
+              "推荐使用 Agent 数字员工的「{skillName}」。{description}",
+            )
+            .replace("{skillName}", skillName)
+            .replace("{description}", description)}
         </span>
       }
       action={
@@ -48,7 +58,7 @@ export default function AgentFormGuide({
           onClick={openAgentSkill}
           icon={<ArrowRightOutlined />}
         >
-          调用此 Skill
+          {$i18n.t("agentFormGuide.invokeSkill", "调用此 Skill")}
         </Button>
       }
     />

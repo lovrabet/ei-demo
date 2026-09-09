@@ -1,4 +1,5 @@
 import dayjs, { type Dayjs } from "dayjs";
+import { $i18n } from "@/i18n";
 
 function numericTimestamp(value: unknown) {
   if (typeof value === "number" && Number.isFinite(value)) return value;
@@ -28,5 +29,8 @@ export function formatExpenseRuleDate(
   emptyText: string,
 ): string {
   if (value === undefined || value === null || value === "") return emptyText;
-  return parseExpenseRuleDate(value)?.format("YYYY-MM-DD") || "日期格式异常";
+  return (
+    parseExpenseRuleDate(value)?.format("YYYY-MM-DD") ||
+    $i18n.t("expenseRules.invalidDateFormat", "日期格式异常")
+  );
 }

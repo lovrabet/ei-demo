@@ -30,6 +30,7 @@ import {
   type PlatformTimeline,
 } from "./api";
 import { formatDateValue } from "@/features/cpo-application-detail/format";
+import { $i18n } from "@/i18n";
 
 type Props = {
   processInstanceId: string;
@@ -53,7 +54,12 @@ function stepStatus(stepStatus?: string, approvalResult?: string | null) {
 function describeStep(step: PlatformTimeline["steps"] extends (infer S)[] ? S : never): string {
   const parts: string[] = [];
   const task = step.tasks?.find((t) => t.assigneeName || t.assignee);
-  if (task?.assigneeName) parts.push(`处理人：${task.assigneeName}`);
+  if (task?.assigneeName)
+    parts.push(
+      $i18n
+        .t("platformFlow.step.assignee", "处理人：{name}")
+        .replace("{name}", task.assigneeName),
+    );
   const comment = step.tasks
     ?.flatMap((t) => t.comments || [])
     .map((c) => c.fullMessage)
@@ -103,12 +109,20 @@ export const PlatformFlowPanel: React.FC<Props> = ({
         ) || null,
       );
     } catch (e: any) {
-      const errMsg = e?.message || String(e || "获取审批时间线失败");
+      const errMsg =
+        e?.message ||
+        String(
+          e || $i18n.t("platformFlow.error.loadTimeline", "获取审批时间线失败"),
+        );
       setTimelineError(errMsg);
       // 流程实例历史不存在（平台侧 404，实例缺失）属可降级场景：保留流程状态标签、
       // 不弹错误提示，面板内给出说明即可。其它异常（网络/服务端错误）仍以 toast 提示。
       if (!/历史不存在|not found|404/i.test(errMsg)) {
-        message.error(`加载审批进度失败：${errMsg}`);
+        message.error(
+          $i18n
+            .t("platformFlow.error.loadProgress", "加载审批进度失败：{msg}")
+            .replace("{msg}", errMsg),
+        );
       }
     } finally {
       setLoading(false);
@@ -128,13 +142,21 @@ export const PlatformFlowPanel: React.FC<Props> = ({
         approved: actionModal.approved,
         comment: comment.trim(),
       });
-      message.success(actionModal.approved ? "已通过" : "已驳回");
+      message.success(
+        actionModal.approved
+          ? $i18n.t("legalAgreement.status.approved", "已通过")
+          : $i18n.t("legalAgreement.status.rejected", "已驳回"),
+      );
       setActionModal(null);
       setComment("");
       await onChanged?.();
       await load();
     } catch (e: any) {
-      message.error(`审批操作失败：${e?.message || e}`);
+      message.error(
+        $i18n
+          .t("platformFlow.error.actionFailedDetail", "审批操作失败：{msg}")
+          .replace("{msg}", String(e?.message || e)),
+      );
     } finally {
       setSubmitting(false);
     }
@@ -157,7 +179,7 @@ export const PlatformFlowPanel: React.FC<Props> = ({
         padding: "16px 20px",
         marginBottom: 16,
       }}
-      aria-label="平台审批流程"
+      aria-label={$i18n.t("platformFlow.ariaLabel", "平台审批流程")}
     >
       <div
         style={{
@@ -168,8 +190,12 @@ export const PlatformFlowPanel: React.FC<Props> = ({
         }}
       >
         <Space size={8}>
-          <span style={{ fontWeight: 600 }}>审批流程</span>
-          <Tag color="geekblue">平台审批</Tag>
+          <span style={{ fontWeight: 600 }}>
+            {$i18n.t("platformFlow.title", "审批流程")}
+          </span>
+          <Tag color="geekblue">
+            {$i18n.t("platformFlow.badge", "平台审批")}
+          </Tag>
           {timeline?.flowName ? <Tag>{timeline.flowName}</Tag> : null}
         </Space>
         <Space size={8}>
@@ -211,11 +237,20 @@ export const PlatformFlowPanel: React.FC<Props> = ({
                       title:
                         (terminalStep as any).result === "REJECTED" ||
                         (terminalStep.nodeName || "").includes("驳回")
-                          ? "流程已驳回"
+                          ? $i18n.t(
+                              "platformFlow.terminal.rejected",
+                              "流程已驳回",
+                            )
                           : (timeline?.status || "").toUpperCase() ===
                               "CANCELLED"
-                            ? "流程已撤销"
-                            : "流程已完成",
+                            ? $i18n.t(
+                                "platformFlow.terminal.cancelled",
+                                "流程已撤销",
+                              )
+                            : $i18n.t(
+                                "platformFlow.terminal.completed",
+                                "流程已完成",
+                              ),
                       status: stepStatus(
                         terminalStep.status,
                         (terminalStep as any).result,
@@ -231,10 +266,13 @@ export const PlatformFlowPanel: React.FC<Props> = ({
         ) : (
           <div style={{ color: "#86868b", padding: "8px 0" }}>
             {loading
-              ? "加载中…"
+              ? $i18n.t("platformFlow.loading", "加载中…")
               : timelineError
-                ? "审批进度暂不可用（流程实例未找到）"
-                : "暂无审批节点信息"}
+                ? $i18n.t(
+                    "platformFlow.empty.unavailable",
+                    "审批进度暂不可用（流程实例未找到）",
+                  )
+                : $i18n.t("platformFlow.empty.noNodes", "暂无审批节点信息")}
           </div>
         )}
       </Spin>
@@ -242,22 +280,30 @@ export const PlatformFlowPanel: React.FC<Props> = ({
       {myTask ? (
         <div style={{ marginTop: 12 }}>
           <Space>
-            <Tag color="processing">当前节点：{myTask.name}</Tag>
+            <Tag color="processing">
+              {$i18n
+                .t("platformFlow.currentNode", "当前节点：{name}")
+                .replace("{name}", myTask.name)}
+            </Tag>
             <Button
               type="primary"
               onClick={() => setActionModal({ approved: true })}
             >
-              通过
+              {$i18n.t("myTodo.actionLabels.reviewPass", "通过")}
             </Button>
             <Button danger onClick={() => setActionModal({ approved: false })}>
-              驳回
+              {$i18n.t("myTodo.actionLabels.reviewReject", "驳回")}
             </Button>
           </Space>
         </div>
       ) : null}
 
       <Modal
-        title={actionModal?.approved ? "通过审批" : "驳回审批"}
+        title={
+          actionModal?.approved
+            ? $i18n.t("platformFlow.modal.approveTitle", "通过审批")
+            : $i18n.t("platformFlow.modal.rejectTitle", "驳回审批")
+        }
         open={!!actionModal}
         onCancel={() => {
           setActionModal(null);
@@ -265,12 +311,15 @@ export const PlatformFlowPanel: React.FC<Props> = ({
         }}
         onOk={submitAction}
         confirmLoading={submitting}
-        okText="确认"
-        cancelText="取消"
+        okText={$i18n.t("myTodo.confirm", "确认")}
+        cancelText={$i18n.t("common.cancel", "取消")}
       >
         <Input.TextArea
           rows={3}
-          placeholder="审批意见（可选）"
+          placeholder={$i18n.t(
+            "platformFlow.modal.commentPlaceholder",
+            "审批意见（可选）",
+          )}
           value={comment}
           onChange={(e) => setComment(e.target.value)}
         />

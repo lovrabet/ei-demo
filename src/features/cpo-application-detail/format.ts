@@ -4,6 +4,7 @@ import type {
   WorkflowPlanStep,
   WorkflowTask,
 } from "./types";
+import { $i18n } from "@/i18n";
 
 function optionalText(value: unknown) {
   if (value === undefined || value === null) return "";
@@ -100,7 +101,9 @@ export function formatDetailValue(
   if (field.format === "date") return formatDateValue(value);
   if (field.format === "datetime") return formatDateValue(value, true);
   if (field.format === "boolean")
-    return Number(value) === 1 || value === true ? "是" : "否";
+    return Number(value) === 1 || value === true
+      ? $i18n.t("common.yes", "是")
+      : $i18n.t("common.no", "否");
   if (field.format === "companions") return formatCompanions(value);
 
   return optionalText(value) || "-";

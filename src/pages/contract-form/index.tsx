@@ -54,6 +54,9 @@ import {
   listEmployeeOptions,
   type EmployeeOption,
 } from "@/features/employees/api";
+import { $i18n } from "@/i18n";
+
+const t = (key: string, fallbackText: string) => $i18n.t(key, fallbackText);
 
 const CONTRACT_CODE = "53869993f80f45ae8ef6cdf051d8e355";
 const ATTACHMENTS_FIELD = "_attachments";
@@ -77,11 +80,17 @@ const PAYMENT_PLAN_STATUS_META: Record<
   NonNullable<ContractPaymentPlanFormValue["status"]>,
   { color: string; label: string }
 > = {
-  pending: { color: "blue", label: "待支付" },
-  processing: { color: "processing", label: "支付处理中" },
-  paid: { color: "success", label: "已支付" },
-  not_required: { color: "default", label: "无需支付" },
-  cancelled: { color: "error", label: "已取消" },
+  pending: { color: "blue", label: t("contractForm.planStatus.pending", "待支付") },
+  processing: {
+    color: "processing",
+    label: t("contractForm.planStatus.processing", "支付处理中"),
+  },
+  paid: { color: "success", label: t("contractForm.planStatus.paid", "已支付") },
+  not_required: {
+    color: "default",
+    label: t("contractForm.planStatus.notRequired", "无需支付"),
+  },
+  cancelled: { color: "error", label: t("contractForm.planStatus.cancelled", "已取消") },
 };
 
 type ContractPaymentPlanFormValue = {
@@ -157,7 +166,7 @@ const ContractForm: React.FC = () => {
       options.unshift({
         value: selectedValue,
         label: selectedName,
-        secondary: "已保存的历史接口人",
+        secondary: t("contractForm.liaison.historyBadge", "已保存的历史接口人"),
         employee: {
           userId: selectedValue,
           username: selectedName,
@@ -212,10 +221,17 @@ const ContractForm: React.FC = () => {
           });
           setRecordStatus(rec.status);
         } else {
-          message.error("未找到该合同");
+          message.error(t("contractForm.notFound", "未找到该合同"));
         }
       })
-      .catch((e: any) => message.error(`加载失败：${e?.message || e}`))
+      .catch((e: any) =>
+        message.error(
+          t("contractForm.loadFailed", "加载失败：{reason}").replace(
+            "{reason}",
+            e?.message || String(e),
+          ),
+        ),
+      )
       .finally(() => setLoading(false));
   }, [editId, form]);
 
@@ -333,7 +349,7 @@ const ContractForm: React.FC = () => {
 
   const onSave = async (thenSubmit: boolean) => {
     if (readOnly) {
-      message.warning("当前单据不可编辑");
+      message.warning(t("contractForm.readOnlyWarn", "当前单据不可编辑"));
       return;
     }
     let values: FormValues;
@@ -357,13 +373,20 @@ const ContractForm: React.FC = () => {
       });
       form.setFieldValue(ATTACHMENTS_FIELD, attachments);
       if (thenSubmit) {
-        message.success("已提交审核");
+        message.success(t("contractForm.submitted", "已提交审核"));
         navigate("/4cf8289fc0df45a4a13818fce6bfcc59");
       } else {
-        message.success(isEdit ? "已更新" : "草稿已保存");
+        message.success(
+          isEdit
+            ? t("contractForm.updated", "已更新")
+            : t("contractForm.draftSaved", "草稿已保存"),
+        );
       }
     } catch (e: any) {
-      message.error(`${thenSubmit ? "提交" : "保存"}失败：${e?.message || e}`);
+      const fallback = thenSubmit
+        ? t("contractForm.submitFailed", "提交失败：{reason}")
+        : t("contractForm.saveFailed", "保存失败：{reason}");
+      message.error(fallback.replace("{reason}", e?.message || String(e)));
     } finally {
       setSaving(false);
     }
@@ -387,16 +410,26 @@ const ContractForm: React.FC = () => {
             icon={<ArrowLeftOutlined />}
             onClick={() => navigate(-1)}
           />
-          {readOnly ? "查看合同" : isEdit ? "编辑合同" : "新建合同"}
+          {readOnly
+            ? t("contractForm.title.view", "查看合同")
+            : isEdit
+              ? t("contractForm.title.edit", "编辑合同")
+              : t("contractForm.title.new", "新建合同")}
         </Space>
       }
     >
       {readOnly ? null : (
         <AgentFormGuide
           skillCode="cpo-contract-application"
-          skillName="合同申请助手"
-          prompt="请根据我上传的合同或审批材料创建并提交合同申请"
-          description="上传合同或审批材料后，Agent 可提取关键信息、整理付款分期并完成申请。"
+          skillName={t("contractForm.agentGuide.skillName", "合同申请助手")}
+          prompt={t(
+            "contractForm.agentGuide.prompt",
+            "请根据我上传的合同或审批材料创建并提交合同申请",
+          )}
+          description={t(
+            "contractForm.agentGuide.description",
+            "上传合同或审批材料后，Agent 可提取关键信息、整理付款分期并完成申请。",
+          )}
         />
       )}
       <Form
@@ -412,28 +445,50 @@ const ContractForm: React.FC = () => {
       >
         <FormLayout>
           <Form.Item
-            label="合同名称"
+            label={t("contractForm.field.contractName", "合同名称")}
             name="contract_name"
-            rules={[{ required: true, message: "请输入合同名称" }]}
+            rules={[
+              {
+                required: true,
+                message: t(
+                  "contractForm.field.contractNameRequired",
+                  "请输入合同名称",
+                ),
+              },
+            ]}
           >
             <Input
-              placeholder="例如：阿里云 2026 年度服务采购合同"
+              placeholder={t(
+                "contractForm.field.contractNamePlaceholder",
+                "例如：阿里云 2026 年度服务采购合同",
+              )}
               maxLength={120}
               showCount
             />
           </Form.Item>
 
           <Form.Item
-            label="资金方向"
+            label={t("contractForm.field.direction", "资金方向")}
             name="direction"
-            rules={[{ required: true, message: "请选择资金方向" }]}
+            rules={[
+              {
+                required: true,
+                message: t("contractForm.field.directionRequired", "请选择资金方向"),
+              },
+            ]}
           >
             <Select
-              placeholder="请选择合同的资金方向"
+              placeholder={t(
+                "contractForm.field.directionPlaceholder",
+                "请选择合同的资金方向",
+              )}
               options={[
                 {
                   value: "payable",
-                  label: "付款合同（供应商为我们提供服务）",
+                  label: t(
+                    "contractForm.direction.payable",
+                    "付款合同（供应商为我们提供服务）",
+                  ),
                 },
               ]}
               onChange={() => form.setFieldValue("partner_id", undefined)}
@@ -444,20 +499,38 @@ const ContractForm: React.FC = () => {
             form={form}
             bizType="contract"
             typeName="contract_type"
-            typeLabel="合同业务类型"
+            typeLabel={t("contractForm.field.contractType", "合同业务类型")}
             partnerName="partner_id"
-            partnerLabel="对方主体"
+            partnerLabel={t("contractForm.field.partner", "对方主体")}
             customerMode={false}
           >
             <Select
-              placeholder="请选择合同业务类型"
+              placeholder={t(
+                "contractForm.field.contractTypePlaceholder",
+                "请选择合同业务类型",
+              )}
               options={[
-                { value: "service", label: "服务" },
-                { value: "procurement", label: "商品 / 物资采购" },
-                { value: "rent", label: "租赁" },
-                { value: "hr", label: "人力" },
-                { value: "certification", label: "认证" },
-                { value: "other", label: "其他" },
+                {
+                  value: "service",
+                  label: t("contractForm.contractType.service", "服务"),
+                },
+                {
+                  value: "procurement",
+                  label: t("contractForm.contractType.procurement", "商品 / 物资采购"),
+                },
+                {
+                  value: "rent",
+                  label: t("contractForm.contractType.rent", "租赁"),
+                },
+                { value: "hr", label: t("contractForm.contractType.hr", "人力") },
+                {
+                  value: "certification",
+                  label: t("contractForm.contractType.certification", "认证"),
+                },
+                {
+                  value: "other",
+                  label: t("contractForm.contractType.other", "其他"),
+                },
               ]}
             />
           </PartySelector>
@@ -466,19 +539,23 @@ const ContractForm: React.FC = () => {
 
           <FormRow template="minmax(0, 1fr) 110px">
             <Form.Item
-              label="我方角色"
+              label={t("contractForm.field.ourRole", "我方角色")}
               name="our_role"
               rules={[{ required: true }]}
               initialValue="party_a"
             >
               <Select
                 options={[
-                  { value: "party_a", label: "甲方" },
-                  { value: "party_b", label: "乙方" },
+                  { value: "party_a", label: t("contractForm.role.partyA", "甲方") },
+                  { value: "party_b", label: t("contractForm.role.partyB", "乙方") },
                 ]}
               />
             </Form.Item>
-            <Form.Item label="币种" name="currency" initialValue="CNY">
+            <Form.Item
+              label={t("contractForm.field.currency", "币种")}
+              name="currency"
+              initialValue="CNY"
+            >
               <Select
                 options={[
                   { value: "CNY", label: "CNY" },
@@ -491,11 +568,18 @@ const ContractForm: React.FC = () => {
 
           <FormRow template="minmax(320px, 420px)">
             <Form.Item
-              label="合同金额"
+              label={t("contractForm.field.amount", "合同金额")}
               name="amount"
               rules={[
-                { required: true, message: "请输入金额" },
-                { type: "number", min: 0, message: "金额不能为负" },
+                {
+                  required: true,
+                  message: t("contractForm.field.amountRequired", "请输入金额"),
+                },
+                {
+                  type: "number",
+                  min: 0,
+                  message: t("contractForm.field.amountNonNegative", "金额不能为负"),
+                },
               ]}
             >
               <MoneyInput min={0} />
@@ -505,34 +589,70 @@ const ContractForm: React.FC = () => {
           <Divider style={{ margin: "8px 0 4px" }} />
 
           <FormRow columns={2}>
-            <Form.Item label="开始日期" name="start_date">
-              <DatePicker placeholder="开始日期" />
+            <Form.Item
+              label={t("contractForm.field.startDate", "开始日期")}
+              name="start_date"
+            >
+              <DatePicker
+                placeholder={t("contractForm.field.startDatePlaceholder", "开始日期")}
+              />
             </Form.Item>
-            <Form.Item label="结束日期" name="end_date">
-              <DatePicker placeholder="结束日期" />
+            <Form.Item
+              label={t("contractForm.field.endDate", "结束日期")}
+              name="end_date"
+            >
+              <DatePicker
+                placeholder={t("contractForm.field.endDatePlaceholder", "结束日期")}
+              />
             </Form.Item>
           </FormRow>
 
           <Alert
             type="info"
             showIcon
-            message="本页面维护付款合同"
-            description="这里维护供应商为我们提供服务、需要对外付款的合同；客户收款合同请从合同工作台或客户 360 进入。"
+            message={t("contractForm.payableAlert.title", "本页面维护付款合同")}
+            description={t(
+              "contractForm.payableAlert.description",
+              "这里维护供应商为我们提供服务、需要对外付款的合同；客户收款合同请从合同工作台或客户 360 进入。",
+            )}
             style={{ margin: "8px 0 12px" }}
           />
 
           <FormRow template="minmax(320px, 520px)">
             <Form.Item
-              label="付款要求"
+              label={t("contractForm.field.paymentRequirement", "付款要求")}
               name="payment_requirement"
-              rules={[{ required: true, message: "请确认该合同是否需要付款" }]}
-              extra="合同可明确为无需付款；需要付款时至少维护一个付款计划。"
+              rules={[
+                {
+                  required: true,
+                  message: t(
+                    "contractForm.field.paymentRequirementRequired",
+                    "请确认该合同是否需要付款",
+                  ),
+                },
+              ]}
+              extra={t(
+                "contractForm.field.paymentRequirementExtra",
+                "合同可明确为无需付款；需要付款时至少维护一个付款计划。",
+              )}
             >
               <Select
                 options={[
-                  { value: "required", label: "需要付款" },
-                  { value: "not_required", label: "无需付款" },
-                  { value: "unknown", label: "待确认" },
+                  {
+                    value: "required",
+                    label: t("contractForm.paymentRequirement.required", "需要付款"),
+                  },
+                  {
+                    value: "not_required",
+                    label: t(
+                      "contractForm.paymentRequirement.notRequired",
+                      "无需付款",
+                    ),
+                  },
+                  {
+                    value: "unknown",
+                    label: t("contractForm.paymentRequirement.unknown", "待确认"),
+                  },
                 ]}
                 onChange={(value) => {
                   if (value !== "not_required") return;
@@ -541,7 +661,12 @@ const ContractForm: React.FC = () => {
                       "payment_plans",
                     ) as ContractPaymentPlanFormValue[]) || [];
                   if (plans.some((plan) => Number(plan.payment_count) > 0)) {
-                    message.warning("已有实际付款的合同不能改为无需付款");
+                    message.warning(
+                      t(
+                        "contractForm.paymentRequirement.cannotSwitch",
+                        "已有实际付款的合同不能改为无需付款",
+                      ),
+                    );
                     form.setFieldValue("payment_requirement", "required");
                     return;
                   }
@@ -555,8 +680,11 @@ const ContractForm: React.FC = () => {
             <Alert
               type="success"
               showIcon
-              message="该合同无需付款"
-              description="不会生成付款计划，也不会出现在待付款合同中。"
+              message={t("contractForm.noPaymentAlert.title", "该合同无需付款")}
+              description={t(
+                "contractForm.noPaymentAlert.description",
+                "不会生成付款计划，也不会出现在待付款合同中。",
+              )}
               style={{ margin: "8px 0 12px" }}
             />
           ) : (
@@ -588,9 +716,13 @@ const ContractForm: React.FC = () => {
                   },
                   label: (
                     <Space size={10}>
-                      <Typography.Text strong>付款计划</Typography.Text>
+                      <Typography.Text strong>
+                        {t("contractForm.paymentPlans", "付款计划")}
+                      </Typography.Text>
                       <Typography.Text type="secondary">
-                        已设置 {watchedPaymentPlans.length} 个
+                        {t("contractForm.paymentPlansCount", "已设置 {count} 个", {
+                          count: watchedPaymentPlans.length,
+                        })}
                       </Typography.Text>
                     </Space>
                   ),
@@ -600,7 +732,10 @@ const ContractForm: React.FC = () => {
                         type="secondary"
                         style={{ margin: "0 0 12px" }}
                       >
-                        付款时自动带出期次最靠前且仍有余额的计划；已有实际付款的计划不可修改或删除。
+                        {t(
+                          "contractForm.paymentPlansHint",
+                          "付款时自动带出期次最靠前且仍有余额的计划；已有实际付款的计划不可修改或删除。",
+                        )}
                       </Typography.Paragraph>
                       <Form.List
                         name="payment_plans"
@@ -617,7 +752,12 @@ const ContractForm: React.FC = () => {
                                 new Set(phaseNumbers).size !==
                                 phaseNumbers.length
                               ) {
-                                throw new Error("付款期次不能重复");
+                                throw new Error(
+                                  t(
+                                    "contractForm.paymentPlansDuplicate",
+                                    "付款期次不能重复",
+                                  ),
+                                );
                               }
                             },
                           },
@@ -665,7 +805,11 @@ const ContractForm: React.FC = () => {
                                     >
                                       <Space size={8}>
                                         <Typography.Text strong>
-                                          付款计划 {index + 1}
+                                          {t(
+                                            "contractForm.planItemTitle",
+                                            "付款计划 {index}",
+                                            { index: index + 1 },
+                                          )}
                                         </Typography.Text>
                                         <Tag
                                           color={statusMeta.color}
@@ -682,7 +826,7 @@ const ContractForm: React.FC = () => {
                                           icon={<DeleteOutlined />}
                                           onClick={() => remove(name)}
                                         >
-                                          删除
+                                          {t("contractForm.action.delete", "删除")}
                                         </Button>
                                       )}
                                     </div>
@@ -713,12 +857,15 @@ const ContractForm: React.FC = () => {
                                     <FormRow template="120px minmax(0, 1fr) 160px">
                                       <Form.Item
                                         {...restField}
-                                        label="期次"
+                                        label={t("contractForm.field.phaseNo", "期次")}
                                         name={[name, "phase_no"]}
                                         rules={[
                                           {
                                             required: true,
-                                            message: "请输入付款期次",
+                                            message: t(
+                                              "contractForm.field.phaseNoRequired",
+                                              "请输入付款期次",
+                                            ),
                                           },
                                         ]}
                                       >
@@ -731,24 +878,33 @@ const ContractForm: React.FC = () => {
                                       </Form.Item>
                                       <Form.Item
                                         {...restField}
-                                        label="期次名称"
+                                        label={t("contractForm.field.phaseName", "期次名称")}
                                         name={[name, "phase_name"]}
                                       >
                                         <Input
                                           disabled={locked}
                                           maxLength={128}
-                                          placeholder="如：首付款、验收款"
+                                          placeholder={t(
+                                            "contractForm.field.phaseNamePlaceholder",
+                                            "如：首付款、验收款",
+                                          )}
                                         />
                                       </Form.Item>
                                       <Form.Item
                                         {...restField}
-                                        label="支付状态"
+                                        label={t(
+                                          "contractForm.field.paymentStatus",
+                                          "支付状态",
+                                        )}
                                         name={[name, "status"]}
                                         initialValue="pending"
                                         rules={[
                                           {
                                             required: true,
-                                            message: "请选择支付状态",
+                                            message: t(
+                                              "contractForm.field.paymentStatusRequired",
+                                              "请选择支付状态",
+                                            ),
                                           },
                                         ]}
                                       >
@@ -757,21 +913,39 @@ const ContractForm: React.FC = () => {
                                           options={[
                                             {
                                               value: "pending",
-                                              label: "待支付",
+                                              label: t(
+                                                "contractForm.planStatus.pending",
+                                                "待支付",
+                                              ),
                                             },
-                                            { value: "paid", label: "已支付" },
+                                            {
+                                              value: "paid",
+                                              label: t(
+                                                "contractForm.planStatus.paid",
+                                                "已支付",
+                                              ),
+                                            },
                                             {
                                               value: "not_required",
-                                              label: "无需支付",
+                                              label: t(
+                                                "contractForm.planStatus.notRequired",
+                                                "无需支付",
+                                              ),
                                             },
                                             {
                                               value: "processing",
-                                              label: "支付处理中",
+                                              label: t(
+                                                "contractForm.planStatus.processing",
+                                                "支付处理中",
+                                              ),
                                               disabled: true,
                                             },
                                             {
                                               value: "cancelled",
-                                              label: "已取消",
+                                              label: t(
+                                                "contractForm.planStatus.cancelled",
+                                                "已取消",
+                                              ),
                                               disabled: true,
                                             },
                                           ]}
@@ -781,12 +955,18 @@ const ContractForm: React.FC = () => {
                                     <FormRow template="minmax(220px, 1fr) 110px 180px">
                                       <Form.Item
                                         {...restField}
-                                        label="计划金额"
+                                        label={t(
+                                          "contractForm.field.plannedAmount",
+                                          "计划金额",
+                                        )}
                                         name={[name, "planned_amount"]}
                                         rules={[
                                           {
                                             required: true,
-                                            message: "请输入计划金额",
+                                            message: t(
+                                              "contractForm.field.plannedAmountRequired",
+                                              "请输入计划金额",
+                                            ),
                                           },
                                           {
                                             validator: (_, value) =>
@@ -794,7 +974,10 @@ const ContractForm: React.FC = () => {
                                                 ? Promise.resolve()
                                                 : Promise.reject(
                                                     new Error(
-                                                      "计划金额必须大于 0",
+                                                      t(
+                                                        "contractForm.field.plannedAmountPositive",
+                                                        "计划金额必须大于 0",
+                                                      ),
                                                     ),
                                                   ),
                                           },
@@ -807,7 +990,7 @@ const ContractForm: React.FC = () => {
                                       </Form.Item>
                                       <Form.Item
                                         {...restField}
-                                        label="币种"
+                                        label={t("contractForm.field.currency", "币种")}
                                         name={[name, "currency"]}
                                         initialValue="CNY"
                                       >
@@ -822,7 +1005,10 @@ const ContractForm: React.FC = () => {
                                       </Form.Item>
                                       <Form.Item
                                         {...restField}
-                                        label="计划付款日"
+                                        label={t(
+                                          "contractForm.field.plannedPayDate",
+                                          "计划付款日",
+                                        )}
                                         name={[name, "planned_pay_date"]}
                                       >
                                         <DatePicker
@@ -833,18 +1019,24 @@ const ContractForm: React.FC = () => {
                                     </FormRow>
                                     <Form.Item
                                       {...restField}
-                                      label="付款触发条件"
+                                      label={t(
+                                        "contractForm.field.triggerCondition",
+                                        "付款触发条件",
+                                      )}
                                       name={[name, "trigger_condition"]}
                                     >
                                       <Input
                                         disabled={locked}
                                         maxLength={500}
-                                        placeholder="如：合同签署后、项目验收后"
+                                        placeholder={t(
+                                          "contractForm.field.triggerConditionPlaceholder",
+                                          "如：合同签署后、项目验收后",
+                                        )}
                                       />
                                     </Form.Item>
                                     <Form.Item
                                       {...restField}
-                                      label="计划备注"
+                                      label={t("contractForm.field.planRemark", "计划备注")}
                                       name={[name, "remark"]}
                                     >
                                       <Input.TextArea
@@ -872,7 +1064,7 @@ const ContractForm: React.FC = () => {
                                   })
                                 }
                               >
-                                新增付款计划
+                                {t("contractForm.addPaymentPlan", "新增付款计划")}
                               </Button>
                             )}
                           </div>
@@ -886,13 +1078,19 @@ const ContractForm: React.FC = () => {
           )}
 
           <FormRow columns={1}>
-            <Form.Item label="对外接口人" name="liaison_user_id">
+            <Form.Item
+              label={t("contractForm.field.liaison", "对外接口人")}
+              name="liaison_user_id"
+            >
               <Select
                 allowClear
                 showSearch
                 filterOption={false}
                 loading={employeeLoading}
-                placeholder="搜索我方员工姓名、花名、工号、手机或邮箱"
+                placeholder={t(
+                  "contractForm.field.liaisonPlaceholder",
+                  "搜索我方员工姓名、花名、工号、手机或邮箱",
+                )}
                 options={employeeSelectOptions.map((option) => ({
                   value: option.value,
                   label: option.label,
@@ -917,7 +1115,10 @@ const ContractForm: React.FC = () => {
             <Input />
           </Form.Item>
 
-          <Form.Item label="合同文件" name={ATTACHMENTS_FIELD}>
+          <Form.Item
+            label={t("contractForm.field.attachments", "合同文件")}
+            name={ATTACHMENTS_FIELD}
+          >
             <AttachmentUpload
               disabled={readOnly}
               maxCount={20}
@@ -925,35 +1126,61 @@ const ContractForm: React.FC = () => {
             />
           </Form.Item>
 
-          <Form.Item label="备注说明" name="remark">
+          <Form.Item
+            label={t("contractForm.field.remark", "备注说明")}
+            name="remark"
+          >
             <Input.TextArea
               rows={3}
-              placeholder="填写合同背景、特殊约定或其他补充说明"
+              placeholder={t(
+                "contractForm.field.remarkPlaceholder",
+                "填写合同背景、特殊约定或其他补充说明",
+              )}
               maxLength={1000}
               showCount
             />
           </Form.Item>
 
           <Form.Item
-            label="合同评价与注意事项"
+            label={t(
+              "contractForm.field.contractAssessment",
+              "合同评价与注意事项",
+            )}
             name="contract_assessment"
-            extra="支持 Markdown；建议客观描述合同价值、履约基础、主要风险及审批后需要持续关注的事项。"
+            extra={t(
+              "contractForm.field.contractAssessmentExtra",
+              "支持 Markdown；建议客观描述合同价值、履约基础、主要风险及审批后需要持续关注的事项。",
+            )}
           >
             <Input.TextArea
               rows={10}
               placeholder={[
-                "## 客观评价",
+                t("contractForm.assessment.h2", "## 客观评价"),
                 "",
-                "合同目标、商业价值及条款总体评价。",
+                t(
+                  "contractForm.assessment.summary",
+                  "合同目标、商业价值及条款总体评价。",
+                ),
                 "",
-                "## 注意事项",
+                t("contractForm.assessment.notes", "## 注意事项"),
                 "",
-                "- 付款前需取得对应发票",
-                "- 验收资料需由项目负责人留档",
+                "- " +
+                  t("contractForm.assessment.invoiceNote", "付款前需取得对应发票"),
+                "- " +
+                  t(
+                    "contractForm.assessment.archiveNote",
+                    "验收资料需由项目负责人留档",
+                  ),
                 "",
-                "## 风险与处置",
+                t("contractForm.assessment.risk", "## 风险与处置"),
                 "",
-                "- **中风险**：风险事实、影响和处置建议",
+                "- **" +
+                  t("contractForm.assessment.riskLevel", "中风险") +
+                  "**：" +
+                  t(
+                    "contractForm.assessment.riskBody",
+                    "风险事实、影响和处置建议",
+                  ),
               ].join("\n")}
               maxLength={10000}
               showCount
@@ -964,7 +1191,10 @@ const ContractForm: React.FC = () => {
             />
           </Form.Item>
 
-          <Form.Item label="申请人" name="applicant_name_snapshot">
+          <Form.Item
+            label={t("contractForm.field.applicant", "申请人")}
+            name="applicant_name_snapshot"
+          >
             <Input disabled />
           </Form.Item>
           <Form.Item name="applicant_user_id" hidden>

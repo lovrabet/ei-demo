@@ -47,6 +47,10 @@ import { useProjectOptions } from "@/features/cpo-project/options";
 import InvoiceSellerInput from "@/features/cpo-invoice-counterparty/InvoiceSellerInput";
 import { normalizeInvoiceDate } from "./date";
 import styles from "./index.module.css";
+import { $i18n } from "@/i18n";
+
+const t = (key: string, fallbackText: string, options?: Record<string, unknown>) =>
+  $i18n.t(key, fallbackText, options);
 
 const ATTACHMENTS_FIELD = "_attachments";
 const RELATED_TRAVEL_FIELD = "_related_travel_id";
@@ -98,14 +102,27 @@ function expenseSubmitErrorMessage(error: unknown) {
   const duplicate = raw.match(/DUPLICATE_INVOICE:([^:]*):([^\s]+)/);
   if (duplicate) {
     const invoiceNos =
-      duplicate[1] === "NO_INVOICE_NUMBER" ? "无号码票据" : duplicate[1];
+      duplicate[1] === "NO_INVOICE_NUMBER"
+        ? t("expenseForm.duplicateInvoice.noNumber", "无号码票据")
+        : duplicate[1];
     const conflicts =
       duplicate[2] === "current_expense"
-        ? "当前报销单内存在重复关联"
-        : `已关联 ${duplicate[2]}`;
-    return `检测到重复发票 ${invoiceNos}，${conflicts}，已禁止提交`;
+        ? t(
+            "expenseForm.duplicateInvoice.currentExpense",
+            "当前报销单内存在重复关联",
+          )
+        : t(
+            "expenseForm.duplicateInvoice.linkedOther",
+            "已关联 {other}",
+          ).replace("{other}", duplicate[2]);
+    return t(
+      "expenseForm.duplicateInvoice.message",
+      "检测到重复发票 {invoices}，{conflicts}，已禁止提交",
+    )
+      .replace("{invoices}", invoiceNos)
+      .replace("{conflicts}", conflicts);
   }
-  return raw || "未知错误";
+  return raw || t("expenseForm.unknownError", "未知错误");
 }
 
 function calculateItemPreview(item?: ExpenseItemFormValue) {
@@ -164,8 +181,25 @@ function InvoiceSummary({
 }) {
   const invoices = item?.invoices || [];
 
+  const ariaLabel = t(
+    "expenseForm.invoice.summaryAria",
+    "{verb} {count} 张发票",
+    {
+      verb: readOnly
+        ? t("expenseForm.invoice.view", "查看")
+        : t("expenseForm.invoice.manage", "管理"),
+      count: invoices.length,
+    },
+  );
+
   return (
-    <Tooltip title={readOnly ? "查看发票" : "管理发票"}>
+    <Tooltip
+      title={
+        readOnly
+          ? t("expenseForm.invoice.view", "查看发票")
+          : t("expenseForm.invoice.manage", "管理发票")
+      }
+    >
       <Button
         type="text"
         size="small"
@@ -173,9 +207,11 @@ function InvoiceSummary({
         className={styles.invoiceCountAction}
         icon={<FileTextOutlined />}
         onClick={onOpen}
-        aria-label={`${readOnly ? "查看" : "管理"} ${invoices.length} 张发票`}
+        aria-label={ariaLabel}
       >
-        {invoices.length} 张发票
+        {t("expenseForm.invoice.count", "{count} 张发票", {
+          count: invoices.length,
+        })}
       </Button>
     </Tooltip>
   );
@@ -419,9 +455,16 @@ const ExpenseForm: React.FC = () => {
               : undefined,
           });
           setRecordStatus(rec.status);
-        } else message.error("未找到该报销");
+        } else message.error(t("expenseForm.notFound", "未找到该报销"));
       })
-      .catch((e: any) => message.error(`加载失败：${e?.message || e}`))
+      .catch((e: any) =>
+        message.error(
+          t("expenseForm.loadFailed", "加载失败：{reason}").replace(
+            "{reason}",
+            e?.message || String(e),
+          ),
+        ),
+      )
       .finally(() => setLoading(false));
   }, [editId, form]);
 
@@ -462,7 +505,7 @@ const ExpenseForm: React.FC = () => {
           !options.some((option) => Number(option.value) === selected)
         ) {
           setTravelOptions([
-            { value: selected, label: "关联差旅标题缺失" },
+            { value: selected, label: t("expenseForm.travel.missingTitle", "关联差旅标题缺失") },
             ...options,
           ]);
           return;
@@ -475,7 +518,7 @@ const ExpenseForm: React.FC = () => {
 
   const onSave = async (thenSubmit: boolean) => {
     if (readOnly) {
-      message.warning("当前单据不可编辑");
+      message.warning(t("expenseForm.readOnlyWarn", "当前单据不可编辑"));
       return;
     }
     let values: any;
@@ -488,7 +531,12 @@ const ExpenseForm: React.FC = () => {
       return;
     }
     if (thenSubmit && values.expense_type === "travel" && !values.travel_type) {
-      message.error("差旅类报销必须填写差旅类型（境内 / 境外）");
+      message.error(
+        t(
+          "expenseForm.travelTypeRequired",
+          "差旅类报销必须填写差旅类型（境内 / 境外）",
+        ),
+      );
       return;
     }
     const normalizedItems = (values[EXPENSE_ITEMS_FIELD] || [])
@@ -502,7 +550,12 @@ const ExpenseForm: React.FC = () => {
       )
       .map(normalizeExpenseItemForSave);
     if (thenSubmit && normalizedItems.length === 0) {
-      message.error("提交报销前请至少填写一条报销明细");
+      message.error(
+        t(
+          "expenseForm.itemsRequired",
+          "提交报销前请至少填写一条报销明细",
+        ),
+      );
       return;
     }
     setSaving(true);
@@ -555,15 +608,20 @@ const ExpenseForm: React.FC = () => {
       });
 
       if (thenSubmit) {
-        message.success("已提交审核");
+        message.success(t("expenseForm.submitted", "已提交审核"));
         navigate("/25a3c0821c9144609c4d081f3af76f9e");
       } else {
-        message.success(isEdit ? "已更新" : "草稿已保存");
+        message.success(
+          isEdit
+            ? t("expenseForm.updated", "已更新")
+            : t("expenseForm.draftSaved", "草稿已保存"),
+        );
       }
     } catch (e: any) {
-      message.error(
-        `${thenSubmit ? "提交" : "保存"}失败：${expenseSubmitErrorMessage(e)}`,
-      );
+      const prefix = thenSubmit
+        ? t("expenseForm.submitFailed", "提交失败：{reason}")
+        : t("expenseForm.saveFailed", "保存失败：{reason}");
+      message.error(prefix.replace("{reason}", expenseSubmitErrorMessage(e)));
     } finally {
       setSaving(false);
     }
@@ -581,16 +639,26 @@ const ExpenseForm: React.FC = () => {
             icon={<ArrowLeftOutlined />}
             onClick={() => navigate(-1)}
           />
-          {readOnly ? "查看报销" : isEdit ? "编辑报销" : "新建报销"}
+          {readOnly
+            ? t("expenseForm.title.view", "查看报销")
+            : isEdit
+              ? t("expenseForm.title.edit", "编辑报销")
+              : t("expenseForm.title.new", "新建报销")}
         </Space>
       }
     >
       {readOnly ? null : (
         <AgentFormGuide
           skillCode="cpo-expense-application"
-          skillName="报销申请助手"
-          prompt="请根据我上传的发票和报销材料创建并提交报销申请"
-          description="上传发票和报销材料后，Agent 可自动识别票面信息、核验重复风险并完成申请。"
+          skillName={t("expenseForm.agent.skillName", "报销申请助手")}
+          prompt={t(
+            "expenseForm.agent.prompt",
+            "请根据我上传的发票和报销材料创建并提交报销申请",
+          )}
+          description={t(
+            "expenseForm.agent.description",
+            "上传发票和报销材料后，Agent 可自动识别票面信息、核验重复风险并完成申请。",
+          )}
         />
       )}
       <Form
@@ -601,30 +669,57 @@ const ExpenseForm: React.FC = () => {
       >
         <FormLayout maxWidth="100%">
           <Form.Item
-            label="报销标题"
+            label={t("expenseForm.field.title", "报销标题")}
             name="title"
-            rules={[{ required: true, message: "请输入报销标题" }]}
+            rules={[
+              {
+                required: true,
+                message: t(
+                  "expenseForm.field.titleRequired",
+                  "请输入报销标题",
+                ),
+              },
+            ]}
           >
             <Input
-              placeholder="如：6 月杭州-北京差旅"
+              placeholder={t(
+                "expenseForm.field.titlePlaceholder",
+                "如：6 月杭州-北京差旅",
+              )}
               maxLength={120}
               showCount
             />
           </Form.Item>
 
           <Form.Item
-            label="项目名称"
+            label={t("expenseForm.field.project", "项目名称")}
             name="project_name"
-            rules={[{ required: true, message: "请选择项目名称" }]}
+            rules={[
+              {
+                required: true,
+                message: t(
+                  "expenseForm.field.projectRequired",
+                  "请选择项目名称",
+                ),
+              },
+            ]}
           >
             <Select
               showSearch
               optionFilterProp="label"
-              placeholder="请选择高新/立项项目"
+              placeholder={t(
+                "expenseForm.field.projectPlaceholder",
+                "请选择高新/立项项目",
+              )}
               loading={projectNameOptionsLoading}
               status={projectNameOptionsError ? "error" : undefined}
               notFoundContent={
-                projectNameOptionsError ? "项目字典加载失败" : undefined
+                projectNameOptionsError
+                  ? t(
+                      "expenseForm.field.projectLoadFailed",
+                      "项目字典加载失败",
+                    )
+                  : undefined
               }
               options={projectNameOptions}
             />
@@ -634,30 +729,54 @@ const ExpenseForm: React.FC = () => {
             template={expenseType === "travel" ? "minmax(0, 1fr) 140px" : "1fr"}
           >
             <Form.Item
-              label="报销类型"
+              label={t("expenseForm.field.expenseType", "报销类型")}
               name="expense_type"
-              rules={[{ required: true, message: "请选择" }]}
+              rules={[
+                {
+                  required: true,
+                  message: t("expenseForm.field.required", "请选择"),
+                },
+              ]}
             >
               <Select
                 loading={expenseTypeOptionsLoading}
                 status={expenseTypeOptionsError ? "error" : undefined}
                 notFoundContent={
-                  expenseTypeOptionsError ? "报销类型字典加载失败" : undefined
+                  expenseTypeOptionsError
+                    ? t(
+                        "expenseForm.field.expenseTypeLoadFailed",
+                        "报销类型字典加载失败",
+                      )
+                    : undefined
                 }
                 options={expenseTypeOptions}
               />
             </Form.Item>
             {expenseType === "travel" && (
               <Form.Item
-                label="差旅类型"
+                label={t("expenseForm.field.travelType", "差旅类型")}
                 name="travel_type"
-                rules={[{ required: true, message: "差旅报销必须选择" }]}
+                rules={[
+                  {
+                    required: true,
+                    message: t(
+                      "expenseForm.field.travelTypeRequired",
+                      "差旅报销必须选择",
+                    ),
+                  },
+                ]}
                 initialValue="domestic"
               >
                 <Select
                   options={[
-                    { value: "domestic", label: "境内" },
-                    { value: "overseas", label: "境外" },
+                    {
+                      value: "domestic",
+                      label: t("expenseForm.travelType.domestic", "境内"),
+                    },
+                    {
+                      value: "overseas",
+                      label: t("expenseForm.travelType.overseas", "境外"),
+                    },
                   ]}
                 />
               </Form.Item>
@@ -665,13 +784,19 @@ const ExpenseForm: React.FC = () => {
           </FormRow>
 
           {expenseType === "travel" && (
-            <Form.Item label="关联差旅申请" name={RELATED_TRAVEL_FIELD}>
+            <Form.Item
+              label={t("expenseForm.field.relatedTravel", "关联差旅申请")}
+              name={RELATED_TRAVEL_FIELD}
+            >
               <Select
                 allowClear
                 showSearch
                 loading={travelOptionsLoading}
                 optionFilterProp="label"
-                placeholder="选择已审批通过的差旅申请"
+                placeholder={t(
+                  "expenseForm.field.relatedTravelPlaceholder",
+                  "选择已审批通过的差旅申请",
+                )}
                 options={travelOptions}
               />
             </Form.Item>
@@ -679,32 +804,50 @@ const ExpenseForm: React.FC = () => {
 
           <FormRow template="repeat(2, minmax(260px, 1fr))">
             <Form.Item
-              label="原始消费合计"
+              label={t("expenseForm.field.totalOriginal", "原始消费合计")}
               name="total_original_amount"
-              rules={[{ required: true, message: "请输入" }]}
+              rules={[
+                {
+                  required: true,
+                  message: t("expenseForm.field.required", "请输入"),
+                },
+              ]}
               initialValue={0}
             >
               <MoneyInput min={0} minWidth={260} disabled />
             </Form.Item>
             <Form.Item
-              label="折算人民币合计"
+              label={t("expenseForm.field.totalCny", "折算人民币合计")}
               name="total_cny_amount"
-              rules={[{ required: true, message: "请输入" }]}
+              rules={[
+                {
+                  required: true,
+                  message: t("expenseForm.field.required", "请输入"),
+                },
+              ]}
               initialValue={0}
             >
               <MoneyInput min={0} minWidth={260} disabled />
             </Form.Item>
             <Form.Item
-              label="最终可报销金额"
+              label={t("expenseForm.field.reimbursableCny", "最终可报销金额")}
               name="reimbursable_cny_amount"
-              rules={[{ required: true, message: "请输入" }]}
+              rules={[
+                {
+                  required: true,
+                  message: t("expenseForm.field.required", "请输入"),
+                },
+              ]}
               initialValue={0}
             >
               <MoneyInput min={0} minWidth={260} disabled />
             </Form.Item>
           </FormRow>
 
-          <Form.Item label="报销明细" className={styles.expenseDetailsField}>
+          <Form.Item
+            label={t("expenseForm.field.items", "报销明细")}
+            className={styles.expenseDetailsField}
+          >
             <Form.List
               name={EXPENSE_ITEMS_FIELD}
               initialValue={[EMPTY_EXPENSE_ITEM]}
@@ -726,10 +869,17 @@ const ExpenseForm: React.FC = () => {
                           gridTemplateColumns: EXPENSE_ITEM_TABLE_COLUMNS,
                         }}
                       >
-                        <div>报销名称</div>
-                        <div>发票金额</div>
-                        <div>实际报销金额</div>
-                        <div>备注</div>
+                        <div>{t("expenseForm.itemsTable.name", "报销名称")}</div>
+                        <div>
+                          {t("expenseForm.itemsTable.invoiceAmount", "发票金额")}
+                        </div>
+                        <div>
+                          {t(
+                            "expenseForm.itemsTable.reimbursableAmount",
+                            "实际报销金额",
+                          )}
+                        </div>
+                        <div>{t("expenseForm.itemsTable.remark", "备注")}</div>
                         <div />
                       </div>
                       <div className={styles.expenseItemList}>
@@ -737,7 +887,11 @@ const ExpenseForm: React.FC = () => {
                           <section
                             key={field.key}
                             className={styles.expenseItem}
-                            aria-label={`报销项目 ${itemIndex + 1}`}
+                            aria-label={t(
+                              "expenseForm.itemAria",
+                              "报销项目 {index}",
+                              { index: itemIndex + 1 },
+                            )}
                           >
                             <div
                               className={styles.expenseItemMain}
@@ -748,31 +902,32 @@ const ExpenseForm: React.FC = () => {
                               <Form.Item
                                 name={[field.name, "description"]}
                                 rules={[
-                                  { required: true, message: "请输入报销项目" },
+                                  {
+                                    required: true,
+                                    message: t(
+                                      "expenseForm.field.itemNameRequired",
+                                      "请输入报销项目",
+                                    ),
+                                  },
                                 ]}
                                 style={{ marginBottom: 0 }}
                               >
-                                <Input placeholder="如：机票报销-宋建敏-返程" />
+                                <Input
+                                  placeholder={t(
+                                    "expenseForm.field.itemNamePlaceholder",
+                                    "如：机票报销-宋建敏-返程",
+                                  )}
+                                />
                               </Form.Item>
                               <Form.Item
                                 name={[field.name, "cny_amount"]}
                                 rules={[
-                                  { required: true, message: "请输入发票金额" },
-                                ]}
-                                style={{ marginBottom: 0 }}
-                              >
-                                <MoneyInput
-                                  min={0}
-                                  minWidth="100%"
-                                  aria-label="发票金额"
-                                />
-                              </Form.Item>
-                              <Form.Item
-                                name={[field.name, "reimbursable_cny_amount"]}
-                                rules={[
                                   {
                                     required: true,
-                                    message: "请输入实际报销金额",
+                                    message: t(
+                                      "expenseForm.field.invoiceAmountRequired",
+                                      "请输入发票金额",
+                                    ),
                                   },
                                 ]}
                                 style={{ marginBottom: 0 }}
@@ -780,7 +935,32 @@ const ExpenseForm: React.FC = () => {
                                 <MoneyInput
                                   min={0}
                                   minWidth="100%"
-                                  aria-label="实际报销金额"
+                                  aria-label={t(
+                                    "expenseForm.itemsTable.invoiceAmount",
+                                    "发票金额",
+                                  )}
+                                />
+                              </Form.Item>
+                              <Form.Item
+                                name={[field.name, "reimbursable_cny_amount"]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: t(
+                                      "expenseForm.field.reimbursableAmountRequired",
+                                      "请输入实际报销金额",
+                                    ),
+                                  },
+                                ]}
+                                style={{ marginBottom: 0 }}
+                              >
+                                <MoneyInput
+                                  min={0}
+                                  minWidth="100%"
+                                  aria-label={t(
+                                    "expenseForm.itemsTable.reimbursableAmount",
+                                    "实际报销金额",
+                                  )}
                                 />
                               </Form.Item>
                               <Form.Item
@@ -789,19 +969,30 @@ const ExpenseForm: React.FC = () => {
                               >
                                 <Input.TextArea
                                   autoSize={{ minRows: 1, maxRows: 4 }}
-                                  placeholder="对应发票文件名、航段、舱位或折扣说明"
+                                  placeholder={t(
+                                    "expenseForm.field.itemRemarkPlaceholder",
+                                    "对应发票文件名、航段、舱位或折扣说明",
+                                  )}
                                 />
                               </Form.Item>
                               <div className={styles.expenseItemActions}>
                                 {!readOnly && fields.length > 1 ? (
-                                  <Tooltip title="删除明细">
+                                  <Tooltip
+                                    title={t(
+                                      "expenseForm.action.deleteItem",
+                                      "删除明细",
+                                    )}
+                                  >
                                     <Button
                                       danger
                                       type="text"
                                       size="small"
                                       icon={<DeleteOutlined />}
                                       onClick={() => remove(field.name)}
-                                      aria-label="删除明细"
+                                      aria-label={t(
+                                        "expenseForm.action.deleteItem",
+                                        "删除明细",
+                                      )}
                                     />
                                   </Tooltip>
                                 ) : null}
@@ -816,7 +1007,10 @@ const ExpenseForm: React.FC = () => {
                             </div>
 
                             <Drawer
-                              title="管理发票"
+                              title={t(
+                                "expenseForm.invoice.manageTitle",
+                                "管理发票",
+                              )}
                               placement="right"
                               width="min(1120px, 96vw)"
                               footer={null}
@@ -846,7 +1040,13 @@ const ExpenseForm: React.FC = () => {
                                               <div
                                                 key={invoiceField.key}
                                                 className={styles.invoiceRow}
-                                                aria-label={`关联发票 ${invoiceIndex + 1}`}
+                                                aria-label={t(
+                                                  "expenseForm.invoice.rowAria",
+                                                  "关联发票 {index}",
+                                                  {
+                                                    index: invoiceIndex + 1,
+                                                  },
+                                                )}
                                               >
                                                 <div
                                                   className={
@@ -865,20 +1065,27 @@ const ExpenseForm: React.FC = () => {
                                                     rules={[
                                                       {
                                                         required: true,
-                                                        message:
+                                                        message: t(
+                                                          "expenseForm.invoice.noRequired",
                                                           "请输入20位发票号码",
+                                                        ),
                                                       },
                                                       {
                                                         pattern: /^\d{20}$/,
-                                                        message:
+                                                        message: t(
+                                                          "expenseForm.invoice.noPattern",
                                                           "发票号码须为20位数字",
+                                                        ),
                                                       },
                                                     ]}
                                                     style={{ marginBottom: 0 }}
                                                   >
                                                     <Input
                                                       disabled={existingInvoice}
-                                                      placeholder="20位发票号码"
+                                                      placeholder={t(
+                                                        "expenseForm.invoice.noPlaceholder",
+                                                        "20位发票号码",
+                                                      )}
                                                     />
                                                   </Form.Item>
                                                   <Form.Item
@@ -889,8 +1096,10 @@ const ExpenseForm: React.FC = () => {
                                                     rules={[
                                                       {
                                                         required: true,
-                                                        message:
+                                                        message: t(
+                                                          "expenseForm.invoice.totalAmountRequired",
                                                           "请输入票面金额",
+                                                        ),
                                                       },
                                                     ]}
                                                     style={{ marginBottom: 0 }}
@@ -899,7 +1108,10 @@ const ExpenseForm: React.FC = () => {
                                                       disabled={existingInvoice}
                                                       min={0.01}
                                                       minWidth="100%"
-                                                      aria-label="票面金额"
+                                                      aria-label={t(
+                                                        "expenseForm.invoice.totalAmount",
+                                                        "票面金额",
+                                                      )}
                                                     />
                                                   </Form.Item>
                                                   <Form.Item
@@ -923,8 +1135,10 @@ const ExpenseForm: React.FC = () => {
                                                       {
                                                         required: true,
                                                         whitespace: true,
-                                                        message:
+                                                        message: t(
+                                                          "expenseForm.invoice.sellerRequired",
                                                           "请输入发票票面销售方",
+                                                        ),
                                                       },
                                                     ]}
                                                     style={{ marginBottom: 0 }}
@@ -1024,14 +1238,28 @@ const ExpenseForm: React.FC = () => {
                                                       }
                                                       placeholder={
                                                         invoiceAttachmentOptions.length
-                                                          ? "选择已上传附件"
-                                                          : "请先在下方上传"
+                                                          ? t(
+                                                              "expenseForm.invoice.chooseAttachment",
+                                                              "选择已上传附件",
+                                                            )
+                                                          : t(
+                                                              "expenseForm.invoice.uploadFirst",
+                                                              "请先在下方上传",
+                                                            )
                                                       }
-                                                      notFoundContent="暂无可选附件"
+                                                      notFoundContent={t(
+                                                        "expenseForm.invoice.noAttachment",
+                                                        "暂无可选附件",
+                                                      )}
                                                     />
                                                   </Form.Item>
                                                   {!readOnly ? (
-                                                    <Tooltip title="解除关联">
+                                                    <Tooltip
+                                                      title={t(
+                                                        "expenseForm.invoice.unlink",
+                                                        "解除关联",
+                                                      )}
+                                                    >
                                                       <Button
                                                         danger
                                                         type="text"
@@ -1047,7 +1275,10 @@ const ExpenseForm: React.FC = () => {
                                                             invoiceField.name,
                                                           )
                                                         }
-                                                        aria-label="解除关联"
+                                                        aria-label={t(
+                                                          "expenseForm.invoice.unlink",
+                                                          "解除关联",
+                                                        )}
                                                       />
                                                     </Tooltip>
                                                   ) : (
@@ -1060,7 +1291,10 @@ const ExpenseForm: React.FC = () => {
                                                       styles.invoiceLockedHint
                                                     }
                                                   >
-                                                    来自发票台账，仅支持查看或解除关联
+                                                    {t(
+                                                      "expenseForm.invoice.lockedHint",
+                                                      "来自发票台账，仅支持查看或解除关联",
+                                                    )}
                                                   </div>
                                                 ) : null}
                                               </div>
@@ -1070,7 +1304,10 @@ const ExpenseForm: React.FC = () => {
                                       </div>
                                     ) : (
                                       <div className={styles.invoiceEmpty}>
-                                        暂未关联发票
+                                        {t(
+                                          "expenseForm.invoice.empty",
+                                          "暂未关联发票",
+                                        )}
                                       </div>
                                     )}
 
@@ -1081,7 +1318,10 @@ const ExpenseForm: React.FC = () => {
                                         onClick={() => addInvoice({})}
                                         block
                                       >
-                                        新增发票
+                                        {t(
+                                          "expenseForm.invoice.add",
+                                          "新增发票",
+                                        )}
                                       </Button>
                                     ) : null}
                                   </div>
@@ -1100,7 +1340,10 @@ const ExpenseForm: React.FC = () => {
                       onClick={() => add({ ...EMPTY_EXPENSE_ITEM })}
                       block
                     >
-                      新增明细
+                      {t(
+                        "expenseForm.action.addItem",
+                        "新增明细",
+                      )}
                     </Button>
                   ) : null}
                 </Space>
@@ -1109,9 +1352,12 @@ const ExpenseForm: React.FC = () => {
           </Form.Item>
 
           <Form.Item
-            label="报销附件"
+            label={t("expenseForm.field.attachments", "报销附件")}
             name={ATTACHMENTS_FIELD}
-            extra="统一批量上传一次；在报销明细的“管理发票”中选择对应附件，无需重复上传。"
+            extra={t(
+              "expenseForm.field.attachmentsHint",
+              "统一批量上传一次；在报销明细的“管理发票”中选择对应附件，无需重复上传。",
+            )}
           >
             <AttachmentUpload
               disabled={readOnly}
@@ -1120,16 +1366,25 @@ const ExpenseForm: React.FC = () => {
             />
           </Form.Item>
 
-          <Form.Item label="备注说明" name="remark">
+          <Form.Item
+            label={t("expenseForm.field.remark", "备注说明")}
+            name="remark"
+          >
             <Input.TextArea
               autoSize={{ minRows: 3, maxRows: 8 }}
-              placeholder="填写报销背景、特殊情况或其他补充说明"
+              placeholder={t(
+                "expenseForm.field.remarkPlaceholder",
+                "填写报销背景、特殊情况或其他补充说明",
+              )}
               maxLength={1000}
               showCount
             />
           </Form.Item>
 
-          <Form.Item label="申请人" name="applicant_name_snapshot">
+          <Form.Item
+            label={t("expenseForm.field.applicant", "申请人")}
+            name="applicant_name_snapshot"
+          >
             <Input disabled />
           </Form.Item>
           <Form.Item name="applicant_user_id" hidden>

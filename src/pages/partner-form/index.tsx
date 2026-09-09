@@ -17,8 +17,11 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import { lovrabetClient } from "@/api/client";
 import FormFooter from "@/components/form-footer";
 import FormLayout, { FormRow } from "@/components/form-layout";
+import { $i18n } from "@/i18n";
 
 const PARTNER_CODE = "68c70907e27c481cbefb96dd3906936e";
+
+const t = (key: string, fallbackText: string) => $i18n.t(key, fallbackText);
 
 type FormValues = {
   name: string;
@@ -71,9 +74,16 @@ const PartnerForm: React.FC = () => {
       .getOne({ id: Number(editId) })
       .then((rec: any) => {
         if (rec?.id) form.setFieldsValue(rec);
-        else message.error("未找到该商业伙伴");
+        else message.error(t("partnerForm.error.notFound", "未找到该商业伙伴"));
       })
-      .catch((e: any) => message.error(`加载失败：${e?.message || e}`))
+      .catch((e: any) =>
+        message.error(
+          t("partnerForm.error.load", "加载失败：{reason}").replace(
+            "{reason}",
+            String(e?.message || e),
+          ),
+        ),
+      )
       .finally(() => setLoading(false));
   }, [editId, form]);
 
@@ -111,7 +121,7 @@ const PartnerForm: React.FC = () => {
       });
       if (isEdit) {
         await model.update({ id: Number(editId), ...payload });
-        message.success("已更新");
+        message.success(t("partnerForm.success.updated", "已更新"));
       } else {
         const created = await model.create(payload);
         if (openerToken && window.opener) {
@@ -125,12 +135,17 @@ const PartnerForm: React.FC = () => {
           );
           window.close();
         } else {
-          message.success("已录入");
+          message.success(t("partnerForm.success.created", "已录入"));
           navigate("/partner-form");
         }
       }
     } catch (e: any) {
-      message.error(`保存失败：${e?.message || e}`);
+      message.error(
+        t("partnerForm.error.save", "保存失败：{reason}").replace(
+          "{reason}",
+          String(e?.message || e),
+        ),
+      );
     } finally {
       setSaving(false);
     }
@@ -154,19 +169,29 @@ const PartnerForm: React.FC = () => {
             icon={<ArrowLeftOutlined />}
             onClick={() => navigate(-1)}
           />
-          {isEdit ? "编辑商业伙伴" : "录入商业伙伴"}
+          {isEdit
+            ? t("partnerForm.title.edit", "编辑商业伙伴")
+            : t("partnerForm.title.create", "录入商业伙伴")}
         </Space>
       }
     >
       <Form form={form} layout="vertical" disabled={saving} requiredMark>
         <FormLayout>
           <Form.Item
-            label="名称"
+            label={t("partnerForm.field.name", "名称")}
             name="name"
-            rules={[{ required: true, message: "请输入名称" }]}
+            rules={[
+              {
+                required: true,
+                message: t("partnerForm.field.nameRequired", "请输入名称"),
+              },
+            ]}
           >
             <Input
-              placeholder="例如：阿里云计算有限公司"
+              placeholder={t(
+                "partnerForm.field.namePlaceholder",
+                "例如：阿里云计算有限公司",
+              )}
               maxLength={120}
               showCount
             />
@@ -174,84 +199,166 @@ const PartnerForm: React.FC = () => {
 
           <FormRow template="minmax(0, 1fr) 120px">
             <Form.Item
-              label="类型"
+              label={t("partnerForm.field.type", "类型")}
               name="partner_type"
-              rules={[{ required: true, message: "请选择" }]}
+              rules={[
+                {
+                  required: true,
+                  message: t("partnerForm.field.typeRequired", "请选择"),
+                },
+              ]}
               initialValue="supplier"
             >
               <Select
                 options={[
-                  { value: "supplier", label: "供应商" },
-                  { value: "service_provider", label: "服务商" },
-                  { value: "individual", label: "个人往来方" },
+                  {
+                    value: "supplier",
+                    label: t("partnerForm.type.supplier", "供应商"),
+                  },
+                  {
+                    value: "service_provider",
+                    label: t("partnerForm.type.serviceProvider", "服务商"),
+                  },
+                  {
+                    value: "individual",
+                    label: t("partnerForm.type.individual", "个人往来方"),
+                  },
                 ]}
               />
             </Form.Item>
-            <Form.Item label="状态" name="status" initialValue="active">
+            <Form.Item
+              label={t("partnerForm.field.status", "状态")}
+              name="status"
+              initialValue="active"
+            >
               <Select
                 options={[
-                  { value: "active", label: "启用" },
-                  { value: "disabled", label: "停用" },
+                  {
+                    value: "active",
+                    label: t("partnerForm.status.active", "启用"),
+                  },
+                  {
+                    value: "disabled",
+                    label: t("partnerForm.status.disabled", "停用"),
+                  },
                 ]}
               />
             </Form.Item>
           </FormRow>
 
-          <Form.Item label="统一社会信用代码" name="unified_credit_code">
-            <Input placeholder="选填（个人往来方可不填）" />
+          <Form.Item
+            label={t("partnerForm.field.uscc", "统一社会信用代码")}
+            name="unified_credit_code"
+          >
+            <Input
+              placeholder={t(
+                "partnerForm.field.optional",
+                "选填（个人往来方可不填）",
+              )}
+            />
           </Form.Item>
 
           <FormRow columns={2}>
-            <Form.Item label="供应商类别" name="supplier_category">
+            <Form.Item
+              label={t("partnerForm.field.supplierCategory", "供应商类别")}
+              name="supplier_category"
+            >
               <Select
                 allowClear
                 showSearch
                 options={SUPPLIER_CATEGORY_OPTIONS}
-                placeholder="选填"
+                placeholder={t("partnerForm.field.optionalShort", "选填")}
               />
             </Form.Item>
-            <Form.Item label="付款用途" name="payment_purpose">
-              <Input placeholder="选填" />
+            <Form.Item
+              label={t("partnerForm.field.paymentPurpose", "付款用途")}
+              name="payment_purpose"
+            >
+              <Input
+                placeholder={t("partnerForm.field.optionalShort", "选填")}
+              />
             </Form.Item>
           </FormRow>
 
           <FormRow columns={2}>
-            <Form.Item label="联系人" name="contact_name">
-              <Input placeholder="选填" />
+            <Form.Item
+              label={t("partnerForm.field.contactName", "联系人")}
+              name="contact_name"
+            >
+              <Input
+                placeholder={t("partnerForm.field.optionalShort", "选填")}
+              />
             </Form.Item>
-            <Form.Item label="联系电话" name="contact_phone">
-              <Input placeholder="选填" />
+            <Form.Item
+              label={t("partnerForm.field.contactPhone", "联系电话")}
+              name="contact_phone"
+            >
+              <Input
+                placeholder={t("partnerForm.field.optionalShort", "选填")}
+              />
             </Form.Item>
           </FormRow>
 
-          <Form.Item label="联系邮箱" name="contact_email">
-            <Input placeholder="选填" />
+          <Form.Item
+            label={t("partnerForm.field.contactEmail", "联系邮箱")}
+            name="contact_email"
+          >
+            <Input placeholder={t("partnerForm.field.optionalShort", "选填")} />
           </Form.Item>
 
-          <Form.Item label="地址 / 寄送地址" name="address">
-            <Input.TextArea rows={2} placeholder="选填" />
+          <Form.Item
+            label={t("partnerForm.field.address", "地址 / 寄送地址")}
+            name="address"
+          >
+            <Input.TextArea
+              rows={2}
+              placeholder={t("partnerForm.field.optionalShort", "选填")}
+            />
           </Form.Item>
 
           <FormRow columns={2}>
-            <Form.Item label="开户行" name="bank_name">
-              <Input placeholder="选填" />
+            <Form.Item
+              label={t("partnerForm.field.bankName", "开户行")}
+              name="bank_name"
+            >
+              <Input
+                placeholder={t("partnerForm.field.optionalShort", "选填")}
+              />
             </Form.Item>
-            <Form.Item label="银行账号" name="bank_account">
-              <Input placeholder="选填" />
+            <Form.Item
+              label={t("partnerForm.field.bankAccount", "银行账号")}
+              name="bank_account"
+            >
+              <Input
+                placeholder={t("partnerForm.field.optionalShort", "选填")}
+              />
             </Form.Item>
           </FormRow>
 
           <FormRow columns={2}>
-            <Form.Item label="外部来源" name="external_source">
-              <Input placeholder="选填" />
+            <Form.Item
+              label={t("partnerForm.field.externalSource", "外部来源")}
+              name="external_source"
+            >
+              <Input
+                placeholder={t("partnerForm.field.optionalShort", "选填")}
+              />
             </Form.Item>
-            <Form.Item label="外部记录ID" name="external_record_id">
-              <Input placeholder="选填" />
+            <Form.Item
+              label={t("partnerForm.field.externalRecordId", "外部记录ID")}
+              name="external_record_id"
+            >
+              <Input
+                placeholder={t("partnerForm.field.optionalShort", "选填")}
+              />
             </Form.Item>
           </FormRow>
 
-          <Form.Item label="备注" name="remark">
-            <Input.TextArea rows={3} placeholder="选填" />
+          <Form.Item label={t("partnerForm.field.remark", "备注")} name="remark">
+            <Input.TextArea
+              rows={3}
+              placeholder={t("partnerForm.field.optionalShort", "选填")}
+            />
           </Form.Item>
         </FormLayout>
       </Form>
@@ -262,7 +369,12 @@ const PartnerForm: React.FC = () => {
         onSaveDraft={onSave}
         saving={saving}
         hint={
-          isEdit ? "修改后立即生效。" : "录入后立即在合同/付款页面下拉中可用。"
+          isEdit
+            ? t("partnerForm.footer.hintEdit", "修改后立即生效。")
+            : t(
+                "partnerForm.footer.hintCreate",
+                "录入后立即在合同/付款页面下拉中可用。",
+              )
         }
       />
     </Card>

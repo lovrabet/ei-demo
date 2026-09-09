@@ -3,6 +3,9 @@ import { LinkOutlined } from "@ant-design/icons";
 import { AutoComplete, Button, Input, Space, Tooltip, Typography } from "antd";
 import { listLocalSuppliers, type LocalPartner } from "@/api/crm";
 import PartnerCreateDrawer from "./PartnerCreateDrawer";
+import { $i18n } from "@/i18n";
+
+const t = (key: string, fallback: string) => $i18n.t(key, fallback);
 
 type InvoiceSellerInputProps = {
   value?: string;
@@ -109,8 +112,14 @@ export default function InvoiceSellerInput({
           <span>{partner.name}</span>
           <Typography.Text type="secondary" style={{ fontSize: 12 }}>
             {partner.unified_credit_code
-              ? `统一社会信用代码：${partner.unified_credit_code}`
-              : "选择后关联为现有供应商"}
+              ? t(
+                  "invoiceSeller.option.usccPrefix",
+                  "统一社会信用代码：{code}",
+                ).replace("{code}", partner.unified_credit_code)
+              : t(
+                  "invoiceSeller.option.linkHint",
+                  "选择后关联为现有供应商",
+                )}
           </Typography.Text>
         </Space>
       ),
@@ -151,12 +160,12 @@ export default function InvoiceSellerInput({
   const clearPartner = () => onPartnerChange(null, sellerName);
 
   const notFoundContent = matching
-    ? "正在匹配现有供应商"
+    ? t("invoiceSeller.matching", "正在匹配现有供应商")
     : matchFailed
-      ? "供应商查询失败，请稍后重试"
+      ? t("invoiceSeller.matchFailed", "供应商查询失败，请稍后重试")
       : searchKeyword.trim().length < 2
-        ? "输入至少 2 个字开始匹配"
-        : "未匹配到供应商，可仅记录销售方名称";
+        ? t("invoiceSeller.keywordTooShort", "输入至少 2 个字开始匹配")
+        : t("invoiceSeller.notFound", "未匹配到供应商，可仅记录销售方名称");
 
   return (
     <>
@@ -174,12 +183,18 @@ export default function InvoiceSellerInput({
         style={{ width: "100%" }}
       >
         <Input
-          placeholder="输入票面销售方，自动匹配现有供应商"
+          placeholder={t(
+            "invoiceSeller.placeholder",
+            "输入票面销售方，自动匹配现有供应商",
+          )}
           allowClear
           suffix={
             partnerId ? (
               <Tooltip
-                title={`已关联供应商：${partnerName || sellerName}，点击解除`}
+                title={t(
+                  "invoiceSeller.linkedTooltip",
+                  "已关联供应商：{name}，点击解除",
+                ).replace("{name}", partnerName || sellerName)}
               >
                 <Button
                   type="text"
@@ -189,11 +204,16 @@ export default function InvoiceSellerInput({
                   onMouseDown={(event) => event.preventDefault()}
                   onClick={clearPartner}
                 >
-                  已关联
+                  {t("invoiceSeller.linkedButton", "已关联")}
                 </Button>
               </Tooltip>
             ) : sellerName.trim() ? (
-              <Tooltip title="没有合适的候选时，可新建供应商；也可仅记录销售方名称，不关联供应商">
+              <Tooltip
+                title={t(
+                  "invoiceSeller.createTooltip",
+                  "没有合适的候选时，可新建供应商；也可仅记录销售方名称，不关联供应商",
+                )}
+              >
                 <Button
                   type="link"
                   size="small"
@@ -201,7 +221,7 @@ export default function InvoiceSellerInput({
                   onMouseDown={(event) => event.preventDefault()}
                   onClick={createPartner}
                 >
-                  新建供应商
+                  {t("invoiceSeller.createButton", "新建供应商")}
                 </Button>
               </Tooltip>
             ) : null

@@ -1,0 +1,409 @@
+[
+  {
+    "key": "invoiceSeller.option.usccPrefix",
+    "zh": "统一社会信用代码：{code}",
+    "en": "Unified Social Credit Code: {code}",
+    "id": "Kode Kredit Sosial Terpadu: {code}"
+  },
+  {
+    "key": "invoiceSeller.option.linkHint",
+    "zh": "选择后关联为现有供应商",
+    "en": "Select to link as an existing supplier",
+    "id": "Pilih untuk menautkan sebagai pemasok yang ada"
+  },
+  {
+    "key": "invoiceSeller.matching",
+    "zh": "正在匹配现有供应商",
+    "en": "Matching existing suppliers",
+    "id": "Mencocokkan pemasok yang ada"
+  },
+  {
+    "key": "invoiceSeller.matchFailed",
+    "zh": "供应商查询失败，请稍后重试",
+    "en": "Supplier lookup failed, please try again later",
+    "id": "Pencarian pemasok gagal, coba lagi nanti"
+  },
+  {
+    "key": "invoiceSeller.keywordTooShort",
+    "zh": "输入至少 2 个字开始匹配",
+    "en": "Enter at least 2 characters to start matching",
+    "id": "Masukkan minimal 2 karakter untuk mulai mencocokkan"
+  },
+  {
+    "key": "invoiceSeller.notFound",
+    "zh": "未匹配到供应商，可仅记录销售方名称",
+    "en": "No supplier matched; you may just record the seller name",
+    "id": "Tidak ada pemasok yang cocok; Anda dapat hanya mencatat nama penjual"
+  },
+  {
+    "key": "invoiceSeller.placeholder",
+    "zh": "输入票面销售方，自动匹配现有供应商",
+    "en": "Enter the invoiced seller name to auto-match existing suppliers",
+    "id": "Masukkan nama penjual pada faktur untuk mencocokkan pemasok yang ada secara otomatis"
+  },
+  {
+    "key": "invoiceSeller.linkedTooltip",
+    "zh": "已关联供应商：{name}，点击解除",
+    "en": "Linked to supplier: {name}; click to unlink",
+    "id": "Tertaut ke pemasok: {name}; klik untuk melepas tautan"
+  },
+  {
+    "key": "invoiceSeller.linkedButton",
+    "zh": "已关联",
+    "en": "Linked",
+    "id": "Tertaut"
+  },
+  {
+    "key": "invoiceSeller.createTooltip",
+    "zh": "没有合适的候选时，可新建供应商；也可仅记录销售方名称，不关联供应商",
+    "en": "If no candidate fits, create a new supplier; or just record the seller name without linking a supplier",
+    "id": "Jika tidak ada kandidat yang cocok, Anda dapat membuat pemasok baru; atau hanya mencatat nama penjual tanpa menautkan pemasok"
+  },
+  {
+    "key": "invoiceSeller.createButton",
+    "zh": "新建供应商",
+    "en": "New Supplier",
+    "id": "Pemasok Baru"
+  },
+  {
+    "key": "partnerForm.createDrawer.title",
+    "zh": "新建供应商 / 服务商",
+    "en": "New Supplier / Service Provider",
+    "id": "Pemasok / Penyedia Jasa Baru"
+  },
+  {
+    "key": "partnerForm.createDrawer.submit",
+    "zh": "创建并关联",
+    "en": "Create & Link",
+    "id": "Buat & Tautkan"
+  },
+  {
+    "key": "partnerForm.createDrawer.created",
+    "zh": "供应商已创建并关联",
+    "en": "Supplier created and linked",
+    "id": "Pemasok berhasil dibuat dan ditautkan"
+  },
+  {
+    "key": "partnerForm.createDrawer.failed",
+    "zh": "创建失败：{reason}",
+    "en": "Creation failed: {reason}",
+    "id": "Gagal membuat: {reason}"
+  },
+  {
+    "key": "receivablePlanForm.alert.message",
+    "zh": "这里维护合同约定的收款期次",
+    "en": "Maintain the collection phases agreed in the contract here",
+    "id": "Kelola termin penagihan yang disepakati dalam kontrak di sini"
+  },
+  {
+    "key": "receivablePlanForm.alert.description",
+    "zh": "实际到账仍以回款记录及核销结果为准。",
+    "en": "Actual receipts are subject to the payment records and allocation results.",
+    "id": "Penerimaan aktual mengacu pada catatan pembayaran dan hasil alokasi."
+  },
+  {
+    "key": "internalLegalEntity.error.modelNotRegistered",
+    "zh": "Lovrabet 模型未注册：我方主体",
+    "en": "Lovrabet model not registered: our legal entity",
+    "id": "Model Lovrabet belum terdaftar: entitas legal kami"
+  },
+  {
+    "key": "legalAgreement.defaultTitle",
+    "zh": "商务合作保密协议",
+    "en": "Business Cooperation Confidentiality Agreement",
+    "id": "Perjanjian Kerahasiaan Kerja Sama Bisnis"
+  },
+  {
+    "key": "legalAgreement.exportWord.emptyContent",
+    "zh": "合同内容为空，无法导出 Word",
+    "en": "The contract content is empty and cannot be exported to Word",
+    "id": "Konten kontrak kosong, tidak dapat diekspor ke Word"
+  },
+  {
+    "key": "legalAgreement.exportWord.failed",
+    "zh": "Word 导出失败",
+    "en": "Word export failed",
+    "id": "Ekspor Word gagal"
+  },
+  {
+    "key": "applicationDetail.printPreparing",
+    "zh": "正在准备财务单据打印稿…",
+    "en": "Preparing the financial document for printing…",
+    "id": "Menyiapkan dokumen keuangan untuk dicetak…"
+  },
+  {
+    "key": "legalAgreement.document.header.agreementNo",
+    "zh": "协议编号：{value}",
+    "en": "Agreement No.: {value}",
+    "id": "No. Perjanjian: {value}"
+  },
+  {
+    "key": "legalAgreement.document.header.agreementType",
+    "zh": "协议类型：{value}",
+    "en": "Agreement Type: {value}",
+    "id": "Jenis Perjanjian: {value}"
+  },
+  {
+    "key": "legalAgreement.document.header.projectName",
+    "zh": "项目名称：{value}",
+    "en": "Project Name: {value}",
+    "id": "Nama Proyek: {value}"
+  },
+  {
+    "key": "legalAgreement.document.header.signingPlace",
+    "zh": "签署地点：{value}",
+    "en": "Place of Signing: {value}",
+    "id": "Tempat Penandatanganan: {value}"
+  },
+  {
+    "key": "legalAgreement.document.header.agreementDate",
+    "zh": "协议日期：{value}",
+    "en": "Agreement Date: {value}",
+    "id": "Tanggal Perjanjian: {value}"
+  },
+  {
+    "key": "legalAgreement.document.preamble.recital",
+    "zh": "鉴于：甲方拟就{projectName}与乙方开展{cooperationMatter}。乙方作为服务提供、产品试用、技术对接或合同履行方，可能接触、获取或处理甲方或其客户数据、业务数据、账号权限、项目资料、商务安排、技术资料及其他非公开信息。双方亦可能相互披露各自具有商业价值、技术价值、经营价值或合规敏感性的非公开信息。为保护双方合法权益，双方本着平等、自愿、公平、诚信原则，签署本协议并共同遵守。",
+    "en": "Whereas: Party A intends to carry out {cooperationMatter} with Party B in respect of {projectName}. As a service provider, product trial partner, technical integration party or contract performing party, Party B may access, obtain or process data of Party A or its customers, business data, account permissions, project materials, business arrangements, technical materials and other non-public information. The parties may also mutually disclose non-public information of commercial, technical, operational or compliance-sensitive value. To protect the lawful rights and interests of both parties, the parties sign this Agreement on the principles of equality, voluntariness, fairness and good faith, and shall abide by it.",
+    "id": "Bahwa: Pihak A bermaksud melaksanakan {cooperationMatter} dengan Pihak B sehubungan dengan {projectName}. Sebagai penyedia layanan, mitra uji coba produk, pihak integrasi teknis, atau pelaksana kontrak, Pihak B dapat mengakses, memperoleh, atau memproses data Pihak A atau pelanggannya, data bisnis, hak akses akun, materi proyek, pengaturan bisnis, materi teknis, dan informasi non-publik lainnya. Para pihak juga dapat saling mengungkapkan informasi non-publik yang memiliki nilai komersial, teknis, operasional, atau sensitif terhadap kepatuhan. Untuk melindungi hak dan kepentingan sah kedua pihak, para pihak menandatangani Perjanjian ini berdasarkan prinsip kesetaraan, kesukarelaan, keadilan, dan itikad baik, serta wajib mematuhinya."
+  },
+  {
+    "key": "legalAgreement.document.preamble.effective",
+    "zh": "本协议于{agreementDate}在{signingPlace}签署，自双方签字或盖章之日起生效。",
+    "en": "This Agreement is signed on {agreementDate} at {signingPlace} and takes effect from the date both parties sign or affix their seals.",
+    "id": "Perjanjian ini ditandatangani pada {agreementDate} di {signingPlace} dan berlaku sejak tanggal kedua pihak menandatangani atau membubuhkan cap."
+  },
+  {
+    "key": "legalAgreement.document.clause1.title",
+    "zh": "第一条 保密信息",
+    "en": "Article 1 Confidential Information",
+    "id": "Pasal 1 Informasi Rahasia"
+  },
+  {
+    "key": "legalAgreement.document.clause1.para1",
+    "zh": "本协议项下保密信息，是指一方以口头、书面、电子、系统接口、账号授权、现场接触或其他方式向另一方披露、提供或使另一方知悉的非公开信息。双方互为披露方和接收方，披露信息的一方为披露方，接收、获取或知悉信息的一方为接收方。",
+    "en": "The confidential information under this Agreement refers to non-public information disclosed, provided or made known by one party to the other party orally, in writing, electronically, through system interfaces, account authorization, on-site access or other means. The parties are mutually the disclosing party and the receiving party: the party that discloses information is the disclosing party, and the party that receives, obtains or becomes aware of information is the receiving party.",
+    "id": "Informasi rahasia berdasarkan Perjanjian ini adalah informasi non-publik yang diungkapkan, diberikan, atau diketahui oleh satu pihak kepada pihak lainnya secara lisan, tertulis, elektronik, melalui antarmuka sistem, otorisasi akun, akses langsung, atau cara lainnya. Para pihak saling menjadi pihak pengungkap dan pihak penerima: pihak yang mengungkapkan informasi adalah pihak pengungkap, dan pihak yang menerima, memperoleh, atau mengetahui informasi adalah pihak penerima."
+  },
+  {
+    "key": "legalAgreement.document.clause1.para2",
+    "zh": "保密信息包括但不限于：甲方或其客户数据、业务数据、账号权限、项目资料、客户信息、经营数据、财务信息、合同文本、商务条款、会议纪要、需求文档、流程制度、系统配置、接口文档、访问凭证、密钥、个人信息、重要数据；以及乙方的产品方案、源代码、算法、模型、提示词、技术架构、报价策略、交付方法、知识产权及依法或依约需要保护的其他非公开信息。",
+    "en": "Confidential information includes but is not limited to: data of Party A or its customers, business data, account permissions, project materials, customer information, operational data, financial information, contract texts, business terms, meeting minutes, requirement documents, processes and policies, system configurations, interface documents, access credentials, keys, personal information and important data; as well as Party B's product solutions, source code, algorithms, models, prompts, technical architecture, pricing strategies, delivery methods, intellectual property and other non-public information that needs to be protected by law or agreement.",
+    "id": "Informasi rahasia meliputi namun tidak terbatas pada: data Pihak A atau pelanggannya, data bisnis, hak akses akun, materi proyek, informasi pelanggan, data operasional, informasi keuangan, teks kontrak, ketentuan bisnis, notulen rapat, dokumen kebutuhan, proses dan kebijakan, konfigurasi sistem, dokumen antarmuka, kredensial akses, kunci, informasi pribadi, dan data penting; serta solusi produk Pihak B, kode sumber, algoritma, model, prompt, arsitektur teknis, strategi penetapan harga, metode pengiriman, kekayaan intelektual, dan informasi non-publik lain yang wajib dilindungi berdasarkan hukum atau perjanjian."
+  },
+  {
+    "key": "legalAgreement.document.clause2.title",
+    "zh": "第二条 合作目的和使用范围",
+    "en": "Article 2 Cooperation Purpose and Scope of Use",
+    "id": "Pasal 2 Tujuan Kerja Sama dan Ruang Lingkup Penggunaan"
+  },
+  {
+    "key": "legalAgreement.document.clause2.para1",
+    "zh": "接收方仅可为{cooperationMatter}及本协议约定合作目的，在必要、最小、授权范围内使用保密信息。未经披露方事先书面同意，接收方不得将保密信息用于本协议目的以外的研发、训练、销售、竞品分析、对外展示、商业推广或其他用途。",
+    "en": "The receiving party may use confidential information only for {cooperationMatter} and the cooperation purposes agreed in this Agreement, within the necessary, minimum and authorized scope. Without the prior written consent of the disclosing party, the receiving party shall not use confidential information for research and development, training, sales, competitive analysis, external display, commercial promotion or other purposes beyond the purpose of this Agreement.",
+    "id": "Pihak penerima hanya boleh menggunakan informasi rahasia untuk {cooperationMatter} dan tujuan kerja sama yang disepakati dalam Perjanjian ini, dalam ruang lingkup yang diperlukan, minimal, dan diotorisasi. Tanpa persetujuan tertulis sebelumnya dari pihak pengungkap, pihak penerima tidak boleh menggunakan informasi rahasia untuk penelitian dan pengembangan, pelatihan, penjualan, analisis pesaing, penayangan eksternal, promosi komersial, atau tujuan lain di luar tujuan Perjanjian ini."
+  },
+  {
+    "key": "legalAgreement.document.clause3.title",
+    "zh": "第三条 双方保密义务",
+    "en": "Article 3 Confidentiality Obligations of Both Parties",
+    "id": "Pasal 3 Kewajiban Kerahasiaan Para Pihak"
+  },
+  {
+    "key": "legalAgreement.document.clause3.para1",
+    "zh": "接收方应以不低于保护自身同类重要信息的注意义务保护披露方保密信息，并采取合理的管理、技术和访问控制措施。未经披露方事先书面同意，接收方不得向任何第三方披露、提供、公开、转让、出售、上传、发布、复制、反向工程或以其他方式处置保密信息。",
+    "en": "The receiving party shall protect the disclosing party's confidential information with a duty of care no less than that used to protect its own similar important information, and shall take reasonable administrative, technical and access control measures. Without the prior written consent of the disclosing party, the receiving party shall not disclose, provide, publish, transfer, sell, upload, release, copy, reverse engineer or otherwise dispose of the confidential information to any third party.",
+    "id": "Pihak penerima wajib melindungi informasi rahasia pihak pengungkap dengan tingkat kehati-hatian yang tidak lebih rendah daripada yang digunakan untuk melindungi informasi penting sejenis miliknya sendiri, serta mengambil langkah administratif, teknis, dan pengendalian akses yang wajar. Tanpa persetujuan tertulis sebelumnya dari pihak pengungkap, pihak penerima tidak boleh mengungkapkan, memberikan, mempublikasikan, mengalihkan, menjual, mengunggah, merilis, menyalin, melakukan rekayasa balik, atau dengan cara lain mengalihkan informasi rahasia kepada pihak ketiga mana pun."
+  },
+  {
+    "key": "legalAgreement.document.clause3.para2",
+    "zh": "接收方确因合作目的需要向其员工、顾问、承包商或关联方披露保密信息的，应限于必要知悉人员，并确保前述人员承担不低于本协议约定的保密义务。接收方应对前述人员的行为承担责任。",
+    "en": "If the receiving party truly needs to disclose confidential information to its employees, consultants, contractors or affiliates for the purpose of cooperation, such disclosure shall be limited to persons who need to know, and the receiving party shall ensure that such persons undertake confidentiality obligations no less stringent than those agreed in this Agreement. The receiving party shall be liable for the acts of such persons.",
+    "id": "Apabila pihak penerima memang perlu mengungkapkan informasi rahasia kepada karyawan, konsultan, kontraktor, atau afiliasinya untuk tujuan kerja sama, pengungkapan tersebut harus dibatasi pada personel yang perlu mengetahui, dan pihak penerima wajib memastikan bahwa personel tersebut terikat oleh kewajiban kerahasiaan yang tidak lebih rendah daripada yang diatur dalam Perjanjian ini. Pihak penerima bertanggung jawab atas tindakan personel tersebut."
+  },
+  {
+    "key": "legalAgreement.document.clause4.title",
+    "zh": "第四条 乙方特别义务",
+    "en": "Article 4 Special Obligations of Party B",
+    "id": "Pasal 4 Kewajiban Khusus Pihak B"
+  },
+  {
+    "key": "legalAgreement.document.clause4.para1",
+    "zh": "乙方接触或处理甲方保密信息、甲方或其客户数据、业务数据、账号权限、系统环境、接口凭证、测试数据、生产数据或个人信息时，应仅为甲方授权的项目目的使用，不得超范围访问、复制、留存、下载、转移、分析或向第三方提供。",
+    "en": "When Party B accesses or processes Party A's confidential information, data of Party A or its customers, business data, account permissions, system environments, interface credentials, test data, production data or personal information, it shall use them only for the project purposes authorized by Party A, and shall not access, copy, retain, download, transfer, analyze or provide them to third parties beyond the authorized scope.",
+    "id": "Ketika Pihak B mengakses atau memproses informasi rahasia Pihak A, data Pihak A atau pelanggannya, data bisnis, hak akses akun, lingkungan sistem, kredensial antarmuka, data uji, data produksi, atau informasi pribadi, Pihak B hanya boleh menggunakannya untuk tujuan proyek yang diotorisasi oleh Pihak A, dan tidak boleh mengakses, menyalin, menyimpan, mengunduh, mengalihkan, menganalisis, atau memberikannya kepada pihak ketiga di luar ruang lingkup yang diotorisasi."
+  },
+  {
+    "key": "legalAgreement.document.clause4.para2",
+    "zh": "未经甲方事先书面同意，乙方不得将甲方保密信息用于模型训练、样本沉淀、案例宣传、产品演示、对外投标、客户名单展示或其他与甲方授权项目无关的用途。乙方应按甲方合理要求配合进行权限回收、数据删除、材料返还、访问记录核查和安全事件处置。",
+    "en": "Without the prior written consent of Party A, Party B shall not use Party A's confidential information for model training, sample accumulation, case promotion, product demonstration, external bidding, customer list display or other purposes unrelated to the project authorized by Party A. Party B shall, upon Party A's reasonable request, cooperate in permission revocation, data deletion, material return, access record review and security incident handling.",
+    "id": "Tanpa persetujuan tertulis sebelumnya dari Pihak A, Pihak B tidak boleh menggunakan informasi rahasia Pihak A untuk pelatihan model, pengumpulan sampel, promosi kasus, demonstrasi produk, penawaran eksternal, penayangan daftar pelanggan, atau tujuan lain yang tidak terkait dengan proyek yang diotorisasi oleh Pihak A. Atas permintaan yang wajar dari Pihak A, Pihak B wajib bekerja sama dalam penarikan hak akses, penghapusan data, pengembalian materi, pemeriksaan catatan akses, dan penanganan insiden keamanan."
+  },
+  {
+    "key": "legalAgreement.document.clause5.title",
+    "zh": "第五条 保密例外",
+    "en": "Article 5 Exceptions to Confidentiality",
+    "id": "Pasal 5 Pengecualian Kerahasiaan"
+  },
+  {
+    "key": "legalAgreement.document.clause5.para1",
+    "zh": "以下信息不属于保密信息：接收方能够证明在披露前已经合法知悉的信息；非因接收方违反本协议而进入公开领域的信息；接收方从有权披露的第三方合法取得的信息；或接收方未使用披露方保密信息而独立开发的信息。接收方根据法律法规、监管机关、司法机关或证券交易规则要求披露的，应在法律允许范围内提前通知披露方，并尽合理努力协助披露方采取保护措施。",
+    "en": "The following information is not confidential information: information that the receiving party can prove it already lawfully knew before disclosure; information that enters the public domain other than through the receiving party's breach of this Agreement; information lawfully obtained by the receiving party from a third party entitled to disclose it; or information independently developed by the receiving party without using the disclosing party's confidential information. Where the receiving party is required to disclose by laws and regulations, regulatory authorities, judicial authorities or securities trading rules, it shall notify the disclosing party in advance to the extent permitted by law and use reasonable efforts to assist the disclosing party in taking protective measures.",
+    "id": "Informasi berikut bukan merupakan informasi rahasia: informasi yang dapat dibuktikan oleh pihak penerima telah diketahui secara sah sebelum pengungkapan; informasi yang memasuki ranah publik bukan karena pelanggaran Perjanjian ini oleh pihak penerima; informasi yang diperoleh secara sah oleh pihak penerima dari pihak ketiga yang berhak mengungkapkannya; atau informasi yang dikembangkan secara independen oleh pihak penerima tanpa menggunakan informasi rahasia pihak pengungkap. Apabila pihak penerima diwajibkan mengungkapkan berdasarkan peraturan perundang-undangan, otoritas pengawas, otoritas kehakiman, atau aturan perdagangan efek, pihak penerima wajib memberitahu pihak pengungkap terlebih dahulu sejauh diizinkan oleh hukum dan berupaya secara wajar untuk membantu pihak pengungkap mengambil langkah perlindungan."
+  },
+  {
+    "key": "legalAgreement.document.clause6.title",
+    "zh": "第六条 返还和销毁",
+    "en": "Article 6 Return and Destruction",
+    "id": "Pasal 6 Pengembalian dan Pemusnahan"
+  },
+  {
+    "key": "legalAgreement.document.clause6.para1",
+    "zh": "合作终止、双方停止谈判或披露方提出书面要求时，接收方应在{days}个工作日内按披露方要求返还、删除或销毁其掌握的全部保密信息及复制件、备份、摘录和派生材料。",
+    "en": "Upon termination of the cooperation, cessation of negotiations between the parties, or the disclosing party's written request, the receiving party shall, within {days} working days, return, delete or destroy all confidential information in its possession, including copies, backups, excerpts and derivative materials, as required by the disclosing party.",
+    "id": "Setelah berakhirnya kerja sama, dihentikannya negosiasi antara para pihak, atau atas permintaan tertulis dari pihak pengungkap, pihak penerima wajib dalam {days} hari kerja mengembalikan, menghapus, atau memusnahkan seluruh informasi rahasia yang dikuasainya, termasuk salinan, cadangan, kutipan, dan materi turunan, sesuai permintaan pihak pengungkap."
+  },
+  {
+    "key": "legalAgreement.document.clause7.title",
+    "zh": "第七条 保密期限",
+    "en": "Article 7 Confidentiality Period",
+    "id": "Pasal 7 Jangka Waktu Kerahasiaan"
+  },
+  {
+    "key": "legalAgreement.document.clause7.para1",
+    "zh": "除双方另有书面约定外，保密期限为本协议生效之日起至合作事项终止、双方停止谈判、相关合同解除或终止后{years}年止。对商业秘密、技术秘密、未公开源代码、账号密钥、个人信息和重要数据，只要其仍具保密属性，保密义务持续有效。",
+    "en": "Unless otherwise agreed in writing by the parties, the confidentiality period runs from the effective date of this Agreement until {years} years after the termination of the cooperation, the cessation of negotiations between the parties, or the rescission or termination of the relevant contracts. For trade secrets, technical secrets, unpublished source code, account keys, personal information and important data, the confidentiality obligations remain in effect for as long as they retain their confidential nature.",
+    "id": "Kecuali disepakati lain secara tertulis oleh para pihak, jangka waktu kerahasiaan berlaku sejak tanggal berlaku Perjanjian ini hingga {years} tahun setelah berakhirnya kerja sama, dihentikannya negosiasi antara para pihak, atau pembatalan atau pengakhiran kontrak terkait. Untuk rahasia dagang, rahasia teknis, kode sumber yang belum dipublikasikan, kunci akun, informasi pribadi, dan data penting, kewajiban kerahasiaan tetap berlaku selama informasi tersebut masih bersifat rahasia."
+  },
+  {
+    "key": "legalAgreement.document.clause8.title",
+    "zh": "第八条 权属和知识产权",
+    "en": "Article 8 Ownership and Intellectual Property",
+    "id": "Pasal 8 Kepemilikan dan Kekayaan Intelektual"
+  },
+  {
+    "key": "legalAgreement.document.clause8.para1",
+    "zh": "保密信息的披露、接收或使用不构成任何所有权、知识产权、数据权益、许可权益或其他权利的转让。甲方及其客户数据、业务数据、项目资料和账号权限归甲方或其合法权利人所有；乙方的产品、平台、代码、模型、算法、技术方案、交付工具和方法论归乙方或其合法权利人所有。双方另有书面约定的，从其约定。",
+    "en": "The disclosure, receipt or use of confidential information does not constitute any transfer of ownership, intellectual property rights, data rights and interests, licensing rights or other rights. Data of Party A and its customers, business data, project materials and account permissions belong to Party A or its lawful right holders; Party B's products, platforms, code, models, algorithms, technical solutions, delivery tools and methodologies belong to Party B or its lawful right holders. Where the parties have otherwise agreed in writing, such agreement shall prevail.",
+    "id": "Pengungkapan, penerimaan, atau penggunaan informasi rahasia tidak merupakan pengalihan kepemilikan, hak kekayaan intelektual, hak dan kepentingan atas data, hak lisensi, atau hak lainnya. Data Pihak A dan pelanggannya, data bisnis, materi proyek, dan hak akses akun dimiliki oleh Pihak A atau pemegang hak sahnya; produk, platform, kode, model, algoritma, solusi teknis, alat pengiriman, dan metodologi Pihak B dimiliki oleh Pihak B atau pemegang hak sahnya. Apabila para pihak telah menyepakati lain secara tertulis, kesepakatan tersebut yang berlaku."
+  },
+  {
+    "key": "legalAgreement.document.clause9.title",
+    "zh": "第九条 违约责任",
+    "en": "Article 9 Liability for Breach",
+    "id": "Pasal 9 Tanggung Jawab atas Pelanggaran"
+  },
+  {
+    "key": "legalAgreement.document.clause10.title",
+    "zh": "第十条 适用法律和争议解决",
+    "en": "Article 10 Governing Law and Dispute Resolution",
+    "id": "Pasal 10 Hukum yang Berlaku dan Penyelesaian Sengketa"
+  },
+  {
+    "key": "legalAgreement.document.clause10.para1",
+    "zh": "本协议适用中华人民共和国法律。因本协议引起或与本协议有关的任何争议，双方应先友好协商；协商不成的，按{method}方式提交{org}处理。",
+    "en": "This Agreement is governed by the laws of the People's Republic of China. Any dispute arising from or in connection with this Agreement shall first be resolved by the parties through friendly negotiation; if negotiation fails, the dispute shall be submitted to {org} by means of {method}.",
+    "id": "Perjanjian ini tunduk pada hukum Republik Rakyat Tiongkok. Sengketa apa pun yang timbul dari atau sehubungan dengan Perjanjian ini wajib diselesaikan terlebih dahulu oleh para pihak melalui musyawarah yang bersahabat; apabila musyawarah gagal, sengketa diajukan kepada {org} melalui {method}."
+  },
+  {
+    "key": "legalAgreement.document.clause11.title",
+    "zh": "第十一条 其他",
+    "en": "Article 11 Miscellaneous",
+    "id": "Pasal 11 Lain-lain"
+  },
+  {
+    "key": "legalAgreement.document.clause11.para1",
+    "zh": "本协议独立于双方就具体项目、订单、试用、采购或服务另行签署的业务合同。若业务合同对保密、数据安全、个人信息保护或知识产权保护作出更高要求的，从其约定；未约定或约定不明的，适用本协议。",
+    "en": "This Agreement is independent of any business contracts separately signed by the parties for specific projects, orders, trials, procurement or services. If a business contract sets higher requirements for confidentiality, data security, personal information protection or intellectual property protection, such requirements shall prevail; where no provision is made or the provision is unclear, this Agreement shall apply.",
+    "id": "Perjanjian ini terpisah dari kontrak bisnis apa pun yang ditandatangani secara terpisah oleh para pihak untuk proyek, pesanan, uji coba, pengadaan, atau layanan tertentu. Apabila kontrak bisnis menetapkan persyaratan yang lebih tinggi untuk kerahasiaan, keamanan data, perlindungan informasi pribadi, atau perlindungan kekayaan intelektual, persyaratan tersebut yang berlaku; apabila tidak diatur atau pengaturannya tidak jelas, Perjanjian ini yang berlaku."
+  },
+  {
+    "key": "legalAgreement.document.extraNote.title",
+    "zh": "其他备注",
+    "en": "Additional Notes",
+    "id": "Catatan Tambahan"
+  },
+  {
+    "key": "legalAgreement.document.signature.title",
+    "zh": "签章页",
+    "en": "Signature Page",
+    "id": "Halaman Tanda Tangan"
+  },
+  {
+    "key": "legalAgreement.document.signature.seal",
+    "zh": "盖章：",
+    "en": "Seal:",
+    "id": "Cap:"
+  },
+  {
+    "key": "legalAgreement.document.signature.repSign",
+    "zh": "法定代表人/授权代表签字：",
+    "en": "Signature of Legal Representative / Authorized Representative:",
+    "id": "Tanda Tangan Wakil Sah / Wakil Berwenang:"
+  },
+  {
+    "key": "legalAgreement.document.signature.date",
+    "zh": "日期：　　　年　　　月　　　日",
+    "en": "Date: ____________",
+    "id": "Tanggal: ____________"
+  },
+  {
+    "key": "legalAgreement.document.party.nameLine",
+    "zh": "{title}：{name}",
+    "en": "{title}: {name}",
+    "id": "{title}: {name}"
+  },
+  {
+    "key": "legalAgreement.document.party.uscc",    "zh": "统一社会信用代码：{value}",
+    "en": "Unified Social Credit Code: {value}",
+    "id": "Kode Kredit Sosial Terpadu: {value}"
+  },
+  {
+    "key": "legalAgreement.document.party.legalRep",
+    "zh": "法定代表人：{value}",
+    "en": "Legal Representative: {value}",
+    "id": "Wakil Sah: {value}"
+  },
+  {
+    "key": "legalAgreement.document.party.address",
+    "zh": "地址：{value}",
+    "en": "Address: {value}",
+    "id": "Alamat: {value}"
+  },
+  {
+    "key": "legalAgreement.document.party.contact",
+    "zh": "项目联系人、电话及邮箱：{value}",
+    "en": "Project contact, phone and email: {value}",
+    "id": "Kontak proyek, telepon, dan email: {value}"
+  },
+  {
+    "key": "legalAgreement.document.penalty.fixedAmount",
+    "zh": "任何一方违反本协议，应赔偿守约方全部损失，并支付违约金人民币{amount}元。",
+    "en": "If either party breaches this Agreement, it shall compensate the non-breaching party for all losses and pay liquidated damages of RMB {amount}.",
+    "id": "Apabila salah satu pihak melanggar Perjanjian ini, pihak tersebut wajib mengganti seluruh kerugian pihak yang dirugikan dan membayar ganti rugi tetap sebesar RMB {amount}."
+  },
+  {
+    "key": "legalAgreement.document.penalty.percentOfDeal",
+    "zh": "任何一方违反本协议，应赔偿守约方全部损失，并支付相当于双方拟达成或已达成合作金额{percent}%的违约金。",
+    "en": "If either party breaches this Agreement, it shall compensate the non-breaching party for all losses and pay liquidated damages equal to {percent}% of the deal amount reached or to be reached by the parties.",
+    "id": "Apabila salah satu pihak melanggar Perjanjian ini, pihak tersebut wajib mengganti seluruh kerugian pihak yang dirugikan dan membayar ganti rugi sebesar {percent}% dari nilai kerja sama yang telah atau akan dicapai para pihak."
+  },
+  {
+    "key": "legalAgreement.document.penalty.none",
+    "zh": "任何一方违反本协议，应立即停止违约行为并赔偿守约方因此遭受的全部损失及合理维权费用。",
+    "en": "If either party breaches this Agreement, it shall immediately cease the breach and compensate the non-breaching party for all losses suffered and reasonable costs of rights protection.",
+    "id": "Apabila salah satu pihak melanggar Perjanjian ini, pihak tersebut wajib segera menghentikan pelanggaran dan mengganti seluruh kerugian yang diderita pihak yang dirugikan beserta biaya pembelaan hak yang wajar."
+  },
+  {
+    "key": "legalAgreement.document.penalty.actualLoss",
+    "zh": "任何一方违反本协议，应立即停止违约行为，采取补救措施，消除影响，并赔偿守约方因此遭受的全部损失及合理维权费用。",
+    "en": "If either party breaches this Agreement, it shall immediately cease the breach, take remedial measures, eliminate the impact, and compensate the non-breaching party for all losses suffered and reasonable costs of rights protection.",
+    "id": "Apabila salah satu pihak melanggar Perjanjian ini, pihak tersebut wajib segera menghentikan pelanggaran, mengambil langkah perbaikan, menghilangkan dampaknya, dan mengganti seluruh kerugian yang diderita pihak yang dirugikan beserta biaya pembelaan hak yang wajar."
+  },
+  {
+    "key": "legalAgreement.document.blank",
+    "zh": "【】",
+    "en": "____",
+    "id": "____"
+  }
+]

@@ -1,3 +1,5 @@
+import { $i18n } from "@/i18n";
+
 type StandalonePrintWindowOptions = {
   targetWindow: Window;
   sourceElement: HTMLElement;
@@ -103,7 +105,10 @@ export async function printInStandaloneWindow({
 
   const preparing = targetDocument.createElement("p");
   preparing.className = "application-detail-print-preparing";
-  preparing.textContent = "正在准备财务单据打印稿…";
+  preparing.textContent = $i18n.t(
+    "applicationDetail.printPreparing",
+    "正在准备财务单据打印稿…",
+  );
   targetDocument.body.appendChild(preparing);
   targetDocument.body.appendChild(
     targetDocument.importNode(sourceElement, true),

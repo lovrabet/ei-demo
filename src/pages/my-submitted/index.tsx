@@ -35,7 +35,10 @@ import {
   fetchPlatformSubmitted,
   PLATFORM_DATASET_BIZ_TYPE,
 } from "@/features/platform-flow/api";
+import { $i18n } from "@/i18n";
 import styles from "./index.module.css";
+
+const t = (key: string, fallbackText: string) => $i18n.t(key, fallbackText);
 
 type SubmittedRow = {
   key: string;
@@ -84,11 +87,21 @@ function statusTag(row: SubmittedRow) {
   const s = (row.status || "").toUpperCase();
   const f = (row.flowStatus || "").toUpperCase();
   if (s === "CANCELLED" || f === "CANCELLED") {
-    return <Tag>已撤销</Tag>;
+    return <Tag>{t("mySubmitted.statusCancelled", "已撤销")}</Tag>;
   }
-  if (f === "REJECTED") return <Tag color="error">已驳回</Tag>;
-  if (s === "RUNNING") return <Tag color="processing">审批中</Tag>;
-  return <Tag color="success">已通过</Tag>;
+  if (f === "REJECTED")
+    return (
+      <Tag color="error">{t("mySubmitted.statusRejected", "已驳回")}</Tag>
+    );
+  if (s === "RUNNING")
+    return (
+      <Tag color="processing">
+        {t("mySubmitted.statusProcessing", "审批中")}
+      </Tag>
+    );
+  return (
+    <Tag color="success">{t("mySubmitted.statusApproved", "已通过")}</Tag>
+  );
 }
 
 const MySubmitted: React.FC = () => {
@@ -138,7 +151,12 @@ const MySubmitted: React.FC = () => {
       setAllRows(rows);
       setPage(1);
     } catch (e: any) {
-      message.error(`加载失败：${e?.message || e}`);
+      message.error(
+        t("mySubmitted.loadFailed", `加载失败：${e?.message || e}`).replace(
+          "{reason}",
+          e?.message || String(e),
+        ),
+      );
     } finally {
       setLoading(false);
     }
@@ -157,22 +175,30 @@ const MySubmitted: React.FC = () => {
 
   const confirmCancel = (row: SubmittedRow) => {
     Modal.confirm({
-      title: "确认撤销该流程？",
-      content: "撤销后流程终止，当前审批人的待办会被取消。",
-      okText: "撤销",
+      title: t("mySubmitted.confirmRevokeTitle", "确认撤销该流程？"),
+      content: t(
+        "mySubmitted.confirmRevokeContent",
+        "撤销后流程终止，当前审批人的待办会被取消。",
+      ),
+      okText: t("mySubmitted.actions.revoke", "撤销"),
       okButtonProps: { danger: true },
-      cancelText: "取消",
+      cancelText: t("mySubmitted.actions.cancelButton", "取消"),
       onOk: async () => {
         setActionLoadingKey(row.key);
         try {
           await cancelPlatformProcess({
             processInstanceId: row.processInstanceId,
-            reason: "申请人撤销",
+            reason: t("mySubmitted.actions.revokeComment", "申请人撤销"),
           });
-          message.success("已撤销");
+          message.success(t("mySubmitted.actions.revokeSuccess", "已撤销"));
           load();
         } catch (e: any) {
-          message.error(`撤销失败：${e?.message || e}`);
+          message.error(
+            t("mySubmitted.actions.revokeFail", `撤销失败：${e?.message || e}`).replace(
+              "{reason}",
+              e?.message || String(e),
+            ),
+          );
         } finally {
           setActionLoadingKey("");
         }
@@ -182,7 +208,7 @@ const MySubmitted: React.FC = () => {
 
   const columns: ColumnsType<SubmittedRow> = [
     {
-      title: "业务类型",
+      title: t("mySubmitted.columns.bizType", "业务类型"),
       dataIndex: "bizType",
       width: 110,
       render: (v: string) => (
@@ -192,7 +218,7 @@ const MySubmitted: React.FC = () => {
       ),
     },
     {
-      title: "流程标题",
+      title: t("mySubmitted.columns.title", "流程标题"),
       dataIndex: "title",
       width: 320,
       ellipsis: { showTitle: false },
@@ -220,13 +246,13 @@ const MySubmitted: React.FC = () => {
       },
     },
     {
-      title: "流程状态",
+      title: t("mySubmitted.columns.flowStatus", "流程状态"),
       key: "flowStatus",
       width: 110,
       render: (_: unknown, row: SubmittedRow) => statusTag(row),
     },
     {
-      title: "当前节点 / 处理人",
+      title: t("mySubmitted.columns.currentNode", "当前节点 / 处理人"),
       key: "currentNode",
       width: 200,
       render: (_: any, r: SubmittedRow) => {
@@ -250,7 +276,7 @@ const MySubmitted: React.FC = () => {
       },
     },
     {
-      title: "金额",
+      title: t("mySubmitted.columns.amount", "金额"),
       key: "amount",
       width: 130,
       align: "right",
@@ -261,7 +287,7 @@ const MySubmitted: React.FC = () => {
       ),
     },
     {
-      title: "提交时间",
+      title: t("mySubmitted.columns.submittedAt", "提交时间"),
       dataIndex: "startTime",
       width: 170,
       render: (v: number) => (
@@ -269,7 +295,7 @@ const MySubmitted: React.FC = () => {
       ),
     },
     {
-      title: "操作",
+      title: t("mySubmitted.columns.actions", "操作"),
       key: "actions",
       width: 180,
       fixed: "right",
@@ -284,7 +310,7 @@ const MySubmitted: React.FC = () => {
                 icon={<EyeOutlined />}
                 onClick={() => navigate(detailPath)}
               >
-                查看
+                {t("mySubmitted.actions.view", "查看")}
               </Button>
             ) : null}
             {r.scope === "active" ? (
@@ -294,7 +320,7 @@ const MySubmitted: React.FC = () => {
                 loading={actionLoadingKey === r.key}
                 onClick={() => confirmCancel(r)}
               >
-                撤销
+                {t("mySubmitted.actions.revoke", "撤销")}
               </Button>
             ) : null}
           </Space>
@@ -309,13 +335,13 @@ const MySubmitted: React.FC = () => {
       title={
         <Space className={styles.toolbar}>
           <FileTextOutlined style={{ color: "#1677ff" }} />
-          我提交的流程
+          {t("mySubmitted.title", "我提交的流程")}
         </Space>
       }
       extra={
         <Space>
           <Select
-            placeholder="业务类型"
+            placeholder={t("mySubmitted.filterBizType", "业务类型")}
             allowClear
             style={{ width: 120 }}
             value={bizTypeFilter || undefined}
@@ -324,17 +350,26 @@ const MySubmitted: React.FC = () => {
               setPage(1);
             }}
             options={[
-              { value: "expense", label: "报销" },
-              { value: "invoice_application", label: "销项开票申请" },
-              { value: "contract", label: "合同" },
-              { value: "crm_contract", label: "对外销售合同" },
-              { value: "payment", label: "付款" },
-              { value: "salary_payment", label: "工资付款" },
-              { value: "travel", label: "差旅出行" },
+              { value: "expense", label: t("mySubmitted.bizOptions.expense", "报销") },
+              {
+                value: "invoice_application",
+                label: t("workflow.bizType.invoiceApplication", "销项开票申请"),
+              },
+              { value: "contract", label: t("mySubmitted.bizOptions.contract", "合同") },
+              {
+                value: "crm_contract",
+                label: t("mySubmitted.bizOptions.crm_contract", "对外销售合同"),
+              },
+              { value: "payment", label: t("mySubmitted.bizOptions.payment", "付款") },
+              {
+                value: "salary_payment",
+                label: t("mySubmitted.bizOptions.salary_payment", "工资付款"),
+              },
+              { value: "travel", label: t("mySubmitted.bizOptions.travel", "差旅出行") },
             ]}
           />
           <Button icon={<ReloadOutlined />} onClick={() => load()} loading={loading}>
-            刷新
+            {t("mySubmitted.refresh", "刷新")}
           </Button>
         </Space>
       }
@@ -348,18 +383,27 @@ const MySubmitted: React.FC = () => {
         tabs={[
           {
             key: "active",
-            label: `进行中 ${allRows.filter((r) => r.scope === "active").length}`,
-            emptyDescription: "暂无进行中的流程",
+            label: `${t("mySubmitted.tabs.active", "进行中")} ${allRows.filter((r) => r.scope === "active").length}`,
+            emptyDescription: t(
+              "mySubmitted.tabs.activeEmpty",
+              "暂无进行中的流程",
+            ),
           },
           {
             key: "completed",
-            label: `已完成 ${allRows.filter((r) => r.scope === "completed").length}`,
-            emptyDescription: "暂无已完成流程",
+            label: `${t("mySubmitted.tabs.completed", "已完成")} ${allRows.filter((r) => r.scope === "completed").length}`,
+            emptyDescription: t(
+              "mySubmitted.tabs.completedEmpty",
+              "暂无已完成流程",
+            ),
           },
           {
             key: "voided",
-            label: `驳回/废弃 ${allRows.filter((r) => r.scope === "voided").length}`,
-            emptyDescription: "暂无驳回或废弃的流程",
+            label: `${t("mySubmitted.tabs.voided", "驳回/废弃")} ${allRows.filter((r) => r.scope === "voided").length}`,
+            emptyDescription: t(
+              "mySubmitted.tabs.voidedEmpty",
+              "暂无驳回或废弃的流程",
+            ),
           },
         ]}
         tableProps={{

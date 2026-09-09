@@ -20,6 +20,9 @@ import type {
   DetailSection,
 } from "./types";
 import styles from "./ApplicationDetailView.module.css";
+import { $i18n } from "@/i18n";
+
+const t = (key: string, fallbackText: string) => $i18n.t(key, fallbackText);
 
 type PrintViewProps = {
   detail: ApplicationDetailResponse;
@@ -30,17 +33,29 @@ type PrintViewProps = {
 export type ApplicationDetailPrintMode = "summary" | "full";
 
 const PAYMENT_PLAN_STATUS_LABELS: Record<string, string> = {
-  pending: "待支付",
-  processing: "支付处理中",
-  paid: "已支付",
-  not_required: "无需支付",
-  cancelled: "已取消",
+  pending: t(
+    "applicationDetail.view.paymentPlanStatusLabels.pending",
+    "待支付",
+  ),
+  processing: t(
+    "applicationDetail.view.paymentPlanStatusLabels.processing",
+    "支付处理中",
+  ),
+  paid: t("applicationDetail.view.paymentPlanStatusLabels.paid", "已支付"),
+  not_required: t(
+    "applicationDetail.view.paymentPlanStatusLabels.not_required",
+    "无需支付",
+  ),
+  cancelled: t(
+    "applicationDetail.view.paymentPlanStatusLabels.cancelled",
+    "已取消",
+  ),
 };
 
 const SALARY_PAYMENT_METHOD_LABELS: Record<string, string> = {
-  bank_card: "银行卡",
-  bank_transfer: "银行转账",
-  other: "其他",
+  bank_card: t("salaryPaymentForm.method.bankCard", "银行卡"),
+  bank_transfer: t("salaryPaymentForm.method.bankTransfer", "银行转账"),
+  other: t("salaryPaymentForm.method.other", "其他"),
 };
 
 const SUMMARY_FIELD_NAMES: Partial<Record<CpoApplicationBizType, string[]>> = {
@@ -147,17 +162,23 @@ function businessNumber(detail: ApplicationDetailResponse) {
     "business_no",
   ];
   const value = fields.map((field) => detail.biz[field]).find(Boolean);
-  return printText(value, "业务编号缺失");
+  return printText(
+    value,
+    t("applicationDetail.print.missingBusinessNumber", "业务编号缺失"),
+  );
 }
 
 function relationValue(fieldName: string, detail: ApplicationDetailResponse) {
   if (fieldName === "partner_id") {
-    return printText(detail.related.partner?.name, "关联对象标题缺失");
+    return printText(
+      detail.related.partner?.name,
+      t("applicationDetail.view.relatedTitleMissing", "关联对象标题缺失"),
+    );
   }
   if (fieldName === "contract_id") {
     return printText(
       detail.related.contract?.contract_name,
-      "关联对象标题缺失",
+      t("applicationDetail.view.relatedTitleMissing", "关联对象标题缺失"),
     );
   }
   return undefined;
@@ -273,17 +294,21 @@ function ExpensePrintTable({ detail }: { detail: ApplicationDetailResponse }) {
   if (!detail.expenseItems.length) return null;
   return (
     <section className={styles.financePrintSection}>
-      <h2>报销明细</h2>
+      <h2>{t("applicationDetail.modules.expenseItems", "报销明细")}</h2>
       <table className={styles.financeDataTable}>
         <thead>
           <tr>
-            <th>发生日期</th>
-            <th>费用类别</th>
-            <th>费用说明</th>
-            <th>原币金额</th>
-            <th>人民币金额</th>
-            <th>可报销金额</th>
-            <th>合规状态</th>
+            <th>{t("applicationDetail.print.occurredDate", "发生日期")}</th>
+            <th>{t("applicationDetail.print.expenseCategory", "费用类别")}</th>
+            <th>
+              {t("applicationDetail.print.expenseDescription", "费用说明")}
+            </th>
+            <th>{t("applicationDetail.print.originalAmount", "原币金额")}</th>
+            <th>{t("applicationDetail.print.cnyAmount", "人民币金额")}</th>
+            <th>
+              {t("applicationDetail.expense.fieldReimbursable", "可报销金额")}
+            </th>
+            <th>{t("applicationDetail.print.complianceStatus", "合规状态")}</th>
           </tr>
         </thead>
         <tbody>
@@ -328,16 +353,16 @@ function SalaryPrintTable({ detail }: { detail: ApplicationDetailResponse }) {
   );
   return (
     <section className={styles.financePrintSection}>
-      <h2>付款明细</h2>
+      <h2>{t("applicationDetail.modules.salaryItems", "付款明细")}</h2>
       <table className={styles.financeDataTable}>
         <thead>
           <tr>
-            <th>付款公司</th>
-            <th>支付项目</th>
-            <th>发薪人数</th>
-            <th>付款方式</th>
-            <th>付款金额</th>
-            <th>备注</th>
+            <th>{t("applicationDetail.print.payingEntity", "付款公司")}</th>
+            <th>{t("applicationDetail.print.paymentProject", "支付项目")}</th>
+            <th>{t("applicationDetail.print.employeeCount", "发薪人数")}</th>
+            <th>{t("applicationDetail.print.paymentMethod", "付款方式")}</th>
+            <th>{t("applicationDetail.print.paymentAmount", "付款金额")}</th>
+            <th>{t("common.remark", "备注")}</th>
           </tr>
         </thead>
         <tbody>
@@ -346,7 +371,10 @@ function SalaryPrintTable({ detail }: { detail: ApplicationDetailResponse }) {
               <td>
                 {printText(
                   item.internal_legal_entity_name_snapshot,
-                  "付款公司名称缺失",
+                  t(
+                    "applicationDetail.print.missingEntityName",
+                    "付款公司名称缺失",
+                  ),
                 )}
               </td>
               <td>{printText(item.payment_project)}</td>
@@ -365,7 +393,7 @@ function SalaryPrintTable({ detail }: { detail: ApplicationDetailResponse }) {
             </tr>
           ))}
           <tr className={styles.financeTotalRow}>
-            <th colSpan={2}>合计</th>
+            <th colSpan={2}>{t("applicationDetail.print.total", "合计")}</th>
             <td className={styles.financeNumberCell}>{totalEmployees}</td>
             <td />
             <td className={styles.financeNumberCell}>
@@ -388,16 +416,21 @@ function PaymentPlanPrintTable({
   if (!rows.length) return null;
   return (
     <section className={styles.financePrintSection}>
-      <h2>付款计划</h2>
+      <h2>{t("applicationDetail.modules.paymentPlans", "付款计划")}</h2>
       <table className={styles.financeDataTable}>
         <thead>
           <tr>
-            <th>期次</th>
-            <th>计划付款日</th>
-            <th>计划金额</th>
-            <th>触发条件</th>
-            <th>付款状态</th>
-            <th>实付金额</th>
+            <th>{t("applicationDetail.print.phase", "期次")}</th>
+            <th>{t("applicationDetail.print.plannedPayDate", "计划付款日")}</th>
+            <th>{t("applicationDetail.print.plannedAmount", "计划金额")}</th>
+            <th>
+              {t(
+                "applicationDetail.payment.fieldPhaseTriggerCondition",
+                "触发条件",
+              )}
+            </th>
+            <th>{t("applicationDetail.print.paymentStatus", "付款状态")}</th>
+            <th>{t("applicationDetail.print.actualPaidAmount", "实付金额")}</th>
           </tr>
         </thead>
         <tbody>
@@ -406,7 +439,12 @@ function PaymentPlanPrintTable({
               <td>
                 {printText(
                   item.phase_name ||
-                    (item.phase_no ? `第 ${item.phase_no} 期` : undefined),
+                    (item.phase_no
+                      ? t(
+                          "applicationDetail.print.phaseNumber",
+                          `第 ${item.phase_no} 期`,
+                        ).replace("{no}", String(item.phase_no))
+                      : undefined),
                 )}
               </td>
               <td>{formatDateValue(item.planned_pay_date)}</td>
@@ -433,22 +471,39 @@ function InvoicePrintTable({ detail }: { detail: ApplicationDetailResponse }) {
   if (!detail.invoiceLinks.length) return null;
   return (
     <section className={styles.financePrintSection}>
-      <h2>关联发票</h2>
+      <h2>{t("applicationDetail.modules.invoiceLinks", "关联发票")}</h2>
       <table className={styles.financeDataTable}>
         <thead>
           <tr>
-            <th>发票号码</th>
-            <th>销售方</th>
-            <th>价税合计</th>
-            <th>本单使用金额</th>
-            <th>关联时间</th>
+            <th>
+              {t("applicationDetail.invoice.fieldInvoiceNo", "发票号码")}
+            </th>
+            <th>{t("applicationDetail.print.seller", "销售方")}</th>
+            <th>
+              {t("applicationDetail.invoice.fieldTotalAmount", "价税合计")}
+            </th>
+            <th>{t("applicationDetail.print.amountUsed", "本单使用金额")}</th>
+            <th>{t("applicationDetail.print.linkedAt", "关联时间")}</th>
           </tr>
         </thead>
         <tbody>
           {detail.invoiceLinks.map((item, index) => (
             <tr key={String(item.id || index)}>
-              <td>{printText(item.invoice?.invoice_no, "发票号码缺失")}</td>
-              <td>{printText(item.invoice?.seller_name, "销售方名称缺失")}</td>
+              <td>
+                {printText(
+                  item.invoice?.invoice_no,
+                  t("applicationDetail.print.missingInvoiceNo", "发票号码缺失"),
+                )}
+              </td>
+              <td>
+                {printText(
+                  item.invoice?.seller_name,
+                  t(
+                    "applicationDetail.print.missingSellerName",
+                    "销售方名称缺失",
+                  ),
+                )}
+              </td>
               <td className={styles.financeNumberCell}>
                 {money(item.invoice?.total_amount)}
               </td>

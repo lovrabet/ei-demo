@@ -30,6 +30,7 @@ import {
   WarningOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { $i18n } from "@/i18n";
 import PageScaffold from "@/components/page-scaffold/PageScaffold";
 import ProjectTabs from "@/components/project-tabs";
 import { getInvoiceCenter } from "@/features/cpo-invoice-center/api";
@@ -45,17 +46,19 @@ import styles from "./index.module.css";
 
 const { Text } = Typography;
 
+const t = (key: string, fallbackText: string) => $i18n.t(key, fallbackText);
+
 const DIRECTION_LABELS: Record<string, string> = {
-  incoming: "对方开给我们",
-  outgoing: "我们开给对方",
+  incoming: t("invoiceCenter.direction.incoming", "对方开给我们"),
+  outgoing: t("invoiceCenter.direction.outgoing", "我们开给对方"),
 };
 
 const PURPOSE_LABELS: Record<string, string> = {
-  reimbursement: "员工报销",
-  procurement: "采购 / 供应商",
-  contract_payment: "合同付款",
-  customer_billing: "客户开票",
-  other: "其他",
+  reimbursement: t("invoiceCenter.purpose.reimbursement", "员工报销"),
+  procurement: t("invoiceCenter.purpose.procurement", "采购 / 供应商"),
+  contract_payment: t("invoiceCenter.purpose.contractPayment", "合同付款"),
+  customer_billing: t("invoiceCenter.purpose.customerBilling", "客户开票"),
+  other: t("invoiceCenter.purpose.other", "其他"),
 };
 
 const EMPTY_SUMMARY: InvoiceCenterResponse["summary"] = {
@@ -82,7 +85,7 @@ function money(value?: number, currency = "CNY") {
 async function copyInvoiceNumber(invoiceNo?: string) {
   const value = String(invoiceNo || "").trim();
   if (!value) {
-    message.warning("当前发票没有可复制的号码");
+    message.warning(t("invoiceCenter.copy.empty", "当前发票没有可复制的号码"));
     return;
   }
   try {
@@ -98,9 +101,9 @@ async function copyInvoiceNumber(invoiceNo?: string) {
       document.execCommand("copy");
       input.remove();
     }
-    message.success("发票号码已复制");
+    message.success(t("invoiceCenter.copy.success", "发票号码已复制"));
   } catch {
-    message.error("复制失败，请手动复制发票号码");
+    message.error(t("invoiceCenter.copy.failed", "复制失败，请手动复制发票号码"));
   }
 }
 
@@ -112,7 +115,7 @@ function InvoiceAttachmentLink({ filePath }: { filePath?: string }) {
     return (
       <div className={styles.drawerAttachmentEmpty}>
         <PaperClipOutlined />
-        <span>暂无发票附件</span>
+        <span>{t("invoiceCenter.attachment.empty", "暂无发票附件")}</span>
       </div>
     );
   }
@@ -131,15 +134,21 @@ function InvoiceAttachmentLink({ filePath }: { filePath?: string }) {
       } else {
         const opened = window.open(url, "_blank", "noopener,noreferrer");
         if (!opened) {
-          message.warning("浏览器已阻止打开附件，请允许弹出窗口后重试");
+          message.warning(
+            t(
+              "invoiceCenter.attachment.popupBlocked",
+              "浏览器已阻止打开附件，请允许弹出窗口后重试",
+            ),
+          );
         }
       }
     } catch (openError) {
       previewWindow?.close();
       message.error(
-        `打开附件失败：${
-          openError instanceof Error ? openError.message : String(openError)
-        }`,
+        t("invoiceCenter.attachment.openFailed", "打开附件失败：{reason}").replace(
+          "{reason}",
+          openError instanceof Error ? openError.message : String(openError),
+        ),
       );
     } finally {
       setOpening(false);
@@ -151,7 +160,7 @@ function InvoiceAttachmentLink({ filePath }: { filePath?: string }) {
       <div className={styles.drawerAttachmentMeta}>
         <PaperClipOutlined />
         <div>
-          <span>附件地址</span>
+          <span>{t("invoiceCenter.attachment.path", "附件地址")}</span>
           <strong title={normalizedPath}>{normalizedPath}</strong>
         </div>
       </div>
@@ -159,10 +168,10 @@ function InvoiceAttachmentLink({ filePath }: { filePath?: string }) {
         type="primary"
         icon={<LinkOutlined />}
         loading={opening}
-        aria-label="打开发票附件"
+        aria-label={t("invoiceCenter.attachment.open", "打开发票附件")}
         onClick={() => void handleOpen()}
       >
-        打开附件
+        {t("invoiceCenter.attachment.openButton", "打开附件")}
       </Button>
     </div>
   );
@@ -179,7 +188,7 @@ function RelatedDocumentList({
     return (
       <Empty
         image={Empty.PRESENTED_IMAGE_SIMPLE}
-        description="暂未关联业务单据"
+        description={t("invoiceCenter.related.empty", "暂未关联业务单据")}
       />
     );
   }
@@ -193,7 +202,7 @@ function RelatedDocumentList({
               <small>{item.relationLabel}</small>
               <strong>{item.title}</strong>
               <em>
-                {item.status || "状态未记录"}
+                {item.status || t("invoiceCenter.status.unrecorded", "状态未记录")}
                 {item.amount ? ` · ${money(item.amount)}` : ""}
               </em>
             </span>
@@ -268,7 +277,7 @@ export default function InvoiceCenterPage() {
       const nextError =
         requestError instanceof Error
           ? requestError.message
-          : "加载发票中心失败";
+          : t("invoiceCenter.error.loadFailed", "加载发票中心失败");
       setError(nextError);
       message.error(nextError);
     } finally {
@@ -282,12 +291,21 @@ export default function InvoiceCenterPage() {
 
   const scopeItems = useMemo(
     () => [
-      { value: "all", label: `全部 ${summary.invoiceCount}` },
-      { value: "incoming", label: `进项 ${summary.incomingCount}` },
-      { value: "outgoing", label: `销项 ${summary.outgoingCount}` },
+      {
+        value: "all",
+        label: `${t("invoiceCenter.scope.all", "全部")} ${summary.invoiceCount}`,
+      },
+      {
+        value: "incoming",
+        label: `${t("invoiceCenter.scope.incoming", "进项")} ${summary.incomingCount}`,
+      },
+      {
+        value: "outgoing",
+        label: `${t("invoiceCenter.scope.outgoing", "销项")} ${summary.outgoingCount}`,
+      },
       {
         value: "action_required",
-        label: `待处理 ${summary.actionRequiredCount}`,
+        label: `${t("invoiceCenter.scope.actionRequired", "待处理")} ${summary.actionRequiredCount}`,
       },
     ],
     [summary],
@@ -295,7 +313,7 @@ export default function InvoiceCenterPage() {
 
   const columns: ColumnsType<InvoiceCenterRow> = [
     {
-      title: "发票号码",
+      title: t("invoiceCenter.table.invoiceNo", "发票号码"),
       dataIndex: "invoiceNo",
       width: 220,
       render: (_, record) => (
@@ -303,19 +321,19 @@ export default function InvoiceCenterPage() {
           <button
             type="button"
             className={styles.invoiceNumberButton}
-            title={record.invoiceNo || "发票号码待补"}
+            title={record.invoiceNo || t("invoiceCenter.invoiceNoMissing", "发票号码待补")}
             onClick={() => setSelected(record)}
           >
-            {record.invoiceNo || "发票号码待补"}
+            {record.invoiceNo || t("invoiceCenter.invoiceNoMissing", "发票号码待补")}
           </button>
           {record.invoiceNo ? (
-            <Tooltip title="复制发票号码">
+            <Tooltip title={t("invoiceCenter.copy.tooltip", "复制发票号码")}>
               <Button
                 className={styles.copyInvoiceNumber}
                 type="text"
                 size="small"
                 icon={<CopyOutlined />}
-                aria-label={`复制发票号码 ${record.invoiceNo}`}
+                aria-label={`${t("invoiceCenter.copy.tooltip", "复制发票号码")} ${record.invoiceNo}`}
                 onClick={(event) => {
                   event.stopPropagation();
                   void copyInvoiceNumber(record.invoiceNo);
@@ -327,7 +345,7 @@ export default function InvoiceCenterPage() {
       ),
     },
     {
-      title: "发票标题",
+      title: t("invoiceCenter.table.title", "发票标题"),
       dataIndex: "title",
       width: 240,
       render: (value) => (
@@ -335,48 +353,59 @@ export default function InvoiceCenterPage() {
       ),
     },
     {
-      title: "分类",
+      title: t("invoiceCenter.table.classification", "分类"),
       width: 190,
       render: (_, record) => (
         <div className={styles.classificationCell}>
           <Tag color={record.direction === "outgoing" ? "blue" : "gold"}>
             {record.direction
               ? DIRECTION_LABELS[record.direction] || record.direction
-              : "方向待补"}
+              : t("invoiceCenter.directionMissing", "方向待补")}
           </Tag>
-          <Tag>{PURPOSE_LABELS[record.purpose || ""] || "用途待补"}</Tag>
+          <Tag>
+            {PURPOSE_LABELS[record.purpose || ""] ||
+              t("invoiceCenter.purposeMissing", "用途待补")}
+          </Tag>
         </div>
       ),
     },
     {
-      title: "交易对手",
+      title: t("invoiceCenter.table.partner", "交易对手"),
       dataIndex: "partnerName",
       width: 220,
       render: (value, record) => (
         <div className={styles.partnerCell}>
-          <span>{value || "交易对手待补"}</span>
-          <small>{record.direction === "outgoing" ? "购方" : "销方"}</small>
+          <span>{value || t("invoiceCenter.partnerMissing", "交易对手待补")}</span>
+          <small>
+            {record.direction === "outgoing"
+              ? t("invoiceCenter.partnerRole.buyer", "购方")
+              : t("invoiceCenter.partnerRole.seller", "销方")}
+          </small>
         </div>
       ),
     },
     {
-      title: "票面 / 分摊",
+      title: t("invoiceCenter.table.amountAllocation", "票面 / 分摊"),
       width: 190,
       align: "right",
       render: (_, record) => (
         <div className={styles.amountCell}>
           <span>{money(record.totalAmount, record.currency)}</span>
-          <small>已分摊 {money(record.allocatedAmount, record.currency)}</small>
+          <small>
+            {t("invoiceCenter.summary.allocated", "已分摊")}{" "}
+            {money(record.allocatedAmount, record.currency)}
+          </small>
           {record.unallocatedAmount > 0 ? (
             <small className={styles.amountPending}>
-              未分摊 {money(record.unallocatedAmount, record.currency)}
+              {t("invoiceCenter.summary.unallocated", "未分摊")}{" "}
+              {money(record.unallocatedAmount, record.currency)}
             </small>
           ) : null}
         </div>
       ),
     },
     {
-      title: "业务关联",
+      title: t("invoiceCenter.table.relatedDocuments", "业务关联"),
       width: 250,
       render: (_, record) => (
         <div className={styles.relationCell}>
@@ -388,7 +417,7 @@ export default function InvoiceCenterPage() {
                     type="button"
                     key={item.key}
                     className={`${styles.relationItem} ${styles.relationItemLink}`}
-                    title={`查看${item.title}`}
+                    title={t("invoiceCenter.related.viewTitle", "查看{title}").replace("{title}", item.title)}
                     onClick={() => openPath(item.path)}
                   >
                     <LinkOutlined />
@@ -406,29 +435,36 @@ export default function InvoiceCenterPage() {
                 )
               ))}
               {record.relatedDocuments.length > 2 ? (
-                <small>另有 {record.relatedDocuments.length - 2} 项关联</small>
+                <small>
+                  {t("invoiceCenter.related.more", "另有 {count} 项关联").replace(
+                    "{count}",
+                    String(record.relatedDocuments.length - 2),
+                  )}
+                </small>
               ) : null}
             </>
           ) : (
-            <Text type="secondary">未关联业务单据</Text>
+            <Text type="secondary">
+              {t("invoiceCenter.related.empty", "未关联业务单据")}
+            </Text>
           )}
         </div>
       ),
     },
     {
-      title: "日期 / 业务归属",
+      title: t("invoiceCenter.table.dateAndStatus", "日期 / 业务归属"),
       width: 150,
       render: (_, record) => (
         <div className={styles.statusCell}>
           <span>{formatDateValue(record.invoiceDate)}</span>
           <Tag color={record.usageStatusTone || "default"}>
-            {record.usageStatusLabel || "待判断"}
+            {record.usageStatusLabel || t("invoiceCenter.status.pending", "待判断")}
           </Tag>
         </div>
       ),
     },
     {
-      title: "待办",
+      title: t("invoiceCenter.table.todo", "待办"),
       width: 92,
       align: "center",
       render: (_, record) =>
@@ -440,11 +476,11 @@ export default function InvoiceCenterPage() {
             </span>
           </Tooltip>
         ) : (
-          <Text type="secondary">无</Text>
+          <Text type="secondary">{t("invoiceCenter.none", "无")}</Text>
         ),
     },
     {
-      title: "操作",
+      title: t("invoiceCenter.table.actions", "操作"),
       fixed: "right",
       width: 100,
       render: (_, record) => (
@@ -454,7 +490,7 @@ export default function InvoiceCenterPage() {
           icon={<EyeOutlined />}
           onClick={() => setSelected(record)}
         >
-          查看
+          {t("invoiceCenter.action.view", "查看")}
         </Button>
       ),
     },
@@ -462,27 +498,30 @@ export default function InvoiceCenterPage() {
 
   return (
     <PageScaffold
-      title="发票中心"
-      description="统一管理进项、销项、报销发票及其合同、付款和费用归属。"
+      title={t("invoiceCenter.pageTitle", "发票中心")}
+      description={t(
+        "invoiceCenter.pageDescription",
+        "统一管理进项、销项、报销发票及其合同、付款和费用归属。",
+      )}
       variant="list"
       density="compact"
       headerExtra={
         <Space wrap>
           <Button icon={<ReloadOutlined />} loading={loading} onClick={load}>
-            刷新
+            {t("invoiceCenter.action.refresh", "刷新")}
           </Button>
           <Button
             icon={<InboxOutlined />}
             onClick={() => navigate("/invoice-archive-form")}
           >
-            录入进项发票
+            {t("invoiceCenter.action.archiveIncoming", "录入进项发票")}
           </Button>
           <Button
             type="primary"
             icon={<FileAddOutlined />}
             onClick={() => navigate("/invoice-form")}
           >
-            申请开票
+            {t("invoiceCenter.action.applyOutgoing", "申请开票")}
           </Button>
         </Space>
       }
@@ -491,44 +530,52 @@ export default function InvoiceCenterPage() {
         <Alert
           type="error"
           showIcon
-          message="发票中心加载失败"
+          message={t("invoiceCenter.error.loadTitle", "发票中心加载失败")}
           description={error}
-          action={<Button onClick={load}>重试</Button>}
+          action={
+            <Button onClick={load}>{t("invoiceCenter.action.retry", "重试")}</Button>
+          }
         />
       ) : null}
 
-      <section className={styles.summaryStrip} aria-label="发票概览">
+      <section
+        className={styles.summaryStrip}
+        aria-label={t("invoiceCenter.summary.ariaAria", "发票概览")}
+      >
         <div>
-          <span>发票总数</span>
+          <span>{t("invoiceCenter.summary.totalCount", "发票总数")}</span>
           <strong>{summary.invoiceCount}</strong>
           <small>
-            业务有效 {summary.activeInvoiceCount} · 已失效{" "}
+            {t("invoiceCenter.summary.active", "业务有效")}{" "}
+            {summary.activeInvoiceCount} · {t("invoiceCenter.summary.inactive", "已失效")}{" "}
             {summary.inactiveInvoiceCount}
           </small>
         </div>
         <div>
-          <span>票面总额</span>
+          <span>{t("invoiceCenter.summary.totalAmount", "票面总额")}</span>
           <strong>{money(summary.totalAmount)}</strong>
-          <small>按业务有效发票汇总</small>
+          <small>{t("invoiceCenter.summary.totalAmountHint", "按业务有效发票汇总")}</small>
         </div>
         <div>
-          <span>已分摊</span>
+          <span>{t("invoiceCenter.summary.allocatedTitle", "已分摊")}</span>
           <strong>{money(summary.allocatedAmount)}</strong>
-          <small>已关联付款或报销</small>
+          <small>{t("invoiceCenter.summary.allocatedHint", "已关联付款或报销")}</small>
         </div>
         <div
           className={summary.actionRequiredCount ? styles.summaryWarning : ""}
         >
-          <span>待处理</span>
+          <span>{t("invoiceCenter.summary.actionRequiredTitle", "待处理")}</span>
           <strong>{summary.actionRequiredCount}</strong>
-          <small>未分摊、未分类或缺少关联</small>
+          <small>
+            {t("invoiceCenter.summary.actionRequiredHint", "未分摊、未分类或缺少关联")}
+          </small>
         </div>
       </section>
 
       <section className={styles.listPanel}>
         <ProjectTabs
           className={styles.scopeTabs}
-          aria-label="发票范围"
+          aria-label={t("invoiceCenter.scope.aria", "发票范围")}
           activeKey={scope}
           items={scopeItems.map((item) => ({
             key: item.value,
@@ -543,7 +590,10 @@ export default function InvoiceCenterPage() {
           <Input.Search
             allowClear
             prefix={<SearchOutlined />}
-            placeholder="搜索发票号、抬头、交易对手或关联合同"
+            placeholder={t(
+              "invoiceCenter.search.placeholder",
+              "搜索发票号、抬头、交易对手或关联合同",
+            )}
             value={keywordInput}
             onChange={(event) => setKeywordInput(event.target.value)}
             onSearch={(value) => {
@@ -553,7 +603,7 @@ export default function InvoiceCenterPage() {
           />
           <Select
             allowClear
-            placeholder="业务用途"
+            placeholder={t("invoiceCenter.filter.purpose", "业务用途")}
             value={purpose || undefined}
             onChange={(value) => {
               setPurpose(value || "");
@@ -566,18 +616,30 @@ export default function InvoiceCenterPage() {
           />
           <Select
             allowClear
-            placeholder="流程状态"
+            placeholder={t("invoiceCenter.filter.status", "流程状态")}
             value={status || undefined}
             onChange={(value) => {
               setStatus(value || "");
               setPage(1);
             }}
             options={[
-              { value: "draft", label: "草稿" },
-              { value: "submitted", label: "审批中" },
-              { value: "reviewed", label: "已审核 / 已归档" },
-              { value: "rejected", label: "已驳回" },
-              { value: "cancelled", label: "已作废" },
+              { value: "draft", label: t("invoiceCenter.status.draft", "草稿") },
+              {
+                value: "submitted",
+                label: t("invoiceCenter.status.submitted", "审批中"),
+              },
+              {
+                value: "reviewed",
+                label: t("invoiceCenter.status.reviewed", "已审核 / 已归档"),
+              },
+              {
+                value: "rejected",
+                label: t("invoiceCenter.status.rejected", "已驳回"),
+              },
+              {
+                value: "cancelled",
+                label: t("invoiceCenter.status.cancelled", "已作废"),
+              },
             ]}
           />
         </div>
@@ -587,13 +649,23 @@ export default function InvoiceCenterPage() {
           columns={columns}
           dataSource={data}
           scroll={{ x: 1480 }}
-          locale={{ emptyText: <Empty description="暂无符合条件的发票" /> }}
+          locale={{
+            emptyText: (
+              <Empty
+                description={t("invoiceCenter.empty.noResults", "暂无符合条件的发票")}
+              />
+            ),
+          }}
           pagination={{
             current: page,
             pageSize,
             total,
             showSizeChanger: true,
-            showTotal: (count) => `共 ${count} 张发票`,
+            showTotal: (count) =>
+              t("invoiceCenter.pagination.total", "共 {count} 张发票").replace(
+                "{count}",
+                String(count),
+              ),
             onChange: (nextPage, nextPageSize) => {
               setPage(nextPageSize === pageSize ? nextPage : 1);
               setPageSize(nextPageSize);
@@ -603,7 +675,7 @@ export default function InvoiceCenterPage() {
       </section>
 
       <Drawer
-        title="发票业务关系"
+        title={t("invoiceCenter.drawer.title", "发票业务关系")}
         width="min(560px, 100vw)"
         open={Boolean(selected)}
         onClose={() => setSelected(undefined)}
@@ -614,7 +686,7 @@ export default function InvoiceCenterPage() {
               icon={<EyeOutlined />}
               onClick={() => openPath(selected.detailPath)}
             >
-              发票登记详情
+              {t("invoiceCenter.action.viewDetail", "发票登记详情")}
             </Button>
           ) : null
         }
@@ -623,50 +695,61 @@ export default function InvoiceCenterPage() {
           <div className={styles.drawerContent}>
             <header>
               <span>
-                {DIRECTION_LABELS[selected.direction || ""] || "方向待补"} ·{" "}
-                {PURPOSE_LABELS[selected.purpose || ""] || "用途待补"}
+                {DIRECTION_LABELS[selected.direction || ""] ||
+                  t("invoiceCenter.directionMissing", "方向待补")}{" "}
+                ·{" "}
+                {PURPOSE_LABELS[selected.purpose || ""] ||
+                  t("invoiceCenter.purposeMissing", "用途待补")}
               </span>
               <h3>{selected.title}</h3>
-              <p>{selected.invoiceNo || "发票号码待补"}</p>
+              <p>
+                {selected.invoiceNo ||
+                  t("invoiceCenter.invoiceNoMissing", "发票号码待补")}
+              </p>
             </header>
             <div className={styles.drawerFacts}>
               <div>
-                <span>交易对手</span>
-                <strong>{selected.partnerName || "待补"}</strong>
+                <span>{t("invoiceCenter.drawer.partner", "交易对手")}</span>
+                <strong>
+                  {selected.partnerName || t("invoiceCenter.drawer.pending", "待补")}
+                </strong>
               </div>
               <div>
-                <span>票面金额</span>
+                <span>{t("invoiceCenter.drawer.totalAmount", "票面金额")}</span>
                 <strong>
                   {money(selected.totalAmount, selected.currency)}
                 </strong>
               </div>
               <div>
-                <span>已分摊</span>
+                <span>{t("invoiceCenter.summary.allocatedTitle", "已分摊")}</span>
                 <strong>
                   {money(selected.allocatedAmount, selected.currency)}
                 </strong>
               </div>
               <div>
-                <span>未分摊</span>
+                <span>{t("invoiceCenter.summary.unallocatedTitle", "未分摊")}</span>
                 <strong>
                   {money(selected.unallocatedAmount, selected.currency)}
                 </strong>
               </div>
               <div>
-                <span>业务归属</span>
-                <strong>{selected.usageStatusLabel || "待判断"}</strong>
+                <span>{t("invoiceCenter.drawer.usageStatus", "业务归属")}</span>
+                <strong>
+                  {selected.usageStatusLabel ||
+                    t("invoiceCenter.status.pending", "待判断")}
+                </strong>
               </div>
               <div>
-                <span>原登记流程</span>
+                <span>{t("invoiceCenter.drawer.workflowStatus", "原登记流程")}</span>
                 <strong>
                   {selected.workflowStatusLabel ||
                     selected.workflowStatus ||
-                    "未记录"}
+                    t("invoiceCenter.status.unrecorded", "未记录")}
                 </strong>
               </div>
             </div>
             <section className={styles.drawerAttachmentSection}>
-              <h4>发票附件</h4>
+              <h4>{t("invoiceCenter.drawer.attachmentTitle", "发票附件")}</h4>
               <InvoiceAttachmentLink filePath={selected.filePath} />
             </section>
             {selected.workflowStatus === "rejected" &&
@@ -674,20 +757,29 @@ export default function InvoiceCenterPage() {
               <Alert
                 type="info"
                 showIcon
-                message="登记流程与当前业务归属不同"
-                description="这张发票原登记流程曾被驳回，但之后已被其他有效业务单据使用。发票中心以当前实际归属为主，原流程状态仅作为历史记录保留。"
+                message={t(
+                  "invoiceCenter.drawer.rejectedTitle",
+                  "登记流程与当前业务归属不同",
+                )}
+                description={t(
+                  "invoiceCenter.drawer.rejectedDescription",
+                  "这张发票原登记流程曾被驳回，但之后已被其他有效业务单据使用。发票中心以当前实际归属为主，原流程状态仅作为历史记录保留。",
+                )}
               />
             ) : null}
             {selected.actionReasons.length ? (
               <Alert
                 type="warning"
                 showIcon
-                message="这张发票仍有待处理事项"
+                message={t(
+                  "invoiceCenter.drawer.actionRequiredTitle",
+                  "这张发票仍有待处理事项",
+                )}
                 description={selected.actionReasons.join("；")}
               />
             ) : null}
             <section>
-              <h4>关联业务单据</h4>
+              <h4>{t("invoiceCenter.drawer.relatedTitle", "关联业务单据")}</h4>
               <RelatedDocumentList
                 rows={selected.relatedDocuments}
                 onOpen={openPath}

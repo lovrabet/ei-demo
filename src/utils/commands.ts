@@ -4,6 +4,7 @@
  */
 
 import { lovrabetClient } from "@/api/client";
+import { $i18n } from "@/i18n";
 
 type BffExecutorClient = Pick<typeof lovrabetClient, "bff">;
 
@@ -14,7 +15,7 @@ export function getCommandErrorMessage(error: unknown): string {
   if (error instanceof Error && error.message) {
     return error.message;
   }
-  return "命令执行失败";
+  return $i18n.t("common.commandFailed", "命令执行失败");
 }
 
 /**

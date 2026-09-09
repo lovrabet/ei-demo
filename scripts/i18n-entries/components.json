@@ -1,0 +1,26 @@
+[
+  {
+    "key": "formFooter.submitApplication",
+    "zh": "提交申请",
+    "en": "Submit Application",
+    "id": "Kirim Permohonan"
+  },
+  {
+    "key": "agentFormGuide.manualEntryNotice",
+    "zh": "当前页面是传统的人工录入方式",
+    "en": "This page uses the traditional manual entry method",
+    "id": "Halaman ini menggunakan cara input manual tradisional"
+  },
+  {
+    "key": "agentFormGuide.recommendSkill",
+    "zh": "推荐使用 Agent 数字员工的「{skillName}」。{description}",
+    "en": "We recommend the Agent digital employee \"{skillName}\". {description}",
+    "id": "Direkomendasikan menggunakan agen digital \"{skillName}\". {description}"
+  },
+  {
+    "key": "agentFormGuide.invokeSkill",
+    "zh": "调用此 Skill",
+    "en": "Invoke this Skill",
+    "id": "Panggil Skill ini"
+  }
+]

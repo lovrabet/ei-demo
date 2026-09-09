@@ -38,7 +38,10 @@ import {
   loadPlatformTodoSummaries,
   type PlatformTaskSummary,
 } from "@/features/platform-flow/api";
+import { $i18n } from "@/i18n";
 import styles from "./index.module.css";
+
+const t = (key: string, fallbackText: string) => $i18n.t(key, fallbackText);
 
 type PersonalStats = {
   myTodoCount: number;
@@ -105,8 +108,8 @@ const emptyOrganization: OrganizationStats = {
 
 const bizTypeLabel: Record<string, string> = {
   ...CPO_BIZ_TYPE_LABEL,
-  partner: "伙伴",
-  credential: "资质",
+  partner: t("workbench.bizTypes.partner", "伙伴"),
+  credential: t("workbench.bizTypes.credential", "资质"),
 };
 
 const currencyFormatter = new Intl.NumberFormat("zh-CN", {
@@ -166,7 +169,9 @@ const Workbench: React.FC = () => {
       setTodos(todoResult);
     } catch (loadError) {
       setError(
-        loadError instanceof Error ? loadError.message : "工作台数据加载失败",
+        loadError instanceof Error
+          ? loadError.message
+          : t("workbench.loadFailed", "工作台数据加载失败"),
       );
     } finally {
       setLoading(false);
@@ -228,32 +233,32 @@ const Workbench: React.FC = () => {
       },
       series: [
         {
-          name: "报销",
+          name: t("workbench.trend.expense", "报销"),
           type: "bar",
           stack: "applications",
           barMaxWidth: 34,
           data: trend.map((item) => item.expense),
         },
         {
-          name: "合同",
+          name: t("workbench.trend.contract", "合同"),
           type: "bar",
           stack: "applications",
           data: trend.map((item) => item.contract),
         },
         {
-          name: "付款",
+          name: t("workbench.trend.payment", "付款"),
           type: "bar",
           stack: "applications",
           data: trend.map((item) => item.payment),
         },
         {
-          name: "发票",
+          name: t("workbench.trend.invoice", "发票"),
           type: "bar",
           stack: "applications",
           data: trend.map((item) => item.invoice),
         },
         {
-          name: "差旅",
+          name: t("workbench.trend.travel", "差旅"),
           type: "bar",
           stack: "applications",
           data: trend.map((item) => item.travel),
@@ -274,7 +279,7 @@ const Workbench: React.FC = () => {
       ],
       tooltip: {
         trigger: "item",
-        formatter: "{b}<br/>{c} 项 · {d}%",
+        formatter: t("workbench.chartFormatter", "{b}<br/>{c} 项 · {d}%"),
         backgroundColor: token.colorBgElevated,
         borderColor: token.colorBorderSecondary,
         textStyle: { color: token.colorText },
@@ -329,20 +334,20 @@ const Workbench: React.FC = () => {
           <div className={styles.eyebrow}>CPO OPERATIONS</div>
           <h1>
             {dashboard?.actor?.displayName
-              ? `${dashboard.actor.displayName}，业务工作台`
-              : "业务工作台"}
+              ? `${dashboard.actor.displayName}，${t("workbench.titleSuffix", "业务工作台")}`
+              : t("workbench.title", "业务工作台")}
           </h1>
-          <p>集中查看个人任务、业务流量和资金事项。</p>
+          <p>{t("workbench.subtitle", "集中查看个人任务、业务流量和资金事项。")}</p>
         </div>
         <div className={styles.heroActions}>
           <span className={styles.updatedAt}>
-            数据更新于{" "}
+            {t("workbench.updatedAt", "数据更新于")}{" "}
             {dashboard?.generatedAt
               ? formatDateTime(dashboard.generatedAt)
               : "-"}
           </span>
           <Button icon={<ReloadOutlined />} onClick={load} loading={loading}>
-            刷新
+            {t("workbench.refresh", "刷新")}
           </Button>
         </div>
       </header>
@@ -352,9 +357,9 @@ const Workbench: React.FC = () => {
           className={styles.alert}
           type="error"
           showIcon
-          message="工作台数据暂时不可用"
+          message={t("workbench.errorTitle", "工作台数据暂时不可用")}
           description={error}
-          action={<Button onClick={load}>重新加载</Button>}
+          action={<Button onClick={load}>{t("workbench.reload", "重新加载")}</Button>}
         />
       ) : null}
 
@@ -364,36 +369,36 @@ const Workbench: React.FC = () => {
         </div>
       ) : (
         <>
-          <section className={styles.statGrid} aria-label="个人工作概览">
+          <section className={styles.statGrid} aria-label={t("workbench.personalOverviewAria", "个人工作概览")}>
             <StatCard
               icon={<ClockCircleOutlined />}
-              label="审批待办"
+              label={t("workbench.statLabels.myTodo", "审批待办")}
               value={todos.length}
-              detail="等待我处理的审批任务"
+              detail={t("workbench.statDetails.myTodo", "等待我处理的审批任务")}
               tone="warning"
               onClick={() => navigate("/approval-center?tab=todo")}
             />
             <StatCard
               icon={<SendOutlined />}
-              label="我发起的业务"
+              label={t("workbench.statLabels.myInitiated", "我发起的业务")}
               value={personal.myInitiatedCount}
-              detail="当前账号创建的申请"
+              detail={t("workbench.statDetails.myInitiated", "当前账号创建的申请")}
               tone="primary"
               onClick={() => navigate("/my-submitted")}
             />
             <StatCard
               icon={<WalletOutlined />}
-              label="付款待确认"
+              label={t("workbench.statLabels.paymentPending", "付款待确认")}
               value={personal.paymentBankPendingCount}
-              detail="银行处理中待回执"
+              detail={t("workbench.statDetails.paymentPending", "银行处理中待回执")}
               tone="success"
               onClick={() => navigate("/payment-form")}
             />
             <StatCard
               icon={<FileProtectOutlined />}
-              label="资质提醒"
+              label={t("workbench.statLabels.credentialAlert", "资质提醒")}
               value={personal.expiringCredentialCount}
-              detail="即将到期的公司资质"
+              detail={t("workbench.statDetails.credentialAlert", "即将到期的公司资质")}
               tone="error"
               onClick={() => navigate("/credential-form")}
             />
@@ -401,14 +406,14 @@ const Workbench: React.FC = () => {
 
           <section className={`${styles.panel} ${styles.todoPanel}`}>
             <PanelHeader
-              title="最近待办"
-              subtitle={`当前共 ${todos.length} 项，按创建时间倒序`}
+              title={t("workbench.recentTodos", "最近待办")}
+              subtitle={t("workbench.recentTodosSubtitle", `当前共 ${todos.length} 项，按创建时间倒序`).replace("{count}", String(todos.length))}
               extra={
                 <Button
                   type="link"
                   onClick={() => navigate("/approval-center?tab=todo")}
                 >
-                  查看全部 <ArrowRightOutlined />
+                  {t("workbench.viewAll", "查看全部")} <ArrowRightOutlined />
                 </Button>
               }
             />
@@ -430,7 +435,7 @@ const Workbench: React.FC = () => {
                         <Tag color="geekblue">{item.nodeName}</Tag>
                       </div>
                       <strong>{item.title}</strong>
-                      <span>{item.applicantName || "申请人未记录"}</span>
+                      <span>{item.applicantName || t("workbench.applicantNotRecorded", "申请人未记录")}</span>
                     </div>
                     <div className={styles.todoMeta}>
                       {item.amount ? (
@@ -438,7 +443,7 @@ const Workbench: React.FC = () => {
                       ) : null}
                       <time>{formatDateTime(item.createdAt)}</time>
                     </div>
-                    <Tooltip title="查看详情">
+                    <Tooltip title={t("workbench.viewDetail", "查看详情")}>
                       <ArrowRightOutlined className={styles.todoArrow} />
                     </Tooltip>
                   </button>
@@ -447,7 +452,7 @@ const Workbench: React.FC = () => {
             ) : (
               <Empty
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description="暂无待办"
+                description={t("workbench.noTodos", "暂无待办")}
               />
             )}
           </section>
@@ -455,10 +460,10 @@ const Workbench: React.FC = () => {
           <section className={styles.primaryGrid}>
             <article className={`${styles.panel} ${styles.trendPanel}`}>
               <PanelHeader
-                title="申请趋势"
-                subtitle="近 6 个月业务申请量，按类型堆叠"
+                title={t("workbench.applicationTrend", "申请趋势")}
+                subtitle={t("workbench.applicationTrendSubtitle", "近 6 个月业务申请量，按类型堆叠")}
                 extra={
-                  <Tag color="blue">{trend.at(-1)?.total || 0} 项 / 本月</Tag>
+                  <Tag color="blue">{trend.at(-1)?.total || 0} {t("workbench.itemsPerMonth", "项 / 本月")}</Tag>
                 }
               />
               {trend.some((item) => item.total > 0) ? (
@@ -471,38 +476,38 @@ const Workbench: React.FC = () => {
                 <Empty
                   className={styles.chartEmpty}
                   image={Empty.PRESENTED_IMAGE_SIMPLE}
-                  description="暂无申请趋势"
+                  description={t("workbench.noTrend", "暂无申请趋势")}
                 />
               )}
             </article>
 
             <article className={styles.panel}>
               <PanelHeader
-                title="近 30 日金额"
-                subtitle="按申请创建时间汇总，单位为人民币"
+                title={t("workbench.amount30d", "近 30 日金额")}
+                subtitle={t("workbench.amount30dSubtitle", "按申请创建时间汇总，单位为人民币")}
               />
               <div className={styles.amountList}>
                 <AmountRow
-                  label="报销申请"
+                  label={t("workbench.amountExpense", "报销申请")}
                   amount={organization.expenseAmount30d}
                   count={organization.expenseCount30d}
                   color={token.colorPrimary}
                 />
                 <AmountRow
-                  label="付款申请"
+                  label={t("workbench.amountPayment", "付款申请")}
                   amount={organization.paymentAmount30d}
                   count={organization.paymentCount30d}
                   color={token.colorSuccess}
                 />
                 <AmountRow
-                  label="合同申请"
+                  label={t("workbench.amountContract", "合同申请")}
                   amount={organization.contractAmount30d}
                   count={organization.contractCount30d}
                   color={token.colorWarning}
                 />
               </div>
               <div className={styles.amountFootnote}>
-                已排除已取消、已驳回和失败记录
+                {t("workbench.amountFootnote", "已排除已取消、已驳回和失败记录")}
               </div>
             </article>
           </section>
@@ -510,8 +515,8 @@ const Workbench: React.FC = () => {
           <section className={styles.secondaryGrid}>
             <article className={styles.panel}>
               <PanelHeader
-                title="待办构成"
-                subtitle={`全局当前待办 ${organization.pendingTaskCount} 项`}
+                title={t("workbench.todoBreakdown", "待办构成")}
+                subtitle={t("workbench.todoBreakdownSubtitle", `全局当前待办 ${organization.pendingTaskCount} 项`).replace("{count}", String(organization.pendingTaskCount))}
               />
               {workload.length ? (
                 <ReactECharts
@@ -523,15 +528,15 @@ const Workbench: React.FC = () => {
                 <Empty
                   className={styles.chartEmpty}
                   image={Empty.PRESENTED_IMAGE_SIMPLE}
-                  description="暂无待办任务"
+                  description={t("workbench.noTodosEmpty", "暂无待办任务")}
                 />
               )}
             </article>
 
             <article className={styles.panel}>
               <PanelHeader
-                title="风险与提醒"
-                subtitle="根据任务截止时间和资质状态识别"
+                title={t("workbench.riskTitle", "风险与提醒")}
+                subtitle={t("workbench.riskSubtitle", "根据任务截止时间和资质状态识别")}
               />
               <div className={styles.riskList}>
                 <div className={styles.riskItem}>
@@ -540,7 +545,7 @@ const Workbench: React.FC = () => {
                   </div>
                   <div className={styles.riskContent}>
                     <div className={styles.riskTopline}>
-                      <span>逾期待办</span>
+                      <span>{t("workbench.overdueTodo", "逾期待办")}</span>
                       <strong>{organization.overdueTaskCount}</strong>
                     </div>
                     <Progress
@@ -549,7 +554,7 @@ const Workbench: React.FC = () => {
                       strokeColor={token.colorWarning}
                       size="small"
                     />
-                    <small>占全部待办 {overdueRatio}%</small>
+                    <small>{t("workbench.overdueRatio", `占全部待办 ${overdueRatio}%`).replace("{ratio}", String(overdueRatio))}</small>
                   </div>
                 </div>
                 <div className={styles.riskItem}>
@@ -558,10 +563,10 @@ const Workbench: React.FC = () => {
                   </div>
                   <div className={styles.riskContent}>
                     <div className={styles.riskTopline}>
-                      <span>资质风险</span>
+                      <span>{t("workbench.credentialRisk", "资质风险")}</span>
                       <strong>{organization.credentialRiskCount}</strong>
                     </div>
-                    <p>包含即将到期和已过期资质</p>
+                    <p>{t("workbench.credentialRiskDetail", "包含即将到期和已过期资质")}</p>
                   </div>
                 </div>
               </div>
@@ -569,18 +574,18 @@ const Workbench: React.FC = () => {
               <div className={styles.quickActions}>
                 <button type="button" onClick={() => navigate("/expense-form")}>
                   <FileAddOutlined />
-                  新建报销
+                  {t("workbench.quickExpense", "新建报销")}
                 </button>
                 <button type="button" onClick={() => navigate("/payment-form")}>
                   <WalletOutlined />
-                  新建付款
+                  {t("workbench.quickPayment", "新建付款")}
                 </button>
                 <button
                   type="button"
                   onClick={() => navigate("/contract-form")}
                 >
                   <FileTextOutlined />
-                  新建合同
+                  {t("workbench.quickContract", "新建合同")}
                 </button>
               </div>
             </article>
@@ -639,12 +644,12 @@ const AmountRow: React.FC<{
     <span className={styles.amountDot} style={{ backgroundColor: color }} />
     <div>
       <span>{label}</span>
-      <small>{count} 笔申请</small>
+      <small>{t("workbench.applicationCount", `${count} 笔申请`).replace("{count}", String(count))}</small>
     </div>
     <strong>{formatCurrency(amount)}</strong>
   </div>
 );
 
-Workbench.displayName = "业务工作台";
+Workbench.displayName = t("workbench.displayName", "业务工作台");
 
 export default Workbench;

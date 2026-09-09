@@ -2,14 +2,21 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { isInIcestark } from "@ice/stark-app";
 import { ConfigProvider } from "antd";
-import zhCN from "antd/locale/zh_CN";
+import dayjs from "dayjs";
+import { antdLocale, currentLanguage, dayjsLocale } from "@/i18n";
 import { mountReactRoot, unmountReactRoot } from "./micro-app-root";
 import App from "./router";
 import "./style.css";
 
+dayjs.locale(dayjsLocale);
+if (typeof document !== "undefined") {
+  document.documentElement.lang = currentLanguage;
+  document.documentElement.dir = "ltr";
+}
+
 function renderApp(customProps?: object) {
   return (
-    <ConfigProvider locale={zhCN}>
+    <ConfigProvider locale={antdLocale}>
       <App {...customProps} />
     </ConfigProvider>
   );
@@ -33,9 +40,7 @@ export function mount({
 }) {
   return mountReactRoot(
     container,
-    <React.StrictMode>
-      {renderApp(customProps)}
-    </React.StrictMode>,
+    <React.StrictMode>{renderApp(customProps)}</React.StrictMode>,
     createRoot,
   );
 }

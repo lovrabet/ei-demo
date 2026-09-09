@@ -25,7 +25,15 @@ import {
   PercentageOutlined,
   InboxOutlined,
   FileProtectOutlined,
+  GlobalOutlined,
 } from "@ant-design/icons";
+import {
+  $i18n,
+  allowLangs,
+  currentLanguage,
+  setApplicationLanguage,
+  type TLanguage,
+} from "@/i18n";
 
 const { Header, Sider, Content } = Layout;
 const MOBILE_LAYOUT_QUERY = "(max-width: 767px)";
@@ -39,30 +47,66 @@ function isMobileViewport() {
 
 // 路由配置，用于生成面包屑
 const routeConfig = [
-  { path: "/", title: "首页" },
-  { path: "/workbench", title: "工作台" },
-  { path: "/approval-center", title: "审批中心" },
-  { path: "/my-todo", title: "审批待办" },
-  { path: "/my-submitted", title: "我提交的流程" },
-  { path: "/my-done", title: "审批已办" },
-  { path: "/application-list", title: "申请单汇总" },
-  { path: "/contracts", title: "合同工作台" },
-  { path: "/customer-360", title: "客户 360" },
-  { path: "/receivable-contract-detail", title: "收款合同详情" },
-  { path: "/receivable-plan-form", title: "收款计划维护" },
-  { path: "/invoice-center", title: "发票中心" },
-  { path: "/expense-rules", title: "报销规则" },
-  { path: "/partner-form", title: "新建商业伙伴" },
-  { path: "/contract-form", title: "新建付款合同" },
-  { path: "/sales-contract-form", title: "新建对外销售合同" },
-  { path: "/payment-form", title: "新建付款" },
-  { path: "/salary-payment-form", title: "新建工资付款" },
-  { path: "/expense-form", title: "新建报销" },
-  { path: "/travel-form", title: "新建差旅出行" },
-  { path: "/invoice-form", title: "销项发票申请" },
-  { path: "/invoice-archive-form", title: "进项发票归档" },
-  { path: "/credential-form", title: "新建资质" },
-  { path: "/legal-agreements", title: "法务协议" },
+  { path: "/", title: $i18n.t("nav.home", "首页") },
+  { path: "/workbench", title: $i18n.t("nav.workbench", "工作台") },
+  {
+    path: "/approval-center",
+    title: $i18n.t("nav.approvalCenter", "审批中心"),
+  },
+  { path: "/my-todo", title: $i18n.t("nav.approvalTodo", "审批待办") },
+  { path: "/my-submitted", title: $i18n.t("nav.mySubmitted", "我提交的流程") },
+  { path: "/my-done", title: $i18n.t("nav.myDone", "审批已办") },
+  {
+    path: "/application-list",
+    title: $i18n.t("nav.applicationList", "申请单汇总"),
+  },
+  { path: "/contracts", title: $i18n.t("nav.contracts", "合同工作台") },
+  { path: "/customer-360", title: $i18n.t("nav.customer360", "客户 360") },
+  {
+    path: "/receivable-contract-detail",
+    title: $i18n.t("nav.receivableContractDetail", "收款合同详情"),
+  },
+  {
+    path: "/receivable-plan-form",
+    title: $i18n.t("nav.receivablePlanForm", "收款计划维护"),
+  },
+  { path: "/invoice-center", title: $i18n.t("nav.invoiceCenter", "发票中心") },
+  { path: "/expense-rules", title: $i18n.t("nav.expenseRules", "报销规则") },
+  {
+    path: "/partner-form",
+    title: $i18n.t("nav.partnerFormCreate", "新建商业伙伴"),
+  },
+  {
+    path: "/contract-form",
+    title: $i18n.t("nav.contractForm", "新建付款合同"),
+  },
+  {
+    path: "/sales-contract-form",
+    title: $i18n.t("nav.salesContractForm", "新建对外销售合同"),
+  },
+  { path: "/payment-form", title: $i18n.t("nav.paymentForm", "新建付款") },
+  {
+    path: "/salary-payment-form",
+    title: $i18n.t("nav.salaryPaymentForm", "新建工资付款"),
+  },
+  { path: "/expense-form", title: $i18n.t("nav.expenseForm", "新建报销") },
+  { path: "/travel-form", title: $i18n.t("nav.travelForm", "新建差旅出行") },
+  {
+    path: "/invoice-form",
+    title: $i18n.t("nav.invoiceApplication", "销项发票申请"),
+  },
+  {
+    path: "/invoice-archive-form",
+    title: $i18n.t("nav.invoiceArchive", "进项发票归档"),
+  },
+  {
+    path: "/credential-form",
+    title: $i18n.t("nav.credentialForm", "新建资质"),
+  },
+  {
+    path: "/legal-agreements",
+    title: $i18n.t("nav.legalAgreements", "法务协议"),
+  },
 ];
 
 const MainLayout: React.FC = () => {
@@ -93,96 +137,96 @@ const MainLayout: React.FC = () => {
     {
       key: "/",
       icon: <HomeOutlined />,
-      label: "首页",
+      label: $i18n.t("nav.home", "首页"),
     },
     {
       key: "/workbench",
       icon: <DashboardOutlined />,
-      label: "工作台",
+      label: $i18n.t("nav.workbench", "工作台"),
     },
     {
       key: "/approval-center",
       icon: <AuditOutlined />,
-      label: "审批中心",
+      label: $i18n.t("nav.approvalCenter", "审批中心"),
     },
     {
       key: "/my-submitted",
       icon: <FileTextOutlined />,
-      label: "我提交的流程",
+      label: $i18n.t("nav.mySubmitted", "我提交的流程"),
     },
     {
       key: "/application-list",
       icon: <FileSearchOutlined />,
-      label: "申请单汇总",
+      label: $i18n.t("nav.applicationList", "申请单汇总"),
     },
     {
       key: "/expense-rules",
       icon: <PercentageOutlined />,
-      label: "报销规则",
+      label: $i18n.t("nav.expenseRules", "报销规则"),
     },
     {
       key: "biz",
       icon: <FileTextOutlined />,
-      label: "业务单据",
+      label: $i18n.t("nav.businessDocuments", "业务单据"),
       children: [
         {
           key: "/contracts",
-          label: "合同工作台",
+          label: $i18n.t("nav.contracts", "合同工作台"),
           icon: <FileProtectOutlined />,
         },
         {
           key: "/customer-360",
-          label: "客户 360",
+          label: $i18n.t("nav.customer360", "客户 360"),
           icon: <UserOutlined />,
         },
         {
           key: "/partner-form",
-          label: "录入供应商 / 服务商",
+          label: $i18n.t("nav.partnerForm", "录入供应商 / 服务商"),
           icon: <FileTextOutlined />,
         },
         {
           key: "/contract-form",
-          label: "新建付款合同",
+          label: $i18n.t("nav.contractForm", "新建付款合同"),
           icon: <FileTextOutlined />,
         },
         {
           key: "/payment-form",
-          label: "新建付款",
+          label: $i18n.t("nav.paymentForm", "新建付款"),
           icon: <FileTextOutlined />,
         },
         {
           key: "/salary-payment-form",
-          label: "新建工资付款",
+          label: $i18n.t("nav.salaryPaymentForm", "新建工资付款"),
           icon: <FileTextOutlined />,
         },
         {
           key: "/expense-form",
-          label: "新建报销",
+          label: $i18n.t("nav.expenseForm", "新建报销"),
           icon: <FileTextOutlined />,
         },
         {
           key: "/travel-form",
-          label: "新建差旅出行",
+          label: $i18n.t("nav.travelForm", "新建差旅出行"),
           icon: <FileTextOutlined />,
         },
         {
           key: "/invoice-center",
-          label: "发票中心",
+          label: $i18n.t("nav.invoiceCenter", "发票中心"),
           icon: <FileSearchOutlined />,
         },
         {
           key: "/invoice-form",
-          label: "申请开具销项发票",
+          label: $i18n.t("nav.invoiceForm", "申请开具销项发票"),
           icon: <FileTextOutlined />,
         },
         {
           key: "/invoice-archive-form",
-          label: "录入进项发票",
+          label: $i18n.t("nav.invoiceArchiveForm", "录入进项发票"),
           icon: <InboxOutlined />,
         },
         {
           key: "/credential-form",
-          label: "新建资质",
+          label: $i18n.t("nav.credentialForm", "新建资质"),
           icon: <FileTextOutlined />,
         },
       ],
@@ -190,7 +234,7 @@ const MainLayout: React.FC = () => {
     {
       key: "/legal-agreements",
       icon: <SafetyCertificateOutlined />,
-      label: "法务协议",
+      label: $i18n.t("nav.legalAgreements", "法务协议"),
     },
   ];
 
@@ -218,7 +262,7 @@ const MainLayout: React.FC = () => {
 
   // 生成面包屑
   const getBreadcrumbItems = () => {
-    const items: any[] = [{ title: "首页" }];
+    const items: any[] = [{ title: $i18n.t("nav.home", "首页") }];
     const currentRoute = routeConfig.find((r) => r.path === location.pathname);
     if (currentRoute && currentRoute.path !== "/") {
       items.push({ title: currentRoute.title });
@@ -230,19 +274,19 @@ const MainLayout: React.FC = () => {
   const userMenuItems: MenuProps["items"] = [
     {
       key: "profile",
-      label: "个人中心",
+      label: $i18n.t("common.profile", "个人中心"),
       icon: <UserOutlined />,
     },
     {
       key: "settings",
-      label: "系统设置",
+      label: $i18n.t("common.settings", "系统设置"),
     },
     {
       type: "divider",
     },
     {
       key: "logout",
-      label: "退出登录",
+      label: $i18n.t("common.logout", "退出登录"),
       danger: true,
     },
   ];
@@ -293,7 +337,7 @@ const MainLayout: React.FC = () => {
                     fontWeight: 600,
                   }}
                 >
-                  Lovrabet System
+                  {$i18n.t("app.name", "Lovrabet System")}
                 </span>
               </div>
             ) : (
@@ -321,7 +365,7 @@ const MainLayout: React.FC = () => {
         <button
           type="button"
           className="main-layout-mobile-mask"
-          aria-label="关闭导航菜单"
+          aria-label={$i18n.t("common.closeNavigation", "关闭导航菜单")}
           onClick={() => setCollapsed(true)}
         />
       ) : null}
@@ -342,8 +386,16 @@ const MainLayout: React.FC = () => {
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             <Button
               type="text"
-              aria-label={collapsed ? "打开导航菜单" : "收起导航菜单"}
-              title={collapsed ? "打开导航菜单" : "收起导航菜单"}
+              aria-label={
+                collapsed
+                  ? $i18n.t("common.openNavigation", "打开导航菜单")
+                  : $i18n.t("common.collapseNavigation", "收起导航菜单")
+              }
+              title={
+                collapsed
+                  ? $i18n.t("common.openNavigation", "打开导航菜单")
+                  : $i18n.t("common.collapseNavigation", "收起导航菜单")
+              }
               icon={
                 menuHidden ? (
                   <MenuUnfoldOutlined />
@@ -373,7 +425,7 @@ const MainLayout: React.FC = () => {
                   height: 32,
                 }}
               >
-                显示菜单
+                {$i18n.t("common.showMenu", "显示菜单")}
               </Button>
             )}
             {/* 面包屑导航 */}
@@ -399,6 +451,34 @@ const MainLayout: React.FC = () => {
             />
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <Dropdown
+              placement="bottomRight"
+              menu={{
+                items: allowLangs.map(({ value }) => ({
+                  key: value,
+                  label:
+                    value === "zh-CN"
+                      ? $i18n.t("language.zhCN", "简体中文")
+                      : value === "id-ID"
+                        ? $i18n.t("language.idID", "Bahasa Indonesia")
+                        : $i18n.t("language.enUS", "English"),
+                })),
+                selectedKeys: [currentLanguage],
+                onClick: ({ key }) => setApplicationLanguage(key as TLanguage),
+              }}
+            >
+              <Button
+                type="text"
+                icon={<GlobalOutlined />}
+                aria-label={$i18n.t("common.language", "语言")}
+              >
+                {currentLanguage === "zh-CN"
+                  ? "中文"
+                  : currentLanguage === "id-ID"
+                    ? "ID"
+                    : "EN"}
+              </Button>
+            </Dropdown>
             {/* 用户信息 */}
             <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
               <Space
@@ -424,7 +504,7 @@ const MainLayout: React.FC = () => {
                   className="main-layout-user-name"
                   style={{ fontSize: 14 }}
                 >
-                  管理员
+                  {$i18n.t("common.administrator", "管理员")}
                 </span>
               </Space>
             </Dropdown>

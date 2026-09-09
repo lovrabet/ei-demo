@@ -1,0 +1,4 @@
+interface:
+  display_name: "企业智能系统多语言开发"
+  short_description: "维护启智云图企业智能系统的中英印三语文案与校验"
+  default_prompt: "Use $yuntoo-ei-i18n to internationalize the requested application module and validate all three locale files."

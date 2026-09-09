@@ -29,6 +29,7 @@ import {
   CPO_STATUS_LABEL,
   getCpoDetailPath,
 } from "@/features/cpo-workflow/routes";
+import { $i18n, currentLanguage } from "@/i18n";
 import styles from "./index.module.css";
 
 type ApplicationRow = {
@@ -101,7 +102,7 @@ function formatAmount(row: ApplicationRow) {
   if (row.amount === undefined || row.amount === null) return "-";
   const prefix =
     row.currency && row.currency !== "CNY" ? `${row.currency} ` : "¥";
-  return `${prefix}${Number(row.amount).toLocaleString("zh-CN")}`;
+  return `${prefix}${Number(row.amount).toLocaleString(currentLanguage)}`;
 }
 
 function detailPathOf(row: ApplicationRow) {
@@ -166,8 +167,11 @@ const ApplicationList: React.FC = () => {
       message.error(
         reason.includes("CPO_APPLICATION_LIST_ACCESS_REQUIRED") ||
           reason.includes("CPO_WORKFLOW_ADMIN_REQUIRED")
-          ? "仅流程管理员或财务顾问组成员可查看申请单汇总"
-          : `加载失败：${reason}`,
+          ? $i18n.t(
+              "applicationList.accessRequired",
+              "仅流程管理员或财务顾问组成员可查看申请单汇总",
+            )
+          : $i18n.t("applicationList.loadFailed", { reason }),
       );
       setRows([]);
       setPaging((current) => ({
@@ -187,7 +191,7 @@ const ApplicationList: React.FC = () => {
 
   const columns: ColumnsType<ApplicationRow> = [
     {
-      title: "序号",
+      title: $i18n.t("applicationList.sequence", "序号"),
       key: "sequence",
       width: 72,
       align: "center",
@@ -195,7 +199,7 @@ const ApplicationList: React.FC = () => {
         (paging.currentPage - 1) * paging.pageSize + index + 1,
     },
     {
-      title: "业务类型",
+      title: $i18n.t("applicationList.businessType", "业务类型"),
       dataIndex: "bizType",
       width: 110,
       render: (value: string) => (
@@ -206,7 +210,7 @@ const ApplicationList: React.FC = () => {
       ),
     },
     {
-      title: "申请单标题",
+      title: $i18n.t("applicationList.applicationTitle", "申请单标题"),
       dataIndex: "title",
       minWidth: 220,
       render: (value: string, row) => (
@@ -216,13 +220,13 @@ const ApplicationList: React.FC = () => {
       ),
     },
     {
-      title: "流程状态",
+      title: $i18n.t("applicationList.flowStatus", "流程状态"),
       key: "flowStatus",
       width: 160,
       render: (_, row) => {
         if (row.flowStatus) {
           if (row.instanceStatus === "CANCELLED") {
-            return <Tag>已撤销</Tag>;
+            return <Tag>{$i18n.t("mySubmitted.statusCancelled", "已撤销")}</Tag>;
           }
           const meta = platformFlowStatusMeta(row.flowStatus);
           return <Tag color={meta.color}>{meta.label}</Tag>;
@@ -231,7 +235,7 @@ const ApplicationList: React.FC = () => {
       },
     },
     {
-      title: "当前处理人",
+      title: $i18n.t("applicationList.currentProcessor", "当前处理人"),
       key: "currentProcessor",
       width: 170,
       render: (_, row) => {
@@ -250,7 +254,7 @@ const ApplicationList: React.FC = () => {
       },
     },
     {
-      title: "资金状态",
+      title: $i18n.t("applicationList.fundStatus", "资金状态"),
       key: "bankStatus",
       width: 140,
       render: (_, row) =>
@@ -263,20 +267,20 @@ const ApplicationList: React.FC = () => {
         ),
     },
     {
-      title: "金额",
+      title: $i18n.t("applicationList.amount", "金额"),
       key: "amount",
       width: 140,
       align: "right",
       render: (_, row) => formatAmount(row),
     },
     {
-      title: "申请人",
+      title: $i18n.t("applicationList.applicant", "申请人"),
       dataIndex: "applicantName",
       width: 130,
       render: (value: string, row) => value || row.applicantUserId || "-",
     },
     {
-      title: "提交/业务时间",
+      title: $i18n.t("applicationList.submittedAt", "提交/业务时间"),
       key: "flowTime",
       width: 180,
       render: (_, row) =>
@@ -286,7 +290,7 @@ const ApplicationList: React.FC = () => {
         ),
     },
     {
-      title: "操作",
+      title: $i18n.t("applicationList.actions", "操作"),
       key: "actions",
       width: 90,
       fixed: "right",
@@ -299,7 +303,7 @@ const ApplicationList: React.FC = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          查看
+          {$i18n.t("applicationList.view", "查看")}
         </Button>
       ),
     },
@@ -310,7 +314,7 @@ const ApplicationList: React.FC = () => {
       title={
         <Space>
           <FileSearchOutlined style={{ color: "#1677ff" }} />
-          申请单汇总
+          {$i18n.t("applicationList.title", "申请单汇总")}
         </Space>
       }
       extra={
@@ -319,7 +323,7 @@ const ApplicationList: React.FC = () => {
           loading={loading}
           onClick={() => load(paging.currentPage)}
         >
-          刷新
+          {$i18n.t("applicationList.refresh", "刷新")}
         </Button>
       }
     >
@@ -337,12 +341,15 @@ const ApplicationList: React.FC = () => {
             ]
               .filter(Boolean)
               .join(" ")}
-            aria-label="申请单筛选"
+            aria-label={$i18n.t("applicationList.filterAria", "申请单筛选")}
           >
             <label className={styles.filterField}>
-              <span>业务类型</span>
+              <span>{$i18n.t("applicationList.businessType", "业务类型")}</span>
               <Select
-                placeholder="全部业务类型"
+                placeholder={$i18n.t(
+                  "applicationList.allBusinessTypes",
+                  "全部业务类型",
+                )}
                 allowClear
                 value={bizType || undefined}
                 options={businessTypeOptions}
@@ -350,21 +357,29 @@ const ApplicationList: React.FC = () => {
               />
             </label>
             <div className={styles.filterField}>
-              <span>申请人</span>
+              <span>{$i18n.t("applicationList.applicant", "申请人")}</span>
               <YtUserSelect
                 appCode={LOVRABET_APP_CODE}
                 value={applicantUserId ? [applicantUserId] : []}
                 maxCount={1}
                 maxTagCount={1}
-                placeholder="全部申请人"
+                placeholder={$i18n.t(
+                  "applicationList.allApplicants",
+                  "全部申请人",
+                )}
                 onChange={(values) => setApplicantUserId(values[0] || "")}
               />
             </div>
             {activeTab === "active" ? (
               <label className={styles.filterField}>
-                <span>单据状态</span>
+                <span>
+                  {$i18n.t("applicationList.documentStatus", "单据状态")}
+                </span>
                 <Select
-                  placeholder="全部进行中状态"
+                  placeholder={$i18n.t(
+                    "applicationList.allActiveStatuses",
+                    "全部进行中状态",
+                  )}
                   allowClear
                   value={status || undefined}
                   options={statusOptions}
@@ -373,10 +388,13 @@ const ApplicationList: React.FC = () => {
               </label>
             ) : null}
             <label className={`${styles.filterField} ${styles.keywordField}`}>
-              <span>关键词</span>
+              <span>{$i18n.t("applicationList.keyword", "关键词")}</span>
               <Input.Search
                 allowClear
-                placeholder="标题或单号"
+                placeholder={$i18n.t(
+                  "applicationList.keywordPlaceholder",
+                  "标题或单号",
+                )}
                 value={keywordInput}
                 onChange={(event) => setKeywordInput(event.target.value)}
                 onSearch={(value) => setKeyword(value.trim())}
@@ -387,18 +405,27 @@ const ApplicationList: React.FC = () => {
         tabs={[
           {
             key: "active",
-            label: "进行中",
-            emptyDescription: "暂无进行中的申请单",
+            label: $i18n.t("applicationList.active", "进行中"),
+            emptyDescription: $i18n.t(
+              "applicationList.emptyActive",
+              "暂无进行中的申请单",
+            ),
           },
           {
             key: "completed",
-            label: "已完成",
-            emptyDescription: "暂无已完成申请单",
+            label: $i18n.t("applicationList.completed", "已完成"),
+            emptyDescription: $i18n.t(
+              "applicationList.emptyCompleted",
+              "暂无已完成申请单",
+            ),
           },
           {
             key: "voided",
-            label: "驳回/废弃",
-            emptyDescription: "暂无驳回或废弃的申请单",
+            label: $i18n.t("applicationList.voided", "驳回/废弃"),
+            emptyDescription: $i18n.t(
+              "applicationList.emptyVoided",
+              "暂无驳回或废弃的申请单",
+            ),
           },
         ]}
         tableProps={{
@@ -412,7 +439,8 @@ const ApplicationList: React.FC = () => {
             pageSize: paging.pageSize,
             total: paging.totalCount,
             showSizeChanger: false,
-            showTotal: (total) => `共 ${total} 条`,
+            showTotal: (total) =>
+              $i18n.t("applicationList.total", { count: total }),
             onChange: load,
           },
         }}

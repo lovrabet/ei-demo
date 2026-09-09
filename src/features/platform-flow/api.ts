@@ -9,6 +9,7 @@
  */
 import { apiRequest } from "@/utils/api";
 import { lovrabetClient } from "@/api/client";
+import { $i18n } from "@/i18n";
 
 export const PLATFORM_APP_CODE = "app-4d050189";
 
@@ -66,7 +67,10 @@ async function fetchTasks<T>(path: string): Promise<{
 }> {
   const res = (await apiRequest(path)) as PagedResponse<T>;
   if (!res?.success) {
-    throw new Error(res?.errorMsg || "平台审批接口调用失败");
+    throw new Error(
+      res?.errorMsg ||
+        $i18n.t("platformFlow.error.requestFailed", "平台审批接口调用失败"),
+    );
   }
   const data = res.data || {};
   return {
@@ -110,7 +114,9 @@ export async function approvePlatformTask(params: {
     }),
   })) as { success: boolean; errorMsg?: string };
   if (!res?.success) {
-    throw new Error(res?.errorMsg || "审批操作失败");
+    throw new Error(
+      res?.errorMsg || $i18n.t("platformFlow.error.actionFailed", "审批操作失败"),
+    );
   }
 }
 
@@ -167,7 +173,10 @@ export async function fetchPlatformTimeline(
     `/api/flow/${encodeURIComponent(processInstanceId)}/timeline`,
   )) as { success: boolean; errorMsg?: string; data?: PlatformTimeline };
   if (!res?.success || !res.data) {
-    throw new Error(res?.errorMsg || "获取审批时间线失败");
+    throw new Error(
+      res?.errorMsg ||
+        $i18n.t("platformFlow.error.loadTimeline", "获取审批时间线失败"),
+    );
   }
   return res.data;
 }
@@ -292,7 +301,7 @@ export async function summarizePlatformTasks(
       key: `platform-${r.id}`,
       bizType,
       bizId,
-      nodeName: r.name || "审批",
+      nodeName: r.name || $i18n.t("workflowConfig.node.approval", "审批"),
       flowName: r.flowName || "",
       title: r.flowName ? `${r.flowName} #${bizId}` : `#${bizId}`,
       applicantName: r.initiatorUsername || "",
@@ -361,11 +370,15 @@ export async function cancelPlatformProcess(params: {
     body: JSON.stringify({
       appCode: PLATFORM_APP_CODE,
       processInstanceId: params.processInstanceId,
-      reason: params.reason || "申请人撤销",
+      reason:
+        params.reason ||
+        $i18n.t("platformFlow.cancel.defaultReason", "申请人撤销"),
     }),
   })) as { success: boolean; errorMsg?: string };
   if (!res?.success) {
-    throw new Error(res?.errorMsg || "撤销流程失败");
+    throw new Error(
+      res?.errorMsg || $i18n.t("platformFlow.error.cancelFailed", "撤销流程失败"),
+    );
   }
 }
 
@@ -414,11 +427,20 @@ export async function fetchAppUsersMap(): Promise<Map<string, string>> {
 } {
   switch ((status || "").toUpperCase()) {
     case "RUNNING":
-      return { label: "审批中", color: "processing" };
+      return {
+        label: $i18n.t("contracts.status.approval", "审批中"),
+        color: "processing",
+      };
     case "COMPLETED":
-      return { label: "已完成", color: "success" };
+      return {
+        label: $i18n.t("applicationList.completed", "已完成"),
+        color: "success",
+      };
     case "CANCELLED":
-      return { label: "已撤销", color: "default" };
+      return {
+        label: $i18n.t("platformFlow.status.cancelled", "已撤销"),
+        color: "default",
+      };
     default:
       return { label: status || "-", color: "default" };
   }
@@ -430,13 +452,25 @@ export function platformFlowStatusMeta(status?: string): {
 } {
   switch ((status || "").toUpperCase()) {
     case "SUBMITTED":
-      return { label: "审批中", color: "processing" };
+      return {
+        label: $i18n.t("contracts.status.approval", "审批中"),
+        color: "processing",
+      };
     case "COMPLETED":
-      return { label: "已通过", color: "success" };
+      return {
+        label: $i18n.t("legalAgreement.status.approved", "已通过"),
+        color: "success",
+      };
     case "REJECTED":
-      return { label: "已驳回", color: "error" };
+      return {
+        label: $i18n.t("legalAgreement.status.rejected", "已驳回"),
+        color: "error",
+      };
     case "CANCELLED":
-      return { label: "已撤销", color: "default" };
+      return {
+        label: $i18n.t("platformFlow.status.cancelled", "已撤销"),
+        color: "default",
+      };
     default:
       return { label: status || "-", color: "default" };
   }

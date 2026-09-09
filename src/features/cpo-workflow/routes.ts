@@ -1,3 +1,5 @@
+import { $i18n } from "@/i18n";
+
 export type CpoBizType =
   | "expense"
   | "invoice"
@@ -9,49 +11,58 @@ export type CpoBizType =
   | "travel";
 
 export const CPO_BIZ_TYPE_LABEL: Record<CpoBizType, string> = {
-  expense: "报销",
-  invoice: "发票",
-  invoice_application: "销项开票申请",
-  contract: "合同",
-  crm_contract: "对外销售合同",
-  payment: "付款",
-  salary_payment: "工资付款",
-  travel: "差旅出行",
+  expense: $i18n.t("workflow.bizType.expense", "报销"),
+  invoice: $i18n.t("workflow.bizType.invoice", "发票"),
+  invoice_application: $i18n.t(
+    "workflow.bizType.invoiceApplication",
+    "销项开票申请",
+  ),
+  contract: $i18n.t("workflow.bizType.contract", "合同"),
+  crm_contract: $i18n.t("workflow.bizType.crmContract", "对外销售合同"),
+  payment: $i18n.t("workflow.bizType.payment", "付款"),
+  salary_payment: $i18n.t("workflow.bizType.salaryPayment", "工资付款"),
+  travel: $i18n.t("workflow.bizType.travel", "差旅出行"),
 };
 
 export const CPO_TASK_TYPE_LABEL: Record<string, string> = {
-  review: "审核",
-  create_voucher: "制单",
-  pay: "付款",
-  bank_review: "网银复核",
-  confirm: "确认",
-  sign: "签署合同",
-  archive: "历史归档",
-  supplement_material: "补材料",
+  review: $i18n.t("workflow.task.review", "审核"),
+  create_voucher: $i18n.t("workflow.task.createVoucher", "制单"),
+  pay: $i18n.t("workflow.task.pay", "付款"),
+  bank_review: $i18n.t("workflow.task.bankReview", "网银复核"),
+  confirm: $i18n.t("workflow.task.confirm", "确认"),
+  sign: $i18n.t("workflow.task.sign", "签署合同"),
+  archive: $i18n.t("workflow.task.archive", "历史归档"),
+  supplement_material: $i18n.t("workflow.task.supplement", "补材料"),
 };
 
 export const CPO_STATUS_LABEL: Record<string, string> = {
-  draft: "草稿",
-  submitted: "已提交",
-  reviewed: "已审核",
-  rejected: "审批驳回",
-  signed: "已签署",
-  archived: "已完成",
-  completed: "已完成",
-  voucher_created: "财务已制单",
-  bank_review_pending: "网银待复核",
-  bank_pending: "银行处理中",
-  paid_confirmed: "已支付",
-  payment_failed: "付款失败",
-  cancelled: "已作废",
+  draft: $i18n.t("workflow.status.draft", "草稿"),
+  submitted: $i18n.t("workflow.status.submitted", "已提交"),
+  reviewed: $i18n.t("workflow.status.reviewed", "已审核"),
+  rejected: $i18n.t("workflow.status.rejected", "审批驳回"),
+  signed: $i18n.t("workflow.status.signed", "已签署"),
+  archived: $i18n.t("workflow.status.completed", "已完成"),
+  completed: $i18n.t("workflow.status.completed", "已完成"),
+  voucher_created: $i18n.t("workflow.status.voucherCreated", "财务已制单"),
+  bank_review_pending: $i18n.t(
+    "workflow.status.bankReviewPending",
+    "网银待复核",
+  ),
+  bank_pending: $i18n.t("workflow.status.bankPending", "银行处理中"),
+  paid_confirmed: $i18n.t("workflow.status.paidConfirmed", "已支付"),
+  payment_failed: $i18n.t("workflow.status.paymentFailed", "付款失败"),
+  cancelled: $i18n.t("workflow.status.cancelled", "已作废"),
 };
 
 export const CPO_BANK_STATUS_LABEL: Record<string, string> = {
-  not_submitted: "待网银制单",
-  bank_review_pending: "网银待复核",
-  bank_pending: "银行处理中",
-  paid_confirmed: "已支付",
-  payment_failed: "付款失败",
+  not_submitted: $i18n.t("workflow.status.pendingBankVoucher", "待网银制单"),
+  bank_review_pending: $i18n.t(
+    "workflow.status.bankReviewPending",
+    "网银待复核",
+  ),
+  bank_pending: $i18n.t("workflow.status.bankPending", "银行处理中"),
+  paid_confirmed: $i18n.t("workflow.status.paidConfirmed", "已支付"),
+  payment_failed: $i18n.t("workflow.status.paymentFailed", "付款失败"),
 };
 
 export const CPO_BANK_STATUS_COLOR: Record<string, string> = {

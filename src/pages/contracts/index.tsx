@@ -35,17 +35,20 @@ import type {
   ContractCenterScope,
 } from "@/features/cpo-contract-center/types";
 import styles from "./index.module.css";
+import { $i18n } from "@/i18n";
+
+const t = (key: string, fallbackText: string) => $i18n.t(key, fallbackText);
 
 const { Text } = Typography;
 
 const CONTRACT_TYPE_LABELS: Record<string, string> = {
-  sales: "销售",
-  procurement: "采购",
-  service: "服务",
-  rent: "租赁",
-  hr: "人力",
-  certification: "认证",
-  other: "其他",
+  sales: t("contracts.contractType.sales", "销售"),
+  procurement: t("contracts.contractType.procurement", "采购"),
+  service: t("contracts.contractType.service", "服务"),
+  rent: t("contracts.contractType.rent", "租赁"),
+  hr: t("contracts.contractType.hr", "人力"),
+  certification: t("contracts.contractType.certification", "认证"),
+  other: t("contracts.contractType.other", "其他"),
 };
 
 const EMPTY_SUMMARY: ContractCenterResponse["summary"] = {
@@ -80,51 +83,67 @@ function money(value?: number, currency = "CNY") {
 function workflowPresentation(row: ContractCenterRow) {
   const flow = String(row.flowStatus || "").toUpperCase();
   if (flow) {
-    if (flow === "REJECTED") return { label: "已驳回", color: "error" };
-    if (flow === "CANCELLED" || row.instanceStatus === "CANCELLED") {
-      return { label: "已作废", color: "default" };
+    if (flow === "REJECTED") {
+      return { label: t("contracts.status.rejected", "已驳回"), color: "error" };
     }
-    if (flow === "SUBMITTED") return { label: "审批中", color: "processing" };
+    if (flow === "CANCELLED" || row.instanceStatus === "CANCELLED") {
+      return { label: t("contracts.status.voided", "已作废"), color: "default" };
+    }
+    if (flow === "SUBMITTED") {
+      return { label: t("contracts.status.approval", "审批中"), color: "processing" };
+    }
     if (
       row.lifecycleStatus === "signed" ||
       ["signed", "archived", "completed"].includes(row.workflowStatus || "")
     ) {
-      return { label: "已签署", color: "success" };
+      return { label: t("contracts.status.signed", "已签署"), color: "success" };
     }
     if (
       row.lifecycleStatus === "pending_signature" ||
       row.workflowStatus === "reviewed"
     ) {
-      return { label: "待签署", color: "warning" };
+      return {
+        label: t("contracts.status.pendingSignature", "待签署"),
+        color: "warning",
+      };
     }
-    return { label: "已通过", color: "success" };
+    return { label: t("contracts.status.approved", "已通过"), color: "success" };
   }
   if (["cancelled", "invalid"].includes(row.workflowStatus || "")) {
-    return { label: "已作废", color: "default" };
+    return { label: t("contracts.status.voided", "已作废"), color: "default" };
   }
   if (row.currentTaskType === "sign") {
-    return { label: "待签署", color: "warning" };
+    return {
+      label: t("contracts.status.pendingSignature", "待签署"),
+      color: "warning",
+    };
   }
   if (row.currentTaskType === "review") {
-    return { label: "审批中", color: "processing" };
+    return { label: t("contracts.status.approval", "审批中"), color: "processing" };
   }
   if (
     row.lifecycleStatus === "signed" ||
     ["signed", "archived", "completed"].includes(row.workflowStatus || "")
   ) {
-    return { label: "已签署", color: "success" };
+    return { label: t("contracts.status.signed", "已签署"), color: "success" };
   }
   if (row.workflowStatus === "reviewed") {
-    return { label: "待签署", color: "warning" };
+    return {
+      label: t("contracts.status.pendingSignature", "待签署"),
+      color: "warning",
+    };
   }
   if (row.workflowStatus === "draft") {
-    return { label: "草稿", color: "default" };
+    return { label: t("contracts.status.draft", "草稿"), color: "default" };
   }
   if (row.workflowStatus === "rejected") {
-    return { label: "已驳回", color: "error" };
+    return { label: t("contracts.status.rejected", "已驳回"), color: "error" };
   }
   return {
-    label: row.workflowStatusLabel || row.workflowStatus || "状态待补",
+    label:
+      row.workflowStatusLabel ||
+      row.workflowStatus ||
+      t("contracts.status.pending", "状态待补"),
     color: "processing",
   };
 }
@@ -186,7 +205,7 @@ export default function ContractCenterPage() {
       const nextError =
         requestError instanceof Error
           ? requestError.message
-          : "加载合同工作台失败";
+          : t("contracts.loadFailed", "加载合同工作台失败");
       setError(nextError);
       message.error(nextError);
     } finally {
@@ -200,15 +219,48 @@ export default function ContractCenterPage() {
 
   const scopeItems = useMemo(
     () => [
-      { value: "all" as const, label: `全部 ${scopeCounts.all}` },
-      { value: "approval" as const, label: `审批中 ${scopeCounts.approval}` },
+      {
+        value: "all" as const,
+        label: t("contracts.scope.all", "全部 {count}").replace(
+          "{count}",
+          String(scopeCounts.all),
+        ),
+      },
+      {
+        value: "approval" as const,
+        label: t("contracts.scope.approval", "审批中 {count}").replace(
+          "{count}",
+          String(scopeCounts.approval),
+        ),
+      },
       {
         value: "pending_signature" as const,
-        label: `待签署 ${scopeCounts.pendingSignature}`,
+        label: t("contracts.scope.pendingSignature", "待签署 {count}").replace(
+          "{count}",
+          String(scopeCounts.pendingSignature),
+        ),
       },
-      { value: "signed" as const, label: `已签署 ${scopeCounts.signed}` },
-      { value: "expiring" as const, label: `即将到期 ${scopeCounts.expiring}` },
-      { value: "voided" as const, label: `已作废 ${scopeCounts.voided}` },
+      {
+        value: "signed" as const,
+        label: t("contracts.scope.signed", "已签署 {count}").replace(
+          "{count}",
+          String(scopeCounts.signed),
+        ),
+      },
+      {
+        value: "expiring" as const,
+        label: t("contracts.scope.expiring", "即将到期 {count}").replace(
+          "{count}",
+          String(scopeCounts.expiring),
+        ),
+      },
+      {
+        value: "voided" as const,
+        label: t("contracts.scope.voided", "已作废 {count}").replace(
+          "{count}",
+          String(scopeCounts.voided),
+        ),
+      },
     ],
     [scopeCounts],
   );
@@ -216,18 +268,18 @@ export default function ContractCenterPage() {
   const businessTabs = [
     {
       value: "receivable" as const,
-      label: "对外销售合同",
+      label: t("contracts.direction.receivable", "对外销售合同"),
     },
     {
       value: "payable" as const,
-      label: "外部服务合同",
+      label: t("contracts.direction.payable", "外部服务合同"),
     },
   ];
   const isSalesContract = direction === "receivable";
 
   const columns: ColumnsType<ContractCenterRow> = [
     {
-      title: "合同",
+      title: t("contracts.columns.contract", "合同"),
       dataIndex: "contractName",
       width: 260,
       fixed: "left",
@@ -241,14 +293,17 @@ export default function ContractCenterPage() {
             <strong>{row.contractName}</strong>
           )}
           <small>
-            {row.contractNo || "合同编号待补"} ·{" "}
-            {CONTRACT_TYPE_LABELS[row.contractType || ""] ||
-              row.contractTypeLabel ||
-              "类型待补"}
+            {(row.contractNo || t("contracts.contractNoPending", "合同编号待补")) +
+              " · " +
+              (CONTRACT_TYPE_LABELS[row.contractType || ""] ||
+                row.contractTypeLabel ||
+                t("contracts.typePending", "类型待补"))}
           </small>
           <Space size={4}>
             <Tag color={row.direction === "receivable" ? "blue" : "gold"}>
-              {row.direction === "receivable" ? "对外销售合同" : "外部服务合同"}
+              {row.direction === "receivable"
+                ? t("contracts.direction.receivable", "对外销售合同")
+                : t("contracts.direction.payable", "外部服务合同")}
             </Tag>
             <Tag bordered={false}>{row.sourceLabel}</Tag>
           </Space>
@@ -256,21 +311,33 @@ export default function ContractCenterPage() {
       ),
     },
     {
-      title: "对方与期限",
+      title: t("contracts.columns.partner", "对方与期限"),
       width: 230,
       render: (_, row) => (
         <div className={styles.stackCell}>
           <span>{row.partnerName}</span>
           <small>
-            {formatDateValue(row.startDate) || "起始日待补"} 至{" "}
-            {formatDateValue(row.endDate) || "长期 / 到期日待补"}
+            {(formatDateValue(row.startDate) ||
+              t("contracts.startDatePending", "起始日待补")) +
+              " " +
+              t("contracts.toSeparator", "至") +
+              " " +
+              (formatDateValue(row.endDate) ||
+                t("contracts.endDatePending", "长期 / 到期日待补"))}
           </small>
-          {row.liaisonName ? <small>合同对接：{row.liaisonName}</small> : null}
+          {row.liaisonName ? (
+            <small>
+              {t("contracts.liaison", "合同对接：{name}").replace(
+                "{name}",
+                row.liaisonName,
+              )}
+            </small>
+          ) : null}
         </div>
       ),
     },
     {
-      title: "审批与签署",
+      title: t("contracts.columns.approvalAndSign", "审批与签署"),
       width: 190,
       render: (_, row) => {
         const state = workflowPresentation(row);
@@ -282,19 +349,34 @@ export default function ContractCenterPage() {
             {row.runningNode ? <small>{row.runningNode}</small> : null}
             {isFlowRow ? (
               processorName ? (
-                <small>当前处理：{processorName}</small>
+                <small>
+                  {t("contracts.currentProcessor", "当前处理：{name}").replace(
+                    "{name}",
+                    processorName,
+                  )}
+                </small>
               ) : null
             ) : row.currentProcessorName ? (
-              <small>当前处理：{row.currentProcessorName}</small>
+              <small>
+                {t("contracts.currentProcessor", "当前处理：{name}").replace(
+                  "{name}",
+                  row.currentProcessorName,
+                )}
+              </small>
             ) : row.signedAt ? (
-              <small>签署于 {formatDateValue(row.signedAt)}</small>
+              <small>
+                {t("contracts.signedAt", "签署于 {date}").replace(
+                  "{date}",
+                  formatDateValue(row.signedAt),
+                )}
+              </small>
             ) : null}
           </div>
         );
       },
     },
     {
-      title: "合同金额",
+      title: t("contracts.columns.amount", "合同金额"),
       dataIndex: "amount",
       width: 150,
       align: "right",
@@ -303,7 +385,9 @@ export default function ContractCenterPage() {
       ),
     },
     {
-      title: isSalesContract ? "收款进度" : "付款进度",
+      title: isSalesContract
+        ? t("contracts.columns.receiptProgress", "收款进度")
+        : t("contracts.columns.paymentProgress", "付款进度"),
       width: 230,
       render: (_, row) => {
         if (row.direction === "receivable") {
@@ -324,12 +408,27 @@ export default function ContractCenterPage() {
               <Progress percent={percent} size="small" showInfo={false} />
               <small>
                 {row.receiptCount
-                  ? `已登记 ${row.receiptCount} 笔回款${row.fullyReceived ? " · 已全额收款" : ""}`
+                  ? t(
+                      "contracts.receiptProgressDetail",
+                      "已登记 {count} 笔回款{full}",
+                    )
+                      .replace("{count}", String(row.receiptCount))
+                      .replace(
+                        "{full}",
+                        row.fullyReceived
+                          ? t("contracts.fullyReceived", " · 已全额收款")
+                          : "",
+                      )
                   : row.planCount
-                    ? `${row.paidPlanCount}/${row.planCount} 期已收款`
+                    ? t("contracts.planReceivedProgress", "{paid}/{total} 期已收款")
+                        .replace("{paid}", String(row.paidPlanCount))
+                        .replace("{total}", String(row.planCount))
                     : row.expectedPlanCount
-                      ? `合同约定 ${row.expectedPlanCount} 期，期次待补全`
-                      : "尚未配置收款计划"}
+                      ? t(
+                          "contracts.expectedPlanCount",
+                          "合同约定 {count} 期，期次待补全",
+                        ).replace("{count}", String(row.expectedPlanCount))
+                      : t("contracts.noReceiptPlan", "尚未配置收款计划")}
               </small>
             </div>
           );
@@ -347,15 +446,21 @@ export default function ContractCenterPage() {
             </span>
             <Progress percent={percent} size="small" showInfo={false} />
             <small>
-              {row.paymentCount} 张付款单 · {row.paidPlanCount}/{row.planCount}{" "}
-              期已付
+              {t("contracts.paymentCount", "{count} 张付款单").replace(
+                "{count}",
+                String(row.paymentCount),
+              ) +
+                " · " +
+                t("contracts.paidPlanProgress", "{paid}/{total} 期已付")
+                  .replace("{paid}", String(row.paidPlanCount))
+                  .replace("{total}", String(row.planCount))}
             </small>
           </div>
         );
       },
     },
     {
-      title: "关联发票",
+      title: t("contracts.columns.relatedInvoices", "关联发票"),
       width: 165,
       render: (_, row) =>
         row.direction === "receivable" ? (
@@ -363,33 +468,47 @@ export default function ContractCenterPage() {
             <span>{money(row.invoiceAmount, row.currency)}</span>
             <small>
               {row.invoiceCount
-                ? `已关联 ${row.invoiceCount} 张销项发票`
-                : "尚未关联销项发票"}
+                ? t(
+                    "contracts.relatedSalesInvoices",
+                    "已关联 {count} 张销项发票",
+                  ).replace("{count}", String(row.invoiceCount))
+                : t("contracts.noSalesInvoiceLink", "尚未关联销项发票")}
             </small>
           </div>
         ) : (
           <div className={styles.stackCell}>
             <span>{money(row.invoiceAmount, row.currency)}</span>
-            <small>已关联 {row.invoiceCount} 张发票</small>
+            <small>
+              {t("contracts.relatedInvoicesCount", "已关联 {count} 张发票").replace(
+                "{count}",
+                String(row.invoiceCount),
+              )}
+            </small>
           </div>
         ),
     },
     {
-      title: isSalesContract ? "下一收款" : "下一付款",
+      title: isSalesContract
+        ? t("contracts.columns.nextReceipt", "下一收款")
+        : t("contracts.columns.nextPayment", "下一付款"),
       width: 180,
       render: (_, row) =>
         row.direction === "receivable" ? (
           <div className={styles.stackCell}>
             <span>
               {row.nextPaymentName ||
-                (row.planCount ? "待收款期次" : "暂无收款计划")}
+                (row.planCount
+                  ? t("contracts.pendingReceiptPhase", "待收款期次")
+                  : t("contracts.noReceiptPlan", "暂无收款计划"))}
             </span>
             {row.nextPaymentDate ? (
               <small
                 className={row.overduePayment ? styles.overdue : undefined}
               >
-                {row.overduePayment ? "已逾期 · " : "计划于 "}
-                {formatDateValue(row.nextPaymentDate)}
+                {(row.overduePayment
+                  ? t("contracts.overduePrefix", "已逾期 · ")
+                  : t("contracts.scheduledPrefix", "计划于 ")) +
+                  formatDateValue(row.nextPaymentDate)}
               </small>
             ) : null}
           </div>
@@ -397,21 +516,25 @@ export default function ContractCenterPage() {
           <div className={styles.stackCell}>
             <span>
               {row.nextPaymentName ||
-                (row.planCount ? "待付款期次" : "暂无付款计划")}
+                (row.planCount
+                  ? t("contracts.pendingPaymentPhase", "待付款期次")
+                  : t("contracts.noPaymentPlan", "暂无付款计划"))}
             </span>
             {row.nextPaymentDate ? (
               <small
                 className={row.overduePayment ? styles.overdue : undefined}
               >
-                {row.overduePayment ? "已逾期 · " : "计划于 "}
-                {formatDateValue(row.nextPaymentDate)}
+                {(row.overduePayment
+                  ? t("contracts.overduePrefix", "已逾期 · ")
+                  : t("contracts.scheduledPrefix", "计划于 ")) +
+                  formatDateValue(row.nextPaymentDate)}
               </small>
             ) : null}
           </div>
         ),
     },
     {
-      title: "操作",
+      title: t("contracts.columns.actions", "操作"),
       width: 168,
       fixed: "right",
       render: (_, row) => (
@@ -423,7 +546,7 @@ export default function ContractCenterPage() {
             disabled={!row.detailPath}
             onClick={() => row.detailPath && navigate(row.detailPath)}
           >
-            详情
+            {t("contracts.actions.detail", "详情")}
           </Button>
           <Button
             type="link"
@@ -436,7 +559,7 @@ export default function ContractCenterPage() {
             }
             onClick={() => navigate(`/payment-form?contractId=${row.id}`)}
           >
-            付款
+            {t("contracts.actions.pay", "付款")}
           </Button>
         </Space>
       ),
@@ -445,8 +568,11 @@ export default function ContractCenterPage() {
 
   return (
     <PageScaffold
-      title="合同工作台"
-      description="分别管理我方对外销售合同与外部供应商服务合同。"
+      title={t("contracts.pageTitle", "合同工作台")}
+      description={t(
+        "contracts.pageDescription",
+        "分别管理我方对外销售合同与外部供应商服务合同。",
+      )}
       variant="list"
       density="compact"
       headerExtra={
@@ -456,7 +582,7 @@ export default function ContractCenterPage() {
             icon={<FileAddOutlined />}
             onClick={() => navigate("/contract-form")}
           >
-            新建外部服务合同
+            {t("contracts.actions.newPayable", "新建外部服务合同")}
           </Button>
         ) : (
           <Button
@@ -464,13 +590,13 @@ export default function ContractCenterPage() {
             icon={<FileAddOutlined />}
             onClick={() => navigate("/sales-contract-form")}
           >
-            新建对外销售合同
+            {t("contracts.actions.newReceivable", "新建对外销售合同")}
           </Button>
         )
       }
     >
       <ProjectTabs
-        aria-label="合同业务类型"
+        aria-label={t("contracts.directionAria", "合同业务类型")}
         activeKey={direction}
         items={businessTabs.map((item) => ({
           key: item.value,
@@ -485,39 +611,55 @@ export default function ContractCenterPage() {
 
       <div className={styles.summaryStrip}>
         <div>
-          <span>{isSalesContract ? "有效销售合同" : "有效服务合同"}</span>
+          <span>
+            {isSalesContract
+              ? t("contracts.summary.activeSales", "有效销售合同")
+              : t("contracts.summary.activeService", "有效服务合同")}
+          </span>
           <strong>{summary.contractCount}</strong>
           <small>
-            {isSalesContract ? "我方提供产品或服务" : "外部供应商提供服务"}
+            {isSalesContract
+              ? t("contracts.summary.activeSalesDetail", "我方提供产品或服务")
+              : t("contracts.summary.activeServiceDetail", "外部供应商提供服务")}
           </small>
         </div>
         <div>
-          <span>合同金额</span>
+          <span>{t("contracts.summary.amount", "合同金额")}</span>
           <strong className={styles.multiCurrency}>
             {formatCurrencySummary(summary.amountsByCurrency)}
           </strong>
-          <small>按币种分别汇总</small>
+          <small>{t("contracts.summary.amountDetail", "按币种分别汇总")}</small>
         </div>
         <div>
-          <span>待签署</span>
+          <span>{t("contracts.summary.pendingSignature", "待签署")}</span>
           <strong>{summary.pendingSignatureCount}</strong>
-          <small>审批通过后等待签署</small>
+          <small>
+            {t("contracts.summary.pendingSignatureDetail", "审批通过后等待签署")}
+          </small>
         </div>
         <div
           className={
             summary.overduePaymentCount ? styles.summaryWarning : undefined
           }
         >
-          <span>{isSalesContract ? "逾期收款计划" : "逾期付款计划"}</span>
+          <span>
+            {isSalesContract
+              ? t("contracts.summary.overdueReceipt", "逾期收款计划")
+              : t("contracts.summary.overduePayment", "逾期付款计划")}
+          </span>
           <strong>{summary.overduePaymentCount}</strong>
-          <small>{isSalesContract ? "计划收款日已过" : "计划付款日已过"}</small>
+          <small>
+            {isSalesContract
+              ? t("contracts.summary.overdueReceiptDetail", "计划收款日已过")
+              : t("contracts.summary.overduePaymentDetail", "计划付款日已过")}
+          </small>
         </div>
       </div>
 
       <section className={styles.listPanel}>
         <ProjectTabs
           className={styles.scopeTabs}
-          aria-label="合同状态"
+          aria-label={t("contracts.statusAria", "合同状态")}
           activeKey={scope}
           items={scopeItems.map((item) => ({
             key: item.value,
@@ -533,7 +675,10 @@ export default function ContractCenterPage() {
             value={keywordInput}
             prefix={<SearchOutlined />}
             allowClear
-            placeholder="搜索合同名称、编号、对方主体或负责人"
+            placeholder={t(
+              "contracts.searchPlaceholder",
+              "搜索合同名称、编号、对方主体或负责人",
+            )}
             onChange={(event) => setKeywordInput(event.target.value)}
             onPressEnter={() => {
               setKeyword(keywordInput.trim());
@@ -543,7 +688,7 @@ export default function ContractCenterPage() {
           <Select
             value={contractType || undefined}
             allowClear
-            placeholder="全部合同类型"
+            placeholder={t("contracts.contractType.all", "全部合同类型")}
             options={Object.entries(CONTRACT_TYPE_LABELS).map(
               ([value, label]) => ({ value, label }),
             )}
@@ -560,11 +705,11 @@ export default function ContractCenterPage() {
                 setPage(1);
               }}
             >
-              查询
+              {t("contracts.actions.search", "查询")}
             </Button>
             <Button
               icon={<ReloadOutlined />}
-              aria-label="刷新"
+              aria-label={t("contracts.actions.refresh", "刷新")}
               onClick={() => void load()}
             />
           </Space>
@@ -573,7 +718,7 @@ export default function ContractCenterPage() {
           <Alert
             type="error"
             showIcon
-            message="合同数据加载失败"
+            message={t("contracts.loadError", "合同数据加载失败")}
             description={error}
             className={styles.alert}
           />
@@ -589,21 +734,33 @@ export default function ContractCenterPage() {
             pageSize,
             total,
             showSizeChanger: true,
-            showTotal: (count) => `共 ${count} 份合同`,
+            showTotal: (count) =>
+              t("contracts.totalContracts", "共 {count} 份合同").replace(
+                "{count}",
+                String(count),
+              ),
             onChange: (nextPage, nextPageSize) => {
               setPage(nextPageSize !== pageSize ? 1 : nextPage);
               setPageSize(nextPageSize);
             },
           }}
           locale={{
-            emptyText: error ? "加载失败，请重试" : "暂无符合条件的合同",
+            emptyText: error
+              ? t("contracts.emptyError", "加载失败，请重试")
+              : t("contracts.empty", "暂无符合条件的合同"),
           }}
         />
       </section>
       <Text type="secondary" className={styles.footnote}>
         {isSalesContract
-          ? "收款进度按已确认的客户回款核销金额统计，收款计划只表示应收安排。"
-          : "付款进度按已确认付款单统计，同一期拆成多张付款单时合并金额并保留真实单据数量。"}
+          ? t(
+              "contracts.footnote.receivable",
+              "收款进度按已确认的客户回款核销金额统计，收款计划只表示应收安排。",
+            )
+          : t(
+              "contracts.footnote.payable",
+              "付款进度按已确认付款单统计，同一期拆成多张付款单时合并金额并保留真实单据数量。",
+            )}
       </Text>
     </PageScaffold>
   );

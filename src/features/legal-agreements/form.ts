@@ -5,6 +5,7 @@ import {
 import type { InternalLegalEntityOption } from "../internal-legal-entities/api";
 import { normalizeLegalAgreementParties } from "./party";
 import type { LegalAgreementDraft, LegalCustomerOption } from "./types";
+import { $i18n } from "@/i18n";
 
 export type LegalAgreementFormValues = Omit<LegalAgreementDraft, "parties"> & {
   customerName?: string;
@@ -26,7 +27,7 @@ export function legalAgreementFormValuesToDraft(
   const baseCounterparty = customer
     ? customerOptionToCounterparty(customer)
     : {
-        partyTitle: "甲方",
+        partyTitle: $i18n.t("contractForm.role.partyA", "甲方"),
         partyRole: "COUNTERPARTY" as const,
         sourceType: "MANUAL" as const,
         companyName: "",
@@ -56,7 +57,9 @@ export function legalAgreementFormValuesToDraft(
 
   return {
     agreementType: values.agreementType || "NDA",
-    agreementTitle: values.agreementTitle || "商务合作保密协议",
+    agreementTitle:
+      values.agreementTitle ||
+      $i18n.t("legalAgreement.defaultTitle", "商务合作保密协议"),
     projectName: values.projectName,
     cooperationMatter: values.cooperationMatter,
     agreementDate: values.agreementDate,

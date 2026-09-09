@@ -9,6 +9,7 @@ import {
   type LocalPartner,
 } from "@/api/crm";
 import { FormRow } from "@/components/form-layout";
+import { $i18n } from "@/i18n";
 
 const { Text } = Typography;
 
@@ -50,8 +51,8 @@ const PartySelector: React.FC<Props> = ({
   bizType,
   typeName,
   partnerName,
-  typeLabel = "业务类型",
-  partnerLabel = "对方主体",
+  typeLabel = $i18n.t("partySelector.businessType", "业务类型"),
+  partnerLabel = $i18n.t("partySelector.counterparty", "对方主体"),
   required = true,
   typeRequired,
   partnerRequired,
@@ -82,7 +83,13 @@ const PartySelector: React.FC<Props> = ({
     setCrmLoading(true);
     listCrmCustomers({ keyword: crmKeyword, pageSize: 200 })
       .then((rows) => setCrmOptions(rows))
-      .catch((e: any) => message.error(`加载客户失败：${e?.message || e}`))
+      .catch((e: any) =>
+        message.error(
+          $i18n.t("partySelector.loadCustomerFailed", {
+            reason: e?.message || String(e),
+          }),
+        ),
+      )
       .finally(() => setCrmLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [salesMode, crmKeyword]);
@@ -91,7 +98,13 @@ const PartySelector: React.FC<Props> = ({
     if (salesMode) return;
     listLocalSuppliers({ keyword: supplierKeyword, pageSize: 200 })
       .then((rows) => setSupplierOptions(rows))
-      .catch((e: any) => message.error(`加载供应商失败：${e?.message || e}`));
+      .catch((e: any) =>
+        message.error(
+          $i18n.t("partySelector.loadSupplierFailed", {
+            reason: e?.message || String(e),
+          }),
+        ),
+      );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [salesMode, supplierKeyword]);
 
@@ -124,7 +137,14 @@ const PartySelector: React.FC<Props> = ({
             name={typeName}
             rules={
               typeIsRequired
-                ? [{ required: true, message: `请选择${typeLabel}` }]
+                ? [
+                    {
+                      required: true,
+                      message: $i18n.t("partySelector.selectRequired", {
+                        label: typeLabel,
+                      }),
+                    },
+                  ]
                 : undefined
             }
             style={{ marginBottom: 0 }}
@@ -143,12 +163,12 @@ const PartySelector: React.FC<Props> = ({
                 {salesMode ? (
                   <>
                     <DatabaseOutlined style={{ marginRight: 2 }} />
-                    客户库
+                    {$i18n.t("partySelector.customerDatabase", "客户库")}
                   </>
                 ) : (
                   <>
                     <DatabaseOutlined style={{ marginRight: 2 }} />
-                    本地供应商
+                    {$i18n.t("partySelector.localSupplier", "本地供应商")}
                   </>
                 )}
               </Text>
@@ -157,7 +177,14 @@ const PartySelector: React.FC<Props> = ({
           name={partnerName}
           rules={
             partnerIsRequired
-              ? [{ required: true, message: `请选择${partnerLabel}` }]
+              ? [
+                  {
+                    required: true,
+                    message: $i18n.t("partySelector.selectRequired", {
+                      label: partnerLabel,
+                    }),
+                  },
+                ]
               : undefined
           }
           style={{ marginBottom: 0 }}
@@ -170,8 +197,15 @@ const PartySelector: React.FC<Props> = ({
               onSearch={setCrmKeyword}
               filterOption={false}
               optionFilterProp="label"
-              placeholder="按名称或统一信用码搜索客户库"
-              notFoundContent={crmLoading ? "加载中..." : "无匹配客户"}
+              placeholder={$i18n.t(
+                "partySelector.searchCustomer",
+                "按名称或统一信用码搜索客户库",
+              )}
+              notFoundContent={
+                crmLoading
+                  ? $i18n.t("partySelector.loading", "加载中...")
+                  : $i18n.t("partySelector.noCustomer", "无匹配客户")
+              }
               options={crmOptions.map((p) => ({
                 value: Number(p.id),
                 label: p.uscc ? `${p.name}（${p.uscc}）` : p.name,
@@ -185,11 +219,16 @@ const PartySelector: React.FC<Props> = ({
               onSearch={setSupplierKeyword}
               filterOption={false}
               optionFilterProp="label"
-              placeholder="按名称搜索本系统供应商"
+              placeholder={$i18n.t(
+                "partySelector.searchSupplier",
+                "按名称搜索本系统供应商",
+              )}
               notFoundContent={
                 <span>
-                  无匹配供应商。{" "}
-                  <a onClick={(e) => e.preventDefault()}>录入新供应商</a>
+                  {$i18n.t("partySelector.noSupplier", "无匹配供应商。")}{" "}
+                  <a onClick={(e) => e.preventDefault()}>
+                    {$i18n.t("partySelector.addSupplier", "录入新供应商")}
+                  </a>
                 </span>
               }
               options={supplierOptions.map((p) => ({

@@ -16,14 +16,29 @@ import dayjs from "dayjs";
 import { manageReceivableContract } from "./api";
 import type { ReceivablePlan } from "./types";
 import styles from "./receivable-plan-drawer.module.css";
+import { $i18n } from "@/i18n";
+
+const t = (key: string, fallback: string) => $i18n.t(key, fallback);
 
 const PLAN_STATUS_OPTIONS = [
-  { value: "DRAFT", label: "待补全" },
-  { value: "PENDING", label: "待收款" },
-  { value: "INVOICED", label: "已开票" },
-  { value: "PARTIALLY_RECEIVED", label: "部分收款" },
-  { value: "RECEIVED", label: "已收款" },
-  { value: "NOT_REQUIRED", label: "无需收款" },
+  { value: "DRAFT", label: t("receivablePlanForm.status.draft", "待补全") },
+  { value: "PENDING", label: t("receivablePlanForm.status.pending", "待收款") },
+  {
+    value: "INVOICED",
+    label: t("receivablePlanForm.status.invoiced", "已开票"),
+  },
+  {
+    value: "PARTIALLY_RECEIVED",
+    label: t("receivablePlanForm.status.partiallyReceived", "部分收款"),
+  },
+  {
+    value: "RECEIVED",
+    label: t("receivablePlanForm.status.received", "已收款"),
+  },
+  {
+    value: "NOT_REQUIRED",
+    label: t("receivablePlanForm.status.notRequired", "无需收款"),
+  },
 ];
 
 type ReceivablePlanDrawerProps = {
@@ -81,7 +96,10 @@ export default function ReceivablePlanDrawer({
     }
     form.setFieldsValue({
       phaseNo: nextPhaseNo,
-      phaseName: `第${nextPhaseNo}期`,
+      phaseName: t("receivablePlanForm.defaultPhaseName", "第{phase}期").replace(
+        "{phase}",
+        String(nextPhaseNo),
+      ),
       plannedAmount: undefined,
       currency: contractCurrency || "CNY",
       plannedReceiptDate: null,
@@ -110,12 +128,18 @@ export default function ReceivablePlanDrawer({
             values.actualReceivedDate?.format("YYYY-MM-DD") || "",
         },
       });
-      message.success(editing ? "收款计划已更新" : "收款计划已创建");
+      message.success(
+        editing
+          ? t("receivablePlanForm.success.updated", "收款计划已更新")
+          : t("receivablePlanForm.success.created", "收款计划已创建"),
+      );
       onClose();
       await onSaved();
     } catch (requestError) {
       message.error(
-        requestError instanceof Error ? requestError.message : "保存失败",
+        requestError instanceof Error
+          ? requestError.message
+          : t("receivablePlanForm.error.save", "保存失败"),
       );
     } finally {
       setSaving(false);
@@ -131,12 +155,14 @@ export default function ReceivablePlanDrawer({
         contractId,
         planId: plan.id,
       });
-      message.success("收款计划已取消");
+      message.success(t("receivablePlanForm.success.cancelled", "收款计划已取消"));
       onClose();
       await onSaved();
     } catch (requestError) {
       message.error(
-        requestError instanceof Error ? requestError.message : "取消失败",
+        requestError instanceof Error
+          ? requestError.message
+          : t("receivablePlanForm.error.cancel", "取消失败"),
       );
     } finally {
       setSaving(false);
@@ -147,7 +173,11 @@ export default function ReceivablePlanDrawer({
     <Drawer
       open={open}
       width={720}
-      title={editing ? "编辑收款计划" : "新增收款计划"}
+      title={
+        editing
+          ? t("receivablePlanForm.title.edit", "编辑收款计划")
+          : t("receivablePlanForm.title.create", "新增收款计划")
+      }
       onClose={saving ? undefined : onClose}
       footer={
         <div className={styles.footer}>
@@ -157,20 +187,26 @@ export default function ReceivablePlanDrawer({
               loading={saving}
               onClick={() => void submit()}
             >
-              保存
+              {t("receivablePlanForm.action.save", "保存")}
             </Button>
             <Button disabled={saving} onClick={onClose}>
-              取消
+              {t("receivablePlanForm.action.cancel", "取消")}
             </Button>
           </Space>
           {editing ? (
             <Popconfirm
-              title="确认取消这个收款期次？"
-              description="计划会保留并标记为已取消，不会删除历史记录。"
+              title={t(
+                "receivablePlanForm.confirm.cancelTitle",
+                "确认取消这个收款期次？",
+              )}
+              description={t(
+                "receivablePlanForm.confirm.cancelDescription",
+                "计划会保留并标记为已取消，不会删除历史记录。",
+              )}
               onConfirm={() => void cancelPlan()}
             >
               <Button danger loading={saving}>
-                取消该期次
+                {t("receivablePlanForm.action.cancelPhase", "取消该期次")}
               </Button>
             </Popconfirm>
           ) : null}
@@ -184,35 +220,73 @@ export default function ReceivablePlanDrawer({
       <Alert
         type="info"
         showIcon
-        message="这里维护合同约定的收款期次"
-        description="实际到账仍以回款记录及核销结果为准。"
+        message={t(
+          "receivablePlanForm.alert.message",
+          "这里维护合同约定的收款期次",
+        )}
+        description={t(
+          "receivablePlanForm.alert.description",
+          "实际到账仍以回款记录及核销结果为准。",
+        )}
       />
       <Form form={form} layout="vertical" className={styles.form}>
         <div className={styles.threeColumns}>
           <Form.Item
             name="phaseNo"
-            label="期次序号"
-            rules={[{ required: true, message: "请输入期次序号" }]}
+            label={t("receivablePlanForm.field.phaseNo", "期次序号")}
+            rules={[
+              {
+                required: true,
+                message: t(
+                  "receivablePlanForm.field.phaseNoRequired",
+                  "请输入期次序号",
+                ),
+              },
+            ]}
           >
             <InputNumber min={1} precision={0} />
           </Form.Item>
           <Form.Item
             name="phaseName"
-            label="期次名称"
-            rules={[{ required: true, message: "请输入期次名称" }]}
+            label={t("receivablePlanForm.field.phaseName", "期次名称")}
+            rules={[
+              {
+                required: true,
+                message: t(
+                  "receivablePlanForm.field.phaseNameRequired",
+                  "请输入期次名称",
+                ),
+              },
+            ]}
           >
-            <Input placeholder="例如：首期服务费" />
+            <Input
+              placeholder={t(
+                "receivablePlanForm.field.phaseNamePlaceholder",
+                "例如：首期服务费",
+              )}
+            />
           </Form.Item>
-          <Form.Item name="status" label="状态" rules={[{ required: true }]}>
+          <Form.Item
+            name="status"
+            label={t("receivablePlanForm.field.status", "状态")}
+            rules={[{ required: true }]}
+          >
             <Select options={PLAN_STATUS_OPTIONS} />
           </Form.Item>
         </div>
 
         <div className={styles.threeColumns}>
-          <Form.Item name="plannedAmount" label="计划收款金额">
+          <Form.Item
+            name="plannedAmount"
+            label={t("receivablePlanForm.field.plannedAmount", "计划收款金额")}
+          >
             <InputNumber min={0} precision={2} />
           </Form.Item>
-          <Form.Item name="currency" label="币种" rules={[{ required: true }]}>
+          <Form.Item
+            name="currency"
+            label={t("receivablePlanForm.field.currency", "币种")}
+            rules={[{ required: true }]}
+          >
             <Select
               options={["CNY", "USD", "HKD", "EUR"].map((value) => ({
                 value,
@@ -220,31 +294,58 @@ export default function ReceivablePlanDrawer({
               }))}
             />
           </Form.Item>
-          <Form.Item name="plannedReceiptDate" label="计划收款日">
+          <Form.Item
+            name="plannedReceiptDate"
+            label={t(
+              "receivablePlanForm.field.plannedReceiptDate",
+              "计划收款日",
+            )}
+          >
             <DatePicker />
           </Form.Item>
         </div>
 
-        <Form.Item name="triggerCondition" label="收款触发条件">
+        <Form.Item
+          name="triggerCondition"
+          label={t("receivablePlanForm.field.triggerCondition", "收款触发条件")}
+        >
           <Input.TextArea
             rows={3}
-            placeholder="例如：验收通过并开具发票后 15 个工作日内"
+            placeholder={t(
+              "receivablePlanForm.field.triggerConditionPlaceholder",
+              "例如：验收通过并开具发票后 15 个工作日内",
+            )}
           />
         </Form.Item>
 
         <div className={styles.threeColumns}>
-          <Form.Item name="invoicedAmount" label="已开票金额">
+          <Form.Item
+            name="invoicedAmount"
+            label={t("receivablePlanForm.field.invoicedAmount", "已开票金额")}
+          >
             <InputNumber min={0} precision={2} />
           </Form.Item>
-          <Form.Item name="receivedAmount" label="已收款金额">
+          <Form.Item
+            name="receivedAmount"
+            label={t("receivablePlanForm.field.receivedAmount", "已收款金额")}
+          >
             <InputNumber min={0} precision={2} />
           </Form.Item>
-          <Form.Item name="actualReceivedDate" label="实际收款日">
+          <Form.Item
+            name="actualReceivedDate"
+            label={t(
+              "receivablePlanForm.field.actualReceivedDate",
+              "实际收款日",
+            )}
+          >
             <DatePicker />
           </Form.Item>
         </div>
 
-        <Form.Item name="remark" label="备注">
+        <Form.Item
+          name="remark"
+          label={t("receivablePlanForm.field.remark", "备注")}
+        >
           <Input.TextArea rows={2} />
         </Form.Item>
       </Form>

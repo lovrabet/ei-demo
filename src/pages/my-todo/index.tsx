@@ -31,6 +31,9 @@ import {
   loadPlatformTodoSummaries,
   type PlatformTaskSummary,
 } from "@/features/platform-flow/api";
+import { $i18n } from "@/i18n";
+
+const t = (key: string, fallbackText: string) => $i18n.t(key, fallbackText);
 
 type TodoRow = PlatformTaskSummary;
 
@@ -63,7 +66,12 @@ export const ApprovalTodoList: React.FC<ApprovalTodoListProps> = ({
       setAllRows(rows);
       setPage(1);
     } catch (e: any) {
-      message.error(`加载失败：${e?.message || e}`);
+      message.error(
+        t("myTodo.loadFailed", `加载失败：${e?.message || e}`).replace(
+          "{reason}",
+          e?.message || String(e),
+        ),
+      );
     } finally {
       setLoading(false);
     }
@@ -94,19 +102,28 @@ export const ApprovalTodoList: React.FC<ApprovalTodoListProps> = ({
         comment: comment.trim(),
       });
       message.success(
-        `${approved ? "已通过" : "已驳回"}：${item.title}`,
+        `${
+          approved
+            ? t("myTodo.resultApproved", "已通过")
+            : t("myTodo.resultRejected", "已驳回")
+        }：${item.title}`,
       );
       setActionModal(null);
       setComment("");
       load();
     } catch (e: any) {
-      message.error(`执行失败：${e?.message || e}`);
+      message.error(
+        t("myTodo.actionFailed", `执行失败：${e?.message || e}`).replace(
+          "{reason}",
+          e?.message || String(e),
+        ),
+      );
     }
   };
 
   const columns: ColumnsType<TodoRow> = [
     {
-      title: "业务类型",
+      title: t("myTodo.columns.bizType", "业务类型"),
       dataIndex: "bizType",
       width: 90,
       render: (v: string) => (
@@ -116,13 +133,13 @@ export const ApprovalTodoList: React.FC<ApprovalTodoListProps> = ({
       ),
     },
     {
-      title: "当前节点",
+      title: t("myTodo.columns.node", "当前节点"),
       dataIndex: "nodeName",
       width: 130,
       render: (v: string) => <Tag color="geekblue">{v}</Tag>,
     },
     {
-      title: "业务标题",
+      title: t("myTodo.columns.title", "业务标题"),
       dataIndex: "title",
       render: (_: any, r: TodoRow) => {
         const detailPath =
@@ -146,26 +163,30 @@ export const ApprovalTodoList: React.FC<ApprovalTodoListProps> = ({
       },
     },
     {
-      title: "金额",
+      title: t("myTodo.columns.amount", "金额"),
       dataIndex: "amount",
       width: 120,
       align: "right",
       render: (v?: number) => (v ? `¥${Number(v).toLocaleString()}` : "-"),
     },
     {
-      title: "当前状态",
+      title: t("myTodo.columns.status", "当前状态"),
       key: "status",
       width: 110,
-      render: () => <Tag color="processing">审批中</Tag>,
+      render: () => (
+        <Tag color="processing">
+          {t("myTodo.statusProcessing", "审批中")}
+        </Tag>
+      ),
     },
     {
-      title: "创建时间",
+      title: t("myTodo.columns.createdAt", "创建时间"),
       dataIndex: "createdAt",
       width: 160,
       render: (v: number) => (v ? formatDateValue(v, true) : "-"),
     },
     {
-      title: "操作",
+      title: t("myTodo.columns.actions", "操作"),
       key: "actions",
       width: 220,
       render: (_: any, r: TodoRow) => {
@@ -175,7 +196,7 @@ export const ApprovalTodoList: React.FC<ApprovalTodoListProps> = ({
           <Space>
             {detailPath ? (
               <Button size="small" onClick={() => navigate(detailPath)}>
-                查看
+                {t("myTodo.view", "查看")}
               </Button>
             ) : null}
             <Button
@@ -183,14 +204,14 @@ export const ApprovalTodoList: React.FC<ApprovalTodoListProps> = ({
               type="primary"
               onClick={() => setActionModal({ item: r, approved: true })}
             >
-              通过
+              {t("myTodo.actionLabels.reviewPass", "通过")}
             </Button>
             <Button
               size="small"
               danger
               onClick={() => setActionModal({ item: r, approved: false })}
             >
-              驳回
+              {t("myTodo.actionLabels.reviewReject", "驳回")}
             </Button>
           </Space>
         );
@@ -201,7 +222,7 @@ export const ApprovalTodoList: React.FC<ApprovalTodoListProps> = ({
   const toolbar = (
     <Space wrap>
       <Select
-        placeholder="业务类型"
+        placeholder={t("myTodo.filterBizType", "业务类型")}
         allowClear
         style={{ width: 120 }}
         value={bizTypeFilter || undefined}
@@ -210,16 +231,25 @@ export const ApprovalTodoList: React.FC<ApprovalTodoListProps> = ({
           setPage(1);
         }}
         options={[
-          { value: "expense", label: "报销" },
-          { value: "invoice_application", label: "销项开票申请" },
-          { value: "contract", label: "合同" },
-          { value: "payment", label: "付款" },
-          { value: "salary_payment", label: "工资付款" },
-          { value: "travel", label: "差旅出行" },
+          { value: "expense", label: t("myTodo.bizOptions.expense", "报销") },
+          {
+            value: "invoice_application",
+            label: t("workflow.bizType.invoiceApplication", "销项开票申请"),
+          },
+          { value: "contract", label: t("myTodo.bizOptions.contract", "合同") },
+          { value: "payment", label: t("myTodo.bizOptions.payment", "付款") },
+          {
+            value: "salary_payment",
+            label: t("myTodo.bizOptions.salary_payment", "工资付款"),
+          },
+          {
+            value: "travel",
+            label: t("myTodo.bizOptions.travel", "差旅出行"),
+          },
         ]}
       />
       <Button icon={<ReloadOutlined />} loading={loading} onClick={() => load()}>
-        刷新
+        {t("myTodo.refresh", "刷新")}
       </Button>
     </Space>
   );
@@ -231,7 +261,9 @@ export const ApprovalTodoList: React.FC<ApprovalTodoListProps> = ({
         columns={columns}
         dataSource={paged}
         loading={loading}
-        locale={{ emptyText: <Empty description="暂无待办" /> }}
+        locale={{
+          emptyText: <Empty description={t("myTodo.empty", "暂无待办")} />,
+        }}
         pagination={{
           current: page,
           pageSize: PAGE_SIZE,
@@ -246,7 +278,11 @@ export const ApprovalTodoList: React.FC<ApprovalTodoListProps> = ({
       <Modal
         title={
           actionModal
-            ? `${actionModal.approved ? "通过" : "驳回"}：${actionModal.item.title}`
+            ? `${
+                actionModal.approved
+                  ? t("myTodo.actionLabels.reviewPass", "通过")
+                  : t("myTodo.actionLabels.reviewReject", "驳回")
+              }：${actionModal.item.title}`
             : ""
         }
         open={!!actionModal}
@@ -255,8 +291,8 @@ export const ApprovalTodoList: React.FC<ApprovalTodoListProps> = ({
           setComment("");
         }}
         onOk={submitAction}
-        okText="确认"
-        cancelText="取消"
+        okText={t("myTodo.confirm", "确认")}
+        cancelText={t("myTodo.cancel", "取消")}
       >
         <div style={{ marginBottom: 12 }}>
           <Space>
@@ -275,7 +311,7 @@ export const ApprovalTodoList: React.FC<ApprovalTodoListProps> = ({
         </div>
         <Input.TextArea
           rows={3}
-          placeholder="审批意见（可选）"
+          placeholder={t("myTodo.approvalCommentPlaceholder", "审批意见（可选）")}
           value={comment}
           onChange={(e) => setComment(e.target.value)}
         />
@@ -305,7 +341,7 @@ export const ApprovalTodoList: React.FC<ApprovalTodoListProps> = ({
       title={
         <Space>
           <ExclamationCircleOutlined style={{ color: "#ff9500" }} />
-          待我审批
+          {t("myTodo.cardTitle", "待我审批")}
         </Space>
       }
       extra={toolbar}

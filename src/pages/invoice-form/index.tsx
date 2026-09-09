@@ -58,6 +58,9 @@ import {
   selectDefaultInternalLegalEntity,
   type InternalLegalEntityOption,
 } from "@/features/internal-legal-entities/api";
+import { $i18n } from "@/i18n";
+
+const t = (key: string, fallbackText: string) => $i18n.t(key, fallbackText);
 
 const INVOICE_CODE = "fc11e2d760b94b2ca2ccf0485ed40ca8";
 const CONTRACT_CODE = "53869993f80f45ae8ef6cdf051d8e355";
@@ -197,24 +200,39 @@ function buildContractLabel(contract: ContractOption) {
       ? `${contract.currency || "CNY"} ${Number(contract.amount).toLocaleString()}`
       : "";
   const suffix = [amount, contract.status].filter(Boolean).join(" / ");
-  return suffix ? `${contract.name}（${suffix}）` : contract.name;
+  return suffix
+    ? t("invoiceForm.contractLabel.title", "{name}（{suffix}）")
+        .replace("{name}", contract.name)
+        .replace("{suffix}", suffix)
+    : contract.name;
 }
 
 const PAYMENT_STATUS_LABELS: Record<string, string> = {
-  draft: "草稿",
-  submitted: "审批中",
-  reviewed: "已审核",
-  bank_pending: "待银行处理",
-  paid_confirmed: "已支付",
-  payment_failed: "支付失败",
+  draft: t("invoiceForm.paymentStatus.draft", "草稿"),
+  submitted: t("invoiceForm.paymentStatus.submitted", "审批中"),
+  reviewed: t("invoiceForm.paymentStatus.reviewed", "已审核"),
+  bank_pending: t("invoiceForm.paymentStatus.bankPending", "待银行处理"),
+  paid_confirmed: t("invoiceForm.paymentStatus.paidConfirmed", "已支付"),
+  payment_failed: t("invoiceForm.paymentStatus.paymentFailed", "支付失败"),
 };
 
 function buildPaymentLabel(payment: PaymentOption) {
   const phase = payment.phaseNo
-    ? `第 ${payment.phaseNo} 期${payment.phaseName ? ` · ${payment.phaseName}` : ""}`
+    ? t("invoiceForm.paymentLabel.phase", "第 {phase} 期").replace(
+        "{phase}",
+        String(payment.phaseNo),
+      ) + (payment.phaseName ? ` · ${payment.phaseName}` : "")
     : "";
   const amount = `${payment.currency || "CNY"} ${Number(payment.amount || 0).toLocaleString()}`;
-  const available = `可覆盖 ${payment.currency || "CNY"} ${Number(payment.availableAmount || 0).toLocaleString()}`;
+  const available = t(
+    "invoiceForm.paymentLabel.available",
+    "可覆盖 {currency} {amount}",
+  )
+    .replace("{currency}", payment.currency || "CNY")
+    .replace(
+      "{amount}",
+      String(Number(payment.availableAmount || 0).toLocaleString()),
+    );
   return [
     phase,
     payment.title,
@@ -314,7 +332,7 @@ const InvoiceForm: React.FC = () => {
               contract.contract_name ||
               contract.title ||
               contract.contract_no ||
-              "合同名称缺失",
+              t("invoiceForm.contractLabel.missing", "合同名称缺失"),
             amount: contract.amount,
             currency: contract.currency,
             partnerId:
@@ -332,7 +350,12 @@ const InvoiceForm: React.FC = () => {
         );
       })
       .catch((error: any) =>
-        message.error(`加载合同失败：${error?.message || error}`),
+        message.error(
+          t("invoiceForm.error.contractsLoad", "加载合同失败：{reason}").replace(
+            "{reason}",
+            error?.message || String(error),
+          ),
+        ),
       )
       .finally(() => setContractLoading(false));
   }, [isIncomingArchive, partnerId]);
@@ -414,7 +437,7 @@ const InvoiceForm: React.FC = () => {
       .getOne({ id: Number(editId) })
       .then(async (record: any) => {
         if (!record?.id) {
-          message.error("未找到该发票记录");
+          message.error(t("invoiceForm.error.recordNotFound", "未找到该发票记录"));
           return;
         }
         const recordIsIncoming = isIncomingArchive;
@@ -510,7 +533,12 @@ const InvoiceForm: React.FC = () => {
         setRecordStatus(record.status);
       })
       .catch((error: any) =>
-        message.error(`加载失败：${error?.message || error}`),
+        message.error(
+          t("invoiceForm.error.recordLoad", "加载失败：{reason}").replace(
+            "{reason}",
+            error?.message || String(error),
+          ),
+        ),
       )
       .finally(() => setLoading(false));
   }, [editId, form, isIncomingArchive, mode, navigate]);
@@ -599,7 +627,10 @@ const InvoiceForm: React.FC = () => {
     if (!contract) return;
     const nextValues: Partial<InvoiceFormValues> = {};
     if (!form.getFieldValue("invoice_title")) {
-      nextValues.invoice_title = `${contract.name}开票申请`;
+      nextValues.invoice_title = t(
+        "invoiceForm.contractLabel.invoiceTitle",
+        "{name}开票申请",
+      ).replace("{name}", contract.name);
     }
     if (!form.getFieldValue("amount") && contract.amount != null) {
       nextValues.amount = Number(contract.amount);
@@ -707,7 +738,7 @@ const InvoiceForm: React.FC = () => {
           )
           .map((payment: any) => ({
             id: Number(payment.id),
-            title: payment.title || payment.payment_phase_name || "付款记录",
+            title: payment.title || payment.payment_phase_name || t("invoiceForm.payment.itemLabel", "付款记录"),
             amount: Number(payment.amount || 0),
             currency: payment.currency || "CNY",
             status: payment.status || "draft",
@@ -736,7 +767,12 @@ const InvoiceForm: React.FC = () => {
         );
       })
       .catch((error: any) =>
-        message.error(`加载合同付款记录失败：${error?.message || error}`),
+        message.error(
+          t(
+            "invoiceForm.error.paymentsLoad",
+            "加载合同付款记录失败：{reason}",
+          ).replace("{reason}", error?.message || String(error)),
+        ),
       )
       .finally(() => {
         if (!cancelled) setPaymentLoading(false);
@@ -781,7 +817,12 @@ const InvoiceForm: React.FC = () => {
         form.setFieldsValue(nextValues);
       })
       .catch((error: any) =>
-        message.error(`加载对方主体失败：${error?.message || error}`),
+        message.error(
+          t("invoiceForm.error.partnerLoad", "加载对方主体失败：{reason}").replace(
+            "{reason}",
+            error?.message || String(error),
+          ),
+        ),
       );
     return () => {
       cancelled = true;
@@ -790,7 +831,7 @@ const InvoiceForm: React.FC = () => {
 
   const onSave = async (action: "draft" | "submit" | "archive") => {
     if (readOnly) {
-      message.warning("当前单据不可编辑");
+      message.warning(t("invoiceForm.error.readonly", "当前单据不可编辑"));
       return;
     }
     let values: InvoiceFormValues;
@@ -924,22 +965,34 @@ const InvoiceForm: React.FC = () => {
       });
       form.setFieldValue(ATTACHMENTS_FIELD, attachments);
       if (action === "submit") {
-        message.success("已提交审核");
+        message.success(t("invoiceForm.submittedToReview", "已提交审核"));
       } else if (action === "archive") {
         await lovrabetClient.bff.execute({
           scriptName: "cpoArchiveIncomingInvoice",
           params: { invoiceId: id },
         });
-        message.success("进项发票已归档");
+        message.success(t("invoiceForm.archiveSuccess", "进项发票已归档"));
       } else {
-        message.success(isEdit ? "草稿已更新" : "草稿已保存");
+        message.success(
+          isEdit
+            ? t("invoiceForm.draftUpdated", "草稿已更新")
+            : t("invoiceForm.draftSaved", "草稿已保存"),
+        );
       }
       navigate("/invoice-center");
     } catch (error: any) {
       if (error?.errorFields) return;
       const actionLabel =
-        action === "submit" ? "提交" : action === "archive" ? "归档" : "保存";
-      message.error(`${actionLabel}失败：${error?.message || error}`);
+        action === "submit"
+          ? t("invoiceForm.actionSubmit", "提交")
+          : action === "archive"
+            ? t("invoiceForm.actionArchive", "归档")
+            : t("invoiceForm.actionSave", "保存");
+      message.error(
+        t("invoiceForm.actionFailed", `${actionLabel}失败：${error?.message || error}`)
+          .replace("{action}", actionLabel)
+          .replace("{reason}", error?.message || String(error)),
+      );
     } finally {
       setSaving(false);
     }
@@ -959,31 +1012,43 @@ const InvoiceForm: React.FC = () => {
           />
           {isIncomingArchive
             ? readOnly
-              ? "查看进项发票"
+              ? t("invoiceForm.title.viewIncoming", "查看进项发票")
               : isEdit
-                ? "编辑进项发票归档"
-                : "录入进项发票"
+                ? t("invoiceForm.title.editIncomingArchive", "编辑进项发票归档")
+                : t("invoiceForm.title.createIncoming", "录入进项发票")
             : readOnly
-              ? "查看销项发票申请"
+              ? t("invoiceForm.title.viewOutgoing", "查看销项发票申请")
               : isEdit
-                ? "编辑销项发票申请"
-                : "申请开具销项发票"}
+                ? t("invoiceForm.title.editOutgoing", "编辑销项发票申请")
+                : t("invoiceForm.title.createOutgoing", "申请开具销项发票")}
         </Space>
       }
     >
       {!readOnly ? (
         <AgentFormGuide
           skillCode="cpo-invoice-application"
-          skillName="发票与开票申请助手"
+          skillName={t("invoiceForm.agent.skillName", "发票与开票申请助手")}
           prompt={
             isIncomingArchive
-              ? "请根据我上传的发票文件完成进项发票归档"
-              : "请根据客户合同和开票材料创建并提交开票申请"
+              ? t(
+                  "invoiceForm.agent.promptIncoming",
+                  "请根据我上传的发票文件完成进项发票归档",
+                )
+              : t(
+                  "invoiceForm.agent.promptOutgoing",
+                  "请根据客户合同和开票材料创建并提交开票申请",
+                )
           }
           description={
             isIncomingArchive
-              ? "上传发票文件后，Agent 可识别票面信息、核验业务关联并完成进项发票归档。"
-              : "提供客户合同和开票材料后，Agent 可核对业务信息、整理附件并完成开票申请。"
+              ? t(
+                  "invoiceForm.agent.descriptionIncoming",
+                  "上传发票文件后，Agent 可识别票面信息、核验业务关联并完成进项发票归档。",
+                )
+              : t(
+                  "invoiceForm.agent.descriptionOutgoing",
+                  "提供客户合同和开票材料后，Agent 可核对业务信息、整理附件并完成开票申请。",
+                )
           }
         />
       ) : null}
@@ -1019,12 +1084,12 @@ const InvoiceForm: React.FC = () => {
             </Form.Item>
           ) : (
             <Form.Item
-              label="申请标题"
+              label={t("invoiceForm.field.applicationTitle", "申请标题")}
               name="invoice_title"
-              rules={[{ required: true, message: "请输入申请标题" }]}
+              rules={[{ required: true, message: t("invoiceForm.field.applicationTitleRequired", "请输入申请标题") }]}
             >
               <Input
-                placeholder="例如：XX 项目首期开票申请"
+                placeholder={t("invoiceForm.field.applicationTitlePlaceholder", "例如：XX 项目首期开票申请")}
                 maxLength={120}
                 showCount
               />
@@ -1038,8 +1103,8 @@ const InvoiceForm: React.FC = () => {
             partnerName="partner_id"
             partnerLabel={
               isIncomingArchive
-                ? "供应商 / 服务商（可选）"
-                : "关联客户（可选）"
+                ? t("invoiceForm.partner.partnerLabelIncoming", "供应商 / 服务商（可选）")
+                : t("invoiceForm.partner.partnerLabelOutgoing", "关联客户（可选）")
             }
             partnerRequired={false}
             hideType
@@ -1048,8 +1113,8 @@ const InvoiceForm: React.FC = () => {
             <Select
               options={[
                 isIncomingArchive
-                  ? { value: "service_provider_invoice", label: "进项发票归档" }
-                  : { value: "customer_invoice", label: "销项发票申请" },
+                  ? { value: "service_provider_invoice", label: t("invoiceForm.partner.requestTypeIncoming", "进项发票归档") }
+                  : { value: "customer_invoice", label: t("invoiceForm.partner.requestTypeOutgoing", "销项发票申请") },
               ]}
             />
           </PartySelector>
@@ -1066,8 +1131,8 @@ const InvoiceForm: React.FC = () => {
           <Form.Item
             label={
               isIncomingArchive
-                ? "关联采购合同（可选）"
-                : "关联销售合同（可选）"
+                ? t("invoiceForm.contract.labelIncoming", "关联采购合同（可选）")
+                : t("invoiceForm.contract.labelOutgoing", "关联销售合同（可选）")
             }
             name={isIncomingArchive ? "contract_id" : "crm_contract_id"}
           >
@@ -1080,11 +1145,11 @@ const InvoiceForm: React.FC = () => {
               placeholder={
                 !partnerId
                   ? isIncomingArchive
-                    ? "选择供应商后可关联付款合同"
-                    : "选择客户后可关联收款合同"
+                    ? t("invoiceForm.contract.placeholderIncomingNoPartner", "选择供应商后可关联付款合同")
+                    : t("invoiceForm.contract.placeholderOutgoingNoPartner", "选择客户后可关联收款合同")
                   : isIncomingArchive
-                    ? "选择该供应商的付款合同"
-                    : "选择该客户的收款合同"
+                    ? t("invoiceForm.contract.placeholderIncoming", "选择该供应商的付款合同")
+                    : t("invoiceForm.contract.placeholderOutgoing", "选择该客户的收款合同")
               }
               options={availableContracts.map((contract) => ({
                 value: contract.id,
@@ -1105,15 +1170,40 @@ const InvoiceForm: React.FC = () => {
               }
               message={
                 receivableSummary?.planCount
-                  ? `合同收款：已收 ${receivableSummary.currency} ${receivableSummary.receivedAmount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}`
-                  : "当前合同尚未维护可核验的收款计划"
+                  ? t(
+                      "invoiceForm.alert.received",
+                      "合同收款：已收 {amount}",
+                    ).replace(
+                      "{amount}",
+                      `${receivableSummary.currency} ${receivableSummary.receivedAmount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}`,
+                    )
+                  : t("invoiceForm.alert.noReceivablePlan", "当前合同尚未维护可核验的收款计划")
               }
               description={
                 receivableSummary?.planCount
                   ? receivableSummary.unknownAmountCount
-                    ? `${receivableSummary.unknownAmountCount} 个期次金额未明确；已知计划 ${receivableSummary.currency} ${receivableSummary.plannedAmount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}。是否允许先票后款仍以合同约定和审批意见为准。`
-                    : `计划收款 ${receivableSummary.currency} ${receivableSummary.plannedAmount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}，待收 ${receivableSummary.currency} ${receivableSummary.remainingAmount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}。是否允许先票后款仍以合同约定和审批意见为准。`
-                  : "系统不会因尚未收款而禁止开票申请，但申请人需要填写下方的收款与开票条件。"
+                    ? t(
+                        "invoiceForm.alert.unknownAmounts",
+                        "{count} 个期次金额未明确；已知计划 {planned}。是否允许先票后款仍以合同约定和审批意见为准。",
+                      )
+                      .replace("{count}", String(receivableSummary.unknownAmountCount))
+                      .replace(
+                        "{planned}",
+                        `${receivableSummary.currency} ${receivableSummary.plannedAmount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}`,
+                      )
+                    : t(
+                        "invoiceForm.alert.remaining",
+                        "计划收款 {planned}，待收 {remaining}。是否允许先票后款仍以合同约定和审批意见为准。",
+                      )
+                      .replace(
+                        "{planned}",
+                        `${receivableSummary.currency} ${receivableSummary.plannedAmount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}`,
+                      )
+                      .replace(
+                        "{remaining}",
+                        `${receivableSummary.currency} ${receivableSummary.remainingAmount.toLocaleString("zh-CN", { minimumFractionDigits: 2 })}`,
+                      )
+                  : t("invoiceForm.alert.allowInvoiceAnyway", "系统不会因尚未收款而禁止开票申请，但申请人需要填写下方的收款与开票条件。")
               }
               style={{ marginBottom: 16 }}
             />
@@ -1121,15 +1211,15 @@ const InvoiceForm: React.FC = () => {
 
           {isIncomingArchive ? (
             <Form.Item
-              label="发票用途"
+              label={t("invoiceForm.field.invoicePurpose", "发票用途")}
               name="invoice_purpose"
-              rules={[{ required: true, message: "请选择发票用途" }]}
+              rules={[{ required: true, message: t("invoiceForm.field.invoicePurposeRequired", "请选择发票用途") }]}
             >
               <Select
                 options={[
-                  { value: "procurement", label: "采购 / 供应商" },
-                  { value: "contract_payment", label: "合同付款核销" },
-                  { value: "other", label: "其他" },
+                  { value: "procurement", label: t("invoiceForm.purpose.procurement", "采购 / 供应商") },
+                  { value: "contract_payment", label: t("invoiceForm.purpose.contractPayment", "合同付款核销") },
+                  { value: "other", label: t("invoiceForm.purpose.other", "其他") },
                 ]}
               />
             </Form.Item>
@@ -1160,10 +1250,10 @@ const InvoiceForm: React.FC = () => {
                       >
                         <Form.Item
                           {...restField}
-                          label={index === 0 ? "关联付款（可选）" : "付款记录"}
+                          label={index === 0 ? t("invoiceForm.payment.linkLabel", "关联付款（可选）") : t("invoiceForm.payment.itemLabel", "付款记录")}
                           name={[name, "payment_id"]}
                           rules={[
-                            { required: true, message: "请选择付款记录" },
+                            { required: true, message: t("invoiceForm.payment.selectRequired", "请选择付款记录") },
                           ]}
                         >
                           <Select
@@ -1173,8 +1263,8 @@ const InvoiceForm: React.FC = () => {
                             optionFilterProp="label"
                             placeholder={
                               contractId
-                                ? "选择该合同下的付款记录"
-                                : "请先选择合同"
+                                ? t("invoiceForm.payment.placeholderContract", "选择该合同下的付款记录")
+                                : t("invoiceForm.payment.placeholderNoContract", "请先选择合同")
                             }
                             options={payments.map((payment) => ({
                               value: payment.id,
@@ -1187,25 +1277,25 @@ const InvoiceForm: React.FC = () => {
                         </Form.Item>
                         <Form.Item
                           {...restField}
-                          label="本票覆盖金额"
+                          label={t("invoiceForm.payment.amountLabel", "本票覆盖金额")}
                           name={[name, "amount_used"]}
                           rules={[
-                            { required: true, message: "请输入覆盖金额" },
+                            { required: true, message: t("invoiceForm.payment.amountRequired", "请输入覆盖金额") },
                             {
                               type: "number",
                               min: 0.01,
-                              message: "覆盖金额必须大于 0",
+                              message: t("invoiceForm.payment.amountMin", "覆盖金额必须大于 0"),
                             },
                           ]}
                         >
                           <MoneyInput min={0.01} minWidth={180} />
                         </Form.Item>
                         <Form.Item label=" ">
-                          <Tooltip title="移除付款关联">
+                          <Tooltip title={t("invoiceForm.payment.removeTitle", "移除付款关联")}>
                             <Button
                               type="text"
                               danger
-                              aria-label="移除付款关联"
+                              aria-label={t("invoiceForm.payment.removeTitle", "移除付款关联")}
                               icon={<DeleteOutlined />}
                               onClick={() => remove(name)}
                             />
@@ -1223,7 +1313,7 @@ const InvoiceForm: React.FC = () => {
                     }
                     block
                   >
-                    关联该合同下的付款
+                    {t("invoiceForm.payment.addRow", "关联该合同下的付款")}
                   </Button>
                   <div
                     style={{
@@ -1232,7 +1322,7 @@ const InvoiceForm: React.FC = () => {
                       fontSize: 13,
                     }}
                   >
-                    一张发票可覆盖多笔付款；每笔付款也可由多张发票共同覆盖，系统按填写金额核销。
+                    {t("invoiceForm.payment.hint", "一张发票可覆盖多笔付款；每笔付款也可由多张发票共同覆盖，系统按填写金额核销。")}
                   </div>
                 </>
               )}
@@ -1243,42 +1333,42 @@ const InvoiceForm: React.FC = () => {
 
           <FormRow columns={2}>
             <Form.Item
-              label="销售方"
+              label={t("invoiceForm.field.seller", "销售方")}
               name="seller_name"
-              rules={[{ required: true, message: "请输入销售方" }]}
+              rules={[{ required: true, message: t("invoiceForm.field.sellerRequired", "请输入销售方") }]}
             >
-              <Input placeholder="开票方或服务提供方名称" />
+              <Input placeholder={t("invoiceForm.field.sellerPlaceholder", "开票方或服务提供方名称")} />
             </Form.Item>
             <Form.Item
-              label="购买方"
+              label={t("invoiceForm.field.buyer", "购买方")}
               name="buyer_name"
-              rules={[{ required: true, message: "请输入购买方" }]}
+              rules={[{ required: true, message: t("invoiceForm.field.buyerRequired", "请输入购买方") }]}
               extra={
                 isIncomingArchive
                   ? undefined
-                  : "未关联客户库时，可直接填写个人或其他散户的开票抬头。"
+                  : t("invoiceForm.field.buyerExtra", "未关联客户库时，可直接填写个人或其他散户的开票抬头。")
               }
             >
-              <Input placeholder="发票抬头或付款方名称" />
+              <Input placeholder={t("invoiceForm.field.buyerPlaceholder", "发票抬头或付款方名称")} />
             </Form.Item>
           </FormRow>
 
           <FormRow columns={1}>
-            <Form.Item label="购买方税号" name="buyer_tax_no">
-              <Input placeholder="统一社会信用代码 / Tax ID" />
+            <Form.Item label={t("invoiceForm.field.buyerTaxNo", "购买方税号")} name="buyer_tax_no">
+              <Input placeholder={t("invoiceForm.field.buyerTaxNoPlaceholder", "统一社会信用代码 / Tax ID")} />
             </Form.Item>
           </FormRow>
-          <Form.Item label="购买方地址电话" name="buyer_address_phone">
-            <Input placeholder="专票需要时填写地址和电话" />
+          <Form.Item label={t("invoiceForm.field.buyerAddressPhone", "购买方地址电话")} name="buyer_address_phone">
+            <Input placeholder={t("invoiceForm.field.buyerAddressPhonePlaceholder", "专票需要时填写地址和电话")} />
           </Form.Item>
-          <Form.Item label="购买方开户行及账号" name="buyer_bank_account">
-            <Input placeholder="专票需要时填写开户行和银行账号" />
+          <Form.Item label={t("invoiceForm.field.buyerBankAccount", "购买方开户行及账号")} name="buyer_bank_account">
+            <Input placeholder={t("invoiceForm.field.buyerBankAccountPlaceholder", "专票需要时填写开户行和银行账号")} />
           </Form.Item>
 
           <Divider style={{ margin: "8px 0 4px" }} />
 
           <FormRow template="repeat(4, minmax(150px, 1fr))">
-            <Form.Item label="币种" name="currency">
+            <Form.Item label={t("invoiceForm.field.currency", "币种")} name="currency">
               <Select
                 options={[
                   { value: "CNY", label: "CNY" },
@@ -1288,40 +1378,40 @@ const InvoiceForm: React.FC = () => {
               />
             </Form.Item>
             <Form.Item
-              label="金额（不含税）"
+              label={t("invoiceForm.field.amount", "金额（不含税）")}
               name="amount"
               rules={[
-                { required: true, message: "请输入金额" },
-                { type: "number", min: 0.01, message: "金额必须大于 0" },
+                { required: true, message: t("invoiceForm.field.amountRequired", "请输入金额") },
+                { type: "number", min: 0.01, message: t("invoiceForm.field.amountMin", "金额必须大于 0") },
               ]}
             >
               <MoneyInput min={0.01} minWidth={160} />
             </Form.Item>
-            <Form.Item label="税率" name="tax_rate">
+            <Form.Item label={t("invoiceForm.field.taxRate", "税率")} name="tax_rate">
               <Select options={TAX_RATE_OPTIONS} />
             </Form.Item>
-            <Form.Item label="税额" name="tax_amount">
+            <Form.Item label={t("invoiceForm.field.taxAmount", "税额")} name="tax_amount">
               <MoneyInput min={0} minWidth={160} disabled />
             </Form.Item>
           </FormRow>
 
           <FormRow template="minmax(260px, 420px)">
             <Form.Item
-              label="价税合计"
+              label={t("invoiceForm.field.totalAmount", "价税合计")}
               name="total_amount"
-              rules={[{ required: true, message: "请输入价税合计" }]}
+              rules={[{ required: true, message: t("invoiceForm.field.totalAmountRequired", "请输入价税合计") }]}
             >
               <MoneyInput min={0} disabled />
             </Form.Item>
           </FormRow>
 
           <Form.Item
-            label="开票内容"
+            label={t("invoiceForm.field.invoiceContent", "开票内容")}
             name="invoice_content"
-            rules={[{ required: true, message: "请输入开票内容" }]}
+            rules={[{ required: true, message: t("invoiceForm.field.invoiceContentRequired", "请输入开票内容") }]}
           >
             <Input
-              placeholder="例如：技术服务费 / 软件服务费 / 云资源服务"
+              placeholder={t("invoiceForm.field.invoiceContentPlaceholder", "例如：技术服务费 / 软件服务费 / 云资源服务")}
               maxLength={300}
               showCount
             />
@@ -1329,41 +1419,41 @@ const InvoiceForm: React.FC = () => {
 
           <FormRow columns={isIncomingArchive ? 3 : 2}>
             {isIncomingArchive ? (
-              <Form.Item label="发票区域" name="invoice_region">
+              <Form.Item label={t("invoiceForm.field.invoiceRegion", "发票区域")} name="invoice_region">
                 <Select
                   options={[
-                    { value: "mainland_china", label: "中国大陆" },
-                    { value: "overseas", label: "海外" },
-                    { value: "unknown", label: "未知" },
+                    { value: "mainland_china", label: t("invoiceForm.region.mainland", "中国大陆") },
+                    { value: "overseas", label: t("invoiceForm.region.overseas", "海外") },
+                    { value: "unknown", label: t("invoiceForm.region.unknown", "未知") },
                   ]}
                 />
               </Form.Item>
             ) : null}
-            <Form.Item label="发票类型" name="invoice_type">
+            <Form.Item label={t("invoiceForm.field.invoiceType", "发票类型")} name="invoice_type">
               <Select
                 options={
                   isIncomingArchive
                     ? [
-                        { value: "vat_special", label: "增值税专用发票" },
-                        { value: "vat_normal", label: "增值税普通发票" },
-                        { value: "e_ticket", label: "电子行程单" },
-                        { value: "receipt", label: "收据 / Receipt" },
-                        { value: "other", label: "其他" },
+                        { value: "vat_special", label: t("invoiceForm.invoiceType.vatSpecial", "增值税专用发票") },
+                        { value: "vat_normal", label: t("invoiceForm.invoiceType.vatNormal", "增值税普通发票") },
+                        { value: "e_ticket", label: t("invoiceForm.invoiceType.eTicket", "电子行程单") },
+                        { value: "receipt", label: t("invoiceForm.invoiceType.receipt", "收据 / Receipt") },
+                        { value: "other", label: t("invoiceForm.invoiceType.other", "其他") },
                       ]
                     : [
-                        { value: "vat_special", label: "增值税专用发票" },
-                        { value: "vat_normal", label: "增值税普通发票" },
-                        { value: "other", label: "其他" },
+                        { value: "vat_special", label: t("invoiceForm.invoiceType.vatSpecial", "增值税专用发票") },
+                        { value: "vat_normal", label: t("invoiceForm.invoiceType.vatNormal", "增值税普通发票") },
+                        { value: "other", label: t("invoiceForm.invoiceType.other", "其他") },
                       ]
                 }
               />
             </Form.Item>
-            <Form.Item label="交付形式" name="invoice_medium">
+            <Form.Item label={t("invoiceForm.field.invoiceMedium", "交付形式")} name="invoice_medium">
               <Select
                 options={[
-                  { value: "electronic", label: "电子" },
-                  { value: "paper", label: "纸质" },
-                  { value: "other", label: "其他" },
+                  { value: "electronic", label: t("invoiceForm.medium.electronic", "电子") },
+                  { value: "paper", label: t("invoiceForm.medium.paper", "纸质") },
+                  { value: "other", label: t("invoiceForm.medium.other", "其他") },
                 ]}
               />
             </Form.Item>
@@ -1373,23 +1463,23 @@ const InvoiceForm: React.FC = () => {
             <>
               <FormRow columns={2}>
                 <Form.Item
-                  label="发票号码"
+                  label={t("invoiceForm.field.invoiceNo", "发票号码")}
                   name="invoice_no"
-                  rules={[{ required: true, message: "请输入发票号码" }]}
+                  rules={[{ required: true, message: t("invoiceForm.field.invoiceNoRequired", "请输入发票号码") }]}
                 >
-                  <Input placeholder="请输入发票号码" />
+                  <Input placeholder={t("invoiceForm.field.invoiceNoPlaceholder", "请输入发票号码")} />
                 </Form.Item>
                 <Form.Item
-                  label="开票日期"
+                  label={t("invoiceForm.field.invoiceDate", "开票日期")}
                   name="invoice_date"
-                  rules={[{ required: true, message: "请选择开票日期" }]}
+                  rules={[{ required: true, message: t("invoiceForm.field.invoiceDateRequired", "请选择开票日期") }]}
                 >
                   <DatePicker style={{ width: "100%" }} />
                 </Form.Item>
               </FormRow>
 
-              <Form.Item label="类目" name="category">
-                <Input placeholder="如：软件服务、云资源、咨询服务" />
+              <Form.Item label={t("invoiceForm.field.category", "类目")} name="category">
+                <Input placeholder={t("invoiceForm.field.categoryPlaceholder", "如：软件服务、云资源、咨询服务")} />
               </Form.Item>
             </>
           ) : null}
@@ -1398,13 +1488,13 @@ const InvoiceForm: React.FC = () => {
 
           {isIncomingArchive ? null : (
             <FormRow columns={3}>
-              <Form.Item label="收票人" name="receiver_name">
+              <Form.Item label={t("invoiceForm.field.receiverName", "收票人")} name="receiver_name">
                 <Input />
               </Form.Item>
-              <Form.Item label="收票手机号" name="receiver_phone">
+              <Form.Item label={t("invoiceForm.field.receiverPhone", "收票手机号")} name="receiver_phone">
                 <Input />
               </Form.Item>
-              <Form.Item label="收票邮箱" name="receiver_email">
+              <Form.Item label={t("invoiceForm.field.receiverEmail", "收票邮箱")} name="receiver_email">
                 <Input />
               </Form.Item>
             </FormRow>
@@ -1412,24 +1502,24 @@ const InvoiceForm: React.FC = () => {
 
           {isIncomingArchive ? null : (
             <Form.Item
-              label="收款与开票条件"
+              label={t("invoiceForm.field.paymentCondition", "收款与开票条件")}
               name="payment_condition_snapshot"
-              extra="说明合同是否约定先款后票、先票后款，或本次开票对应的收款条件。"
+              extra={t("invoiceForm.field.paymentConditionExtra", "说明合同是否约定先款后票、先票后款，或本次开票对应的收款条件。")}
             >
               <Input.TextArea
                 rows={2}
                 maxLength={500}
-                placeholder="例如：合同签署后先开票，客户收到发票后 15 个工作日内付款"
+                placeholder={t("invoiceForm.field.paymentConditionPlaceholder", "例如：合同签署后先开票，客户收到发票后 15 个工作日内付款")}
               />
             </Form.Item>
           )}
 
           <Form.Item
-            label={isIncomingArchive ? "发票文件" : "开票材料（可选）"}
+            label={isIncomingArchive ? t("invoiceForm.field.attachmentsIncoming", "发票文件") : t("invoiceForm.field.attachmentsOutgoing", "开票材料（可选）")}
             name={ATTACHMENTS_FIELD}
             rules={
               isIncomingArchive
-                ? [{ required: true, message: "请上传发票文件" }]
+                ? [{ required: true, message: t("invoiceForm.field.attachmentsRequired", "请上传发票文件") }]
                 : undefined
             }
           >
@@ -1440,13 +1530,13 @@ const InvoiceForm: React.FC = () => {
             />
           </Form.Item>
 
-          <Form.Item label="备注说明" name="remark">
+          <Form.Item label={t("invoiceForm.field.remark", "备注说明")} name="remark">
             <Input.TextArea
               rows={3}
               placeholder={
                 isIncomingArchive
-                  ? "填写发票来源、线下沟通情况或其他补充说明"
-                  : "填写开票背景、特殊要求或其他补充说明"
+                  ? t("invoiceForm.field.remarkPlaceholderIncoming", "填写发票来源、线下沟通情况或其他补充说明")
+                  : t("invoiceForm.field.remarkPlaceholderOutgoing", "填写开票背景、特殊要求或其他补充说明")
               }
               maxLength={1000}
               showCount
@@ -1454,7 +1544,7 @@ const InvoiceForm: React.FC = () => {
           </Form.Item>
 
           <Form.Item
-            label={isIncomingArchive ? "登记人" : "申请人"}
+            label={isIncomingArchive ? t("invoiceForm.field.registrant", "登记人") : t("invoiceForm.field.applicant", "申请人")}
             name="applicant_name_snapshot"
           >
             <Input disabled />
@@ -1474,11 +1564,11 @@ const InvoiceForm: React.FC = () => {
             isIncomingArchive ? undefined : () => onSave("submit")
           }
           saving={saving}
-          singleActionLabel="保存归档"
+          singleActionLabel={t("invoiceForm.footer.archiveButton", "保存归档")}
           hint={
             isIncomingArchive
-              ? "保存后直接进入发票台账，不发起审批。"
-              : "提交后进入开票审批流，审批通过后可补录实际票号和附件。"
+              ? t("invoiceForm.footer.incomingHint", "保存后直接进入发票台账，不发起审批。")
+              : t("invoiceForm.footer.outgoingHint", "提交后进入开票审批流，审批通过后可补录实际票号和附件。")
           }
         />
       )}

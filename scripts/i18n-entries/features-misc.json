@@ -1,0 +1,134 @@
+[
+  {
+    "key": "platformFlow.error.requestFailed",
+    "zh": "平台审批接口调用失败",
+    "en": "Platform approval request failed",
+    "id": "Permintaan persetujuan platform gagal"
+  },
+  {
+    "key": "platformFlow.error.actionFailed",
+    "zh": "审批操作失败",
+    "en": "Approval action failed",
+    "id": "Tindakan persetujuan gagal"
+  },
+  {
+    "key": "platformFlow.error.actionFailedDetail",
+    "zh": "审批操作失败：{msg}",
+    "en": "Approval action failed: {msg}",
+    "id": "Tindakan persetujuan gagal: {msg}"
+  },
+  {
+    "key": "platformFlow.error.loadTimeline",
+    "zh": "获取审批时间线失败",
+    "en": "Failed to load approval timeline",
+    "id": "Gagal memuat linimasa persetujuan"
+  },
+  {
+    "key": "platformFlow.error.loadProgress",
+    "zh": "加载审批进度失败：{msg}",
+    "en": "Failed to load approval progress: {msg}",
+    "id": "Gagal memuat progres persetujuan: {msg}"
+  },
+  {
+    "key": "platformFlow.error.cancelFailed",
+    "zh": "撤销流程失败",
+    "en": "Failed to cancel the process",
+    "id": "Gagal membatalkan proses"
+  },
+  {
+    "key": "platformFlow.cancel.defaultReason",
+    "zh": "申请人撤销",
+    "en": "Cancelled by applicant",
+    "id": "Dibatalkan oleh pemohon"
+  },
+  {
+    "key": "platformFlow.status.cancelled",
+    "zh": "已撤销",
+    "en": "Cancelled",
+    "id": "Dibatalkan"
+  },
+  {
+    "key": "platformFlow.ariaLabel",
+    "zh": "平台审批流程",
+    "en": "Platform approval process",
+    "id": "Proses persetujuan platform"
+  },
+  {
+    "key": "platformFlow.title",
+    "zh": "审批流程",
+    "en": "Approval process",
+    "id": "Proses persetujuan"
+  },
+  {
+    "key": "platformFlow.badge",
+    "zh": "平台审批",
+    "en": "Platform approval",
+    "id": "Persetujuan platform"
+  },
+  {
+    "key": "platformFlow.step.assignee",
+    "zh": "处理人：{name}",
+    "en": "Assignee: {name}",
+    "id": "Pelaksana: {name}"
+  },
+  {
+    "key": "platformFlow.terminal.rejected",
+    "zh": "流程已驳回",
+    "en": "Process rejected",
+    "id": "Proses ditolak"
+  },
+  {
+    "key": "platformFlow.terminal.cancelled",
+    "zh": "流程已撤销",
+    "en": "Process cancelled",
+    "id": "Proses dibatalkan"
+  },
+  {
+    "key": "platformFlow.terminal.completed",
+    "zh": "流程已完成",
+    "en": "Process completed",
+    "id": "Proses selesai"
+  },
+  {
+    "key": "platformFlow.loading",
+    "zh": "加载中…",
+    "en": "Loading…",
+    "id": "Memuat…"
+  },
+  {
+    "key": "platformFlow.empty.unavailable",
+    "zh": "审批进度暂不可用（流程实例未找到）",
+    "en": "Approval progress unavailable (process instance not found)",
+    "id": "Progres persetujuan tidak tersedia (instans proses tidak ditemukan)"
+  },
+  {
+    "key": "platformFlow.empty.noNodes",
+    "zh": "暂无审批节点信息",
+    "en": "No approval node information yet",
+    "id": "Belum ada informasi node persetujuan"
+  },
+  {
+    "key": "platformFlow.currentNode",
+    "zh": "当前节点：{name}",
+    "en": "Current node: {name}",
+    "id": "Node saat ini: {name}"
+  },
+  {
+    "key": "platformFlow.modal.approveTitle",
+    "zh": "通过审批",
+    "en": "Approve",
+    "id": "Setujui"
+  },
+  {
+    "key": "platformFlow.modal.rejectTitle",
+    "zh": "驳回审批",
+    "en": "Reject",
+    "id": "Tolak"
+  },
+  {
+    "key": "platformFlow.modal.commentPlaceholder",
+    "zh": "审批意见（可选）",
+    "en": "Approval comment (optional)",
+    "id": "Komentar persetujuan (opsional)"
+  }
+]

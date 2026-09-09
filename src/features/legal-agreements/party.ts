@@ -1,4 +1,5 @@
 import type { LegalAgreementDraft } from "./types";
+import { $i18n } from "@/i18n";
 
 type DraftParty = LegalAgreementDraft["parties"][number];
 
@@ -31,10 +32,10 @@ export function normalizeLegalAgreementParties(
 
 function normalizePartyTitle(party: DraftParty): DraftParty {
   if (party.partyRole === "COUNTERPARTY") {
-    return { ...party, partyTitle: "甲方" };
+    return { ...party, partyTitle: $i18n.t("contractForm.role.partyA", "甲方") };
   }
   if (party.partyRole === "OUR_SIDE") {
-    return { ...party, partyTitle: "乙方" };
+    return { ...party, partyTitle: $i18n.t("contractForm.role.partyB", "乙方") };
   }
   return party;
 }

@@ -17,6 +17,9 @@ import {
   summarizePlatformTasks,
   type PlatformTaskSummary,
 } from "@/features/platform-flow/api";
+import { $i18n } from "@/i18n";
+
+const t = (key: string, fallbackText: string) => $i18n.t(key, fallbackText);
 
 type DoneRow = PlatformTaskSummary & {
   completedBy: string;
@@ -60,7 +63,12 @@ export const ApprovalDoneList: React.FC<ApprovalDoneListProps> = ({
       setAllRows(rows);
       setPage(1);
     } catch (e: any) {
-      message.error(`加载失败：${e?.message || e}`);
+      message.error(
+        t("myDone.loadFailed", `加载失败：${e?.message || e}`).replace(
+          "{reason}",
+          e?.message || String(e),
+        ),
+      );
     } finally {
       setLoading(false);
     }
@@ -83,7 +91,7 @@ export const ApprovalDoneList: React.FC<ApprovalDoneListProps> = ({
 
   const columns: ColumnsType<DoneRow> = [
     {
-      title: "业务类型",
+      title: t("myDone.columns.bizType", "业务类型"),
       dataIndex: "bizType",
       width: 90,
       render: (v: string) => (
@@ -93,13 +101,13 @@ export const ApprovalDoneList: React.FC<ApprovalDoneListProps> = ({
       ),
     },
     {
-      title: "已完成节点",
+      title: t("myDone.columns.node", "已完成节点"),
       dataIndex: "nodeName",
       width: 130,
       render: (v: string) => <Tag color="geekblue">{v}</Tag>,
     },
     {
-      title: "业务标题",
+      title: t("myDone.columns.title", "业务标题"),
       dataIndex: "title",
       render: (_: any, r: DoneRow) => {
         const detailPath =
@@ -123,19 +131,19 @@ export const ApprovalDoneList: React.FC<ApprovalDoneListProps> = ({
       },
     },
     {
-      title: "完成人",
+      title: t("myDone.columns.completedBy", "完成人"),
       dataIndex: "completedBy",
       width: 120,
       render: (v?: string) => v || "-",
     },
     {
-      title: "完成时间",
+      title: t("myDone.columns.completedAt", "完成时间"),
       dataIndex: "completedAt",
       width: 160,
       render: (v: number) => (v ? formatDateValue(v, true) : "-"),
     },
     {
-      title: "操作",
+      title: t("myDone.columns.actions", "操作"),
       key: "actions",
       width: 90,
       render: (_: any, r: DoneRow) => {
@@ -143,7 +151,7 @@ export const ApprovalDoneList: React.FC<ApprovalDoneListProps> = ({
           r.bizType && r.bizId ? getCpoDetailPath(r.bizType, r.bizId) : "";
         return detailPath ? (
           <Button size="small" onClick={() => navigate(detailPath)}>
-            查看
+            {t("myDone.view", "查看")}
           </Button>
         ) : (
           "-"
@@ -155,7 +163,7 @@ export const ApprovalDoneList: React.FC<ApprovalDoneListProps> = ({
   const toolbar = (
     <Space wrap>
       <Select
-        placeholder="业务类型"
+        placeholder={t("myDone.filterBizType", "业务类型")}
         allowClear
         style={{ width: 120 }}
         value={bizTypeFilter || undefined}
@@ -164,16 +172,25 @@ export const ApprovalDoneList: React.FC<ApprovalDoneListProps> = ({
           setPage(1);
         }}
         options={[
-          { value: "expense", label: "报销" },
-          { value: "invoice_application", label: "销项开票申请" },
-          { value: "contract", label: "合同" },
-          { value: "payment", label: "付款" },
-          { value: "salary_payment", label: "工资付款" },
-          { value: "travel", label: "差旅出行" },
+          { value: "expense", label: t("myDone.bizOptions.expense", "报销") },
+          {
+            value: "invoice_application",
+            label: t("workflow.bizType.invoiceApplication", "销项开票申请"),
+          },
+          { value: "contract", label: t("myDone.bizOptions.contract", "合同") },
+          { value: "payment", label: t("myDone.bizOptions.payment", "付款") },
+          {
+            value: "salary_payment",
+            label: t("myDone.bizOptions.salary_payment", "工资付款"),
+          },
+          {
+            value: "travel",
+            label: t("myDone.bizOptions.travel", "差旅出行"),
+          },
         ]}
       />
       <Button icon={<ReloadOutlined />} loading={loading} onClick={() => load()}>
-        刷新
+        {t("myDone.refresh", "刷新")}
       </Button>
     </Space>
   );
@@ -184,7 +201,9 @@ export const ApprovalDoneList: React.FC<ApprovalDoneListProps> = ({
       columns={columns}
       dataSource={paged}
       loading={loading}
-      locale={{ emptyText: <Empty description="暂无已办" /> }}
+      locale={{
+        emptyText: <Empty description={t("myDone.empty", "暂无已办")} />,
+      }}
       pagination={{
         current: page,
         pageSize: PAGE_SIZE,
@@ -219,7 +238,7 @@ export const ApprovalDoneList: React.FC<ApprovalDoneListProps> = ({
       title={
         <Space>
           <CheckCircleOutlined style={{ color: "#34c759" }} />
-          我已审批
+          {t("myDone.cardTitle", "我已审批")}
         </Space>
       }
       extra={toolbar}

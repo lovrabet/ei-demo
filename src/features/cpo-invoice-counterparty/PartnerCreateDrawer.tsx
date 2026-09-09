@@ -6,6 +6,9 @@ import {
   type LocalPartner,
 } from "@/api/crm";
 import PartnerFormFields from "./PartnerFormFields";
+import { $i18n } from "@/i18n";
+
+const t = (key: string, fallback: string) => $i18n.t(key, fallback);
 
 type PartnerCreateDrawerProps = {
   open: boolean;
@@ -42,10 +45,17 @@ export default function PartnerCreateDrawer({
     setSaving(true);
     try {
       const partner = await createLocalPartner(values);
-      message.success("供应商已创建并关联");
+      message.success(
+        t("partnerForm.createDrawer.created", "供应商已创建并关联"),
+      );
       onCreated(partner);
     } catch (error: any) {
-      message.error(`创建失败：${error?.message || error}`);
+      message.error(
+        t("partnerForm.createDrawer.failed", "创建失败：{reason}").replace(
+          "{reason}",
+          String(error?.message || error),
+        ),
+      );
     } finally {
       setSaving(false);
     }
@@ -53,7 +63,7 @@ export default function PartnerCreateDrawer({
 
   return (
     <Drawer
-      title="新建供应商 / 服务商"
+      title={t("partnerForm.createDrawer.title", "新建供应商 / 服务商")}
       placement="right"
       width="min(760px, 96vw)"
       open={open}
@@ -67,10 +77,10 @@ export default function PartnerCreateDrawer({
       footer={
         <Space style={{ width: "100%", justifyContent: "flex-end" }}>
           <Button disabled={saving} onClick={onCancel}>
-            取消
+            {t("common.cancel", "取消")}
           </Button>
           <Button type="primary" loading={saving} onClick={submit}>
-            创建并关联
+            {t("partnerForm.createDrawer.submit", "创建并关联")}
           </Button>
         </Space>
       }

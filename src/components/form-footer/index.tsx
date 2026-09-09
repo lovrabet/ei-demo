@@ -5,6 +5,7 @@ import {
   SendOutlined,
   FileTextOutlined,
 } from "@ant-design/icons";
+import { $i18n } from "@/i18n";
 import styles from "./index.module.css";
 
 type Mode = "workflow" | "single";
@@ -33,7 +34,7 @@ const FormFooter: React.FC<Props> = ({
   onSaveAndSubmit,
   saving,
   hint,
-  singleActionLabel = "保存",
+  singleActionLabel = $i18n.t("common.save", "保存"),
 }) => {
   return (
     <div className={styles.footer}>
@@ -42,13 +43,16 @@ const FormFooter: React.FC<Props> = ({
         <span>
           {hint ||
             (mode === "workflow"
-              ? "提交后进入审核流，审批人将在审批中心的待我审批中看到。"
-              : "保存后立即生效。")}
+              ? $i18n.t(
+                  "formFooter.workflowHint",
+                  "提交后进入审核流，审批人将在审批中心的待我审批中看到。",
+                )
+              : $i18n.t("formFooter.singleHint", "保存后立即生效。"))}
         </span>
       </div>
       <Space size={8} className={styles.footerActions}>
         <Button onClick={onCancel} disabled={saving}>
-          取消
+          {$i18n.t("common.cancel", "取消")}
         </Button>
         {mode === "workflow" && onSaveAndSubmit && (
           <Button
@@ -58,7 +62,9 @@ const FormFooter: React.FC<Props> = ({
             disabled={saving}
             icon={<SendOutlined />}
           >
-            {saving ? "提交中" : "提交申请"}
+            {saving
+              ? $i18n.t("common.submitting", "提交中")
+              : $i18n.t("formFooter.submitApplication", "提交申请")}
           </Button>
         )}
         {mode === "single" && (
@@ -69,7 +75,7 @@ const FormFooter: React.FC<Props> = ({
             disabled={saving}
             icon={<SaveOutlined />}
           >
-            {saving ? "保存中" : singleActionLabel}
+            {saving ? $i18n.t("common.saving", "保存中") : singleActionLabel}
           </Button>
         )}
       </Space>

@@ -94,21 +94,39 @@ import type {
   WorkflowPlanStep,
 } from "./types";
 import styles from "./ApplicationDetailView.module.css";
+import { $i18n } from "@/i18n";
+
+const t = (key: string, fallbackText: string) => $i18n.t(key, fallbackText);
 
 const RELATION_TYPE_LABELS: Record<string, string> = {
-  actual: "实际使用",
-  offset: "冲销",
-  supplier_invoice: "供应商发票",
-  receipt: "收据",
-  proof: "证明",
+  actual: t("applicationDetail.view.relationTypeLabels.actual", "实际使用"),
+  offset: t("applicationDetail.view.relationTypeLabels.offset", "冲销"),
+  supplier_invoice: t(
+    "applicationDetail.view.relationTypeLabels.supplier_invoice",
+    "供应商发票",
+  ),
+  receipt: t("applicationDetail.view.relationTypeLabels.receipt", "收据"),
+  proof: t("applicationDetail.view.relationTypeLabels.proof", "证明"),
 };
 
 const PAYMENT_PLAN_STATUS_LABELS: Record<string, string> = {
-  pending: "待支付",
-  processing: "支付处理中",
-  paid: "已支付",
-  not_required: "无需支付",
-  cancelled: "已取消",
+  pending: t(
+    "applicationDetail.view.paymentPlanStatusLabels.pending",
+    "待支付",
+  ),
+  processing: t(
+    "applicationDetail.view.paymentPlanStatusLabels.processing",
+    "支付处理中",
+  ),
+  paid: t("applicationDetail.view.paymentPlanStatusLabels.paid", "已支付"),
+  not_required: t(
+    "applicationDetail.view.paymentPlanStatusLabels.not_required",
+    "无需支付",
+  ),
+  cancelled: t(
+    "applicationDetail.view.paymentPlanStatusLabels.cancelled",
+    "已取消",
+  ),
 };
 
 const PAYMENT_PLAN_STATUS_COLORS: Record<string, string> = {
@@ -119,14 +137,28 @@ const PAYMENT_PLAN_STATUS_COLORS: Record<string, string> = {
 };
 
 const CONTRACT_LIFECYCLE_LABELS: Record<string, string> = {
-  pending_signature: "待签署",
-  signed: "已签署",
-  in_progress: "进行中",
-  completed: "已完成",
+  pending_signature: t(
+    "applicationDetail.view.contractLifecycleLabels.pending_signature",
+    "待签署",
+  ),
+  signed: t(
+    "applicationDetail.view.contractLifecycleLabels.signed",
+    "已签署",
+  ),
+  in_progress: t(
+    "applicationDetail.view.contractLifecycleLabels.in_progress",
+    "进行中",
+  ),
+  completed: t(
+    "applicationDetail.view.contractLifecycleLabels.completed",
+    "已完成",
+  ),
 };
 
 function text(value: unknown) {
-  if (value === undefined || value === null || value === "") return "-";
+  if (value === undefined || value === null || value === "") {
+    return t("applicationDetail.view.noValue", "-");
+  }
   return String(value);
 }
 
@@ -183,9 +215,22 @@ export function getPaymentPlanLinkLabel(
 ) {
   const linkedPayment = payment || getPaymentPlanLinks(row)[0];
   if (linkedPayment?.title) return linkedPayment.title;
-  if (row.phase_name) return `${row.phase_name}付款申请`;
-  if (row.phase_no) return `第 ${row.phase_no} 期付款申请`;
-  return "关联付款标题缺失";
+  if (row.phase_name) {
+    return t(
+      "applicationDetail.view.phasePaymentTitle",
+      `${row.phase_name}付款申请`,
+    ).replace("{phase}", row.phase_name);
+  }
+  if (row.phase_no) {
+    return t(
+      "applicationDetail.view.phasePaymentTitleNumbered",
+      `第 ${row.phase_no} 期付款申请`,
+    ).replace("{phase}", String(row.phase_no));
+  }
+  return t(
+    "applicationDetail.view.linkedPaymentTitleMissing",
+    "关联付款标题缺失",
+  );
 }
 
 export function getPaymentPlanLinkMeta(
@@ -208,6 +253,15 @@ function humanizeExpenseRemark(value: unknown) {
   const raw = text(value);
   if (raw === "-") return [];
 
+  const unmatchedInvoice = t(
+    "applicationDetail.view.expenseRemark.unmatchedInvoice",
+    "（未匹配发票台账）",
+  );
+  const manualReview = t(
+    "applicationDetail.view.expenseRemark.manualReview",
+    "费用归类需人工核对",
+  );
+
   return raw
     .split(/[；;]/)
     .map((item) => item.trim())
@@ -216,11 +270,11 @@ function humanizeExpenseRemark(value: unknown) {
       const normalized = item
         .replace(
           /\s*[（(]发票台账无记录，?\s*invoice_id\s*留空[）)]/gi,
-          "（未匹配发票台账）",
+          unmatchedInvoice,
         )
         .replace(
           /命中兜底规则\s*expense_unclear_manual_review/gi,
-          "费用归类需人工核对",
+          manualReview,
         );
       const invoiceMatch = normalized.match(
         /^发票号\s+([0-9A-Za-z-]+)(?:[（(]([^）)]+)[）)])?$/,
@@ -228,7 +282,10 @@ function humanizeExpenseRemark(value: unknown) {
       if (invoiceMatch) {
         return {
           kind: "invoice",
-          label: "发票号",
+          label: t(
+            "applicationDetail.view.expenseRemark.invoiceNoLabel",
+            "发票号",
+          ),
           value: invoiceMatch[1],
           meta: invoiceMatch[2] || "",
         };
@@ -237,7 +294,10 @@ function humanizeExpenseRemark(value: unknown) {
       if (sellerMatch) {
         return {
           kind: "seller",
-          label: "销售方",
+          label: t(
+            "applicationDetail.view.expenseRemark.sellerLabel",
+            "销售方",
+          ),
           value: sellerMatch[1],
           meta: "",
         };
@@ -246,14 +306,19 @@ function humanizeExpenseRemark(value: unknown) {
       if (fileMatch) {
         return {
           kind: "file",
-          label: "对应文件",
+          label: t(
+            "applicationDetail.view.expenseRemark.fileLabel",
+            "对应文件",
+          ),
           value: fileMatch[1],
           meta: "",
         };
       }
       return {
         kind: normalized.includes("人工") ? "review" : "other",
-        label: normalized.includes("人工") ? "核对提示" : "备注",
+        label: normalized.includes("人工")
+          ? t("applicationDetail.view.expenseRemark.reviewLabel", "核对提示")
+          : t("applicationDetail.view.expenseRemark.otherLabel", "备注"),
         value: normalized,
         meta: "",
       };
@@ -265,7 +330,13 @@ function ExpenseRemarkRow({ value }: { value: unknown }) {
   if (!details.length) return null;
 
   return (
-    <div className={styles.remarkRow} aria-label="备注">
+    <div
+      className={styles.remarkRow}
+      aria-label={t(
+        "applicationDetail.view.expenseRemark.rowAriaLabel",
+        "备注",
+      )}
+    >
       <div className={styles.remarkContent}>
         {details.map((item, index) => (
           <div
@@ -320,12 +391,16 @@ function formatRelationField(
   if (fieldName === "partner_id") {
     const partner = related.partner;
     if (partner?.name) return String(partner.name);
-    return value || partner?.id ? "关联对象标题缺失" : "-";
+    return value || partner?.id
+      ? t("applicationDetail.view.relatedTitleMissing", "关联对象标题缺失")
+      : t("applicationDetail.view.noValue", "-");
   }
   if (fieldName === "contract_id") {
     const contract = related.contract;
     if (contract?.contract_name) return String(contract.contract_name);
-    return value || contract?.id ? "关联对象标题缺失" : "-";
+    return value || contract?.id
+      ? t("applicationDetail.view.relatedTitleMissing", "关联对象标题缺失")
+      : t("applicationDetail.view.noValue", "-");
   }
   return undefined;
 }
@@ -377,7 +452,14 @@ function ExecutiveSummary({
       <ModuleHeading
         id="document-360-executiveSummary-heading"
         title={label}
-        meta={risks.length ? `${risks.length} 项需关注` : "当前无明显异常"}
+        meta={
+          risks.length
+            ? t(
+                "applicationDetail.view.executive.risksAttention",
+                `${risks.length} 项需关注`,
+              ).replace("{count}", String(risks.length))
+            : t("applicationDetail.view.executive.noIssues", "当前无明显异常")
+        }
       />
       <div className={styles.executiveMetrics}>
         {metrics.map((metric) => (
@@ -393,7 +475,13 @@ function ExecutiveSummary({
         ))}
       </div>
       {risks.length ? (
-        <div className={styles.executiveRisks} aria-label="经营风险提示">
+        <div
+          className={styles.executiveRisks}
+          aria-label={t(
+            "applicationDetail.view.executive.risksAriaLabel",
+            "经营风险提示",
+          )}
+        >
           {risks.map((risk) => (
             <div
               className={styles.executiveRisk}
@@ -424,10 +512,22 @@ type ManagedRelationType =
   | "serves_customer";
 
 const MANAGED_RELATION_LABELS: Record<ManagedRelationType, string> = {
-  payment_invoice: "付款核销发票",
-  originates_from_quote: "来源报价",
-  covered_by_nda: "前置保密协议",
-  serves_customer: "服务客户",
+  payment_invoice: t(
+    "applicationDetail.view.relationTypeLabels.payment_invoice",
+    "付款核销发票",
+  ),
+  originates_from_quote: t(
+    "applicationDetail.view.relationTypeLabels.originates_from_quote",
+    "来源报价",
+  ),
+  covered_by_nda: t(
+    "applicationDetail.view.relationTypeLabels.covered_by_nda",
+    "前置保密协议",
+  ),
+  serves_customer: t(
+    "applicationDetail.view.relationTypeLabels.serves_customer",
+    "服务客户",
+  ),
 };
 
 function optionLabel(option: Document360Option) {
@@ -437,7 +537,13 @@ function optionLabel(option: Document360Option) {
       : "";
   const available =
     option.availableAmount !== undefined
-      ? `可用 ${formatPlanMoney(option.availableAmount, option.currency)}`
+      ? t(
+          "applicationDetail.view.executive.availableAmount",
+          `可用 ${formatPlanMoney(option.availableAmount, option.currency)}`,
+        ).replace(
+          "{amount}",
+          formatPlanMoney(option.availableAmount, option.currency),
+        )
       : "";
   return [option.label, option.secondary, amount, available]
     .filter(Boolean)
@@ -532,7 +638,12 @@ function Document360ManagementPanel({
         }
       })
       .catch((error: any) =>
-        message.error(`加载可关联对象失败：${error?.message || error}`),
+        message.error(
+          t(
+            "applicationDetail.view.messages.loadOptionsFailed",
+            `加载可关联对象失败：${error?.message || error}`,
+          ).replace("{reason}", error?.message || String(error)),
+        ),
       )
       .finally(() => {
         if (active) setLoading(false);
@@ -552,10 +663,20 @@ function Document360ManagementPanel({
         bizId: detail.summary.bizId,
         lifecycleStatus,
       });
-      message.success("履约状态已更新");
+      message.success(
+        t(
+          "applicationDetail.view.messages.lifecycleUpdated",
+          "履约状态已更新",
+        ),
+      );
       await reload();
     } catch (error: any) {
-      message.error(`更新失败：${error?.message || error}`);
+      message.error(
+        t(
+          "applicationDetail.view.messages.updateFailed",
+          `更新失败：${error?.message || error}`,
+        ).replace("{reason}", error?.message || String(error)),
+      );
     } finally {
       setSavingKey("");
     }
@@ -570,10 +691,20 @@ function Document360ManagementPanel({
         invoiceDirection,
         invoicePurpose,
       });
-      message.success("发票分类已更新");
+      message.success(
+        t(
+          "applicationDetail.view.messages.invoiceClassificationUpdated",
+          "发票分类已更新",
+        ),
+      );
       await reload();
     } catch (error: any) {
-      message.error(`更新失败：${error?.message || error}`);
+      message.error(
+        t(
+          "applicationDetail.view.messages.updateFailed",
+          `更新失败：${error?.message || error}`,
+        ).replace("{reason}", error?.message || String(error)),
+      );
     } finally {
       setSavingKey("");
     }
@@ -2492,26 +2623,77 @@ function Attachments({
 }
 
 const WORKFLOW_PLAN_STATE_LABELS: Record<WorkflowPlanStep["state"], string> = {
-  upcoming: "待流转",
-  current: "当前节点",
-  completed: "已通过",
-  notified: "已抄送",
-  rejected: "已驳回",
-  cancelled: "已取消",
+  upcoming: t(
+    "applicationDetail.view.workflowActions.historyStateLabels.upcoming",
+    "待流转",
+  ),
+  current: t(
+    "applicationDetail.view.workflowActions.historyStateLabels.current",
+    "当前节点",
+  ),
+  completed: t(
+    "applicationDetail.view.workflowActions.historyStateLabels.completed",
+    "已通过",
+  ),
+  notified: t(
+    "applicationDetail.view.workflowActions.historyStateLabels.notified",
+    "已抄送",
+  ),
+  rejected: t(
+    "applicationDetail.view.workflowActions.historyStateLabels.rejected",
+    "已驳回",
+  ),
+  cancelled: t(
+    "applicationDetail.view.workflowActions.historyStateLabels.cancelled",
+    "已取消",
+  ),
 };
 
 const HISTORY_ACTION_STATE_LABELS: Record<string, string> = {
-  submit: "已提交",
-  withdraw: "已撤回",
-  cancel: "已作废",
-  review_pass: "已通过",
-  review_reject: "已驳回",
-  cc_notify: "已抄送",
-  confirm_legacy_paid: "已支付",
-  print_summary_requested: "待确认",
-  print_full_requested: "待确认",
-  print_confirmed: "已确认",
-  print_confirmation_revoked: "已撤销",
+  submit: t(
+    "applicationDetail.view.workflowActions.historyStateLabels.submitted",
+    "已提交",
+  ),
+  withdraw: t(
+    "applicationDetail.view.workflowActions.historyStateLabels.withdraw",
+    "已撤回",
+  ),
+  cancel: t(
+    "applicationDetail.view.workflowActions.historyStateLabels.cancel",
+    "已作废",
+  ),
+  review_pass: t(
+    "applicationDetail.view.workflowActions.historyStateLabels.review_pass",
+    "已通过",
+  ),
+  review_reject: t(
+    "applicationDetail.view.workflowActions.historyStateLabels.review_reject",
+    "已驳回",
+  ),
+  cc_notify: t(
+    "applicationDetail.view.workflowActions.historyStateLabels.cc_notify",
+    "已抄送",
+  ),
+  confirm_legacy_paid: t(
+    "applicationDetail.view.workflowActions.historyStateLabels.confirm_legacy_paid",
+    "已支付",
+  ),
+  print_summary_requested: t(
+    "applicationDetail.view.workflowActions.historyStateLabels.print_summary_requested",
+    "待确认",
+  ),
+  print_full_requested: t(
+    "applicationDetail.view.workflowActions.historyStateLabels.print_full_requested",
+    "待确认",
+  ),
+  print_confirmed: t(
+    "applicationDetail.view.workflowActions.historyStateLabels.print_confirmed",
+    "已确认",
+  ),
+  print_confirmation_revoked: t(
+    "applicationDetail.view.workflowActions.historyStateLabels.print_confirmation_revoked",
+    "已撤销",
+  ),
 };
 
 function historyActionColor(action?: string) {
@@ -2882,7 +3064,12 @@ function WorkflowActionBar({
   const submitAction = async () => {
     if (!selectedAction) return;
     if (selectedAction.commentRequired && !comment.trim()) {
-      message.warning("请填写操作原因");
+      message.warning(
+        t(
+          "applicationDetail.view.workflowActions.reasonRequired",
+          "请填写操作原因",
+        ),
+      );
       return;
     }
     setSubmitting(true);
@@ -2894,12 +3081,22 @@ function WorkflowActionBar({
         action: selectedAction.action,
         comment: comment.trim(),
       });
-      message.success(`已${selectedAction.label}`);
+      message.success(
+        t(
+          "applicationDetail.view.workflowActions.actionCompleted",
+          `已${selectedAction.label}`,
+        ).replace("{label}", selectedAction.label || ""),
+      );
       setSelectedAction(null);
       setComment("");
       await onChanged?.();
     } catch (error: any) {
-      message.error(`流程操作失败：${error?.message || error}`);
+      message.error(
+        t(
+          "applicationDetail.view.workflowActions.actionFailed",
+          `流程操作失败：${error?.message || error}`,
+        ).replace("{reason}", error?.message || String(error)),
+      );
     } finally {
       setSubmitting(false);
     }
@@ -2908,16 +3105,30 @@ function WorkflowActionBar({
   return (
     <>
       <div className={styles.workflowActionDock} ref={dockRef}>
-        <footer className={styles.workflowActionBar} aria-label="流程操作">
+        <footer
+          className={styles.workflowActionBar}
+          aria-label={t(
+            "applicationDetail.view.workflowActions.actionBarAriaLabel",
+            "流程操作",
+          )}
+        >
           <div className={styles.workflowActionInfo}>
-            <div className={styles.workflowActionTitle}>流程操作</div>
+            <div className={styles.workflowActionTitle}>
+              {t(
+                "applicationDetail.view.workflowActions.actionBarAriaLabel",
+                "流程操作",
+              )}
+            </div>
             <div className={styles.muted}>
               当前节点：
               {text(
                 detail.currentTask?.workflow_step_name ||
                   detail.currentTask?.title ||
                   detail.currentTask?.task_type ||
-                  "待处理",
+                  t(
+                    "applicationDetail.view.workflowActions.pending",
+                    "待处理",
+                  ),
               )}
             </div>
           </div>
@@ -2945,12 +3156,18 @@ function WorkflowActionBar({
                   <Tooltip
                     title={
                       action.adminOverrideReason ||
-                      "当前不是你的操作节点，但因应用管理员权限可见并可操作。"
+                      t(
+                        "applicationDetail.view.workflowActions.adminProxyHint",
+                        "当前不是你的操作节点，但因应用管理员权限可见并可操作。",
+                      )
                     }
                   >
                     <QuestionCircleOutlined
                       className={styles.adminOverrideHintIcon}
-                      aria-label="管理员代操作说明"
+                      aria-label={t(
+                        "applicationDetail.view.workflowActions.adminProxyHintAriaLabel",
+                        "管理员代操作说明",
+                      )}
                       onClick={(event) => event.stopPropagation()}
                     />
                   </Tooltip>
@@ -2961,10 +3178,23 @@ function WorkflowActionBar({
         </footer>
       </div>
       <Modal
-        title={selectedAction ? selectedAction.label : "操作确认"}
+        title={
+          selectedAction
+            ? selectedAction.label
+            : t(
+                "applicationDetail.view.workflowActions.confirmTitle",
+                "操作确认",
+              )
+        }
         open={Boolean(selectedAction)}
-        okText="确认"
-        cancelText="取消"
+        okText={t(
+          "applicationDetail.view.workflowActions.okText",
+          "确认",
+        )}
+        cancelText={t(
+          "applicationDetail.view.workflowActions.cancelText",
+          "取消",
+        )}
         confirmLoading={submitting}
         onOk={submitAction}
         onCancel={() => {
@@ -2978,10 +3208,16 @@ function WorkflowActionBar({
             className={styles.adminOverrideAlert}
             type="warning"
             showIcon
-            message="管理员代操作"
+            message={t(
+              "applicationDetail.view.workflowActions.adminProxyTag",
+              "管理员代操作",
+            )}
             description={
               selectedAction.adminOverrideReason ||
-              "当前不是你的操作节点，但因应用管理员权限可见并可操作。"
+              t(
+                "applicationDetail.view.workflowActions.adminProxyHint",
+                "当前不是你的操作节点，但因应用管理员权限可见并可操作。",
+              )
             }
           />
         ) : null}
@@ -2990,8 +3226,14 @@ function WorkflowActionBar({
           value={comment}
           placeholder={
             selectedAction?.commentRequired
-              ? "请填写操作原因（必填）"
-              : "填写操作备注（可选）"
+              ? t(
+                  "applicationDetail.view.workflowActions.reasonRequiredHint",
+                  "请填写操作原因（必填）",
+                )
+              : t(
+                  "applicationDetail.view.workflowActions.reasonOptionalHint",
+                  "填写操作备注（可选）",
+                )
           }
           onChange={(event) => setComment(event.target.value)}
         />

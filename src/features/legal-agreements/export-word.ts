@@ -2,6 +2,7 @@
  * 将合同 HTML 导出为 Word（.docx）。
  * 签章页单独分页、甲乙方左右分栏需在导出前做 Word 兼容转换（表格 + 分页符）。
  */
+import { $i18n } from "@/i18n";
 
 function inlineParagraphStyles(content: string): string {
   return content.replace(/<p>/g, '<p style="margin:8pt 0;line-height:1.8;">');
@@ -22,7 +23,9 @@ export function transformSignatureSectionForWord(html: string): string {
       }
 
       const h2Match = beforeGrid.match(/<h2>[\s\S]*?<\/h2>/);
-      const heading = h2Match?.[0] ?? "<h2>签章页</h2>";
+      const heading =
+        h2Match?.[0] ??
+        `<h2>${$i18n.t("legalAgreement.document.signature.title", "签章页")}</h2>`;
 
       return `<section class="sign" style="page-break-before:always;mso-page-break-before:always;margin-top:24pt;">
 ${heading}
@@ -76,13 +79,20 @@ export async function exportLegalAgreementWord(options: {
 }) {
   const preparedHtml = prepareHtmlForWordExport(options.html);
   if (!preparedHtml) {
-    throw new Error("合同内容为空，无法导出 Word");
+    throw new Error(
+      $i18n.t(
+        "legalAgreement.exportWord.emptyContent",
+        "合同内容为空，无法导出 Word",
+      ),
+    );
   }
 
   const { asBlob } = await import("html-docx-js-typescript");
   const blob = await asBlob(preparedHtml);
   if (!(blob instanceof Blob)) {
-    throw new Error("Word 导出失败");
+    throw new Error(
+      $i18n.t("legalAgreement.exportWord.failed", "Word 导出失败"),
+    );
   }
 
   const safeName = sanitizeWordFileName(options.fileName);

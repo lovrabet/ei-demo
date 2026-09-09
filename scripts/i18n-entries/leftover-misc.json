@@ -1,0 +1,14 @@
+[
+  {
+    "key": "common.commandFailed",
+    "zh": "命令执行失败",
+    "en": "Failed to execute command",
+    "id": "Gagal menjalankan perintah"
+  },
+  {
+    "key": "expenseRules.invalidDateFormat",
+    "zh": "日期格式异常",
+    "en": "Invalid date format",
+    "id": "Format tanggal tidak valid"
+  }
+]

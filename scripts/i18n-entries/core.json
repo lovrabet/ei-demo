@@ -1,0 +1,308 @@
+[
+  {
+    "key": "nav.partnerFormCreate",
+    "zh": "新建商业伙伴",
+    "en": "New Business Partner",
+    "id": "Mitra Bisnis Baru"
+  },
+  {
+    "key": "nav.invoiceArchive",
+    "zh": "进项发票归档",
+    "en": "Incoming Invoice Archive",
+    "id": "Arsip Faktur Masuk"
+  },
+  {
+    "key": "home.eyebrow",
+    "zh": "Lovrabet 企业智能应用样板",
+    "en": "Lovrabet Enterprise Intelligence App Template",
+    "id": "Templat Aplikasi Kecerdasan Perusahaan Lovrabet"
+  },
+  {
+    "key": "home.heroTitle",
+    "zh": "AI 原生的企业采购与财务审批样板",
+    "en": "AI-Native Enterprise Procurement & Finance Approval Template",
+    "id": "Templat Persetujuan Pengadaan & Keuangan Perusahaan Berbasis AI"
+  },
+  {
+    "key": "home.heroText",
+    "zh": "把规则、流程与 AI 放进每一张业务单据，覆盖申请、审查、审批和归档。",
+    "en": "Embed rules, workflows, and AI into every business document, covering application, review, approval, and archiving.",
+    "id": "Tanamkan aturan, alur kerja, dan AI ke dalam setiap dokumen bisnis, mencakup pengajuan, peninjauan, persetujuan, dan pengarsipan."
+  },
+  {
+    "key": "home.enterWorkbench",
+    "zh": "进入工作台",
+    "en": "Enter Workbench",
+    "id": "Buka Workbench"
+  },
+  {
+    "key": "home.agentDigitalEmployee",
+    "zh": "Agent 数字员工",
+    "en": "Agent Digital Employee",
+    "id": "Karyawan Digital Agen"
+  },
+  {
+    "key": "home.heroImageAlt",
+    "zh": "合同、发票与审批印章组成的企业流程工作台",
+    "en": "Enterprise workflow workbench composed of contracts, invoices, and approval seals",
+    "id": "Meja kerja alur kerja perusahaan yang terdiri dari kontrak, faktur, dan stempel persetujuan"
+  },
+  {
+    "key": "home.heroCaption",
+    "zh": "规则系统强制，流程系统驱动，AI 全程参与",
+    "en": "Enforced by the rule system, driven by the workflow system, with AI involved throughout",
+    "id": "Ditegakkan oleh sistem aturan, digerakkan oleh sistem alur kerja, dengan AI terlibat sepenuhnya"
+  },
+  {
+    "key": "home.quickEntriesAria",
+    "zh": "常用业务入口",
+    "en": "Common business entries",
+    "id": "Entri bisnis umum"
+  },
+  {
+    "key": "home.quick.workbenchDesc",
+    "zh": "查看待办、申请和经营概览",
+    "en": "View to-dos, applications, and business overview",
+    "id": "Lihat tugas, pengajuan, dan ringkasan operasi"
+  },
+  {
+    "key": "home.quick.approvalCenterDesc",
+    "zh": "统一处理平台 Flow 待办与已办",
+    "en": "Handle platform Flow to-dos and completed items in one place",
+    "id": "Tangani tugas dan item selesai Flow platform secara terpadu"
+  },
+  {
+    "key": "home.quick.applicationListDesc",
+    "zh": "按状态检索各类业务单据",
+    "en": "Search business documents by status",
+    "id": "Cari dokumen bisnis berdasarkan status"
+  },
+  {
+    "key": "home.quick.expenseFormDesc",
+    "zh": "体验发票识别与规则校验",
+    "en": "Experience invoice recognition and rule validation",
+    "id": "Coba pengenalan faktur dan validasi aturan"
+  },
+  {
+    "key": "home.capabilityTitle",
+    "zh": "AI 深入六个高频业务场景",
+    "en": "AI Embedded in Six High-Frequency Business Scenarios",
+    "id": "AI Terintegrasi dalam Enam Skenario Bisnis Frekuensi Tinggi"
+  },
+  {
+    "key": "home.capabilitySubtitle",
+    "zh": "不是在系统旁边增加一个问答框，而是在数据读写、规则核验和审批流转中直接参与。",
+    "en": "Not a chat box next to the system, but direct participation in data reads and writes, rule verification, and approval flows.",
+    "id": "Bukan kotak tanya jawab di samping sistem, melainkan partisipasi langsung dalam baca-tulis data, verifikasi aturan, dan alur persetujuan."
+  },
+  {
+    "key": "home.capability.expense.title",
+    "zh": "费用报销",
+    "en": "Expense Reimbursement",
+    "id": "Reimburs Biaya"
+  },
+  {
+    "key": "home.capability.expense.desc",
+    "zh": "识别票面信息，匹配金额、时限与费用类别规则，标记异常并拦截重复报销。",
+    "en": "Recognize invoice details, match amount, time-limit, and category rules, flag anomalies, and block duplicate claims.",
+    "id": "Kenali informasi faktur, cocokkan aturan jumlah, batas waktu, dan kategori biaya, tandai anomali, dan blokir pengajuan ganda."
+  },
+  {
+    "key": "home.capability.expense.action",
+    "zh": "发起报销",
+    "en": "Start a Reimbursement",
+    "id": "Ajukan Reimburs"
+  },
+  {
+    "key": "home.capability.contract.title",
+    "zh": "合同审查",
+    "en": "Contract Review",
+    "id": "Peninjauan Kontrak"
+  },
+  {
+    "key": "home.capability.contract.desc",
+    "zh": "覆盖主体授权、价税资金、交付验收、知识产权和违约解除等风险维度。",
+    "en": "Covers risk dimensions such as party authorization, pricing, tax and funds, delivery and acceptance, intellectual property, and breach termination.",
+    "id": "Mencakup dimensi risiko seperti otorisasi pihak, harga, pajak dan dana, pengiriman dan penerimaan, kekayaan intelektual, serta pemutusan akibat pelanggaran."
+  },
+  {
+    "key": "home.capability.contract.action",
+    "zh": "进入合同工作台",
+    "en": "Enter Contract Workbench",
+    "id": "Masuk Meja Kerja Kontrak"
+  },
+  {
+    "key": "home.capability.invoice.title",
+    "zh": "发票查重与登记",
+    "en": "Invoice Deduplication & Registration",
+    "id": "Pemeriksaan Duplikat & Pendaftaran Faktur"
+  },
+  {
+    "key": "home.capability.invoice.desc",
+    "zh": "定位冲突单据，统一管理进销项发票、开票申请和归档状态。",
+    "en": "Locate conflicting documents and centrally manage input/output invoices, issuance requests, and archiving status.",
+    "id": "Temukan dokumen yang bentrok dan kelola faktur masuk/keluar, permohonan penerbitan, serta status pengarsipan secara terpadu."
+  },
+  {
+    "key": "home.capability.invoice.action",
+    "zh": "查看发票中心",
+    "en": "View Invoice Center",
+    "id": "Lihat Pusat Faktur"
+  },
+  {
+    "key": "home.capability.salary.title",
+    "zh": "工资发放",
+    "en": "Payroll Disbursement",
+    "id": "Pembayaran Gaji"
+  },
+  {
+    "key": "home.capability.salary.desc",
+    "zh": "解析工资表，校验月份与合计，并按主体拆分生成付款申请。",
+    "en": "Parse payroll sheets, verify months and totals, and split them by entity to generate payment requests.",
+    "id": "Urai tabel gaji, verifikasi bulan dan total, lalu pecah berdasarkan entitas untuk membuat permohonan pembayaran."
+  },
+  {
+    "key": "home.capability.customer.title",
+    "zh": "客户 360 与应收",
+    "en": "Customer 360 & Receivables",
+    "id": "Pelanggan 360 & Piutang"
+  },
+  {
+    "key": "home.capability.customer.desc",
+    "zh": "整合机会、合同、收款和跟进信息，辅助判断催收优先级。",
+    "en": "Integrate opportunities, contracts, receipts, and follow-ups to help prioritize collections.",
+    "id": "Integrasikan peluang, kontrak, penerimaan, dan tindak lanjut untuk membantu menentukan prioritas penagihan."
+  },
+  {
+    "key": "home.capability.customer.action",
+    "zh": "查看客户视图",
+    "en": "View Customer Profile",
+    "id": "Lihat Profil Pelanggan"
+  },
+  {
+    "key": "home.capability.workflow.title",
+    "zh": "平台原生审批流转",
+    "en": "Platform-Native Approval Flow",
+    "id": "Alur Persetujuan Asli Platform"
+  },
+  {
+    "key": "home.capability.workflow.desc",
+    "zh": "单据提交后进入平台 Flow，由流程驱动节点处理、状态回写、批量审批和飞书通知。",
+    "en": "Submitted documents enter the platform Flow, where the process drives node handling, status write-back, batch approvals, and Lark notifications.",
+    "id": "Dokumen yang dikirim masuk ke Flow platform, di mana proses menggerakkan pemrosesan node, penulisan ulang status, persetujuan massal, dan notifikasi Feishu."
+  },
+  {
+    "key": "home.capability.workflow.action",
+    "zh": "处理审批",
+    "en": "Process Approvals",
+    "id": "Proses Persetujuan"
+  },
+  {
+    "key": "home.architectureKicker",
+    "zh": "默认架构",
+    "en": "Default Architecture",
+    "id": "Arsitektur Default"
+  },
+  {
+    "key": "home.architectureTitle",
+    "zh": "守卫在数据层，流程在平台层",
+    "en": "Guards at the Data Layer, Workflows at the Platform Layer",
+    "id": "Penjagaan di Lapisan Data, Alur Kerja di Lapisan Platform"
+  },
+  {
+    "key": "home.architectureDesc",
+    "zh": "即使绕过前端界面，业务规则仍由 BFF 在数据读写侧执行。审批状态由平台 Flow 统一驱动和回写。",
+    "en": "Even if the frontend is bypassed, business rules are still enforced by the BFF on the data read/write side. Approval states are uniformly driven and written back by the platform Flow.",
+    "id": "Meskipun antarmuka frontend dilewati, aturan bisnis tetap ditegakkan oleh BFF di sisi baca/tulis data. Status persetujuan digerakkan dan ditulis ulang secara terpadu oleh Flow platform."
+  },
+  {
+    "key": "home.layer.frontend.title",
+    "zh": "业务前端",
+    "en": "Business Frontend",
+    "id": "Frontend Bisnis"
+  },
+  {
+    "key": "home.layer.frontend.desc",
+    "zh": "负责业务申请、工作台、审批中心和各类业务视图。",
+    "en": "Hosts business applications, the workbench, the approval center, and various business views.",
+    "id": "Menangani pengajuan bisnis, meja kerja, pusat persetujuan, dan berbagai tampilan bisnis."
+  },
+  {
+    "key": "home.layer.data.title",
+    "zh": "Lovrabet 数据与业务层",
+    "en": "Lovrabet Data & Business Layer",
+    "id": "Lapisan Data & Bisnis Lovrabet"
+  },
+  {
+    "key": "home.layer.data.meta",
+    "zh": "42 个数据模型 + BFF",
+    "en": "42 Data Models + BFF",
+    "id": "42 Model Data + BFF"
+  },
+  {
+    "key": "home.layer.data.desc",
+    "zh": "Instant API 连接数据，ENDPOINT 编排业务，Policy 统一路由与拦截。",
+    "en": "Instant API connects data, ENDPOINTs orchestrate business logic, and Policies unify routing and interception.",
+    "id": "Instant API menghubungkan data, ENDPOINT mengorkestrasi bisnis, dan Policy menyatukan perutean serta intersepsi."
+  },
+  {
+    "key": "home.layer.flow.title",
+    "zh": "平台 Flow 与 AI Agent",
+    "en": "Platform Flow & AI Agent",
+    "id": "Flow Platform & Agen AI"
+  },
+  {
+    "key": "home.layer.flow.meta",
+    "zh": "流程驱动 + AI 全程参与",
+    "en": "Process-Driven + AI Throughout",
+    "id": "Digerakkan Proses + AI Sepenuhnya"
+  },
+  {
+    "key": "home.layer.flow.desc",
+    "zh": "统一审批流转，支持规则核验、风险识别、批量处理与消息通知。",
+    "en": "Unified approval flows with rule verification, risk detection, batch processing, and messaging notifications.",
+    "id": "Alur persetujuan terpadu dengan verifikasi aturan, identifikasi risiko, pemrosesan massal, dan notifikasi pesan."
+  },
+  {
+    "key": "home.boundaryTitle",
+    "zh": "标准实现边界",
+    "en": "Standard Implementation Boundaries",
+    "id": "Batas Implementasi Standar"
+  },
+  {
+    "key": "home.boundaryDesc",
+    "zh": "本项目只展示当前推荐的标准实现，同时保留以下明确的工程边界。",
+    "en": "This project demonstrates only the currently recommended standard implementation, with the following explicit engineering boundaries.",
+    "id": "Proyek ini hanya menampilkan implementasi standar yang direkomendasikan saat ini, dengan batas teknis eksplisit berikut."
+  },
+  {
+    "key": "home.boundary.flow",
+    "zh": "所有审批类单据统一由平台原生 Flow 发起、流转和回写，不再维护自研审批状态机。",
+    "en": "All approval documents are initiated, circulated, and written back by the platform-native Flow; no custom approval state machine is maintained.",
+    "id": "Semua dokumen persetujuan dimulai, dialirkan, dan ditulis ulang oleh Flow asli platform; mesin status persetujuan kustom tidak lagi dipelihara."
+  },
+  {
+    "key": "home.boundary.dal",
+    "zh": "数据表与 Custom SQL 统一由平台 DAL 按物理表名和唯一资源名解析，业务代码不再维护资源 UUID 映射。",
+    "en": "Data tables and Custom SQL are uniformly resolved by the platform DAL via physical table names and unique resource names; business code no longer maintains resource UUID mappings.",
+    "id": "Tabel data dan Custom SQL diselesaikan secara terpadu oleh DAL platform berdasarkan nama tabel fisik dan nama sumber daya unik; kode bisnis tidak lagi memelihara pemetaan UUID sumber daya."
+  },
+  {
+    "key": "home.boundary.policy",
+    "zh": "行级读取与写入管控统一由 Instant API Policy 路由、拒绝规则和平台角色执行。",
+    "en": "Row-level read and write controls are enforced uniformly by Instant API Policy routing, deny rules, and platform roles.",
+    "id": "Kontrol baca dan tulis tingkat baris ditegakkan secara terpadu oleh perutean Policy Instant API, aturan penolakan, dan peran platform."
+  },
+  {
+    "key": "home.footer.disclaimer",
+    "zh": "所有业务数据均为演示用虚构数据。",
+    "en": "All business data is fictitious and for demonstration only.",
+    "id": "Semua data bisnis bersifat fiktif dan hanya untuk demonstrasi."
+  },
+  {
+    "key": "home.footer.license",
+    "zh": "基于 Lovrabet 平台构建，采用 MIT 开源协议。",
+    "en": "Built on the Lovrabet platform and released under the MIT license.",
+    "id": "Dibangun di atas platform Lovrabet dan dirilis di bawah lisensi MIT."
+  }
+]

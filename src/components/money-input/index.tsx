@@ -1,6 +1,7 @@
 import React from "react";
 import { InputNumber } from "antd";
 import type { InputNumberProps } from "antd";
+import { $i18n } from "@/i18n";
 import styles from "./index.module.css";
 
 type MoneyInputProps = Omit<InputNumberProps<number>, "addonAfter"> & {
@@ -35,7 +36,7 @@ const parseMoney: InputNumberProps<number>["parser"] = (value) => {
 };
 
 export default function MoneyInput({
-  unit = "元",
+  unit = $i18n.t("common.currencyYuan", "元"),
   minWidth = 320,
   precision = 2,
   controls = false,

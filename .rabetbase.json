@@ -1,17 +1,14 @@
 {
   "createdAt": "8/11/2026, 3:51:36 PM",
   "version": "2.3.15",
-  "env": "production",
   "apps": {
     "oa-cn": {
       "appcode": "app-4d050189",
-      "region": "cn",
-      "env": "production"
+      "region": "cn"
     },
     "oa-id": {
       "appcode": "app-4d050189",
-      "region": "id",
-      "env": "production"
+      "region": "id"
     }
   },
   "defaultApp": "oa-cn"
